@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-dark text-white">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+
+				<div th:object="${producto}" th:remove="tag">
+					<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger"
+						role="alert">
+						<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+					</ul>
+				</div>
+
+				<form th:action="@{/producto/productosave}" th:object="${producto}"
+					method="post" enctype="multipart/form-data">
+					<div class="form-group row">
+						<label for="codigo" class="col-sm-2 col-form-label">Codigo</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{codigo}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{nombrep}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('nombrep')}" th:errors="*{nombrep}"></small>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="precio" class="col-sm-2 col-form-label">Precio</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{precio}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="createAt" class="col-sm-2 col-form-label">Fecha</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" th:field="*{fecha}"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}"></small>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="categoria" class="col-sm-2 col-form-label"
+							th:text="Categoria"></label>
+						<div class="col-sm-6">
+							<select th:field="*{categoria}" id="cargar_categoria"
+								name="cargar_categoria" class="custom-select mr-sm-2">
+								
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="marca" class="col-sm-2 col-form-label" th:text="Marca"></label>
+						<div class="col-sm-6">
+							<select th:field="*{marca}" id="cargar_marca" name="cargar_marca"
+								class="custom-select mr-sm-2">
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="margen" class="col-sm-2 col-form-label"
+							th:text="Margen"></label>
+						<div class="col-sm-6">
+							<select th:field="*{margen}" id="cargar_margen"
+								name="cargar_margen" class="custom-select mr-sm-2">
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="presentacion" class="col-sm-2 col-form-label"
+							th:text="Presentacion"></label>
+						<div class="col-sm-6">
+							<select th:field="*{presentacion}" id="cargar_presentacion"
+								name="cargar_presentacion" class="custom-select mr-sm-2">
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="proveedor" class="col-sm-2 col-form-label"
+							th:text="Proveedor"></label>
+						<div class="col-sm-6">
+							<select th:field="*{proveedor}" id="cargar_proveedor"
+								name="cargar_proveedor" class="custom-select mr-sm-2">
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<div class="col-sm-6">
+							<input type="submit" th:value="${titulo}"
+								class="btn btn-secondary" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	<script th:replace="productos/js/autocomplete :: javascript"></script>
+	<script>
+	function rellenarUpdate(){
+		if([[${categoriaid}]]!=null){
+	document.getElementById("cargar_categoria").value=[[${categoriaid}]];
+	document.getElementById("cargar_marca").value=[[${marcaid}]];
+	document.getElementById("cargar_margen").value=[[${margenid}]];
+	document.getElementById("cargar_presentacion").value=[[${presentacionid}]];
+	document.getElementById("cargar_proveedor").value=[[${proveedorid}]];
+	alert([[${categoriaid}]]);
+		}
+	} 
+	
+	</script>
+
+</body>
+</html>

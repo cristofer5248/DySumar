@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="layout/layout :: head"></head>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<div class="card-header"></div>
+			<div class="card-body">
+
+				<h4 class="card-title">
+					<a th:if="${#request.isUserInRole('ADMIN')}"
+						th:href="@{/producto/nuevo}" class="btn btn-primary btn-xs">crear
+						producto</a>
+				</h4>
+				<table class="table table-striped table-bordered">
+					<thead class="thead-inverse">
+						<tr>
+							<th
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">id</th>
+							<th>Codigo</th>
+							<th>Nombre</th>
+							<th>Precio</th>
+							<th>Marca</th>
+							<th>Categoria</th>							
+							<th
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">editar</th>
+							<th th:if="${#request.isUserInRole('ADMIN')}">eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="producto: ${productos}">
+							<td
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+								class="btn btn-primary btn-xs"
+								th:href="@{/verproducto/} + ${producto.id}"
+								th:text="${producto.id}"></a></td>
+							<td th:text="${producto.codigo}"></td>	
+							<td th:text="${producto.nombrep}"></td>
+							<td th:text="${producto.precio}"></td>
+							<td th:text="${producto.marca.nombrem}"></td>
+							<td th:text="${producto.categoria.nombre}"></td>
+<!-- 							<td
+								th:if="${#request.isUserInRole('USER')}"><a
+								class="btn btn-success btn-xs"
+								th:href="@{'/factura/form/' + ${producto.id}}"
+								th:text="'crear factura'"></a></td> -->
+							<td
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+								class="btn btn-primary btn-xs"
+								th:href="@{/producto/editar/} + ${producto.id}" th:text="'editar'"></a></td>
+							<td th:if="${#request.isUserInRole('ADMIN')}"><a
+								class="btn btn-danger btn-xs"
+								th:href="@{/producto/eliminar/} + ${producto.id}" th:text="'eliminar'"
+								onclick="return confirm('Estas seguro que quieres eliminar?');"></a></td>
+						</tr>
+					</tbody>
+
+				</table>
+
+				<nav th:replace="paginator-nav :: paginator"></nav>
+			</div>
+		</div>
+
+
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>
