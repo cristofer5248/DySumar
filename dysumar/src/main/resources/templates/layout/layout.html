@@ -3,13 +3,14 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="head">
 <meta charset="UTF-8" />
-<title
-	th:text="'DySumar- ' + ${titulo}"></title>
+<title th:text="'DySumar- ' + ${titulo}"></title>
 <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 <link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}" />
 
-<link rel="shortcut icon" type="image/png" th:href="@{/images/icono.png}"/>
-<link rel="shortcut icon" type="image/png" th:href="@{/images/icono.png}"/>
+<link rel="shortcut icon" type="image/png"
+	th:href="@{/images/icono.png}" />
+<link rel="shortcut icon" type="image/png"
+	th:href="@{/images/icono.png}" />
 </head>
 <body>
 
@@ -23,23 +24,60 @@
 			<div class="collapse navbar-collapse">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
+
 					<li
 						th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"
-						class="nav-item"><a class="nav-link" href="#about"
-						th:href="@{/clientes}">Clientes</a></li>
-					<li class="nav-item"><a class="nav-link" href="#about"
-						th:href="@{/producto/listar}">Productos</a></li>
-					<li
-						th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"
-						class="nav-item"><a class="nav-link" href="#about"
-						th:href="@{/taller/ver}">Inventario</a></li>
-					<li th:if="${#request.isUserInRole('ADMIN')}" class="nav-item"><a
-						class="nav-link" href="#about" th:href="@{/user/ver}">Proveedores</a></li>
-					<li th:if="${#request.isUserInRole('USER')}" class="nav-item"><a
-						class="nav-link" href="#about" th:href="@{/bitacora/ver}">Factura</a></li>
-					<li	th:if="!${#request.isUserInRole('ADMIN')} AND !${#request.isUserInRole('USER')}"
-						class="nav-item"><a class="nav-link" href="#about"
-						th:href="@{/movimientos/ver}">Movimientos</a></li>
+						class="nav-item dropdown"><a class="nav-link dropdown-toggle"
+						href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false"> Clientes </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="#about" th:href="@{/clientes}">Clientes</a>
+							<a class="dropdown-item" href="#">Direcciones</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="#">Giros</a>
+						</div></li>
+
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"> Entradas </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="#about"
+								th:href="@{/producto/listar}">Productos</a> 
+								<a
+								class="dropdown-item" th:href="@{/inventario/listar}">Inventario</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="#">Movimientos</a>
+						</div></li>
+
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"> Salidas </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="#about"
+								th:if="!${#request.isUserInRole('ADMIN')} AND !${#request.isUserInRole('USER')}"
+								th:href="@{/producto/listar}">Facturas</a> <a
+								class="dropdown-item" href="#">Historial de Salidas</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="#">Movimientos</a>
+						</div></li>
+
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"> Productos </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="#about"
+								th:href="@{/producto/listar}">Marcas</a> <a
+								class="dropdown-item" href="#">Proveedores</a> <a
+								class="dropdown-item" href="#">Categorias</a> <a
+								class="dropdown-item" href="#">Descuentos</a> <a
+								class="dropdown-item" href="#">Margenes</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" href="#">Buscar una cotizacion</a>
+						</div></li>
+
 				</ul>
 
 				<ul class="navbar-nav navbar-right">
@@ -91,8 +129,7 @@
 				Boot</a> y <a href="http://www.thymeleaf.org">Thymeleaf</a>.
 		</p>
 		<p>
-			Soporte: christopher.emm01@gmail.com<br /> &copy;
-			<br />
+			Soporte: christopher.emm01@gmail.com<br /> &copy; <br />
 		</p>
 		<!-- Optional JavaScript -->
 		<!-- jQuery first, then Bootstrap JS -->

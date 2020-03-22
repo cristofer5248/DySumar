@@ -51,6 +51,7 @@ public class ProductoController {
 		Producto productos = new Producto();
 		model.put("producto", productos);
 		model.put("titulo", "Crear nuevo producto");
+		model.put("nullchecker", 1);
 		return "/productos/productoform";
 	}
 
@@ -104,7 +105,7 @@ public class ProductoController {
 		model.put("margenid", producto.getMargen().getId());
 		model.put("presentacionid", producto.getPresentacion().getId());
 		model.put("proveedorid", producto.getProveedor().getId());
-		
+		model.put("nullchecker", 0);
 		model.put("titulo", "Editar Producto");
 		return "/productos/productoform";
 	}
