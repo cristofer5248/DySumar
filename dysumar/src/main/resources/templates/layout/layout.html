@@ -4,9 +4,10 @@
 <head th:fragment="head">
 <meta charset="UTF-8" />
 <title th:text="'DySumar- ' + ${titulo}"></title>
+
 <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 <link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}" />
-
+<link rel="stylesheet" th:href="@{/css/crudanimation.css}" />
 <link rel="shortcut icon" type="image/png"
 	th:href="@{/images/icono.png}" />
 <link rel="shortcut icon" type="image/png"
@@ -55,8 +56,9 @@
 						role="button" data-toggle="dropdown" aria-haspopup="true"
 						aria-expanded="false"> Salidas </a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="#about"
-								th:if="!${#request.isUserInRole('ADMIN')} AND !${#request.isUserInRole('USER')}"
+							<a 
+							class="dropdown-item" href="#about"
+								th:if="${#request.isUserInRole('ADMIN')}"
 								th:href="@{/producto/listar}">Facturas</a> <a
 								class="dropdown-item" href="#">Historial de Salidas</a>
 							<div class="dropdown-divider"></div>
@@ -137,6 +139,7 @@
 		<script th:src="@{/js/popper.min.js}"></script>
 		<script th:src="@{/js/bootstrap.min.js}"></script>
 		<script th:src="@{/js/jquery-ui.min.js}"></script>
+		<script th:src="@{/js/animeddelete.js}"></script>
 	</footer>
 </body>
 </html>

@@ -1,5 +1,7 @@
 package com.grupoq.app.models.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +43,12 @@ public class IProductoServiceImpl implements IProductoService {
 	public Producto findOne(Long id) {
 		// TODO Auto-generated method stub
 		return productosDao.findById(id).orElse(null);
+	}
+
+	@Override
+	public List<Producto> findAllList() {
+		// TODO Auto-generated method stub
+		return (List<Producto>) productosDao.findAll();
 	}
 
 }

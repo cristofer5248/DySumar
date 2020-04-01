@@ -2,6 +2,8 @@ package com.grupoq.app.models.service;
 
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,30 @@ public class IInventarioServiceImpl implements IInventarioService {
 	public Page<Inventario> findAll(Pageable pageable) {
 		// TODO Auto-generated method stub
 		return inventarioDao.findAll(pageable);
+	}
+
+	@Override
+	public void save(Inventario inventario) {
+		inventarioDao.save(inventario);
+		
+	}
+
+	@Override
+	public List<String> sumarStock(Long id) {
+		// TODO Auto-generated method stub
+		return inventarioDao.sumarStock(id);
+	}
+
+	@Override
+	public void delete(Long id) {
+		inventarioDao.deleteById(id);
+		
+	}
+
+	@Override
+	public Inventario findById(Long id) {
+		// TODO Auto-generated method stub
+		return inventarioDao.findById(id).orElse(null);
 	}
 
 

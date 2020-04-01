@@ -22,10 +22,13 @@
 						<tr>
 							<th
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">id</th>
-							<th>nombre</th>
-							<th>apellido</th>
-							<th>email</th>
-							<th>fecha</th>
+							<th>Codigo</th>
+							<th>Nombre</th>
+							<th>Apellido</th>
+							<th>Email</th>
+							<th th:if="${#request.isUserInRole('ADMIN')}">DUI</th>
+							<th th:if="${#request.isUserInRole('ADMIN')}">Giro</th>
+							<th>Fecha de registro</th>
 							<th
 								th:if="${#request.isUserInRole('USER')}">crear
 								factura</th>
@@ -41,9 +44,12 @@
 								class="btn btn-primary btn-xs"
 								th:href="@{/vercliente/} + ${cliente.id}"
 								th:text="${cliente.id}"></a></td>
+							<td th:text="${cliente.codigo}"></td>
 							<td th:text="${cliente.nombre}"></td>
 							<td th:text="${cliente.apellido}"></td>
 							<td th:text="${cliente.email}"></td>
+							<td th:if="${#request.isUserInRole('ADMIN')}" th:text="${cliente.dui}"></td>
+							<td th:if="${#request.isUserInRole('ADMIN')}" th:text="${cliente.giro.nombre}">DUI></td>
 							<td th:text="${cliente.createAt}"></td>
 							<td
 								th:if="${#request.isUserInRole('USER')}"><a

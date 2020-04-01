@@ -61,6 +61,8 @@ public class Producto implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Descuento descuento;
 	
+	private int stock;
+	
 	public Producto() {
 		
 	}
@@ -131,6 +133,12 @@ public class Producto implements Serializable {
 	}
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
+	}
+	public int getStock() {
+		return stock;
+	}
+	public void setStock(int stock) {
+		this.stock = stock;
 	}
 
 	

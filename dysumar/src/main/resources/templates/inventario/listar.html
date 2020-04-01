@@ -14,7 +14,7 @@
 
 				<h4 class="card-title">
 					<a th:if="${#request.isUserInRole('ADMIN')}"
-						th:href="@{/inventario/nuevo}" class="btn btn-primary btn-xs">Inventariar</a>
+						th:href="@{/producto/listar}" class="btn btn-primary btn-xs">Inventariar</a>
 				</h4>
 				<table class="table table-striped table-bordered">
 					<thead class="thead-inverse">
@@ -23,15 +23,14 @@
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">id</th>
 							<th>Codigo</th>
 							<th>Nombre</th>
-							
-							<th>Marca</th>
-							<th>Categoria</th>
-							<th>Proveedor</th>
-							<th>Unidad</th>
+							<th>Proveedor</th>							
 							<th>Stock</th>
-							<th>Precio</th>							
-							<th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">editar</th>
+							<th>M</th>
+							<th>P</th>							
+							<th>P.V</th>		
+							<th>Inversion</th>					
+							<th>Estimacion</th>							
+														
 							<th th:if="${#request.isUserInRole('ADMIN')}">eliminar</th>
 						</tr>
 					</thead>
@@ -40,25 +39,22 @@
 							<td
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
 								class="btn btn-primary btn-xs"
-								th:href="@{/verproducto/} + ${inventario.id}"
+								th:href="@{/producto/} + ${inventario.id}"
 								th:text="${inventario.producto.id}"></a></td>
 							<td th:text="${inventario.producto.codigo}"></td>	
-							<td th:text="${inventario.producto.nombrep}"></td>
-							<td th:text="${inventario.producto.marca.nombrem}"></td>
-							<td th:text="${inventario.producto.categoria.nombre}"></td>
-							<td th:text="${inventario.producto.proveedor.nombre}"></td>
-							<td th:text="${inventario.producto.presentacion.unidad}"></td>
-							<td th:text="${inventario.stock}"></td>
-							<td th:text="${inventario.producto.precio}"></td>
+							<td th:text="${inventario.producto.nombrep}"></td>													
+							<td th:text="${inventario.producto.proveedor.nombre}"></td>							
+							<td th:text="${inventario.stock}"></td>							
+							<td th:text="${inventario.producto.margen.porcentaje}+'%'"></td>
+							<td th:text="'$'+${inventario.producto.precio}"></td>							
+							<td class="mm" th:text="'$'+${#numbers.formatDecimal((inventario.producto.precio * (inventario.producto.margen.porcentaje/100)+inventario.producto.precio), 0, 'COMMA', 2, 'POINT')}"></td>
+							<td th:text="'$'+${#numbers.formatDecimal((inventario.producto.precio*inventario.stock), 0, 'COMMA', 2, 'POINT')}"></td>
+							<td class="mm" th:text="'$'+${#numbers.formatDecimal(((inventario.producto.precio * (inventario.producto.margen.porcentaje/100)+inventario.producto.precio)*inventario.stock), 0, 'COMMA', 2, 'POINT')}"></td>
 <!-- 							<td
 								th:if="${#request.isUserInRole('USER')}"><a
 								class="btn btn-success btn-xs"
 								th:href="@{'/factura/form/' + ${inventario.id}}"
-								th:text="'crear factura'"></a></td> -->
-							<td
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
-								class="btn btn-primary btn-xs"
-								th:href="@{/inventario/editar/} + ${inventario.id}" th:text="'editar'"></a></td>
+								th:text="'crear factura'"></a></td> -->							
 							<td th:if="${#request.isUserInRole('ADMIN')}"><a
 								class="btn btn-danger btn-xs"
 								th:href="@{/inventario/eliminar/} + ${inventario.id}" th:text="'eliminar'"
@@ -76,5 +72,9 @@
 	</div>
 
 	<footer th:replace="layout/layout :: footer"></footer>
+	<script>
+	/* var mm = document.getElementsByClassName('mm');
+	alert(mm[0].value); */
+	</script>
 </body>
 </html>

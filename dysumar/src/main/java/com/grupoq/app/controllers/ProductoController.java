@@ -1,5 +1,6 @@
 package com.grupoq.app.controllers;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -13,10 +14,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -63,7 +66,8 @@ public class ProductoController {
 			model.addAttribute("titulo", "Formulario de Productos");
 			return "/productos/productoform";
 		}
-		String mensajeFlash = (producto.getId() != null) ? "producto editado con éxito!" : "Producto creado con éxito!";
+		String mensajeFlash = (producto.getId() != null) ? "producto editado con éxito!" : "Producto creado con éxito!"; 
+		if(producto.getId()==null) {producto.setStock(0);}
 		productoService.save(producto);
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
@@ -75,8 +79,15 @@ public class ProductoController {
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 
 		if (id > 0) {
-			productoService.delete(id);
-			flash.addFlashAttribute("success", "Producto eliminado con éxito!");
+			try {
+				productoService.delete(id);
+				flash.addFlashAttribute("success", "Producto eliminado con éxito!");
+			} catch (Exception e) {
+				flash.addFlashAttribute("success", "El producto posiblemente tiene registros de inventariado, no se puede eliminar!");
+				return "redirect:/producto/listar";
+			}
+			
+			
 
 		}
 		return "redirect:/producto/listar";
@@ -108,6 +119,12 @@ public class ProductoController {
 		model.put("nullchecker", 0);
 		model.put("titulo", "Editar Producto");
 		return "/productos/productoform";
+	}
+	
+	@GetMapping(value = "/cargar_productos", produces = { "application/json" })
+	public @ResponseBody List<Producto> marcaTodosJson() {
+		List<Producto> list = productoService.findAllList();
+		return list;
 	}
 
 }

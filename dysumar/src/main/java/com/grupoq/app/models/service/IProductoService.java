@@ -3,6 +3,9 @@ package com.grupoq.app.models.service;
 
 
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 
 import com.grupoq.app.models.entity.Producto;
@@ -14,4 +17,6 @@ public interface IProductoService {
 	public void delete(Long id);
 	
 	public Producto findOne(Long id);
+	
+	public List<Producto> findAllList();
 }

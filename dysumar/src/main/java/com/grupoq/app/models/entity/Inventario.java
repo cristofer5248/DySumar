@@ -1,7 +1,9 @@
 package com.grupoq.app.models.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -9,6 +11,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "inventario")
@@ -18,9 +25,15 @@ public class Inventario implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)	
 	private Producto producto;
 	private int stock;
+	
+	
+	@Column(name = "create_at")
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date fecha;
 	//descuentos y margenes
 	private static final long serialVersionUID = 1L;
 
@@ -50,6 +63,14 @@ public class Inventario implements Serializable{
 
 	public void setStock(int stock) {
 		this.stock = stock;
+	}
+
+	public Date getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
 	}
 	
 }
