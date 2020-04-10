@@ -106,9 +106,9 @@ const url3 = "/margen/cargar_margen";
 $.getJSON(url3,function(data){
 	$.each(data,function(key,entry){
 		if(id3==entry.id){
-		margen.append($('<option selected></option>').attr('value',entry.id).text(entry.porcentaje));
+		margen.append($('<option selected></option>').attr('value',entry.id).text(entry.porcentaje+"%"));
 		}else{
-			margen.append($('<option></option>').attr('value',entry.id).text(entry.porcentaje));	
+			margen.append($('<option></option>').attr('value',entry.id).text(entry.porcentaje+"%"));	
 		}
 	})
 });

@@ -58,13 +58,14 @@
 							<td th:text="${producto.proveedor.nombre}"></td>
 							<td th:text="${producto.presentacion.unidad}"></td>
 							<td th:text="${producto.stock}"></td>
-							<td	th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
-								th:href="@{'/inventario/nuevo/' + ${producto.id}}">
+							<td
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+								th:href="@{'/descuento/listar/' + ${producto.id}}">
 									<div class='icon'>
-										<i class='fa fa-check'></i>
+										<i class='fa fa-percent'></i>
 									</div>
 									<div class='text check'>
-										<span>Inventariar</span>
+										<span>Descuentos</span>
 									</div>
 							</a></td>
 							<td th:if="${#request.isUserInRole('ADMIN')}"><a
@@ -78,7 +79,7 @@
 							</a></td>
 							<td th:if="${#request.isUserInRole('ADMIN')}"><a
 								th:href="@{/producto/eliminar/} + ${producto.id}"
-								onclick="return confirm('Estas seguro que quieres eliminar?');">
+								onclick="return confirm('¿Esta seguro?');">
 									<div class='icon'>
 										<i class='fa fa-trash'></i>
 									</div>
@@ -99,5 +100,15 @@
 	</div>
 
 	<footer th:replace="layout/layout :: footer"></footer>
+	<script th:inline="javascript">
+	var x = [[${error}]];
+	var y = [[${success}]];
+	
+	if(x!=null){
+	alertify.error(x);
+	}
+	if(y!=null){ alertify.alert('Exito!', y, function(){ alertify.success('Ok'); });}
+	
+	</script>
 </body>
 </html>

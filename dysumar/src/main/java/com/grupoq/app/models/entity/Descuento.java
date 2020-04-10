@@ -3,9 +3,11 @@ package com.grupoq.app.models.entity;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -17,6 +19,9 @@ public class Descuento implements Serializable {
 	private Long id;
 	private int cantidad;
 	private double porcentaje;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Producto producto;
 		
 	private static final long serialVersionUID = 1L;
 
@@ -47,4 +52,15 @@ public class Descuento implements Serializable {
 	public void setPorcentaje(double porcentaje) {
 		this.porcentaje = porcentaje;
 	}
+
+	public Producto getProducto() {
+		return producto;
+	}
+
+	public void setProducto(Producto producto) {
+		this.producto = producto;
+	}
+
+
+	
 }

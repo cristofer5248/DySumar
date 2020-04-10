@@ -20,4 +20,28 @@ public class IDescuentoServiceImpl implements IDescuentoService {
 		return (List<Descuento>) descuentoDao.findAll();
 	}
 
+	@Override
+	public void save(Descuento descuento) {
+		descuentoDao.save(descuento);
+		
+	}
+
+	@Override
+	public void delete(Long id) {
+		descuentoDao.deleteById(id);
+		
+	}
+
+	@Override
+	public Descuento findBy(Long id) {
+		// TODO Auto-generated method stub
+		return descuentoDao.findById(id).orElse(null);
+	}
+
+	@Override
+	public List<Descuento> findByProductoId(Long id) {
+		// TODO Auto-generated method stub
+		return descuentoDao.findByProductoId(id);
+	}
+
 }

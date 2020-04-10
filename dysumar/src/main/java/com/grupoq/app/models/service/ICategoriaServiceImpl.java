@@ -20,4 +20,22 @@ public class ICategoriaServiceImpl implements ICategoriaService {
 		return (List<Categoria>) categoriaDao.findAll();
 	}
 
+	@Override
+	public void delete(Long id) {
+		categoriaDao.deleteById(id);
+		
+	}
+
+	@Override
+	public Categoria findBy(Long id) {
+		// TODO Auto-generated method stub
+		return categoriaDao.findById(id).orElse(null);
+	}
+
+	@Override
+	public void save(Categoria categoria) {
+		categoriaDao.save(categoria);
+		
+	}
+
 }

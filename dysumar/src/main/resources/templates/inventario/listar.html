@@ -14,7 +14,7 @@
 
 				<h4 class="card-title">
 					<a th:if="${#request.isUserInRole('ADMIN')}"
-						th:href="@{/producto/listar}" class="btn btn-primary btn-xs">Inventariar</a>
+						th:href="@{/inventario/nuevo}" class="btn btn-primary btn-xs">Ingresar</a>
 				</h4>
 				<table class="table table-striped table-bordered">
 					<thead class="thead-inverse">
@@ -39,8 +39,8 @@
 							<td
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
 								class="btn btn-primary btn-xs"
-								th:href="@{/producto/} + ${inventario.id}"
-								th:text="${inventario.producto.id}"></a></td>
+								th:href="@{/inventario/} + ${inventario.codigoProveedor}"
+								th:text="${inventario.codigoProveedor}"></a></td>
 							<td th:text="${inventario.producto.codigo}"></td>	
 							<td th:text="${inventario.producto.nombrep}"></td>													
 							<td th:text="${inventario.producto.proveedor.nombre}"></td>							

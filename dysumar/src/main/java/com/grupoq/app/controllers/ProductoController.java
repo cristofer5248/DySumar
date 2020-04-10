@@ -83,7 +83,7 @@ public class ProductoController {
 				productoService.delete(id);
 				flash.addFlashAttribute("success", "Producto eliminado con éxito!");
 			} catch (Exception e) {
-				flash.addFlashAttribute("success", "El producto posiblemente tiene registros de inventariado, no se puede eliminar!");
+				flash.addFlashAttribute("error", "El producto posiblemente tiene registros de inventariado, no se puede eliminar!");
 				return "redirect:/producto/listar";
 			}
 			

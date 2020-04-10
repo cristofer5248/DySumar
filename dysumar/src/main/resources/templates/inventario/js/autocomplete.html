@@ -5,81 +5,114 @@
 	<script type="text/javascript" th:fragment="javascript">
 		$(document).ready(function() {
 
-// 			$("#cargar_categoria").autocomplete({
 
-// 				source : function(request, response) {
-// 					$.ajax({
-// 						url : "/categoria/cargar_categoria/" + request.term,
-// 						dataType : "json",
-// 						data : {
-// 							term : request.term
-// 						},
-// 						success : function(data) {
-// 							response($.map(data, function(item) {
-// 								return {
-// 									value : item.id,
-// 									label : item.modelo,
-// 									precio : item.placas,
-// 								};
-// 							}));
-// 						},
-// 					});
-// 				},
-// 				select : function(event, ui) {
-// 					$("#cargar_vehiculos").val(ui.item.value)
+			$("#cargar_producto").autocomplete({
+
+				source : function(request, response) {
+					var provid = $("#cargar_proveedor").val();
+					$.ajax({
+						url : "/descuento/cargar_producto/" + request.term+"/"+provid,
+						dataType : "json",
+						data : {
+							term : request.term
+							
+						},
+						success : function(data) {
+							
+							response($.map(data, function(item) {
+								return {
+									value : item.id,
+									label : item.codigo+"-" +item.nombrep +" - "+item.proveedornombre,
+									precio: item.precio
+									
+								};
+									
+							}));
+						},
+					});
+				},
+				select : function(event, ui) {
+// 					$("#cargar_producto").val(ui.item.value)
+					if(itemsHelper.hasProducto(ui.item.value)){
+						itemsHelper.incrementaCantidad(ui.item.value, ui.item.precio)
+						return false;
+					}
+					var linea = $("#plantillaItemsFactura").html();
+					linea = linea.replace(/{ID}/g,ui.item.value);
+					linea = linea.replace(/{NOMBRE}/g,ui.item.label);
+					linea = linea.replace(/{PRECIO}/g,ui.item.precio);
+					
+					$("#cargarItemProductos tbody").append(linea);
+					itemsHelper.calcularImporte(ui.item.value, ui.item.precio,1);
 					
 
-// 					return false;
-// 				}
-// 			});
-// 			$("#cargar_delegado").autocomplete({
+					return false;
+				}
+			});
+			
+	 		$("form").submit(function(){
+	 			$("#plantillaItemsFactura").remove();
+	 			return;
+	 		});
+	 		$("#cargar_proveedor").change(function(){
+	 			$("#cargar_producto").removeAttr('disabled');
+	 			return;
+	 		});
+	 		
+		});
+		
+		var itemsHelper = {
+				calcularImporte: function(id, precio, cantidad){
+					$("#total_importe_"+id).html(parseFloat(precio)* parseInt(cantidad));
+					this.calcularGranTotal();
+				},
+				hasProducto: function(id){
+					var resultado = false;
+					
+				
+				$('input[name="item_id[]"]').each(function(){
+					if(parseInt(id) == parseInt($(this).val()) ){
+						resultado = true;
+					}
+				});
+				return resultado;
+		},
+		incrementaCantidad: function(id,precio){
+			var cantidad = $("#cantidad_" +id).val() ? parseInt($("#cantidad_"+id).val()) : 0;
+			$("#cantidad_"+id).val(++cantidad);
+			this.calcularImporte(id,precio,cantidad);
+		},
+		eliminarLineaFactura: function(id){
+			$("#row_"+id).remove();
+			this.calcularGranTotal();
+		},
+		calcularGranTotal: function(){
+			var total = 0;
+			$('span[id^="total_importe_"]').each(function(){
+// 				alert(parseFloat($(this).html()).toFixed(2));
+				total+=parseFloat($(this).html());
+// 				total+=parseFloat($(this).html()).toFixed(2);
+// 				total+=Math.round(parseFloat($(this).html()*100)/100);
+			});
+			$("#gran_total").html(total);
+			$("#submit").removeAttr('disabled');
+		}
+	}
 
-// 				source : function(request, response) {
-// 					$.ajax({
-// 						url : "/taller/cargar_delegado/" + request.term,
-// 						dataType : "json",
-// 						data : {
-// 							term : request.term
-// 						},
-// 						success : function(data) {
-// 							response($.map(data, function(item) {
-// 								return {
-// 									value : item.id,
-// 									label : item.nombre,
-// 									precio : item.username,
-// 								};
-// 							}));
-// 						},
-// 					});
-// 				},
-// 				select : function(event, ui) {
-// 					$("#cargar_delegado").val(ui.item.value)
-
-// 					return false;
-// 				}
-// 			});
 
 			
-let dropdown = $('#cargar_productos')
-dropdown.empty();
-dropdown.append('<option>Selecciona</option>');
-dropdown.prop('selectedIndex',1);
-const url = "/producto/cargar_productos";
-
-//populate dropdown list wujuu
-$.getJSON(url,function(data){
-	$.each(data,function(key,entry){
-		
-		if(id1==entry.id){
-		dropdown.append($('<option selected></option>').attr('value',entry.idp).text(entry.nombrep));		
-	}else{
-			dropdown.append($('<option></option>').attr('value',entry.idp).text(entry.nombrep));
-		}
-		
-	})
-});
-
-
+		let proveedor = $('#cargar_proveedor')
+		proveedor.empty();
+		proveedor.append('<option selected="true" disabled>Selecciona</option>');
+		proveedor.prop('selectedIndex',0);
+		const url5 = "/proveedor/cargar_proveedor";
+		//populate dropdown list wujuu
+		$.getJSON(url5,function(data){
+			$.each(data,function(key,entry){
+				
+				proveedor.append($('<option></option>').attr('value',entry.id).text(entry.nombre));	
+				
+			})
 		});
 		
 	</script>

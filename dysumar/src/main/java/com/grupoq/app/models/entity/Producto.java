@@ -1,15 +1,20 @@
 package com.grupoq.app.models.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,6 +24,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "productos")
@@ -42,30 +49,41 @@ public class Producto implements Serializable {
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date fecha;
 	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Marca marca;
 	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Proveedor proveedor;
 	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Presentacion presentacion;
 	private double precio;
 	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Categoria categoria;
 	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Margen margen;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Descuento descuento;
+	@OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name="inventario_id")
+	private List<Inventario> inventarios;
 	
 	private int stock;
 	
 	public Producto() {
+		this.inventarios = new ArrayList<Inventario>();
 		
 	}
+	
+	public void addProductoInventario(Inventario inventario) {
+		this.inventarios.add(inventario);
+		}
 	private static final long serialVersionUID = 1L;
 	public Long getId() {
 		return id;
@@ -122,12 +140,6 @@ public class Producto implements Serializable {
 	public void setMargen(Margen margen) {
 		this.margen = margen;
 	}
-	public Descuento getDescuento() {
-		return descuento;
-	}
-	public void setDescuento(Descuento descuento) {
-		this.descuento = descuento;
-	}
 	public Date getFecha() {
 		return fecha;
 	}
@@ -139,6 +151,12 @@ public class Producto implements Serializable {
 	}
 	public void setStock(int stock) {
 		this.stock = stock;
+	}
+	public List<Inventario> getInventarios() {
+		return inventarios;
+	}
+	public void setInventarios(List<Inventario> inventarios) {
+		this.inventarios = inventarios;
 	}
 
 	

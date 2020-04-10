@@ -51,4 +51,15 @@ public class IProductoServiceImpl implements IProductoService {
 		return (List<Producto>) productosDao.findAll();
 	}
 
+	@Override
+	public List<Producto> findByNombrep(String term) {
+		return productosDao.findByNombrep(term);
+	}
+
+	@Override
+	public List<Producto> findByNombrepAndProveedorId(String term, Long term2) {
+		// TODO Auto-generated method stub
+		return productosDao.findByNombrepAndProveedorId(term, term2);
+	}
+
 }

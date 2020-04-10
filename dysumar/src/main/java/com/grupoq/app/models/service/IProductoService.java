@@ -19,4 +19,6 @@ public interface IProductoService {
 	public Producto findOne(Long id);
 	
 	public List<Producto> findAllList();
+	public List<Producto> findByNombrep(String term);	
+	public List<Producto> findByNombrepAndProveedorId(String term, Long term2);
 }

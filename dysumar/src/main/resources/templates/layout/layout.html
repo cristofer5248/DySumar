@@ -8,6 +8,11 @@
 <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 <link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}" />
 <link rel="stylesheet" th:href="@{/css/crudanimation.css}" />
+<link rel="stylesheet" th:href="@{/css/alertify.min.css}" />
+<link rel="stylesheet" th:href="@{/themes/default.min.css}" />
+<link rel="stylesheet" th:href="@{/css/bootstrap-datepicker.css}" />
+
+
 <link rel="shortcut icon" type="image/png"
 	th:href="@{/images/icono.png}" />
 <link rel="shortcut icon" type="image/png"
@@ -44,9 +49,8 @@
 						aria-expanded="false"> Entradas </a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="#about"
-								th:href="@{/producto/listar}">Productos</a> 
-								<a
-								class="dropdown-item" th:href="@{/inventario/listar}">Inventario</a>
+								th:href="@{/producto/listar}">Productos</a> <a
+								class="dropdown-item" th:href="@{/inventario/listar}">Ingresos</a>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="#">Movimientos</a>
 						</div></li>
@@ -56,11 +60,10 @@
 						role="button" data-toggle="dropdown" aria-haspopup="true"
 						aria-expanded="false"> Salidas </a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<a 
-							class="dropdown-item" href="#about"
+							<a class="dropdown-item" href="#about"
 								th:if="${#request.isUserInRole('ADMIN')}"
-								th:href="@{/producto/listar}">Facturas</a> <a
-								class="dropdown-item" href="#">Historial de Salidas</a>
+								th:href="@{/ventas/nuevo}">Ventas</a> <a
+								class="dropdown-item" th:href="@{/ventas/listar}">Historial de Salidas</a>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="#">Movimientos</a>
 						</div></li>
@@ -70,11 +73,10 @@
 						role="button" data-toggle="dropdown" aria-haspopup="true"
 						aria-expanded="false"> Productos </a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="#about"
-								th:href="@{/producto/listar}">Marcas</a> <a
-								class="dropdown-item" href="#">Proveedores</a> <a
-								class="dropdown-item" href="#">Categorias</a> <a
-								class="dropdown-item" href="#">Descuentos</a> <a
+							<a class="dropdown-item" href="#about" th:href="@{/marca/listar}">Marcas</a>
+							<a class="dropdown-item" th:href="@{/proveedor/listar}">Proveedores</a> <a
+								class="dropdown-item" th:href="@{/categoria/listar}">Categorias</a> <a
+								class="dropdown-item" th:href="@{/descuento/nuevo}">Descuentos</a> <a
 								class="dropdown-item" href="#">Margenes</a>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="#">Buscar una cotizacion</a>
@@ -140,6 +142,18 @@
 		<script th:src="@{/js/bootstrap.min.js}"></script>
 		<script th:src="@{/js/jquery-ui.min.js}"></script>
 		<script th:src="@{/js/animeddelete.js}"></script>
+		<script th:src="@{/js/alertify.min.js}"></script>
+		<script th:src="@{/js/bootstrap-datepicker.min.js}"></script>
+		<script th:inline="javascript">
+	var x = [[${error}]];
+	var y = [[${success}]];
+	
+	if(x!=null){
+	alertify.error(x);
+	}
+	if(y!=null){ alertify.alert('Exito!', y, function(){ alertify.success('Ok'); });}
+	
+	</script>
 	</footer>
 </body>
 </html>

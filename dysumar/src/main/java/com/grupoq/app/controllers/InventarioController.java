@@ -1,9 +1,12 @@
 package com.grupoq.app.controllers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.Valid;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,7 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,7 +56,7 @@ public class InventarioController {
 	public String nuevo(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 		Inventario inventario = new Inventario();
 		Producto productoTemp = new Producto();
-		if (id > 0) {			
+		if (id > 0) {
 			productoTemp = productoService.findOne(id);
 			if (productoTemp == null) {
 				flash.addFlashAttribute("error", "El ID del producto ha inventariar no existe en la BBDD!");
@@ -65,51 +68,77 @@ public class InventarioController {
 		}
 		inventario.setProducto(productoTemp);
 		model.put("inventario", inventario);
-		model.put("infProducto",productoTemp.getNombrep() + " con el codigo " + productoTemp.getCodigo());
-		model.put("titulo", "Inventariar");
+		model.put("infProducto", productoTemp.getNombrep() + " con el codigo " + productoTemp.getCodigo());
+		model.put("titulo", "Ingreso");
 		model.put("nullchecker", 1);
 		model.put("nullchecker", 0);
-		return "/inventario/form";		
+		return "/inventario/form";
 	}
 
 	@Secured("ROLE_ADMIN")
-	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public String guardar(@Valid Inventario inventario, BindingResult result, Model model, RedirectAttributes flash,
-			SessionStatus status) {
-		if (result.hasErrors()) {
-			model.addAttribute("titulo", "Inventariado");
-			return "/producto/listar";
-		}
-		String mensajeFlash = (inventario.getId() != null) ? "inventario editado con éxito!"
-				: "Inventario creado con éxito!";		
-		inventarioService.save(inventario);
-		// llenado de nuevo stock/ suma con inventario
-		List<String> total = inventarioService.sumarStock(inventario.getProducto().getId());
-		Producto productoTemp = inventario.getProducto();
-		productoTemp.setStock(Integer.parseInt(total.get(0).toString()));
-		productoService.save(productoTemp);
+	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
+	public String nuevo2(Map<String, Object> model, RedirectAttributes flash) {
+		Inventario inventario = new Inventario();			
+		model.put("inventario", inventario);		
+		model.put("titulo", "Inventariar");		
+		return "/inventario/form2";
+	}
+	
 
-		System.out.print("/n Veamos si sale :/n" + total.get(0).toString());
+	@Secured("ROLE_ADMIN")
+	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	public String guardar(
+			@RequestParam(name="fecha", required=true) String fecha,
+			@RequestParam(name="codigo", required=true) String codigo,
+			@RequestParam(name="item_id[]", required=false) Long[] itemId,
+			@RequestParam(name="cantidad[]", required=false) Integer[] cantidad , Model model, RedirectAttributes flash,
+			SessionStatus status) throws ParseException {
+		String pattern = "MM-dd-yyyy";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		Date date1 = simpleDateFormat.parse(fecha);
+
+//		if (result.hasErrors()) {
+//			model.addAttribute("titulo", "Inventariado");
+//			return "/producto/listar";
+//		}
+		String mensajeFlash = (itemId != null) ? "inventario editado con éxito!"
+				: "Inventario creado con éxito!";
+		
+		for(int i = 0; i<itemId.length; i++) {
+			Inventario inventario = new Inventario();
+			Producto producto = productoService.findOne(itemId[i]);
+			inventario.setProducto(producto);
+			inventario.setStock(cantidad[i]);
+			inventario.setFecha(date1);
+			inventario.setCodigoProveedor(codigo);
+			inventarioService.save(inventario);		
+			// llenado de nuevo stock/ suma con inventario
+			List<String> total = inventarioService.sumarStock(itemId[i]);
+			producto.setStock(Integer.parseInt(total.get(0).toString()));
+			productoService.save(producto);
+		}
+		
 
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:/inventario/listar";
 	}
+
 	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/eliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 
 		if (id > 0) {
 			Inventario inventarioTemp = inventarioService.findById(id);
-			if(inventarioTemp!=null) {
-			int stockDeInventario = inventarioTemp.getStock();
-			System.out.print("Codigo para eliminar de inventario /n "+stockDeInventario);
-			Producto productoTemp = inventarioTemp.getProducto();
-			int stockTemp = productoTemp.getStock()-stockDeInventario;
-			productoTemp.setStock(stockTemp);
-			productoService.save(productoTemp);
-			inventarioService.delete(id);
-			flash.addFlashAttribute("success", "Inventariado eliminado con éxito!");
+			if (inventarioTemp != null) {
+				int stockDeInventario = inventarioTemp.getStock();
+				System.out.print("Codigo para eliminar de inventario /n " + stockDeInventario);
+				Producto productoTemp = inventarioTemp.getProducto();
+				int stockTemp = productoTemp.getStock() - stockDeInventario;
+				productoTemp.setStock(stockTemp);
+				productoService.save(productoTemp);
+				inventarioService.delete(id);
+				flash.addFlashAttribute("success", "Inventariado eliminado con éxito!");
 			}
 		}
 		return "redirect:/inventario/listar";
