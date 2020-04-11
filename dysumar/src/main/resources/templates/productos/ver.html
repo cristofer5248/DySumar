@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head"></head>
+
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+
+				<h4 class="card-title">
+					<a th:if="${#request.isUserInRole('USER')}"
+						class="btn btn-primary btn-xs"
+						th:href="@{'/factura/form/' + ${producto.id}}"
+						th:text="'Crear factura'"></a>
+					<!-- 						<a -->
+					<!-- 						sec:authorize="hasRole('ROLE_ADMIN')" -->
+					<!-- 						class="btn btn-primary btn-xs" -->
+					<!-- 						th:href="@{'/taller/form/' + ${producto.id}}" -->
+					<!-- 						th:text="'Nuevo requerimiento'"></a> -->
+					<a th:if="${#request.isUserInRole('ADMIN')}"
+						class="btn btn-primary btn-xs"
+						th:href="@{'/taller/tallerform/' + ${producto.id}}"
+						th:text="'Nueva asignacion'"></a> 
+						<a class="btn btn-primary btn-xs" th:if="${not #lists.isEmpty(producto.inventarios)} AND ${#request.isUserInRole('USER')}" 
+						th:href="@{'/factura/finalizar/' + ${taller.id}}"
+						th:text="'Finalizar factura'"></a>
+
+				</h4>
+
+<!-- 				<img th:if="${#strings.length(producto.foto) > 0}"
+					class="img-thumbnail rounded float-left" style="max-width: 25%;"
+					th:src="@{'/uploads/' + ${producto.foto}}" th:alt="${producto.foto}" /> -->
+
+				<ul class="list-group">
+					<li class="list-group-item active" th:text="${producto.nombrep}"></li>
+					<li class="list-group-item" th:text="${producto.precio}"></li>
+					<li class="list-group-item" th:text="${producto.stock}"></li>
+					<li class="list-group-item" th:text="${producto.proveedor.nombre}"></li>
+				</ul>
+
+				<div th:if="${#lists.isEmpty(producto.inventarios)}" class="alert alert-info my-4"
+					th:text="'No hay inventarios de este producto ' + ${producto.nombrep} + ' ' + ${producto.codigo}"></div>
+
+				<table th:if="${not #lists.isEmpty(producto.inventarios)}"
+					class="table table-bordered table-striped my-4">
+					<thead class="thead-inverse">
+						<tr>
+							<th>id</th>
+							<th>stock</th>
+							
+							<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">ver</th> -->
+							<th sec:authorize="hasRole('ROLE_ADMIN')">eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="inventario: ${producto.inventarios}">
+							<td th:text="${inventario.id}"></td>
+							<td th:text="${inventario.stock}"></td>
+<!-- 							<td th:text="${inventario.cantidad}"></td> -->
+
+<!-- 							<td th:text="${factura.cantidad * factura.servicios.precio}"></td> -->
+							<!-- 							<td sec:authorize="hasRole('ROLE_ADMIN')"><a -->
+							<!-- 								class="btn btn-primary btn-xs" -->
+							<!-- 								th:href="@{'/factura/ver/' + ${factura.id}}" th:text="'detalle'"></a></td> -->
+							<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+								class="btn btn-danger btn-xs"
+								th:href="@{'/factura/eliminar/' + ${producto.id}}"
+								th:text="'eliminar'"
+								onclick="return confirm('¿Estas seguro que desea eliminar la factura?');"></a></td>
+						</tr>
+					</tbody>
+
+				</table>
+
+			</div>
+		</div>
+
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

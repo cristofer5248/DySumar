@@ -48,7 +48,7 @@
 							<td
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
 								class="btn btn-primary btn-xs"
-								th:href="@{/verproducto/} + ${producto.id}"
+								th:href="@{/producto/ver/} + ${producto.id}"
 								th:text="${producto.id}"></a></td>
 							<td th:text="${producto.codigo}"></td>
 							<td th:text="${producto.nombrep}"></td>

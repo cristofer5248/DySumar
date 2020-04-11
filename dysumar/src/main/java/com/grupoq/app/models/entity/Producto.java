@@ -70,8 +70,8 @@ public class Producto implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Margen margen;
 	
-	@OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name="inventario_id")
+	@OneToMany(mappedBy="producto", fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	/* @JoinColumn(name="producto") */
 	private List<Inventario> inventarios;
 	
 	private int stock;

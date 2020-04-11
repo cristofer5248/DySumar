@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-
 import com.grupoq.app.models.entity.Producto;
 import com.grupoq.app.models.service.IProductoService;
 import com.grupoq.app.util.paginator.PageRender;
@@ -66,8 +65,10 @@ public class ProductoController {
 			model.addAttribute("titulo", "Formulario de Productos");
 			return "/productos/productoform";
 		}
-		String mensajeFlash = (producto.getId() != null) ? "producto editado con éxito!" : "Producto creado con éxito!"; 
-		if(producto.getId()==null) {producto.setStock(0);}
+		String mensajeFlash = (producto.getId() != null) ? "producto editado con éxito!" : "Producto creado con éxito!";
+		if (producto.getId() == null) {
+			producto.setStock(0);
+		}
 		productoService.save(producto);
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
@@ -83,11 +84,10 @@ public class ProductoController {
 				productoService.delete(id);
 				flash.addFlashAttribute("success", "Producto eliminado con éxito!");
 			} catch (Exception e) {
-				flash.addFlashAttribute("error", "El producto posiblemente tiene registros de inventariado, no se puede eliminar!");
+				flash.addFlashAttribute("error",
+						"El producto posiblemente tiene registros de inventariado, no se puede eliminar!");
 				return "redirect:/producto/listar";
 			}
-			
-			
 
 		}
 		return "redirect:/producto/listar";
@@ -110,7 +110,7 @@ public class ProductoController {
 			return "redirect:/producto/listar";
 		}
 		model.put("producto", producto);
-		
+
 		model.put("categoriaid", producto.getCategoria().getId());
 		model.put("marcaid", producto.getMarca().getIdm());
 		model.put("margenid", producto.getMargen().getId());
@@ -120,11 +120,26 @@ public class ProductoController {
 		model.put("titulo", "Editar Producto");
 		return "/productos/productoform";
 	}
-	
+
 	@GetMapping(value = "/cargar_productos", produces = { "application/json" })
 	public @ResponseBody List<Producto> marcaTodosJson() {
 		List<Producto> list = productoService.findAllList();
 		return list;
+	}
+
+	@GetMapping(value = "/ver/{id}")
+	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+
+//		Taller taller = clienteService.findByIdTallerWithClienteWithFactura(id);
+//		List<?> taller = facturaService.probando(id);
+		Producto producto = productoService.findOne(id);
+		if (producto == null) {
+			flash.addFlashAttribute("error", "El producto no existe en la base de datos");
+			return "redirect:/producto/listar";
+		}
+		model.put("producto", producto);
+		model.put("titulo", "Detalle producto: " + producto.getNombrep());		
+		return "/productos/ver";
 	}
 
 }
