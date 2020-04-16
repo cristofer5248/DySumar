@@ -62,4 +62,16 @@ public class IProductoServiceImpl implements IProductoService {
 		return productosDao.findByNombrepAndProveedorId(term, term2);
 	}
 
+	@Override
+	public Producto fetchProductoWithInventario(Long id) {
+		// TODO Auto-generated method stub
+		return productosDao.fetchByIdWithInventario(id);
+	}
+
+	@Override
+	public Producto fetchByIdWithInventarioByCodigoP(String id) {
+		// TODO Auto-generated method stub
+		return productosDao.fetchByIdWithInventarioByCodigoP(id);
+	}
+
 }

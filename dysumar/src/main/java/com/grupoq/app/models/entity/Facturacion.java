@@ -21,7 +21,7 @@ public class Facturacion implements Serializable {
 	private Long id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	private CarritoItems carritoItems;
+	private Cotizacion cotizacion;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private TFactura tipoFactura;
@@ -51,12 +51,14 @@ public class Facturacion implements Serializable {
 		this.id = id;
 	}
 
-	public CarritoItems getCarritoItems() {
-		return carritoItems;
+
+
+	public Cotizacion getCotizacion() {
+		return cotizacion;
 	}
 
-	public void setCarritoItems(CarritoItems carritoItems) {
-		this.carritoItems = carritoItems;
+	public void setCotizacion(Cotizacion cotizacion) {
+		this.cotizacion = cotizacion;
 	}
 
 	public TFactura getTipoFactura() {

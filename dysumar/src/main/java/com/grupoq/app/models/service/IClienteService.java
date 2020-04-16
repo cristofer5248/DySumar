@@ -19,6 +19,8 @@ public interface IClienteService {
 	
 	public Cliente findOne(Long id);
 	
+	public List<Cliente> findByNombre(String term);
+	
 	public Cliente fetchByIdWithTallerWithFactura(Long id);
 	
 	public void delete(Long id);		

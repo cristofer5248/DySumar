@@ -15,7 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -103,6 +103,11 @@ public class InventarioController {
 //		}
 		String mensajeFlash = (itemId != null) ? "inventario editado con éxito!"
 				: "Inventario creado con éxito!";
+		if(itemId == null || itemId.length==0) {
+			model.addAttribute("titulo","Nuevo ingreso");
+			model.addAttribute("error","Error: El nuevo no puede tener lineas de productos vacias!");
+			return "/inventario/nuevo";
+		}
 		
 		for(int i = 0; i<itemId.length; i++) {
 			Inventario inventario = new Inventario();
@@ -142,5 +147,22 @@ public class InventarioController {
 			}
 		}
 		return "redirect:/inventario/listar";
+	}
+	
+	@GetMapping(value = "/ver/{id}")
+	public String ver(@PathVariable(value = "id") String id, Map<String, Object> model, RedirectAttributes flash) {
+
+
+		List<Inventario> inventario = inventarioService.findByIdCodigoProveedor(id);
+		if (inventario.isEmpty()) {
+			flash.addFlashAttribute("error", "El ingreso con ese codigo no existe en la base de datos");
+			return "redirect:/inventario/listar";
+		}
+		model.put("inventarios", inventario);
+		model.put("proveedor", inventario.get(0).getProducto().getProveedor().getNombre());
+		model.put("fecha", inventario.get(0).getFecha().toString());
+		model.put("codigopro", id);
+		model.put("titulo", "Detalle del ingreso : " + id);		
+		return "/inventario/ver";
 	}
 }

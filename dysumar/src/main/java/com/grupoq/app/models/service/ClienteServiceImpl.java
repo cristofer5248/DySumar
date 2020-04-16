@@ -57,8 +57,14 @@ public class ClienteServiceImpl implements IClienteService {
 
 	@Override
 	public void deleteFactura(Long id) {
-		// TODO Auto-generated method stub
+		clienteDao.deleteById(id);
 		
+	}
+
+	@Override
+	public List<Cliente> findByNombre(String term) {
+		// TODO Auto-generated method stub
+		return clienteDao.findByNombre(term);
 	}
 
 	

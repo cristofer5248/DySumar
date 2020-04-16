@@ -23,4 +23,5 @@ public interface IInventarioService {
 	public void delete(Long id);
 	
 	public Inventario findById(Long id);
+	public List<Inventario> findByIdCodigoProveedor(String id);
 }

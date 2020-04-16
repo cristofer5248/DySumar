@@ -3,6 +3,7 @@ package com.grupoq.app.controllers;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,13 +34,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.grupoq.app.models.service.IClienteService;
 import com.grupoq.app.models.service.IUploadFileService;
+import com.grupoq.app.models.dao.IClienteDirecciones;
 import com.grupoq.app.models.entity.Cliente;
+import com.grupoq.app.models.entity.ClienteDirecciones;
 //import com.bolsadeideas.springboot.app.models.entity.Cliente;
 //import com.bolsadeideas.springboot.app.models.service.IClienteService;
 //import com.bolsadeideas.springboot.app.models.service.IUploadFileService;
@@ -53,6 +57,9 @@ public class ClienteController {
 
 	@Autowired
 	private IClienteService clienteService;
+	
+	@Autowired
+	private IClienteDirecciones clientedireccionesService;
 
 	
 	@Autowired
@@ -234,6 +241,17 @@ public class ClienteController {
 
 		}
 		return "redirect:/clientes";
+	}
+	
+	@GetMapping(value = "/cargar_cliente/{term}", produces = { "application/json" })
+	public @ResponseBody List<Cliente> buscarclienteJson(@PathVariable String term) {
+		List<Cliente> list = clienteService.findByNombre(term);
+		return list;
+	}
+	@GetMapping(value = "/cargar_direcciones/{term}", produces = { "application/json" })
+	public @ResponseBody List<ClienteDirecciones> listarDireccionesJson(@PathVariable Long term) {
+		List<ClienteDirecciones> list = clientedireccionesService.findByCliente(term);
+		return list;
 	}
 
 	private boolean hasRole(String role) {

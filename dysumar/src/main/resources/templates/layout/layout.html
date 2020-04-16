@@ -9,7 +9,7 @@
 <link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}" />
 <link rel="stylesheet" th:href="@{/css/crudanimation.css}" />
 <link rel="stylesheet" th:href="@{/css/alertify.min.css}" />
-<link rel="stylesheet" th:href="@{/themes/default.min.css}" />
+<link rel="stylesheet" th:href="@{/css/themes/default.min.css}" />
 <link rel="stylesheet" th:href="@{/css/bootstrap-datepicker.css}" />
 
 
@@ -62,7 +62,7 @@
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="#about"
 								th:if="${#request.isUserInRole('ADMIN')}"
-								th:href="@{/ventas/nuevo}">Ventas</a> <a
+								th:href="@{/factura/listar}">Factura</a> <a
 								class="dropdown-item" th:href="@{/ventas/listar}">Historial de Salidas</a>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="#">Movimientos</a>

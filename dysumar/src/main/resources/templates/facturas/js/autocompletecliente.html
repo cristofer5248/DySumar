@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<script type="text/javascript" th:fragment="javascript">
+		$(document).ready(function() {
+
+
+			$("#cargar_cliente").autocomplete({
+
+				source : function(request, response) {
+// 					var provid = $("#cargar_proveedor").val();
+					$.ajax({
+						url : "/cargar_cliente/" + request.term,
+						dataType : "json",
+						data : {
+							term : request.term
+							
+						},
+						success : function(data) {
+							
+							response($.map(data, function(item) {
+								return {
+									value : item.id,
+									label : item.codigo+"-" +item.nombre +" - "+item.apellido,
+									precio: item.precio
+									
+								};
+									
+							}));
+						},
+					});
+				},
+				select : function(event, ui) {
+					$("#cargar_cliente").val(ui.item.value);
+					$("#cargar_direccion").removeAttr('disabled');
+					var idcliente = $("#cargar_cliente").val();
+					let dropdown = $('#cargar_direccion')
+					dropdown.empty();
+					dropdown.append('<option>Selecciona</option>');
+					dropdown.prop('selectedIndex',1);
+					const url = "/cargar_direcciones/"+idcliente;
+
+					//populate dropdown list wujuu
+					$.getJSON(url,function(data){
+						$.each(data,function(key,entry){
+							dropdown.append($('<option selected></option>').attr('value',entry.id).text(entry.direcciones.nombre));															
+						})
+					});
+					
+					
+					return false;
+				}
+		});				
+			$("#cargar_cliente").change(function(){
+	 			$("#cargar_direccion").removeAttr('disabled');
+	 			return;
+	 		});	
+			
+	});
+
+
+			
+		
+		
+	</script>
+</body>
+</html>

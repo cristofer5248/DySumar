@@ -21,4 +21,7 @@ public interface IProductoService {
 	public List<Producto> findAllList();
 	public List<Producto> findByNombrep(String term);	
 	public List<Producto> findByNombrepAndProveedorId(String term, Long term2);
+	
+	public Producto fetchProductoWithInventario(Long id);
+	public Producto fetchByIdWithInventarioByCodigoP(String id);
 }

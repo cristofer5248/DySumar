@@ -18,7 +18,7 @@ public class FormaDePago implements Serializable{
 	private Long id;
 	@Column(length = 30)
 	private String nombre;
-	private double total;
+//	private double total;
 	private FormaDePago() {
 		
 	}
@@ -38,7 +38,7 @@ public class FormaDePago implements Serializable{
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-
+/*
 	public double getTotal() {
 		return total;
 	}
@@ -46,7 +46,7 @@ public class FormaDePago implements Serializable{
 	public void setTotal(double total) {
 		this.total = total;
 	}
-
+*/
 	/**
 	 * 
 	 */

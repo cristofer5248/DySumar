@@ -48,6 +48,12 @@ public class IInventarioServiceImpl implements IInventarioService {
 		return inventarioDao.findById(id).orElse(null);
 	}
 
+	@Override
+	public List<Inventario> findByIdCodigoProveedor(String id) {
+		// TODO Auto-generated method stub
+		return inventarioDao.findByIdCodigoProveedor(id);
+	}
+
 
 	
 	

@@ -132,7 +132,9 @@ public class ProductoController {
 
 //		Taller taller = clienteService.findByIdTallerWithClienteWithFactura(id);
 //		List<?> taller = facturaService.probando(id);
-		Producto producto = productoService.findOne(id);
+//		Generica sin fetch no join
+//		Producto producto = productoService.findOne(id);
+		Producto producto = productoService.fetchProductoWithInventario(id);
 		if (producto == null) {
 			flash.addFlashAttribute("error", "El producto no existe en la base de datos");
 			return "redirect:/producto/listar";

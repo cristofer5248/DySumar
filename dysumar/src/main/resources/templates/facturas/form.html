@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-dark text-white">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+
+				<div th:object="${facturacion}" th:remove="tag">
+					<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger"
+						role="alert">
+						<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+					</ul>
+				</div>
+
+				<form th:action="@{/factura/savefactura}" th:object="${facturacion}"
+					method="post" enctype="multipart/form-data">
+					<div class="form-group row">
+						<label for="cargar_cliente" class="col-sm-2 col-form-label"
+							th:text="'Busqueda de Cliente'"></label>
+						<div class="col-sm-6">
+							<input type="text" name="cargar_cliente" id="cargar_cliente"
+								class="form-control" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="direccion" class="col-sm-2 col-form-label"
+							th:text="Direccion"></label>
+						<div class="col-sm-6">
+							<select id="cargar_direccion" name="cargar_direccion" th:field="*{cliente}"
+								class="custom-select mr-sm-2" disabled>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="cuentade" class="col-sm-2 col-form-label">A
+							cuenta de</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{aCuentade}" class="form-control"
+								th:errorclass="'form-control alert-danger'" />
+						</div>
+					</div>
+					<div class="form-group row" th:if="*{cotizacion==null}">
+						<label for="carritoItems" class="col-sm-2 col-form-label">Codigo
+							de cotizacion</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{cotizacion}"
+								class="form-control" th:errorclass="'form-control alert-danger'" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="Formadepago" class="col-sm-2 col-form-label"
+							th:text="formadepago"></label>
+						<div class="col-sm-6">
+<!-- 							<select name="formaDePago" id="formaDePago" class="custom-select mr-sm-2"> -->
+<!-- 								<option value="0" disabled selected>Selecciona una</option> -->
+<!-- 								<option value=1>Forma 1</option> -->
+<!-- 								<option value=2>Forma 2</option> -->
+<!-- 								<option value=2>Forma 3</option> -->
+<!-- 							</select> -->
+							<input name="formaDePago" id="formaDePago" class="custom-select mr-sm-2"/>
+								
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="condiciondepago" class="col-sm-2 col-form-label"
+							th:text="condiciondepago"></label>
+						<div class="col-sm-6">
+							<select th:field="*{condicionesDPago}" class="custom-select mr-sm-2">
+								<option value=0 disabled selected>Selecciona una</option>
+								<option value="1">condicion uno</option>
+								<option value="2">condicion dos</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="tipodefactura" class="col-sm-2 col-form-label"
+							th:text="tipodefactura"></label>
+						<div class="col-sm-6">
+							<select th:field="*{tipoFactura}" class="custom-select mr-sm-2">
+								<option value=0 disabled selected>Selecciona una</option>
+								<option value="1">tipo 1</option>
+								<option value="2">tipo 2</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="detalle" class="col-sm-2 col-form-label">Detalle</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{detalles}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('detalles')}" th:errors="*{detalles}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="col-sm-6">
+							<input type="submit" th:value="${titulo}"
+								class="btn btn-secondary" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+<!-- 	<script th:replace="productos/js/setselected :: javascript"></script> -->
+	<script th:replace="facturas/js/autocompletecliente :: javascript"></script>
+
+
+</body>
+</html>

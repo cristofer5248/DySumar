@@ -20,7 +20,7 @@
 					<thead class="thead-inverse">
 						<tr>
 							<th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">id</th>
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">Id compra</th>
 							<th>Codigo</th>
 							<th>Nombre</th>
 							<th>Proveedor</th>							
@@ -39,7 +39,7 @@
 							<td
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
 								class="btn btn-primary btn-xs"
-								th:href="@{/inventario/} + ${inventario.codigoProveedor}"
+								th:href="@{/inventario/ver/} + ${inventario.codigoProveedor}"
 								th:text="${inventario.codigoProveedor}"></a></td>
 							<td th:text="${inventario.producto.codigo}"></td>	
 							<td th:text="${inventario.producto.nombrep}"></td>													

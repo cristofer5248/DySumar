@@ -18,6 +18,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "clientes")
 public class Cliente implements Serializable {
@@ -46,6 +48,7 @@ public class Cliente implements Serializable {
 	@Column(length = 10)
 	private String dui;
 	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Giro giro;
 	
@@ -59,6 +62,7 @@ public class Cliente implements Serializable {
 //	@Column(length = 60, unique = true)
 //	private String password;
 		
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private TipoCliente tipoCliente;
 	

@@ -30,8 +30,11 @@ public class CarritoItems implements Serializable {
 	@Column(length = 10)
 	private String codigo;
 	
-	@NotEmpty
+	
 	private int cantidad;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Cotizacion cotizacionid;
 	
 	public CarritoItems() {
 		
@@ -67,6 +70,14 @@ public class CarritoItems implements Serializable {
 
 	public void setCodigo(String codigo) {
 		this.codigo = codigo;
+	}
+
+	public Cotizacion getCotizacionid() {
+		return cotizacionid;
+	}
+
+	public void setCotizacionid(Cotizacion cotizacionid) {
+		this.cotizacionid = cotizacionid;
 	}
 	
 }
