@@ -32,8 +32,8 @@
 						<label for="direccion" class="col-sm-2 col-form-label"
 							th:text="Direccion"></label>
 						<div class="col-sm-6">
-							<select id="cargar_direccion" name="cargar_direccion" th:field="*{cliente}"
-								class="custom-select mr-sm-2" disabled>
+							<select id="cargar_direccion" name="cargar_direccion"
+								th:field="*{cliente}" class="custom-select mr-sm-2" disabled>
 							</select>
 						</div>
 					</div>
@@ -49,32 +49,33 @@
 						<label for="carritoItems" class="col-sm-2 col-form-label">Codigo
 							de cotizacion</label>
 						<div class="col-sm-6">
-							<input type="text" th:field="*{cotizacion}"
-								class="form-control" th:errorclass="'form-control alert-danger'" />
+							<input type="text" th:field="*{cotizacion}" class="form-control"
+								th:errorclass="'form-control alert-danger'" />
 						</div>
 					</div>
 					<div class="form-group row">
 						<label for="Formadepago" class="col-sm-2 col-form-label"
 							th:text="formadepago"></label>
 						<div class="col-sm-6">
-<!-- 							<select name="formaDePago" id="formaDePago" class="custom-select mr-sm-2"> -->
-<!-- 								<option value="0" disabled selected>Selecciona una</option> -->
-<!-- 								<option value=1>Forma 1</option> -->
-<!-- 								<option value=2>Forma 2</option> -->
-<!-- 								<option value=2>Forma 3</option> -->
-<!-- 							</select> -->
-							<input name="formaDePago" id="formaDePago" class="custom-select mr-sm-2"/>
-								
+							<select name="formaDePago" id="formaDePago"
+								class="custom-select mr-sm-2">
+								<option value="0" disabled selected>Selecciona una</option>
+								<option th:each="fdp : ${fdePago}" th:value="${fdp.id}"
+									th:text="${fdp.nombre}"></option>
+							</select>
+							<!-- 							<input name="formaDePago" id="formaDePago" class="custom-select mr-sm-2"/> -->
+
 						</div>
 					</div>
 					<div class="form-group row">
 						<label for="condiciondepago" class="col-sm-2 col-form-label"
 							th:text="condiciondepago"></label>
 						<div class="col-sm-6">
-							<select th:field="*{condicionesDPago}" class="custom-select mr-sm-2">
-								<option value=0 disabled selected>Selecciona una</option>
-								<option value="1">condicion uno</option>
-								<option value="2">condicion dos</option>
+							<select th:field="*{condicionesDPago}"
+								class="custom-select mr-sm-2">
+								<option value="0" disabled selected>Selecciona una</option>
+								<option th:each="cdp : ${cdePago}" th:value="${cdp.id}"
+									th:text="${cdp.nombre}"></option>
 							</select>
 						</div>
 					</div>
@@ -83,9 +84,9 @@
 							th:text="tipodefactura"></label>
 						<div class="col-sm-6">
 							<select th:field="*{tipoFactura}" class="custom-select mr-sm-2">
-								<option value=0 disabled selected>Selecciona una</option>
-								<option value="1">tipo 1</option>
-								<option value="2">tipo 2</option>
+								<option value="0" disabled selected>Selecciona una</option>
+								<option th:each="tf : ${tfactura}" th:value="${tf.id}"
+									th:text="${tf.nombre}"></option>
 							</select>
 						</div>
 					</div>
@@ -110,7 +111,7 @@
 	</div>
 
 	<footer th:replace="layout/layout :: footer"></footer>
-<!-- 	<script th:replace="productos/js/setselected :: javascript"></script> -->
+	<!-- 	<script th:replace="productos/js/setselected :: javascript"></script> -->
 	<script th:replace="facturas/js/autocompletecliente :: javascript"></script>
 
 

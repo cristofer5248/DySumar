@@ -7,19 +7,23 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+//import javax.persistence.Table;
 
 @Entity
-@Table(name = "formasDePago")
-public class FormaDePago implements Serializable{
+//@Table(name = "formasDePago")
+public class Formadepago implements Serializable{
 
+	/**
+	 * 
+	 */	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(length = 30)
 	private String nombre;
 //	private double total;
-	private FormaDePago() {
+	private static final long serialVersionUID = 1L;
+	private Formadepago() {
 		
 	}
 	
@@ -50,6 +54,6 @@ public class FormaDePago implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	
 
 }

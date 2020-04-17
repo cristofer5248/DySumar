@@ -10,11 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
-import com.grupoq.app.models.dao.IClienteDao;
+import com.grupoq.app.models.dao.ICDePagoDao;
 import com.grupoq.app.models.dao.IClienteDirecciones;
 import com.grupoq.app.models.dao.IFacturaDao;
+import com.grupoq.app.models.dao.IFormaDePagoDao;
+import com.grupoq.app.models.dao.ITipoDeFacturaDao;
+import com.grupoq.app.models.entity.CDepago;
 import com.grupoq.app.models.entity.ClienteDirecciones;
 import com.grupoq.app.models.entity.Facturacion;
+import com.grupoq.app.models.entity.Formadepago;
+import com.grupoq.app.models.entity.TFactura;
 
 @Service
 public class IFacturaServiceImpl implements IFacturaService {
@@ -24,6 +29,15 @@ public class IFacturaServiceImpl implements IFacturaService {
 	
 	@Autowired
 	IClienteDirecciones clientedireccionesdao;
+	
+	@Autowired
+	IFormaDePagoDao formadepagodao;
+	
+	@Autowired
+	ICDePagoDao cdepagodao;
+	
+	@Autowired
+	ITipoDeFacturaDao tipodefacturadao;
 
 	@Override
 	public Facturacion fetchByIdWithClienteWithCarritoItemsWithProducto(Long id) {
@@ -59,5 +73,29 @@ public class IFacturaServiceImpl implements IFacturaService {
 	public List<ClienteDirecciones> findByCliente(Long id) {
 		// TODO Auto-generated method stub
 		return clientedireccionesdao.findByCliente(id);
+	}
+
+	@Override
+	public List<Formadepago> listFdp() {
+		// TODO Auto-generated method stub
+		return (List<Formadepago>) formadepagodao.findAll();
+	}
+
+	@Override
+	public List<CDepago> listCdp() {
+		// TODO Auto-generated method stub
+		return (List<CDepago>) cdepagodao.findAll();
+	}
+
+	@Override
+	public List<TFactura> listTf() {
+		// TODO Auto-generated method stub
+		return (List<TFactura>) tipodefacturadao.findAll();
+	}
+
+	@Override
+	public Page<Facturacion> findAllCustom(Pageable page) {
+		// TODO Auto-generated method stub
+		return facturadao.findAllCustom(page);
 	}
 }

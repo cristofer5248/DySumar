@@ -37,7 +37,7 @@ public class Facturacion implements Serializable {
 	private String detalles;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	private FormaDePago formaDePago;
+	private Formadepago formadepago;
 	
 	public Facturacion() {
 		
@@ -101,12 +101,21 @@ public class Facturacion implements Serializable {
 		this.detalles = detalles;
 	}
 
-	public FormaDePago getFormaDePago() {
-		return formaDePago;
+	public Formadepago getFormadepago() {
+		return formadepago;
 	}
 
-	public void setFormaDePago(FormaDePago formaDePago) {
-		this.formaDePago = formaDePago;
+	public void setFormadepago(Formadepago formadepago) {
+		this.formadepago = formadepago;
 	}
+	
+
+//	public FormaDePago getFormaDePago() {
+//		return formaDePago;
+//	}
+//
+//	public void setFormaDePago(FormaDePago formaDePago) {
+//		this.formaDePago = formaDePago;
+//	}
 	
 }

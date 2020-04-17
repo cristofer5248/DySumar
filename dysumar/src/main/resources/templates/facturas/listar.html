@@ -42,16 +42,16 @@
 							<td
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
 								class="btn btn-primary btn-xs"
-								th:href="@{/factura/ver/} + ${facturas.id}"
-								th:text="${facturas.id}"></a></td>
-							<td th:text="${facturas.aCuentade}"></td>
-							<td th:text="${facturas.cliente.cliente.nombre}"></td>
+								th:href="@{/factura/ver/} + ${factura.id}"
+								th:text="${factura.id}"></a></td>
+							<td th:text="${factura.aCuentade}"></td>
+							<td th:text="${factura.cliente.cliente.nombre}"></td>
 							<!-- <td th:text="${facturas.}"></td> -->
-							<td th:text="${facturas.carritoItems.id}+'%'"></td>
-							<td th:text="'$'+${factura.condicionesDPago}"></td>
-							<td th:text="'$'+${factura.formaDePago}"></td>
-							<td th:text="'$'+${factura.tipoFactura}"></td>
-							<td th:text="'$'+${factura.detalles}"></td>
+							<td th:text="${factura.cotizacion.id}"></td>
+							<td th:text="${factura.condicionesDPago.nombre}"></td>
+<!-- 							<td th:text="'$'+${factura.formaDePago}"></td> -->
+							<td th:text="${factura.tipoFactura.nombre}"></td>
+							<td th:text="${factura.detalles}"></td>
 							<!-- 							<td
 								th:if="${#request.isUserInRole('USER')}"><a
 								class="btn btn-success btn-xs"

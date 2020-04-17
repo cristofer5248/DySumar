@@ -1,5 +1,6 @@
 package com.grupoq.app.controllers;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,7 +33,6 @@ import com.grupoq.app.models.service.IFacturaService;
 import com.grupoq.app.models.service.IProductoService;
 import com.grupoq.app.util.paginator.PageRender;
 import com.grupoq.app.webservice.ProductosWB;
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -90,6 +90,11 @@ public class FacturaController {
 		}
 		System.out.print("La cotizacion no esta vacia");
 		facturacion.setCotizacion(cotizacion);		
+		//llenando select a lo dundo
+		model.put("fdePago", facturaservice.listFdp());
+		model.put("cdePago", facturaservice.listCdp());
+		model.put("tfactura", facturaservice.listTf());		
+		//llenando selects a lo dundo
 		model.put("facturacion", facturacion);
 		return "/facturas/form";
 	}
@@ -99,6 +104,13 @@ public class FacturaController {
 	public String nuevoSin(Map<String, Object> model, RedirectAttributes flash) {
 		Facturacion facturacion = new Facturacion();
 		model.put("facturacion", facturacion);
+		
+		//llenando select a lo dundo
+		model.put("fdePago", facturaservice.listFdp());
+		model.put("cdePago", facturaservice.listCdp());
+		model.put("tfactura", facturaservice.listTf());		
+		//llenando selects a lo dundo
+		
 		model.put("titulo", "Facturacion");
 		return "/facturas/form";
 	}
