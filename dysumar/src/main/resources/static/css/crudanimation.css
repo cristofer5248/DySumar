@@ -7,6 +7,10 @@
   -webkit-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%); */
 }
+.alertinput{
+	background-color: red;
+	color: white;
+}
 
 a {
   display: -webkit-box;

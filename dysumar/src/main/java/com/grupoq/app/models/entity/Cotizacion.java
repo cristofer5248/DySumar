@@ -1,6 +1,7 @@
 package com.grupoq.app.models.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class Cotizacion implements Serializable {
 	
 	@Id
 	@Column(length = 15)
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(name = "create_at")
@@ -34,10 +35,18 @@ public class Cotizacion implements Serializable {
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date fecha;	
 	
-	@OneToMany(fetch= FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name="cotizacionid")
+	@OneToMany(mappedBy="cotizacionid", fetch= FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//	@JoinColumn(name="cotizacionid")
 	private List<CarritoItems> carrito;
+
 	
+	public Cotizacion() {
+		this.carrito = new ArrayList<CarritoItems>();
+	}
+
+	public void addProductoCotizacion(CarritoItems carritos) {
+		this.carrito.add(carritos);
+	}
 	public Long getId() {
 		return id;
 	}

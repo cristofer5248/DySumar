@@ -23,7 +23,7 @@ public class Formadepago implements Serializable{
 	private String nombre;
 //	private double total;
 	private static final long serialVersionUID = 1L;
-	private Formadepago() {
+	public Formadepago() {
 		
 	}
 	

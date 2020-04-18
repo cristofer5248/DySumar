@@ -16,4 +16,7 @@ public interface IInventarioDao extends PagingAndSortingRepository<Inventario, L
 	
 	@Query("select i from Inventario i join fetch i.producto p join fetch p.proveedor pro join fetch p.marca ma join fetch p.categoria c where i.codigoProveedor=?1")
 	public List<Inventario> findByIdCodigoProveedor(String id);
+	
+	@Query("select i from Inventario i join fetch i.producto p join fetch p.proveedor pro join fetch p.marca ma join fetch p.categoria c where i.codigoProveedor=?1")
+	public Inventario findByIdCodigoProveedorOb(String id);
 }

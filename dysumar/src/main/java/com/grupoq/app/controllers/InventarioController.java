@@ -153,16 +153,24 @@ public class InventarioController {
 	public String ver(@PathVariable(value = "id") String id, Map<String, Object> model, RedirectAttributes flash) {
 
 
-		List<Inventario> inventario = inventarioService.findByIdCodigoProveedor(id);
-		if (inventario.isEmpty()) {
+		Inventario inventario = inventarioService.findByIdCodigoProveedorOb(id);
+//		List<Inventario> inventario = inventarioService.findByIdCodigoProveedor(id);
+		if (inventario == null) {
 			flash.addFlashAttribute("error", "El ingreso con ese codigo no existe en la base de datos");
 			return "redirect:/inventario/listar";
 		}
+		
 		model.put("inventarios", inventario);
-		model.put("proveedor", inventario.get(0).getProducto().getProveedor().getNombre());
-		model.put("fecha", inventario.get(0).getFecha().toString());
+		model.put("proveedor", inventario.getProducto().getProveedor().getId());
+		model.put("fecha", inventario.getFecha().toString());
 		model.put("codigopro", id);
-		model.put("titulo", "Detalle del ingreso : " + id);		
+		model.put("titulo", "Detalle del ingreso : " + id);
+		
+//		model.put("inventarios", inventario);
+//		model.put("proveedor", inventario.get(0).getProducto().getProveedor().getNombre());
+//		model.put("fecha", inventario.get(0).getFecha().toString());
+//		model.put("codigopro", id);
+//		model.put("titulo", "Detalle del ingreso : " + id);		
 		return "/inventario/ver";
 	}
 }

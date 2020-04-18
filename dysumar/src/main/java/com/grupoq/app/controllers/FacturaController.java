@@ -88,8 +88,11 @@ public class FacturaController {
 			flash.addFlashAttribute("error","No existe ese id de cotizacion. Mostrando formulario vacio...");
 			return "facturas/form";
 		}
-		System.out.print("La cotizacion no esta vacia");
-		facturacion.setCotizacion(cotizacion);		
+		
+		facturacion.setCotizacion(cotizacion);
+		if(facturacion.getCotizacion()!=null) {
+		System.out.print("La cotizacion no esta vacia, es mas este tiene el id \n"+facturacion.getCotizacion().getId());
+		}
 		//llenando select a lo dundo
 		model.put("fdePago", facturaservice.listFdp());
 		model.put("cdePago", facturaservice.listCdp());
@@ -120,6 +123,7 @@ public class FacturaController {
 	@RequestMapping(value = "/savefactura", method = RequestMethod.POST)
 	public String guardarfactura(@Valid Facturacion facturacion, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
+		
 		if (result.hasErrors()) {
 			model.addAttribute("titulo", "Formulario de Facturacions");
 			if(facturacion.getCotizacion()==null) {
@@ -197,10 +201,27 @@ public class FacturaController {
 
 		}
 		mensajeFlash = mensajeFlash + " \nEl codigo de cotizacion es: " + cotizacion.getId();
-
+		flash.addFlashAttribute("error", "Recuerde no borrar los datos con el campo en rojo");
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:/factura/nuevof/"+cotizacion.getId();
 	}
+//para ver el detalle de la FACTURA
+	@GetMapping(value = "/ver/{id}")
+	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 
+
+		Facturacion facturacion = facturaservice.fetchByIdWithClienteWithCarritoItemsWithProducto(id);
+		if (facturacion == null) {
+			flash.addFlashAttribute("error", "El ingreso con ese codigo no existe en la base de datos");
+			return "redirect:/facturacion/listar";
+		}
+		model.put("facturacions", facturacion);
+		model.put("lositems", facturacion.getCotizacion().getCarrito());
+//		model.put("proveedor", facturacion.get(0).getProducto().getProveedor().getNombre());
+//		model.put("fecha", facturacion.get(0).getFecha().toString());
+		model.put("codigofa", id);
+		model.put("titulo", "Detalle de factura # : " + id);		
+		return "/facturas/ver";
+	}
 }

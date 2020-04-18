@@ -45,19 +45,19 @@
 								th:errorclass="'form-control alert-danger'" />
 						</div>
 					</div>
-					<div class="form-group row" th:if="*{cotizacion==null}">
+					<div class="form-group row">
 						<label for="carritoItems" class="col-sm-2 col-form-label">Codigo
 							de cotizacion</label>
 						<div class="col-sm-6">
-							<input type="text" th:field="*{cotizacion}" class="form-control"
-								th:errorclass="'form-control alert-danger'" />
+							<input type="text" th:field="*{cotizacion}" class="form-control" id="codigocotizacion"
+								th:errorclass="'form-control alert-danger'"/>
 						</div>
 					</div>
 					<div class="form-group row">
 						<label for="Formadepago" class="col-sm-2 col-form-label"
 							th:text="formadepago"></label>
 						<div class="col-sm-6">
-							<select name="formaDePago" id="formaDePago"
+							<select th:field="*{formadepago}"
 								class="custom-select mr-sm-2">
 								<option value="0" disabled selected>Selecciona una</option>
 								<option th:each="fdp : ${fdePago}" th:value="${fdp.id}"
@@ -113,6 +113,13 @@
 	<footer th:replace="layout/layout :: footer"></footer>
 	<!-- 	<script th:replace="productos/js/setselected :: javascript"></script> -->
 	<script th:replace="facturas/js/autocompletecliente :: javascript"></script>
+
+	<script>
+	var codigoc = $("#codigocotizacion").val();
+		if(codigoc>0){
+			$("#codigocotizacion").addClass("alertinput");
+		}
+	</script>
 
 
 </body>
