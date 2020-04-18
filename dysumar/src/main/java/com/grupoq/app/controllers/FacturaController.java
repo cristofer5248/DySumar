@@ -216,8 +216,7 @@ public class FacturaController {
 			flash.addFlashAttribute("error", "El ingreso con ese codigo no existe en la base de datos");
 			return "redirect:/facturacion/listar";
 		}
-		model.put("facturacions", facturacion);
-		model.put("lositems", facturacion.getCotizacion().getCarrito());
+		model.put("facturaciones", facturacion);		
 //		model.put("proveedor", facturacion.get(0).getProducto().getProveedor().getNombre());
 //		model.put("fecha", facturacion.get(0).getFecha().toString());
 		model.put("codigofa", id);

@@ -56,6 +56,7 @@
 							<th>ID</th>
 							<th>Producto</th>
 							<th>Marca</th>
+							<th>Proveedor</th>
 							<th>Cantidad</th>
 
 							<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">ver</th> -->
@@ -63,9 +64,10 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="carritos: ${lositems}">
+						<tr th:each="carritos: ${facturaciones.cotizacion.carrito}">
 							<td th:text="${carritos.productos.id}"></td>
 							<td th:text="${carritos.productos.nombrep}"></td>
+							<td th:text="${carritos.productos.proveedor.nombre}"></td>
 							<td th:text="${carritos.productos.marca.nombrem}"></td>
 							<td th:text="${carritos.cantidad}"></td>
 							<!-- 							<td th:text="${factura.cantidad}"></td> -->
