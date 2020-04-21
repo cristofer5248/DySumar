@@ -74,4 +74,16 @@ public class IProductoServiceImpl implements IProductoService {
 		return productosDao.fetchByIdWithInventarioByCodigoP(id);
 	}
 
+	@Override
+	public Page<Producto> findAllJoin(Pageable page) {
+		// TODO Auto-generated method stub
+		return productosDao.findAllJoin(page);
+	}
+
+	@Override
+	public Page<Producto> findAllLike(String termn, Pageable page) {
+		// TODO Auto-generated method stub
+		return productosDao.findAllLike(termn, page);
+	}
+
 }

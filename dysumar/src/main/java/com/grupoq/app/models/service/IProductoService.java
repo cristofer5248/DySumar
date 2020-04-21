@@ -13,8 +13,10 @@ import com.grupoq.app.models.entity.Producto;
 public interface IProductoService {
 
 	public Page<Producto> findAll(Pageable page);
+	public Page<Producto> findAllJoin(Pageable page);
 	public void save (Producto producto);
 	public void delete(Long id);
+	public Page<Producto> findAllLike(String termn,Pageable page);
 	
 	public Producto findOne(Long id);
 	

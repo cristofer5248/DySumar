@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+
 import com.grupoq.app.models.entity.Producto;
 import com.grupoq.app.models.service.IProductoService;
 import com.grupoq.app.util.paginator.PageRender;
@@ -36,10 +37,15 @@ public class ProductoController {
 	@Autowired
 	private IProductoService productoService;
 
-	@RequestMapping(value = "/listar", method = RequestMethod.GET)
-	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+	@RequestMapping(value = {"/listar","/listar/{nombrep}"}, method = RequestMethod.GET)
+	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model, @PathVariable(value = "nombrep", required = false) String nombrep) {
 		Pageable pageRequest = PageRequest.of(page, 20);
-		Page<Producto> productos = productoService.findAll(pageRequest);
+		Page<Producto> productos;
+		if(nombrep!=null) {
+			productos = productoService.findAllLike(nombrep,pageRequest );
+		}else {
+		productos = productoService.findAllJoin(pageRequest);
+		}
 		PageRender<Producto> pageRender = new PageRender<>("listar", productos);
 		model.addAttribute("titulo", "Listado de productos");
 		model.addAttribute("productos", productos);
@@ -47,6 +53,7 @@ public class ProductoController {
 		return "/productos/listar";
 	}
 
+	
 	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
 	public String nuevo(Map<String, Object> model) {
@@ -55,6 +62,16 @@ public class ProductoController {
 		model.put("titulo", "Crear nuevo producto");
 		model.put("nullchecker", 1);
 		return "/productos/productoform";
+	}
+	
+	@Secured("ROLE_ADMIN")
+	@RequestMapping(value = "/nuevo10", method = RequestMethod.GET)
+	public String nuevosdjiosjfdoi(Map<String, Object> model) {
+		Producto productos = new Producto();
+		model.put("producto", productos);
+		model.put("titulo", "Crear nuevo producto");
+		model.put("nullchecker", 1);
+		return "/templates/productos/productoform";
 	}
 
 	@Secured("ROLE_ADMIN")

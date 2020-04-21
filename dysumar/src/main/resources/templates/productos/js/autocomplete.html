@@ -122,9 +122,9 @@ const url4 = "/presentacion/cargar_presentacion";
 $.getJSON(url4,function(data){
 	$.each(data,function(key,entry){
 		if(id4==entry.id){
-		presentacion.append($('<option selected></option>').attr('value',entry.id).text(entry.unidad));
+		presentacion.append($('<option selected></option>').attr('value',entry.id).text(entry.detalle));
 		}else{
-		presentacion.append($('<option></option>').attr('value',entry.id).text(entry.unidad));
+		presentacion.append($('<option></option>').attr('value',entry.id).text(entry.detalle));
 		}
 	})
 });

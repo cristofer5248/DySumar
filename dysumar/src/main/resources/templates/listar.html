@@ -49,7 +49,7 @@
 							<td th:text="${cliente.apellido}"></td>
 							<td th:text="${cliente.email}"></td>
 							<td th:if="${#request.isUserInRole('ADMIN')}" th:text="${cliente.dui}"></td>
-							<td th:if="${#request.isUserInRole('ADMIN')}" th:text="${cliente.giro.nombre}">DUI></td>
+							<td style="font-size:10px;" th:if="${#request.isUserInRole('ADMIN')}" th:text="${cliente.giro.categoriagiro.nombre}"></td>
 							<td th:text="${cliente.createAt}"></td>
 							<td
 								th:if="${#request.isUserInRole('USER')}"><a

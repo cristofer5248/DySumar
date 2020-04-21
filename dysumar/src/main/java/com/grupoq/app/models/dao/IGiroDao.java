@@ -9,6 +9,6 @@ import com.grupoq.app.models.entity.Giro;
 
 public interface IGiroDao extends CrudRepository<Giro, Long> {
 	
-	@Query("select g from Giro g where g.nombre like %?1%")
+	@Query("select g from Giro g where g.detalles like %?1%")
 	public List<Giro> findByNombre(String term);
 }

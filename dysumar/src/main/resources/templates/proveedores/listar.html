@@ -16,7 +16,7 @@
 
 		<div class="card bg-light">
 			<div class="card-header"></div>
-			<div class="card-body">
+			<div class="card-body table-responsive" >
 
 				<h4 class="card-title">
 					<a th:if="${#request.isUserInRole('ADMIN')}"
@@ -24,21 +24,21 @@
 						proveedor</a>
 
 				</h4>
-				<table class="table table-striped table-bordered">
+				<table class="table table-striped table-bordered table-sm">
 					<thead class="thead-inverse">
 						<tr>
 							<th
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">id</th>
 							<th>Nombre</th>
 							<th>Codigo</th>
-							<th>Giro</th>
+<!-- 							<th>Giro</th> -->
 							<th>Telefono</th>
 							<th>Email</th>
 							<th>NIT</th>
 							<th>Direccion</th>													
 							<th>Borrar</th>
 							<th>Editar</th>
-							
+								
 							<!-- <th
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"></th> -->
 							<!-- <th th:if="${#request.isUserInRole('ADMIN')}"></th> -->
@@ -53,11 +53,11 @@
 								th:text="${proveedor.id}"></a></td>
 							<td th:text="${proveedor.nombre}"></td>
 							<td th:text="${proveedor.codigoP}"></td>
-							<td th:text="${proveedor.giro.nombre}"></td>
+<!-- 							<td style="font-size: 10px;" th:text="${proveedor.giro.categoriagiro.nombre}"></td> -->
 							<td th:text="${proveedor.telefono}"></td>
 							<td th:text="${proveedor.email}"></td>
 							<td th:text="${proveedor.nit}"></td>
-							<td th:text="${proveedor.direccion}"></td>
+							<td style="font-size: 10px;" th:text="${proveedor.direccion}"></td>
 							<!-- <td	th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
 								th:href="@{'/proveedor/nuevo/' + ${proveedor.id}}">
 									<div class='icon'>

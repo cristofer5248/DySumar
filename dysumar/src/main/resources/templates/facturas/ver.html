@@ -42,8 +42,15 @@
 					<li class="list-group-item active" th:text="${codigofa}"></li>
 					<li class="list-group-item"
 						th:text="'Factura con id:    '+${codigofa}"></li>
-<!-- 					<li class="list-group-item" th:text="'Cotizacion con id:  ${cotizacion.id}"></li> -->
-<!-- 					<li class="list-group-item" th:text="'Fecha:  ${cotizacion.fecha}"></li> -->
+					<li class="list-group-item" th:text="'Cliente: '+  ${facturaciones.cliente.cliente.nombre} +'  '+ ${facturaciones.cliente.cliente.apellido}"></li>
+					<li class="list-group-item" th:text="'NIT: '+  ${facturaciones.cliente.cliente.dui}"></li>
+					<li class="list-group-item" th:text="'Giro: '+  ${facturaciones.cliente.cliente.giro.nombre}"></li>
+					<li class="list-group-item" th:text="'Direccion: '+  ${facturaciones.cliente.direcciones.nombre}"></li>
+					<li class="list-group-item" th:text="'A cuenta de: '+  ${facturaciones.aCuentade}"></li>
+					<li class="list-group-item" th:text="'Factura : '+  ${facturaciones.tipoFactura.nombre}"></li>
+					<li class="list-group-item" th:text="'Condicion: ' +${facturaciones.condicionesDPago.nombre}"></li>
+					<li class="list-group-item" th:text="'Pago: ' +${facturaciones.formadepago.nombre}"></li>
+					<li class="list-group-item" th:text="'Fecha: ' +${facturaciones.cotizacion.fecha}"></li>
 				</ul>
 
 				<!-- <div th:if="${#lists.isEmpty(factura)}"
