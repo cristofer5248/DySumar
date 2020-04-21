@@ -5,13 +5,13 @@
 	<script type="text/javascript" th:fragment="javascript">
 		$(document).ready(function() {
 
-
+var urlAjax = $("#urlAjaxpro").val();
 			$("#cargar_producto").autocomplete({
 
 				source : function(request, response) {
 // 					var provid = $("#cargar_proveedor").val();
 					$.ajax({
-						url : "/factura/cargar_producto/" + request.term,
+						url : urlAjax + request.term,
 						dataType : "json",
 						data : {
 							term : request.term

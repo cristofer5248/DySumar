@@ -10,6 +10,6 @@ import com.grupoq.app.models.entity.Cliente;
 
 public interface IClienteDao extends PagingAndSortingRepository<Cliente, Long> {
 
-	@Query("select c from Cliente c where c.nombre like %?1%")
+	@Query("select c from Cliente c where c.nombre like %?1")
 	public List<Cliente> findByNombre(String term);
 }

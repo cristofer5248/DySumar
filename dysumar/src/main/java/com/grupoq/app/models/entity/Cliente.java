@@ -30,7 +30,7 @@ public class Cliente implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotEmpty
+	
 	@Column(length = 12)
 	private int codigo;
 	
@@ -70,7 +70,7 @@ public class Cliente implements Serializable {
 		
 	}
 
-	private String foto;
+//	private String foto;
 	
 	public Long getId() {
 		return id;
@@ -112,13 +112,13 @@ public class Cliente implements Serializable {
 		this.createAt = createAt;
 	}
 
-	public String getFoto() {
-		return foto;
-	}
-
-	public void setFoto(String foto) {
-		this.foto = foto;
-	}
+//	public String getFoto() {
+//		return foto;
+//	}
+//
+//	public void setFoto(String foto) {
+//		this.foto = foto;
+//	}
 
 
 	

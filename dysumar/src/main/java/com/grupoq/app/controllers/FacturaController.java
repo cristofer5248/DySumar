@@ -40,7 +40,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 
 @Controller
-@SessionAttributes("Facturacion")
+@SessionAttributes("facturacion")
 @RequestMapping("/factura")
 public class FacturaController {
 
@@ -139,7 +139,7 @@ public class FacturaController {
 		facturaservice.save(facturacion);
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
-		return "redirect:/factura/listar";
+		return "redirect:/factura/ver/"+facturacion.getId();
 	}
 	
 	
@@ -222,5 +222,22 @@ public class FacturaController {
 		model.put("codigofa", id);
 		model.put("titulo", "Detalle de factura # : " + id);		
 		return "/facturas/ver";
+	}
+	@Secured("ROLE_ADMIN")
+	@RequestMapping(value = "/eliminar/{id}")
+	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
+
+		if (id > 0) {
+			try {
+				facturaservice.delete(id);
+				flash.addFlashAttribute("success", "Facturacion eliminada con éxito!");
+			} catch (Exception e) {
+				flash.addFlashAttribute("error",
+						"El Facturacion posiblemente tiene registros enlazados, no se puede eliminar!");
+				return "redirect:/factura/listar";
+			}
+
+		}
+		return "redirect:/factura/listar";
 	}
 }

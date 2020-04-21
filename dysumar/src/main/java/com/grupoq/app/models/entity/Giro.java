@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "giro")
 public class Giro implements Serializable {
@@ -26,6 +28,7 @@ public class Giro implements Serializable {
 	@Column(length = 200)
 	private String detalles;
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private CategoriaGiro categoriagiro; 
 	

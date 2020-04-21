@@ -107,7 +107,8 @@
 	</div>
 
 	<footer th:replace="layout/layout :: footer"></footer>
-	<script th:replace="proveedores/js/autocomplete :: javascript"></script>
+	<input type="hidden" id="urlAjax" th:value="@{/giro/cargar_giro/}"/>
+	<script th:replace="proveedores/js/autocomplete :: javascript"></script>	
 
 
 </body>

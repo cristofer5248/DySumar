@@ -6,8 +6,8 @@
             var isOpen = false;
             
             
-            vamonos.click(function(){
-            	location.href = "/producto/listar"+"/"+$("#btn-search").val();
+            vamonos.click(function(){            	
+            	location.href = $("#urlenviar").val()+$("#btn-search").val();
             });
             submitIcon.click(function(){
                 if(isOpen == false){

@@ -5,12 +5,12 @@
 	<script type="text/javascript" th:fragment="javascript">
 	
 		$(document).ready(function() {
-
+		var urlAjax = $("#urlAjax").val();
 			$("#cargar_producto").autocomplete({
 
 				source : function(request, response) {					
 					$.ajax({
-						url : "/descuento/cargar_producto/" + request.term,
+						url : urlAjax + request.term,
 						dataType : "json",
 						data : {
 							term : request.term

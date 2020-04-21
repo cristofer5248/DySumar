@@ -20,6 +20,8 @@ public class Facturacion implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	private int codigofactura;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Cotizacion cotizacion;
 	
@@ -107,6 +109,14 @@ public class Facturacion implements Serializable {
 
 	public void setFormadepago(Formadepago formadepago) {
 		this.formadepago = formadepago;
+	}
+
+	public int getCodigofactura() {
+		return codigofactura;
+	}
+
+	public void setCodigofactura(int codigofactura) {
+		this.codigofactura = codigofactura;
 	}
 	
 

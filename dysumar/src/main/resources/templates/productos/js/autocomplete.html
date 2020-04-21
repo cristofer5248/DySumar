@@ -64,7 +64,7 @@ let dropdown = $('#cargar_categoria')
 dropdown.empty();
 dropdown.append('<option>Selecciona</option>');
 dropdown.prop('selectedIndex',1);
-const url = "/categoria/cargar_categoria";
+const url = $("#urlAjaxcategoria").val();
 
 //populate dropdown list wujuu
 $.getJSON(url,function(data){
@@ -84,7 +84,7 @@ let marca = $('#cargar_marca')
 marca.empty();
 marca.append('<option selected="true" disabled>Selecciona</option>');
 marca.prop('selectedIndex',0);
-const url2 = "/marca/cargar_marca";
+const url2 = $("#urlAjaxmarca").val();
 //populate dropdown list wujuu
 $.getJSON(url2,function(data){
 	$.each(data,function(key,entry){
@@ -101,7 +101,7 @@ let margen = $('#cargar_margen')
 margen.empty();
 margen.append('<option selected="true" disabled>Selecciona</option>');
 margen.prop('selectedIndex',0);
-const url3 = "/margen/cargar_margen";
+const url3 = $("#urlAjaxmargen").val();
 //populate dropdown list wujuu
 $.getJSON(url3,function(data){
 	$.each(data,function(key,entry){
@@ -117,10 +117,10 @@ let presentacion = $('#cargar_presentacion')
 presentacion.empty();
 presentacion.append('<option selected="true" disabled>Selecciona</option>');
 presentacion.prop('selectedIndex',0);
-const url4 = "/presentacion/cargar_presentacion";
+const url4 = $("#urlAjaxpresentacion").val();
 //populate dropdown list wujuu
 $.getJSON(url4,function(data){
-	$.each(data,function(key,entry){
+	$.each(data,function(key,entry){		
 		if(id4==entry.id){
 		presentacion.append($('<option selected></option>').attr('value',entry.id).text(entry.detalle));
 		}else{
@@ -133,10 +133,11 @@ let proveedor = $('#cargar_proveedor')
 proveedor.empty();
 proveedor.append('<option selected="true" disabled>Selecciona</option>');
 proveedor.prop('selectedIndex',0);
-const url5 = "/proveedor/cargar_proveedor";
+const url5 = $("#urlAjaxproveedor").val();
 //populate dropdown list wujuu
 $.getJSON(url5,function(data){
 	$.each(data,function(key,entry){
+		
 		if(id5==entry.id){
 		proveedor.append($('<option selected></option>').attr('value',entry.id).text(entry.nombre));
 		}else{

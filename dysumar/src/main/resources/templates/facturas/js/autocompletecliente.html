@@ -4,14 +4,14 @@
 
 	<script type="text/javascript" th:fragment="javascript">
 		$(document).ready(function() {
-
+var urlAjaxcliente = $("#urlAjaxcliente").val();
 
 			$("#cargar_cliente").autocomplete({
 
 				source : function(request, response) {
 // 					var provid = $("#cargar_proveedor").val();
 					$.ajax({
-						url : "/cargar_cliente/" + request.term,
+						url : urlAjaxcliente + request.term,
 						dataType : "json",
 						data : {
 							term : request.term
@@ -22,8 +22,8 @@
 							response($.map(data, function(item) {
 								return {
 									value : item.id,
-									label : item.codigo+"-" +item.nombre +" - "+item.apellido,
-									precio: item.precio
+									label : item.codigo+"-" +item.nombre +" - "+item.apellido
+									
 									
 								};
 									
@@ -34,12 +34,13 @@
 				select : function(event, ui) {
 					$("#cargar_cliente").val(ui.item.value);
 					$("#cargar_direccion").removeAttr('disabled');
+					var urlAjaxdirecciones = $("#urlAjaxdirecciones").val();
 					var idcliente = $("#cargar_cliente").val();
 					let dropdown = $('#cargar_direccion')
 					dropdown.empty();
 					dropdown.append('<option>Selecciona</option>');
 					dropdown.prop('selectedIndex',1);
-					const url = "/cargar_direcciones/"+idcliente;
+					const url = urlAjaxdirecciones+idcliente;
 
 					//populate dropdown list wujuu
 					$.getJSON(url,function(data){

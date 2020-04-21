@@ -43,7 +43,7 @@
 							<th>Precio</th>
 							<th>Marca</th>
 							<th>Categoria</th>
-							<th>Proveedor</th>
+							<th id="thproveedor">Proveedor</th>
 							<th>Unidad</th>
 							<th>Stock</th>
 							<th
@@ -52,26 +52,25 @@
 							<th th:if="${#request.isUserInRole('ADMIN')}"></th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody id="trtable">
 						<tr th:each="producto: ${productos}">
-							<td
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+							<td th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
 								class="btn btn-primary btn-xs"
 								th:href="@{/producto/ver/} + ${producto.id}"
 								th:text="${producto.id}"></a></td>
-							<td th:text="${producto.codigo}"></td>
-							<td th:text="${producto.nombrep}"></td>
-							<td th:text="'$'+${producto.precio}"></td>
-							<td th:text="${producto.marca.nombrem}"></td>
-							<td th:text="${producto.categoria.nombre}"></td>
-							<td th:text="${producto.proveedor.nombre}"></td>
+							<td class="tddata" th:text="${producto.codigo}"></td>
+							<td class="tddata" th:text="${producto.nombrep}"></td>
+							<td class="tddata" th:text="'$'+${producto.precio}"></td>
+							<td class="tddata" th:text="${producto.marca.nombrem}"></td>
+							<td class="tddata" th:text="${producto.categoria.nombre}"></td>
+							<td class="tdproveedor" th:text="${producto.proveedor.nombre}"></td>
 							<td th:text="${producto.presentacion.unidad}"></td>
-							<td th:text="${producto.stock}"></td>
+							<td class="tddata" th:text="${producto.stock}"></td>
 							<td
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
 								th:href="@{'/descuento/listar/' + ${producto.id}}">
 									<div class='icon'>
-										<i class='fa fa-percent'></i>
+										<i class='fa fa-percent' onmouseover="quitarcolumns();"></i>
 									</div>
 									<div class='text check'>
 										<span>Descuentos</span>
@@ -86,13 +85,13 @@
 										<span>Actualizar</span>
 									</div>
 							</a></td>
-							<td th:if="${#request.isUserInRole('ADMIN')}"><a
+							<td th:if="${#request.isUserInRole('ADMIN')}"><a class="centerMe"
 								th:href="@{/producto/eliminar/} + ${producto.id}"
 								onclick="return confirm('¿Esta seguro?');">
 									<div class='icon'>
 										<i class='fa fa-trash'></i>
 									</div>
-									<div class='text delete'>
+									<div class="text delete">
 										<span>Eliminar</span>
 									</div>
 							</a></td>
@@ -107,18 +106,30 @@
 
 
 	</div>
-
+<input type="hidden" id="urlenviar" th:value="@{/producto/listar/}"/>
 	<footer th:replace="layout/layout :: footer"></footer>
 	<script th:src="@{/js/searchbar.js}"></script>
 	<script th:inline="javascript">
 	var x = [[${error}]];
 	var y = [[${success}]];
+	var contador=0;
 	
 	if(x!=null){
 	alertify.error(x);
 	}
 	if(y!=null){ alertify.alert('Exito!', y, function(){ alertify.success('Ok'); });}
 	
+	function quitarcolumns(){
+		
+		if(contador==0){
+		$('table tr').find('td:eq(6),th:eq(6)').remove();
+		$('table tr').find('td:eq(5),th:eq(5)').remove();
+		contador++;
+		}
+		
+	}
+	
 	</script>
+	
 </body>
 </html>

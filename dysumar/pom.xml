@@ -11,7 +11,10 @@
 	</parent>
 	<groupId>com.qq.grupoq.app</groupId>
 	<artifactId>dobleq</artifactId>
+<!-- 	<artifactId>dysumar</artifactId> -->
+	
 	<version>0.0.1-SNAPSHOT</version>
+<!-- 	<version>0.1</version> -->
 	<name>dobleq</name>
 	<description>Demo project for Spring Boot</description>
 	<packaging>war</packaging>

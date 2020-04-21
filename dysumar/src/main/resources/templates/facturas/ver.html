@@ -30,7 +30,8 @@
 					<!-- 						th:href="@{'/taller/form/' + ${producto.id}}" -->
 					<!-- 						th:text="'Nuevo requerimiento'"></a> -->
 					<a class="btn btn-primary btn-xs" th:href="@{/factura/listar}"
-						th:text="'Volver'"></a>
+						th:text="'Volver'"></a> <a class="btn btn-danger btn-xs"
+						th:href="@{/factura/eliminar/}+${codigofa}" th:text="'Descarcar ahora'"></a>
 
 				</h4>
 
@@ -42,15 +43,24 @@
 					<li class="list-group-item active" th:text="${codigofa}"></li>
 					<li class="list-group-item"
 						th:text="'Factura con id:    '+${codigofa}"></li>
-					<li class="list-group-item" th:text="'Cliente: '+  ${facturaciones.cliente.cliente.nombre} +'  '+ ${facturaciones.cliente.cliente.apellido}"></li>
-					<li class="list-group-item" th:text="'NIT: '+  ${facturaciones.cliente.cliente.dui}"></li>
-					<li class="list-group-item" th:text="'Giro: '+  ${facturaciones.cliente.cliente.giro.nombre}"></li>
-					<li class="list-group-item" th:text="'Direccion: '+  ${facturaciones.cliente.direcciones.nombre}"></li>
-					<li class="list-group-item" th:text="'A cuenta de: '+  ${facturaciones.aCuentade}"></li>
-					<li class="list-group-item" th:text="'Factura : '+  ${facturaciones.tipoFactura.nombre}"></li>
-					<li class="list-group-item" th:text="'Condicion: ' +${facturaciones.condicionesDPago.nombre}"></li>
-					<li class="list-group-item" th:text="'Pago: ' +${facturaciones.formadepago.nombre}"></li>
-					<li class="list-group-item" th:text="'Fecha: ' +${facturaciones.cotizacion.fecha}"></li>
+					<li class="list-group-item"
+						th:text="'Cliente: '+  ${facturaciones.cliente.cliente.nombre} +'  '+ ${facturaciones.cliente.cliente.apellido}"></li>
+					<li class="list-group-item"
+						th:text="'NIT: '+  ${facturaciones.cliente.cliente.dui}"></li>
+					<li class="list-group-item"
+						th:text="'Giro: '+  ${facturaciones.cliente.cliente.giro.detalles}"></li>
+					<li class="list-group-item"
+						th:text="'Direccion: '+  ${facturaciones.cliente.direcciones.nombre}"></li>
+					<li class="list-group-item"
+						th:text="'A cuenta de: '+  ${facturaciones.aCuentade}"></li>
+					<li class="list-group-item"
+						th:text="'Factura : '+  ${facturaciones.tipoFactura.nombre}"></li>
+					<li class="list-group-item"
+						th:text="'Condicion: ' +${facturaciones.condicionesDPago.nombre}"></li>
+					<li class="list-group-item"
+						th:text="'Pago: ' +${facturaciones.formadepago.nombre}"></li>
+					<li class="list-group-item"
+						th:text="'Fecha: ' +${facturaciones.cotizacion.fecha}"></li>
 				</ul>
 
 				<!-- <div th:if="${#lists.isEmpty(factura)}"
@@ -62,18 +72,20 @@
 						<tr>
 							<th>ID</th>
 							<th>Producto</th>
+							<th>Precio</th>
 							<th>Marca</th>
 							<th>Proveedor</th>
 							<th>Cantidad</th>
 
 							<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">ver</th> -->
-							<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th>
+							<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th> -->
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="carritos: ${facturaciones.cotizacion.carrito}">
 							<td th:text="${carritos.productos.id}"></td>
 							<td th:text="${carritos.productos.nombrep}"></td>
+							<td th:text="'$'+${carritos.productos.precio}"></td>
 							<td th:text="${carritos.productos.proveedor.nombre}"></td>
 							<td th:text="${carritos.productos.marca.nombrem}"></td>
 							<td th:text="${carritos.cantidad}"></td>
@@ -83,11 +95,11 @@
 							<!-- 							<td sec:authorize="hasRole('ROLE_ADMIN')"><a -->
 							<!-- 								class="btn btn-primary btn-xs" -->
 							<!-- 								th:href="@{'/factura/ver/' + ${factura.id}}" th:text="'detalle'"></a></td> -->
-							<td sec:authorize="hasRole('ROLE_ADMIN')"><a
-								class="btn btn-danger btn-xs"
-								th:href="@{'/factura/eliminar/' + ${codigofa}}"
-								th:text="'eliminar'"
-								onclick="return confirm('¿Estas seguro que desea eliminar la factura?');"></a></td>
+							<!-- 							<td sec:authorize="hasRole('ROLE_ADMIN')"><a -->
+							<!-- 								class="btn btn-danger btn-xs" -->
+							<!-- 								th:href="@{'/factura/eliminar/' + ${codigofa}}" -->
+							<!-- 								th:text="'eliminar'" -->
+							<!-- 								onclick="return confirm('¿Estas seguro que desea eliminar la factura?');"></a></td> -->
 						</tr>
 					</tbody>
 

@@ -4,14 +4,14 @@
 
 	<script type="text/javascript" th:fragment="javascript">
 		$(document).ready(function() {
-
+var urlAjaxproveedor = $("#urlAjaxproveedor").val();
 
 			$("#cargar_producto").autocomplete({
 
 				source : function(request, response) {
 					var provid = $("#cargar_proveedor").val();
 					$.ajax({
-						url : "/descuento/cargar_producto/" + request.term+"/"+provid,
+						url : urlAjaxproveedor + request.term+"/"+provid,
 						dataType : "json",
 						data : {
 							term : request.term

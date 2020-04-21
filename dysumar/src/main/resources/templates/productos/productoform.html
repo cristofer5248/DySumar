@@ -116,6 +116,11 @@
 	</div>
 
 	<footer th:replace="layout/layout :: footer"></footer>
+	<input type="hidden" id="urlAjaxcategoria" th:value="@{/categoria/cargar_categoria}"/>
+	<input type="hidden" id="urlAjaxmarca" th:value="@{/marca/cargar_marca}"/>
+	<input type="hidden" id="urlAjaxmargen" th:value="@{/margen/cargar_margen}"/>
+	<input type="hidden" id="urlAjaxpresentacion" th:value="@{/presentacion/cargar_presentacion}"/>
+	<input type="hidden" id="urlAjaxproveedor" th:value="@{/proveedor/cargar_proveedor}"/>
 	<script th:replace="productos/js/setselected :: javascript"></script>
 	<script th:replace="productos/js/autocomplete :: javascript"></script>
 	

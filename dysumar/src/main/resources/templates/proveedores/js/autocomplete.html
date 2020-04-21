@@ -4,13 +4,15 @@
 
 	<script type="text/javascript" th:fragment="javascript">
 	
+	var urlAjax = $("#urlAjax").val();
+	alert(urlAjax);
 		$(document).ready(function() {
 
 			$("#cargar_giro").autocomplete({
 
 				source : function(request, response) {					
 					$.ajax({
-						url : "/giro/cargar_giro/" + request.term,
+						url : urlAjax + request.term,
 						dataType : "json",
 						data : {
 							term : request.term
@@ -21,7 +23,7 @@
 							response($.map(data, function(item) {
 								return {
 									value : item.id,
-									label : item.nombre,
+									label : item.detalles,
 								};
 									
 							}));

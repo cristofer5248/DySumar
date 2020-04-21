@@ -111,6 +111,8 @@
 	</div>
 
 	<footer th:replace="layout/layout :: footer"></footer>
+	<input type="hidden" id="urlAjaxcliente" th:value="@{/cargar_cliente/}"/>
+	<input type="hidden" id="urlAjaxdirecciones" th:value="@{/cargar_direcciones/}"/>
 	<!-- 	<script th:replace="productos/js/setselected :: javascript"></script> -->
 	<script th:replace="facturas/js/autocompletecliente :: javascript"></script>
 
