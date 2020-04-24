@@ -65,6 +65,10 @@ public class Cliente implements Serializable {
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private TipoCliente tipoCliente;
+
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Usuario usuario;
 	
 	public Cliente() {
 		
@@ -158,6 +162,14 @@ public class Cliente implements Serializable {
 
 	public void setTipoCliente(TipoCliente tipoCliente) {
 		this.tipoCliente = tipoCliente;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 
 }

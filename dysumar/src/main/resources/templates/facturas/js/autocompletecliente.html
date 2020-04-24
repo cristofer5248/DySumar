@@ -6,36 +6,37 @@
 		$(document).ready(function() {
 var urlAjaxcliente = $("#urlAjaxcliente").val();
 
-			$("#cargar_cliente").autocomplete({
+// 			$("#cargar_cliente").autocomplete({
 
-				source : function(request, response) {
-// 					var provid = $("#cargar_proveedor").val();
-					$.ajax({
-						url : urlAjaxcliente + request.term,
-						dataType : "json",
-						data : {
-							term : request.term
+// 				source : function(request, response) {
+// // 					var provid = $("#cargar_proveedor").val();
+// 					$.ajax({
+// 						url : urlAjaxcliente + request.term,
+// 						dataType : "json",
+// 						data : {
+// 							term : request.term
 							
-						},
-						success : function(data) {
+// 						},
+// 						success : function(data) {
 							
-							response($.map(data, function(item) {
-								return {
-									value : item.id,
-									label : item.codigo+"-" +item.nombre +" - "+item.apellido
+// 							response($.map(data, function(item) {
+// 								return {
+// 									value : item.id,
+// 									label : item.codigo+"-" +item.nombre +" - "+item.apellido
 									
 									
-								};
+// 								};
 									
-							}));
-						},
-					});
-				},
-				select : function(event, ui) {
-					$("#cargar_cliente").val(ui.item.value);
+// 							}));
+// 						},
+// 					});
+// 				},
+				$("#misclientes").change(function () { 
+// 				select : function(event, ui) {
+// 					$("#cargar_cliente").val(ui.item.value);
 					$("#cargar_direccion").removeAttr('disabled');
 					var urlAjaxdirecciones = $("#urlAjaxdirecciones").val();
-					var idcliente = $("#cargar_cliente").val();
+					var idcliente = document.getElementById("misclientes").value
 					let dropdown = $('#cargar_direccion')
 					dropdown.empty();
 					dropdown.append('<option>Selecciona</option>');
@@ -48,11 +49,11 @@ var urlAjaxcliente = $("#urlAjaxcliente").val();
 							dropdown.append($('<option selected></option>').attr('value',entry.id).text(entry.direcciones.nombre));															
 						})
 					});
+});
 					
 					
-					return false;
-				}
-		});				
+// 				}
+// 		});			//aqui	
 			$("#cargar_cliente").change(function(){
 	 			$("#cargar_direccion").removeAttr('disabled');
 	 			return;

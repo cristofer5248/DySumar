@@ -7,10 +7,11 @@
 
 <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 <link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}" />
-<link rel="stylesheet" th:href="@{/css/crudanimation.css}" />
 <link rel="stylesheet" th:href="@{/css/alertify.min.css}" />
 <link rel="stylesheet" th:href="@{/css/themes/default.min.css}" />
 <link rel="stylesheet" th:href="@{/css/bootstrap-datepicker.css}" />
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.min.css}" />
+<link rel="stylesheet" th:href="@{/css/crudanimation.css}" />
 
 
 <link rel="shortcut icon" type="image/png"
@@ -38,7 +39,9 @@
 						aria-haspopup="true" aria-expanded="false"> Clientes </a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="#about" th:href="@{/clientes}">Clientes</a>
-							<a class="dropdown-item" href="#">Direcciones</a>
+							<a class="dropdown-item" th:href="@{/direcciones}">Direcciones</a>
+							<a class="dropdown-item" th:href="@{/cdireccion}">Asignar direccion</a>
+							
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="#">Giros</a>
 						</div></li>
@@ -61,7 +64,7 @@
 						aria-expanded="false"> Salidas </a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="#about"
-								th:if="${#request.isUserInRole('ADMIN')}"
+								th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('USER')}"
 								th:href="@{/factura/listar}">Factura</a> <a
 								class="dropdown-item" th:href="@{/ventas/listar}">Historial de Salidas</a>
 							<div class="dropdown-divider"></div>
@@ -144,6 +147,8 @@
 		<script th:src="@{/js/animeddelete.js}"></script>
 		<script th:src="@{/js/alertify.min.js}"></script>
 		<script th:src="@{/js/bootstrap-datepicker.min.js}"></script>
+		<script th:src="@{/js/bootstrap-select.min.js}"></script>
+		
 		<script th:inline="javascript">
 	var x = [[${error}]];
 	var y = [[${success}]];

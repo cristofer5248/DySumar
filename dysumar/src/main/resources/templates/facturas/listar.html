@@ -15,9 +15,9 @@
 			<div class="card-body">
 
 				<h4 class="card-title">
-					<a th:if="${#request.isUserInRole('ADMIN')}"
+					<a th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('USER')}"
 						th:href="@{/factura/nuevof}" class="btn btn-primary btn-xs">Facturar</a>
-					<a th:if="${#request.isUserInRole('ADMIN')}"
+					<a th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('USER')}"
 						th:href="@{/factura/nuevo}" class="btn btn-primary btn-xs">Cotizár</a>
 				</h4>
 				<table class="table table-striped table-bordered">
@@ -44,7 +44,7 @@
 								class="btn btn-primary btn-xs"
 								th:href="@{/factura/ver/} + ${factura.id}"
 								th:text="${factura.id}"></a></td>
-							<td th:text="${factura.aCuentade}"></td>
+							<td th:text="${factura.aCuentade.username}"></td>
 							<td th:text="${factura.cliente.cliente.nombre}"></td>
 							<!-- <td th:text="${facturas.}"></td> -->
 							<td th:text="${factura.cotizacion.id}"></td>

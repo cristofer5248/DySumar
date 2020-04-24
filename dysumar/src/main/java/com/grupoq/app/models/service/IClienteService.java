@@ -5,6 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.grupoq.app.models.entity.Cliente;
+import com.grupoq.app.models.entity.ClienteDirecciones;
+import com.grupoq.app.models.entity.Direccion;
+import com.grupoq.app.models.entity.Usuario;
 
 
 
@@ -12,10 +15,16 @@ import com.grupoq.app.models.entity.Cliente;
 public interface IClienteService {
 
 	public List<Cliente> findAll();
+	public List<Direccion> findAlld(String term);
+	public void save(Direccion direccion);
+	
+	public List<Cliente> findAllByUsuario(String usuario);
 	
 	public Page<Cliente> findAll(Pageable pageable);
 
 	public void save(Cliente cliente);
+	
+	public void savecd(ClienteDirecciones cd);
 	
 	public Cliente findOne(Long id);
 	

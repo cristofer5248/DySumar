@@ -49,15 +49,26 @@ var urlAjaxproveedor = $("#urlAjaxproveedor").val();
 					return false;
 				}
 			});
-			
+			$("#cargar_proveedor").change(function(){
+	 			$("#cargar_producto").removeAttr('disabled');
+	 			
+  			
+			var total = 0;
+			var uncero= 0;
+			$("#gran_total").html(total);
+			var itemsclass = document.getElementsByClassName("itemsclass");
+			if(itemsclass.length>1){
+			for(var i=0; i<itemsclass.length;i++){
+				$('.itemsclass').slice(1).remove();
+			}
+			}
+			return;
+	 		});	
 	 		$("form").submit(function(){
 	 			$("#plantillaItemsFactura").remove();
 	 			return;
 	 		});
-	 		$("#cargar_proveedor").change(function(){
-	 			$("#cargar_producto").removeAttr('disabled');
-	 			return;
-	 		});
+	 		
 	 		
 		});
 		
@@ -97,6 +108,7 @@ var urlAjaxproveedor = $("#urlAjaxproveedor").val();
 			$("#gran_total").html(total);
 			$("#submit").removeAttr('disabled');
 		}
+		
 	}
 
 
@@ -105,7 +117,7 @@ var urlAjaxproveedor = $("#urlAjaxproveedor").val();
 		proveedor.empty();
 		proveedor.append('<option selected="true" disabled>Selecciona</option>');
 		proveedor.prop('selectedIndex',0);
-		const url5 = "/proveedor/cargar_proveedor";
+		const url5 = $("#urlAjaxproveedorselect").val();
 		//populate dropdown list wujuu
 		$.getJSON(url5,function(data){
 			$.each(data,function(key,entry){

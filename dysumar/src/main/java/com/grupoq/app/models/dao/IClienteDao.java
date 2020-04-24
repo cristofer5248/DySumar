@@ -12,4 +12,7 @@ public interface IClienteDao extends PagingAndSortingRepository<Cliente, Long> {
 
 	@Query("select c from Cliente c where c.nombre like %?1")
 	public List<Cliente> findByNombre(String term);
+	
+	@Query("select c from Cliente c join fetch c.usuario u where u.username=?1")
+	public List<Cliente> findByUsuario(String term);
 }

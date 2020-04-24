@@ -21,12 +21,15 @@
 				<form th:action="@{/factura/savefactura}" th:object="${facturacion}"
 					method="post" enctype="multipart/form-data">
 					<div class="form-group row">
-						<label for="cargar_cliente" class="col-sm-2 col-form-label"
-							th:text="'Busqueda de Cliente'"></label>
-						<div class="col-sm-6">
-							<input type="text" name="cargar_cliente" id="cargar_cliente"
-								class="form-control" />
-						</div>
+					<label for="cliente" class="col-sm-2 col-form-label"
+						th:text="'Tus clientes'"></label>
+					<div class="col-sm-6">					
+						<select class="selectpicker" id="misclientes" data-live-search="true" >
+							<option value="0" disabled selected>Seleccione uno</option>
+							<option th:each="cl : ${carteraclientes}" th:value="${cl.id}"
+								th:text="${cl.nombre}"></option>
+						</select>
+					</div>
 					</div>
 					<div class="form-group row">
 						<label for="direccion" class="col-sm-2 col-form-label"
@@ -38,27 +41,36 @@
 						</div>
 					</div>
 					<div class="form-group row">
-						<label for="cuentade" class="col-sm-2 col-form-label">A
-							cuenta de</label>
+						<label for="codigo" class="col-sm-2 col-form-label">Codigo
+							de factura </label>
 						<div class="col-sm-6">
-							<input type="text" th:field="*{aCuentade}" class="form-control"
-								th:errorclass="'form-control alert-danger'" />
+							<input th:field="*{codigofactura}" type="text"
+								class="form-control" />
 						</div>
 					</div>
+					<!-- 					<div class="form-group row"> -->
+					<!-- 						<label for="cuentade" class="col-sm-2 col-form-label">A -->
+					<!-- 							cuenta de</label> -->
+					<!-- 						<div class="col-sm-6"> -->
+					<!-- 							<input type="text" th:field="*{aCuentade}" class="form-control" -->
+					<!-- 								th:errorclass="'form-control alert-danger'" /> -->
+					<!-- 						</div> -->
+					<!-- 					</div> -->
 					<div class="form-group row">
 						<label for="carritoItems" class="col-sm-2 col-form-label">Codigo
 							de cotizacion</label>
 						<div class="col-sm-6">
-							<input type="text" th:field="*{cotizacion}" class="form-control" id="codigocotizacion"
-								th:errorclass="'form-control alert-danger'"/>
+							<input type="text" th:field="*{cotizacion}" class="form-control"
+								id="codigocotizacion"
+								th:errorclass="'form-control alert-danger'" />
 						</div>
 					</div>
 					<div class="form-group row">
 						<label for="Formadepago" class="col-sm-2 col-form-label"
-							th:text="formadepago"></label>
+							th:text="'Forma de pago'"></label>
 						<div class="col-sm-6">
-							<select th:field="*{formadepago}"
-								class="custom-select mr-sm-2">
+							<select th:field="*{formadepago}" class="custom-select mr-sm-2"
+								data-live-search="true">
 								<option value="0" disabled selected>Selecciona una</option>
 								<option th:each="fdp : ${fdePago}" th:value="${fdp.id}"
 									th:text="${fdp.nombre}"></option>
@@ -69,7 +81,7 @@
 					</div>
 					<div class="form-group row">
 						<label for="condiciondepago" class="col-sm-2 col-form-label"
-							th:text="condiciondepago"></label>
+							th:text="'Condicion de pago'"></label>
 						<div class="col-sm-6">
 							<select th:field="*{condicionesDPago}"
 								class="custom-select mr-sm-2">
@@ -81,7 +93,7 @@
 					</div>
 					<div class="form-group row">
 						<label for="tipodefactura" class="col-sm-2 col-form-label"
-							th:text="tipodefactura"></label>
+							th:text="'Tipo de factura'"></label>
 						<div class="col-sm-6">
 							<select th:field="*{tipoFactura}" class="custom-select mr-sm-2">
 								<option value="0" disabled selected>Selecciona una</option>
@@ -111,14 +123,15 @@
 	</div>
 
 	<footer th:replace="layout/layout :: footer"></footer>
-	<input type="hidden" id="urlAjaxcliente" th:value="@{/cargar_cliente/}"/>
-	<input type="hidden" id="urlAjaxdirecciones" th:value="@{/cargar_direcciones/}"/>
+	<input type="hidden" id="urlAjaxcliente" th:value="@{/cargar_cliente/}" />
+	<input type="hidden" id="urlAjaxdirecciones"
+		th:value="@{/cargar_direcciones/}" />
 	<!-- 	<script th:replace="productos/js/setselected :: javascript"></script> -->
 	<script th:replace="facturas/js/autocompletecliente :: javascript"></script>
 
 	<script>
-	var codigoc = $("#codigocotizacion").val();
-		if(codigoc>0){
+		var codigoc = $("#codigocotizacion").val();
+		if (codigoc > 0) {
 			$("#codigocotizacion").addClass("alertinput");
 		}
 	</script>

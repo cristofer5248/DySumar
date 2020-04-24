@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="layout/layout :: head"></head>
 <link rel="stylesheet" th:href="@{/css/login.css}" />
+<meta charset=utf8></meta>
 <body>
 
 	<header th:replace="layout/layout :: header"></header>
@@ -9,14 +10,14 @@
 	<div class="login-wrap" style="box-sizing: initial">
 		<div class="login-html">
 			<input id="tab-1" type="radio" name="tab" class="sign-in" checked><label
-				for="tab-1" class="tab">Sign In</label> <input id="tab-2"
+				for="tab-1" class="tab">Iniciar Sesion</label> <input id="tab-2"
 				type="radio" name="tab" class="sign-up"><label for="tab-2"
-				class="tab">Sign Up</label>
+				class="tab">Registrar</label>
 			<div class="login-form">
 			<form th:action="@{/login}" method="post">
 				<div class="sign-in-htm">
 					<div class="group">
-						<label for="user" class="label">Username</label> <input id="user"
+						<label for="user" class="label">Usuario</label> <input id="user"
 							name="username" type="text" class="input" />
 					</div>
 					<div class="group">
@@ -25,17 +26,17 @@
 					</div>
 					<div class="group">
 						<input id="check" type="checkbox" class="check" checked> <label
-							for="check"><span class="icon"></span>Keep me signed in </label>
+							for="check"><span class="icon"></span>Mantener session </label>
 					</div>
 					<div class="group">
-						<input type="submit" class="button" value="Sign In" />
+						<input type="submit" class="button" value="Iniciar" />
 					</div>
 					<input type="hidden" th:name="${_csrf.parameterName}"
 						th:value="${_csrf.token}" />
 						</form>
 					<div class="hr"></div>
-					<div class="foot-Ink">
-						<a href="#forgot">Forgot Password?</a>
+					<div class="foot-Ink" style="color:white">
+						<a href="#forgot">¿Ayuda?</a>
 					</div>
 				</div>
 

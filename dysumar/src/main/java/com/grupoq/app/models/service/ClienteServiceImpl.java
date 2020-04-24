@@ -8,7 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.grupoq.app.models.dao.IClienteDao;
+import com.grupoq.app.models.dao.IClienteDirecciones;
+import com.grupoq.app.models.dao.IDireccionesDao;
 import com.grupoq.app.models.entity.Cliente;
+import com.grupoq.app.models.entity.ClienteDirecciones;
+import com.grupoq.app.models.entity.Direccion;
 
 
 @Service
@@ -16,6 +20,13 @@ public class ClienteServiceImpl implements IClienteService {
 
 	@Autowired
 	private IClienteDao clienteDao;
+	
+	@Autowired
+	private IDireccionesDao direccionesdao;
+	
+	@Autowired
+	private IClienteDirecciones clientedireccionesdao;
+	
 
 	
 	@Override
@@ -65,6 +76,30 @@ public class ClienteServiceImpl implements IClienteService {
 	public List<Cliente> findByNombre(String term) {
 		// TODO Auto-generated method stub
 		return clienteDao.findByNombre(term);
+	}
+
+	@Override
+	public void save(Direccion direccion) {
+	direccionesdao.save(direccion);
+		
+	}
+
+	@Override
+	public List<Direccion> findAlld(String term) {
+		// TODO Auto-generated method stub
+		return (List<Direccion>) direccionesdao.findallBy(term);
+	}
+
+	@Override
+	public void savecd(ClienteDirecciones cd) {
+		clientedireccionesdao.save(cd);
+		
+	}
+
+	@Override
+	public List<Cliente> findAllByUsuario(String usuario) {
+		// TODO Auto-generated method stub
+		return clienteDao.findByUsuario(usuario);
 	}
 
 	

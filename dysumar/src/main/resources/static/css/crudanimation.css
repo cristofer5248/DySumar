@@ -61,7 +61,7 @@ a .icon:after {
   transition: .2s right;
   z-index: 1;
 }
-a .text {
+td a .text {
   position: relative;
   width: 0;
   height: 30px;

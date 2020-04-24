@@ -28,9 +28,11 @@ import com.grupoq.app.models.entity.CarritoItems;
 import com.grupoq.app.models.entity.Cotizacion;
 import com.grupoq.app.models.entity.Facturacion;
 import com.grupoq.app.models.entity.Producto;
+import com.grupoq.app.models.service.IClienteService;
 import com.grupoq.app.models.service.ICotizacionService;
 import com.grupoq.app.models.service.IFacturaService;
 import com.grupoq.app.models.service.IProductoService;
+import com.grupoq.app.models.service.IUsuarioService;
 import com.grupoq.app.util.paginator.PageRender;
 import com.grupoq.app.webservice.ProductosWB;
 
@@ -38,6 +40,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 
 @Controller
 @SessionAttributes("facturacion")
@@ -55,6 +58,12 @@ public class FacturaController {
 
 	@Autowired
 	ICarritoItemsDao carritoitemsdao;
+	
+	@Autowired
+	IUsuarioService usuarioService;
+	
+	@Autowired
+	IClienteService clienteService;
 
 	@RequestMapping(value = "/listar", method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
@@ -67,7 +76,7 @@ public class FacturaController {
 		return "/facturas/listar";
 	}
 //PARA CARRITO
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
 	public String nuevo2(Map<String, Object> model, RedirectAttributes flash) {
 		CarritoItems carrito = new CarritoItems();
@@ -76,9 +85,9 @@ public class FacturaController {
 		return "/facturas/form2";
 	}
 //ESTOS SI SON PARA FACTURA
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@RequestMapping(value = "/nuevof/{term}", method = RequestMethod.GET)
-	public String nuevo(Map<String, Object> model, RedirectAttributes flash,@PathVariable Long term) {
+	public String nuevo(Map<String, Object> model, RedirectAttributes flash,@PathVariable Long term,Authentication authentication) {
 		Facturacion facturacion = new Facturacion();
 		Cotizacion cotizacion = new Cotizacion();
 		cotizacion = cotizacionService.findby(term);		
@@ -96,22 +105,24 @@ public class FacturaController {
 		//llenando select a lo dundo
 		model.put("fdePago", facturaservice.listFdp());
 		model.put("cdePago", facturaservice.listCdp());
-		model.put("tfactura", facturaservice.listTf());		
+		model.put("tfactura", facturaservice.listTf());
+		model.put("carteraclientes", clienteService.findAllByUsuario(authentication.getName()));
 		//llenando selects a lo dundo
 		model.put("facturacion", facturacion);
 		return "/facturas/form";
 	}
 //ESTOS SI SON PARA FACTURA
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@RequestMapping(value = "/nuevof", method = RequestMethod.GET)
-	public String nuevoSin(Map<String, Object> model, RedirectAttributes flash) {
+	public String nuevoSin(Map<String, Object> model, RedirectAttributes flash,Authentication authentication) {
 		Facturacion facturacion = new Facturacion();
 		model.put("facturacion", facturacion);
 		
 		//llenando select a lo dundo
 		model.put("fdePago", facturaservice.listFdp());
 		model.put("cdePago", facturaservice.listCdp());
-		model.put("tfactura", facturaservice.listTf());		
+		model.put("tfactura", facturaservice.listTf());
+		model.put("carteraclientes", clienteService.findAllByUsuario(authentication.getName()));
 		//llenando selects a lo dundo
 		
 		model.put("titulo", "Facturacion");
@@ -122,8 +133,8 @@ public class FacturaController {
 	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/savefactura", method = RequestMethod.POST)
 	public String guardarfactura(@Valid Facturacion facturacion, BindingResult result, Model model, RedirectAttributes flash,
-			SessionStatus status) {
-		
+			SessionStatus status,Authentication authentication) {
+		facturacion.setaCuentade(usuarioService.findByUsername(authentication.getName()));
 		if (result.hasErrors()) {
 			model.addAttribute("titulo", "Formulario de Facturacions");
 			if(facturacion.getCotizacion()==null) {

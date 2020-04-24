@@ -9,6 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Facturacion implements Serializable {
 	/**
@@ -20,6 +24,7 @@ public class Facturacion implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotNull
 	private int codigofactura;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -31,7 +36,10 @@ public class Facturacion implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private ClienteDirecciones cliente;
 	
-	private String aCuentade;
+//	private String aCuentade;
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Usuario aCuentade;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private CDepago condicionesDPago;
@@ -79,11 +87,13 @@ public class Facturacion implements Serializable {
 		this.cliente = cliente;
 	}
 
-	public String getaCuentade() {
+
+
+	public Usuario getaCuentade() {
 		return aCuentade;
 	}
 
-	public void setaCuentade(String aCuentade) {
+	public void setaCuentade(Usuario aCuentade) {
 		this.aCuentade = aCuentade;
 	}
 
