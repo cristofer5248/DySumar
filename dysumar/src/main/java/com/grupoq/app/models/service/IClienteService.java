@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import com.grupoq.app.models.entity.Cliente;
 import com.grupoq.app.models.entity.ClienteDirecciones;
 import com.grupoq.app.models.entity.Direccion;
-import com.grupoq.app.models.entity.Usuario;
 
 
 

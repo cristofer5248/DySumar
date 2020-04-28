@@ -98,4 +98,16 @@ public class IFacturaServiceImpl implements IFacturaService {
 		// TODO Auto-generated method stub
 		return facturadao.findAllCustom(page);
 	}
+
+	@Override
+	public Page<Facturacion> findByClienteClienteNombreStartsWith(String nombre, Pageable page) {
+		// TODO Auto-generated method stub
+		return facturadao.findByClienteClienteNombreStartsWith(nombre, page);
+	}
+
+	@Override
+	public Page<Facturacion> findByaACuentadeNombre(String nombre, Pageable page) {
+		// TODO Auto-generated method stub
+		return facturadao.findByaACuentadeNombre(nombre, page);
+	}
 }

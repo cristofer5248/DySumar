@@ -30,7 +30,9 @@ tbody .tdproveedor{
     border:0;
     outline:0;
     background:#dcddd8;
-    width:100%;
+/*     if you want to remove my select in front to search, just remove my select and change width value (below this) to 100% */
+/* si quieres quitar el select que esta enfrente de la barra de busqueda solo remueve ese select y ponle 100% de abajo */
+    width:75%;
     height:50px;
     margin:0;
     padding:0px 55px 0px 20px;
@@ -87,4 +89,11 @@ tbody .tdproveedor{
 .byline a{
   text-decoration:none;
   color: #d74b4b;
+}
+#opcsearch {
+
+
+}
+#vamonos{
+
 }

@@ -10,5 +10,6 @@ public interface ICategoriaService {
 	public void delete (Long id);
 	public Categoria findBy(Long id);
 	public void save(Categoria categoria);
+	public List<Categoria> findByNombreStartsWith(String nombre);
 
 }

@@ -36,16 +36,23 @@ public class ProveedorController {
 
 	@Autowired
 	private IProveedorService proveedoresService;
-	
+
 	@GetMapping(value = "/cargar_proveedor", produces = { "application/json" })
 	public @ResponseBody List<Proveedor> celulasTodosJson() {
 		List<Proveedor> list = proveedoresService.findAllList();
 		return list;
 	}
-	@RequestMapping(value = "/listar", method = RequestMethod.GET)
-	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+
+	@RequestMapping(value = { "/listar", "/listar/{term}" }, method = RequestMethod.GET)
+	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
+			@PathVariable(value = "term", required = false) String term) {
 		Pageable pageRequest = PageRequest.of(page, 20);
-		Page<Proveedor> proveedors = proveedoresService.findAll(pageRequest);
+		Page<Proveedor> proveedors = null;
+		if (term != null) {
+			proveedors = proveedoresService.findByNombreStartsWith(term, pageRequest);
+		} else {
+			proveedors = proveedoresService.findAll(pageRequest);
+		}
 		PageRender<Proveedor> pageRender = new PageRender<>("listar", proveedors);
 		model.addAttribute("titulo", "Listado de proveedores");
 		model.addAttribute("proveedores", proveedors);
@@ -71,7 +78,8 @@ public class ProveedorController {
 			model.addAttribute("titulo", "Formulario de Proveedors");
 			return "/proveedores/form";
 		}
-		String mensajeFlash = (proveedor.getId() != null) ? "proveedor editado con éxito!" : "Proveedor creado con éxito!"; 
+		String mensajeFlash = (proveedor.getId() != null) ? "proveedor editado con éxito!"
+				: "Proveedor creado con éxito!";
 		proveedoresService.save(proveedor);
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
@@ -87,11 +95,10 @@ public class ProveedorController {
 				proveedoresService.deleteById(id);
 				flash.addFlashAttribute("success", "Proveedor eliminado con éxito!");
 			} catch (Exception e) {
-				flash.addFlashAttribute("error", "El proveedor posiblemente tiene registros de inventariado o productos, no se puede eliminar!");
+				flash.addFlashAttribute("error",
+						"El proveedor posiblemente tiene registros de inventariado o productos, no se puede eliminar!");
 				return "redirect:/proveedor/listar";
 			}
-			
-			
 
 		}
 		return "redirect:/proveedor/listar";

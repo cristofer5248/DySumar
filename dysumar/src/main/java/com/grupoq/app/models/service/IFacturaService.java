@@ -24,4 +24,6 @@ public interface IFacturaService {
 	public List<CDepago> listCdp();
 	public List<TFactura> listTf();
 	public Page<Facturacion> findAllCustom(Pageable page); 
+	public Page<Facturacion> findByClienteClienteNombreStartsWith(String nombre, Pageable page);
+	public Page<Facturacion> findByaACuentadeNombre(String nombre, Pageable page);
 }

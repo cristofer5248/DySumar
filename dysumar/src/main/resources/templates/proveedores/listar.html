@@ -8,6 +8,7 @@
 	href='https://fonts.googleapis.com/css?family=Roboto:100,300,400'>
 
 <link rel="stylesheet" href="css/deleteanimated_js.css">
+<link rel="stylesheet" th:href="@{/css/searchbar.css}" />
 <body>
 
 	<header th:replace="layout/layout :: header"></header>
@@ -16,14 +17,21 @@
 
 		<div class="card bg-light">
 			<div class="card-header"></div>
-			<div class="card-body table-responsive" >
+			<div class="card-body table-responsive">
 
-				<h4 class="card-title">
+				<div class="card-title">
 					<a th:if="${#request.isUserInRole('ADMIN')}"
 						th:href="@{/proveedor/nuevo}" class="btn btn-primary btn-xs">Crear
 						proveedor</a>
-
-				</h4>
+					<form class="searchbox" th:action="@{/proveedor/listar/}">
+						<input type="search"
+							placeholder="Introducir un indicio del nombre de la marca......"
+							class="searchbox-input" onkeyup="buttonUp();" id="btn-search"
+							required> <input type="button" id="vamonos"
+							class="searchbox-submit" value="GO"> <span
+							class="searchbox-icon">Buscar</span>
+					</form>
+				</div>
 				<table class="table table-striped table-bordered table-sm">
 					<thead class="thead-inverse">
 						<tr>
@@ -31,14 +39,14 @@
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">id</th>
 							<th>Nombre</th>
 							<th>Codigo</th>
-<!-- 							<th>Giro</th> -->
+							<!-- 							<th>Giro</th> -->
 							<th>Telefono</th>
 							<th>Email</th>
 							<th>NIT</th>
-							<th>Direccion</th>													
+							<th>Direccion</th>
 							<th>Borrar</th>
 							<th>Editar</th>
-								
+
 							<!-- <th
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"></th> -->
 							<!-- <th th:if="${#request.isUserInRole('ADMIN')}"></th> -->
@@ -53,7 +61,7 @@
 								th:text="${proveedor.id}"></a></td>
 							<td th:text="${proveedor.nombre}"></td>
 							<td th:text="${proveedor.codigoP}"></td>
-<!-- 							<td style="font-size: 10px;" th:text="${proveedor.giro.categoriagiro.nombre}"></td> -->
+							<!-- 							<td style="font-size: 10px;" th:text="${proveedor.giro.categoriagiro.nombre}"></td> -->
 							<td th:text="${proveedor.telefono}"></td>
 							<td th:text="${proveedor.email}"></td>
 							<td th:text="${proveedor.nit}"></td>
@@ -102,5 +110,7 @@
 	</div>
 
 	<footer th:replace="layout/layout :: footer"></footer>
+	<input type="hidden" id="urlenviar" th:value="@{/proveedor/listar/}" />
+	<script th:src="@{/js/searchbar.js}"></script>
 </body>
 </html>

@@ -39,4 +39,10 @@ public class IMarcaServiceImpl implements IMarcaService {
 		
 	}
 
+	@Override
+	public Page<Marca> findByNombre(String nombre, Pageable page) {
+		// TODO Auto-generated method stub
+		return marcaDao.findByNombremStartsWith(nombre, page);
+	}
+
 }

@@ -77,17 +77,17 @@ td a .text {
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
 }
-a .update {
+td a .update {
   
   background: blue;
   
 }
-a .delete {
+td a .delete {
   
   background: red;
   
 }
-a .check {
+td a .check {
   
   background: green;
   

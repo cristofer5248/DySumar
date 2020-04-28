@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import com.grupoq.app.models.entity.ClienteDirecciones;
-import com.grupoq.app.models.entity.Direccion;
 
 public interface IClienteDirecciones extends CrudRepository<ClienteDirecciones, Long> {
 

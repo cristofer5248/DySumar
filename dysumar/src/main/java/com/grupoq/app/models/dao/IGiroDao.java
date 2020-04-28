@@ -11,4 +11,5 @@ public interface IGiroDao extends CrudRepository<Giro, Long> {
 	
 	@Query("select g from Giro g where g.detalles like %?1%")
 	public List<Giro> findByNombre(String term);
+	
 }

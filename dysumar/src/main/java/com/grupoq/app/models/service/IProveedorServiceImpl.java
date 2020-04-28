@@ -47,6 +47,12 @@ public class IProveedorServiceImpl implements IProveedorService {
 		// TODO Auto-generated method stub
 		return proveedorDao.findById(id).orElse(null);
 	}
+
+	@Override
+	public Page<Proveedor> findByNombreStartsWith(String nombre, Pageable page) {
+		// TODO Auto-generated method stub
+		return proveedorDao.findByNombreStartsWith(nombre, page);
+	}
 	
 	
 }

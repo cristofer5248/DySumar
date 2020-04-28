@@ -28,7 +28,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class CategoriaController {
 
-
 	@Autowired
 	private ICategoriaService categoriaService;
 
@@ -38,11 +37,16 @@ public class CategoriaController {
 		return list;
 	}
 
-	@RequestMapping(value = "/listar", method = RequestMethod.GET)
-	public String listar(Model model) {		
-		List<Categoria> categorias = categoriaService.findAll();
+	@RequestMapping(value = { "/listar", "/listar/{param}" }, method = RequestMethod.GET)
+	public String listar(Model model, @PathVariable(value = "param", required = false) String param) {
+		List<Categoria> categorias = null;
+		if (param != null) {
+			categorias = categoriaService.findByNombreStartsWith(param);
+		} else {
+			categorias = categoriaService.findAll();
+		}
 		model.addAttribute("titulo", "Listado de categorias");
-		model.addAttribute("categorias", categorias);		
+		model.addAttribute("categorias", categorias);
 		return "/categorias/listar";
 	}
 

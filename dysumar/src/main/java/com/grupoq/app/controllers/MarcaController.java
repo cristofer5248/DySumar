@@ -41,10 +41,16 @@ public class MarcaController {
 		return list;
 	}
 
-	@RequestMapping(value = "/listar", method = RequestMethod.GET)
-	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+	@RequestMapping(value = { "/listar", "/listar/{param}" }, method = RequestMethod.GET)
+	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
+			@PathVariable(value = "param", required = false) String param) {
 		Pageable pageRequest = PageRequest.of(page, 20);
-		Page<Marca> marcas = marcaService.findAllPage(pageRequest);
+		Page<Marca> marcas=  null;
+		if (param != null) {
+			marcas = marcaService.findByNombre(param, pageRequest);
+		} else {
+			marcas = marcaService.findAllPage(pageRequest);
+		}
 		PageRender<Marca> pageRender = new PageRender<>("listar", marcas);
 		model.addAttribute("titulo", "Listado de marcas");
 		model.addAttribute("marcas", marcas);

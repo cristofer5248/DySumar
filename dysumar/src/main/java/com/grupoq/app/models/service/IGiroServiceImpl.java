@@ -40,6 +40,14 @@ public class IGiroServiceImpl implements IGiroService {
 
 
 
+	@Override
+	public void save(Giro giro) {
+		giroDao.save(giro);
+		
+	}
+
+
+
 
 
 }

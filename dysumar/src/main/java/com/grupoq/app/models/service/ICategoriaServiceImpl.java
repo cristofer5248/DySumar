@@ -38,4 +38,10 @@ public class ICategoriaServiceImpl implements ICategoriaService {
 		
 	}
 
+	@Override
+	public List<Categoria> findByNombreStartsWith(String nombre) {
+		// TODO Auto-generated method stub
+		return categoriaDao.findByNombreStartsWith(nombre);
+	}
+
 }

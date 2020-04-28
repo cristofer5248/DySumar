@@ -12,6 +12,7 @@
 <link rel="stylesheet" th:href="@{/css/bootstrap-datepicker.css}" />
 <link rel="stylesheet" th:href="@{/css/bootstrap-select.min.css}" />
 <link rel="stylesheet" th:href="@{/css/crudanimation.css}" />
+<link rel="stylesheet" th:href="@{/css/datatables.min.css}" />
 
 
 <link rel="shortcut icon" type="image/png"
@@ -43,7 +44,7 @@
 							<a class="dropdown-item" th:href="@{/cdireccion}">Asignar direccion</a>
 							
 							<div class="dropdown-divider"></div>
-							<a class="dropdown-item" href="#">Giros</a>
+							<a class="dropdown-item" th:href="@{/giro/listar}">Giros</a>
 						</div></li>
 
 					<li class="nav-item dropdown"><a
@@ -89,7 +90,7 @@
 
 				<ul class="navbar-nav navbar-right">
 					<li sec:authorize="!isAuthenticated()"><a
-						class="btn btn-outline-primary" th:href="@{/login}">Sign In</a></li>
+						class="btn btn-outline-primary" th:href="@{/login}">Iniciar Sesion</a></li>
 
 					<li sec:authorize="isAuthenticated()" class="dropdown show"><a
 						class="btn btn-outline-primary dropdown-toggle" href="#"
@@ -101,7 +102,7 @@
 							<form id="logoutForm" th:action="@{/logout}" method="post">
 								<button class="dropdown-item"
 									onclick="document.getElementById('logoutForm').submit();"
-									type="submit">Sign Out</button>
+									type="submit">Cerrar Sesion</button>
 								<input type="hidden" th:name="${_csrf.parameterName}"
 									th:value="${_csrf.token}" />
 							</form>
@@ -122,6 +123,7 @@
 	</header>
 
 	<div class="container"></div>
+	
 
 	<footer th:fragment="footer" class="container"
 		style="background-color: #0B243B; color: white;">
@@ -148,6 +150,7 @@
 		<script th:src="@{/js/alertify.min.js}"></script>
 		<script th:src="@{/js/bootstrap-datepicker.min.js}"></script>
 		<script th:src="@{/js/bootstrap-select.min.js}"></script>
+		<script th:src="@{/js/datatables.min.js}"></script>
 		
 		<script th:inline="javascript">
 	var x = [[${error}]];

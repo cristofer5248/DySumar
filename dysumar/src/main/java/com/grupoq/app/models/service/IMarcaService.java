@@ -14,4 +14,5 @@ public interface IMarcaService {
 	public Page<Marca> findAllPage(Pageable page);
 	public void save(Marca marca);
 	public void delete(Long id);
+	public Page<Marca> findByNombre(String nombre ,Pageable page);
 }
