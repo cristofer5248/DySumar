@@ -23,6 +23,8 @@ public class CarritoItems implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	private double margen;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Producto productos;
 	
@@ -78,6 +80,14 @@ public class CarritoItems implements Serializable {
 
 	public void setCotizacionid(Cotizacion cotizacionid) {
 		this.cotizacionid = cotizacionid;
+	}
+
+	public double getMargen() {
+		return margen;
+	}
+
+	public void setMargen(double margen) {
+		this.margen = margen;
 	}
 	
 }

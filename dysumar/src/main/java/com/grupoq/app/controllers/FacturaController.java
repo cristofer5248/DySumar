@@ -112,7 +112,11 @@ public class FacturaController {
 			flash.addFlashAttribute("error", "No existe ese id de cotizacion. Mostrando formulario vacio...");
 			return "facturas/form";
 		}
-
+		if (!cotizacion.aprobado) {
+			flash.addFlashAttribute("error", "Esa cotizacion a sido sometida a evaluacion...");
+			flash.addFlashAttribute("success", "Recuerde: El codigo de su Cotizacion tiene le ID: "+cotizacion.getId());
+			return "redirect:/factura/listar";
+		}
 		facturacion.setCotizacion(cotizacion);
 		if (facturacion.getCotizacion() != null) {
 			System.out.print(
@@ -147,7 +151,7 @@ public class FacturaController {
 	}
 
 //guardar final de factura
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@RequestMapping(value = "/savefactura", method = RequestMethod.POST)
 	public String guardarfactura(@Valid Facturacion facturacion, BindingResult result, Model model,
 			RedirectAttributes flash, SessionStatus status, Authentication authentication) {
@@ -159,10 +163,14 @@ public class FacturaController {
 						"El codigo de cotizacion no puede estar vacio, mostrando formulario vacio...");
 //				return "redirect:/factura/nuevof";
 				return "/facturas/form";
-			}
+			}			
 //			return "redirect:/factura/nuevof/"+facturacion.getCotizacion().getId();
 
 			return "/facturas/form";
+		}
+		Cotizacion cotizaciontemporal = cotizacionService.findby(facturacion.getCotizacion().getId());	
+		if(!cotizaciontemporal.aprobado) {
+			return "redirect:/factura/listar";			
 		}
 		String mensajeFlash = (facturacion.getId() != null) ? "facturacion editado con éxito!"
 				: "Facturacion creado con éxito!";
@@ -184,7 +192,7 @@ public class FacturaController {
 			productos.setProveedornombre(veamos.getProveedor().getNombre());
 			productos.setPrecio(veamos.getPrecio());
 			productos.setNombrep(veamos.getNombrep());
-			productos.setMargen(veamos.getMargen().getPorcentaje());
+			productos.setMargen(veamos.getMargen());
 			productos.setCodigo(veamos.getCodigo());
 			list2.add(productos);
 
@@ -192,10 +200,11 @@ public class FacturaController {
 		return list2;
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String guardar(@RequestParam(name = "item_id[]", required = false) Long[] itemId,
-			@RequestParam(name = "cantidad[]", required = false) Integer[] cantidad, Model model,
+			@RequestParam(name = "cantidad[]", required = false) Integer[] cantidad,
+			@RequestParam(name = "margen_id[]", required = false) double[] margen, Model model,
 			RedirectAttributes flash, SessionStatus status) throws ParseException {
 //		if (result.hasErrors()) {
 //			model.addAttribute("titulo", "Inventariado");
@@ -208,8 +217,11 @@ public class FacturaController {
 			return "/facturacion/nuevo";
 		}
 		Cotizacion cotizacion = new Cotizacion();
+
 		cotizacion.setFecha(new Date());
 		cotizacionService.save(cotizacion);
+		// contador de cotizacion solo para cambiar estado
+		boolean icotizacion = true;
 
 		Random random = new Random();
 		for (int i = 0; i < itemId.length; i++) {
@@ -225,6 +237,28 @@ public class FacturaController {
 			// fin
 
 			carrito.setCotizacionid(cotizacion);
+
+			// margen default
+			// evaluar si era un cotizacin evaluada
+
+			if (margen != null) {
+
+				if (margen[i] != producto.getMargen()) {
+					if (icotizacion) {
+						Cotizacion cotizacintemporal = cotizacionService.findby(cotizacion.getId());
+						cotizacintemporal.setAprobado(false);
+						cotizacionService.save(cotizacintemporal);
+						icotizacion=false;
+					}
+					carrito.setMargen(margen[i]);
+				} else {
+					carrito.setMargen(producto.getMargen());
+				}
+			} else {
+				// evaluar si era un cotizacin evaluada
+				carrito.setMargen(producto.getMargen());
+				// margen default
+			}
 			carrito.setCantidad(cantidad[i]);
 			carritoitemsdao.save(carrito);
 

@@ -38,6 +38,8 @@ public class Cotizacion implements Serializable {
 	@OneToMany(mappedBy="cotizacionid", fetch= FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 //	@JoinColumn(name="cotizacionid")
 	private List<CarritoItems> carrito;
+	
+	public boolean aprobado = true;
 
 	
 	public Cotizacion() {
@@ -79,6 +81,14 @@ public class Cotizacion implements Serializable {
 
 	public void setCarrito(List<CarritoItems> carrito) {
 		this.carrito = carrito;
+	}
+
+	public boolean isAprobado() {
+		return aprobado;
+	}
+
+	public void setAprobado(boolean aprobado) {
+		this.aprobado = aprobado;
 	}	
 
 	

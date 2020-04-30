@@ -7,8 +7,8 @@
             
             
             vamonos.click(function(){            	
-            	            	
-            	location.href = $("#urlenviar").val()+$("#btn-search").val();
+            	var opc = $("#opcSearch").val();            	
+            	location.href = $("#urlenviar").val()+opc+"/"+$("#btn-search").val();
             });
             submitIcon.click(function(){
                 if(isOpen == false){

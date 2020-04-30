@@ -130,7 +130,7 @@ public class ProductoController {
 
 		model.put("categoriaid", producto.getCategoria().getId());
 		model.put("marcaid", producto.getMarca().getIdm());
-		model.put("margenid", producto.getMargen().getId());
+//		model.put("margenid", producto.getMargen().getId());
 		model.put("presentacionid", producto.getPresentacion().getId());
 		model.put("proveedorid", producto.getProveedor().getId());
 		model.put("nullchecker", 0);

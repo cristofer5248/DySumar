@@ -40,7 +40,7 @@
 					</div>
 
 					<div class="form-group row">
-						<label for="precio" class="col-sm-2 col-form-label">Precio</label>
+						<label for="precio" class="col-sm-2 col-form-label">Costo</label>
 						<div class="col-sm-6">
 							<input type="text" th:field="*{precio}" class="form-control"
 								th:errorclass="'form-control alert-danger'" /> <small
@@ -80,9 +80,11 @@
 						<label for="margen" class="col-sm-2 col-form-label"
 							th:text="Margen"></label>
 						<div class="col-sm-6">
-							<select th:field="*{margen}" id="cargar_margen"
-								name="cargar_margen" class="custom-select mr-sm-2">
-							</select>
+						<input class="form-control" th:field="*{margen}" type="number" step="0.01"/>
+						
+<!-- 							<select th:field="*{margen}" id="cargar_margen" -->
+<!-- 								name="cargar_margen" class="custom-select mr-sm-2"> -->
+<!-- 							</select> -->
 						</div>
 					</div>
 					<div class="form-group row">

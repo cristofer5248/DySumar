@@ -14,7 +14,7 @@ public interface IFacturaDao extends PagingAndSortingRepository<Facturacion, Lon
 //	@Query("select f from Facturacion f where f.id=?1")
 	public Facturacion fetchByIdWithClienteWithCarritoItemsWithProducto(Long id);
 	
-	@Query("select f from Facturacion f")
+	@Query(value="select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join fetch f.tipoFactura tp join fetch f.condicionesDPago cp join fetch f.formadepago fp join fetch f.aCuentade usu",countQuery = "select count(f) from Facturacion f join f.cliente cd join cd.cliente c join f.tipoFactura tp join f.condicionesDPago cp join f.formadepago fp join f.aCuentade usu")
 	public Page<Facturacion> findAllCustom(Pageable page);
 	
 	//buscar factura por cliente

@@ -51,7 +51,7 @@ public class DescuentoController {
 			productos.setProveedornombre(veamos.getProveedor().getNombre());
 			productos.setPrecio(veamos.getPrecio());
 			productos.setNombrep(veamos.getNombrep());
-			productos.setMargen(veamos.getMargen().getPorcentaje());
+//			productos.setMargen(veamos.getMargen().getPorcentaje());
 			productos.setCodigo(veamos.getCodigo());
 			list2.add(productos);
 			

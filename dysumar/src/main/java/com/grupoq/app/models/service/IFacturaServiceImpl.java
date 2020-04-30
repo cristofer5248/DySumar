@@ -48,7 +48,8 @@ public class IFacturaServiceImpl implements IFacturaService {
 	@Override
 	public Page<Facturacion> findAll(Pageable page) {
 		// TODO Auto-generated method stub
-		return facturadao.findAll(page);
+//		return facturadao.findAll(page);
+		return facturadao.findAllCustom(page);
 	}
 
 	@Override

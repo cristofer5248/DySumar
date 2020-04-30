@@ -23,7 +23,8 @@ var urlAjax = $("#urlAjaxpro").val();
 								return {
 									value : item.id,
 									label : item.codigo+"-" +item.nombrep +" - "+item.proveedornombre,
-									precio: item.precio
+									precio: item.precio,
+									margen: item.margen
 									
 								};
 									
@@ -34,18 +35,19 @@ var urlAjax = $("#urlAjaxpro").val();
 				select : function(event, ui) {
 // 					$("#cargar_producto").val(ui.item.value)
 					if(itemsHelper.hasProducto(ui.item.value)){
-						itemsHelper.incrementaCantidad(ui.item.value, ui.item.precio)
+						itemsHelper.incrementaCantidad(ui.item.value, ui.item.precio,ui.item.margen)
 						return false;
 					}
+					
 					var linea = $("#plantillaItemsFactura").html();
 					linea = linea.replace(/{ID}/g,ui.item.value);
 					linea = linea.replace(/{NOMBRE}/g,ui.item.label);
 					linea = linea.replace(/{PRECIO}/g,ui.item.precio);
+// 					linea = linea.replace(/{MARGEN}/g,ui.item.margen);
 					
 					$("#cargarItemProductos tbody").append(linea);
-					itemsHelper.calcularImporte(ui.item.value, ui.item.precio,1);
-					
-
+					itemsHelper.calcularImporte(ui.item.value, ui.item.precio,1,ui.item.margen);
+					$("#margen_"+ui.item.value).val(ui.item.margen);
 					return false;
 				}
 			});
@@ -59,8 +61,19 @@ var urlAjax = $("#urlAjaxpro").val();
 		});
 		
 		var itemsHelper = {
-				calcularImporte: function(id, precio, cantidad){
-					$("#total_importe_"+id).html(parseFloat(precio)* parseInt(cantidad));
+				calcularImporte: function(id, precio, cantidad,margen){
+					if(margen==null){
+						margen = $("#margen_"+id).val();
+					}
+					$("#total_importe_"+id).html((parseFloat(precio)* parseInt(cantidad)*(margen/100)).toFixed(2));
+					this.calcularGranTotal();
+				},
+				calcularImporte2: function(id, precio,margen){
+					var cantidad = 1;
+					
+						cantidad = $("#cantidad_"+id).val();
+					
+					$("#total_importe_"+id).html((parseFloat(precio)* parseInt(cantidad)*(margen/100)).toFixed(2));
 					this.calcularGranTotal();
 				},
 				hasProducto: function(id){
@@ -77,7 +90,9 @@ var urlAjax = $("#urlAjaxpro").val();
 		incrementaCantidad: function(id,precio){
 			var cantidad = $("#cantidad_" +id).val() ? parseInt($("#cantidad_"+id).val()) : 0;
 			$("#cantidad_"+id).val(++cantidad);
-			this.calcularImporte(id,precio,cantidad);
+			margen = $("#margen_"+id).val();
+			alert(margen);
+			this.calcularImporte(id,precio,cantidad,margen);
 		},
 		eliminarLineaFactura: function(id){
 			$("#row_"+id).remove();
@@ -91,6 +106,7 @@ var urlAjax = $("#urlAjaxpro").val();
 // 				total+=parseFloat($(this).html()).toFixed(2);
 // 				total+=Math.round(parseFloat($(this).html()*100)/100);
 			});
+			total = total.toFixed(2);
 			$("#gran_total").html(total);
 			$("#submit").removeAttr('disabled');
 		}

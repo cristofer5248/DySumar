@@ -13,6 +13,7 @@
 <link rel="stylesheet" th:href="@{/css/bootstrap-select.min.css}" />
 <link rel="stylesheet" th:href="@{/css/crudanimation.css}" />
 <link rel="stylesheet" th:href="@{/css/datatables.min.css}" />
+<link rel="stylesheet" th:href="@{/css/all.css}" />
 
 
 <link rel="shortcut icon" type="image/png"
@@ -41,8 +42,9 @@
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="#about" th:href="@{/clientes}">Clientes</a>
 							<a class="dropdown-item" th:href="@{/direcciones}">Direcciones</a>
-							<a class="dropdown-item" th:href="@{/cdireccion}">Asignar direccion</a>
-							
+							<a class="dropdown-item" th:href="@{/cdireccion}">Asignar
+								direccion</a>
+
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" th:href="@{/giro/listar}">Giros</a>
 						</div></li>
@@ -67,7 +69,8 @@
 							<a class="dropdown-item" href="#about"
 								th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('USER')}"
 								th:href="@{/factura/listar}">Factura</a> <a
-								class="dropdown-item" th:href="@{/ventas/listar}">Historial de Salidas</a>
+								class="dropdown-item" th:href="@{/ventas/listar}">Historial
+								de Salidas</a>
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" href="#">Movimientos</a>
 						</div></li>
@@ -78,19 +81,21 @@
 						aria-expanded="false"> Productos </a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="#about" th:href="@{/marca/listar}">Marcas</a>
-							<a class="dropdown-item" th:href="@{/proveedor/listar}">Proveedores</a> <a
-								class="dropdown-item" th:href="@{/categoria/listar}">Categorias</a> <a
-								class="dropdown-item" th:href="@{/descuento/nuevo}">Descuentos</a> <a
-								class="dropdown-item" href="#">Margenes</a>
+							<a class="dropdown-item" th:href="@{/proveedor/listar}">Proveedores</a>
+							<a class="dropdown-item" th:href="@{/categoria/listar}">Categorias</a>
+							<a class="dropdown-item" th:href="@{/descuento/nuevo}">Descuentos</a>
+							<!-- 								<a	class="dropdown-item" href="#">Margenes</a> -->
 							<div class="dropdown-divider"></div>
-							<a class="dropdown-item" href="#">Buscar una cotizacion</a>
+							<a class="dropdown-item" data-toggle="modal"
+								data-target="#exampleModal">Buscar una cotizacion</a>
 						</div></li>
 
 				</ul>
 
 				<ul class="navbar-nav navbar-right">
 					<li sec:authorize="!isAuthenticated()"><a
-						class="btn btn-outline-primary" th:href="@{/login}">Iniciar Sesion</a></li>
+						class="btn btn-outline-primary" th:href="@{/login}">Iniciar
+							Sesion</a></li>
 
 					<li sec:authorize="isAuthenticated()" class="dropdown show"><a
 						class="btn btn-outline-primary dropdown-toggle" href="#"
@@ -111,7 +116,36 @@
 				</ul>
 			</div>
 		</nav>
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Busqueda de
+							cotizacion</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
 
+					<div class="modal-body">
+						<label>Ingrese el codigo de la cotizacion</label> <input
+							id="cotizacionSearch" class="form-control" />
+					</div>
+					<div class="modal-footer">
+
+
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Close</button>
+						<button type="button" id="btncotizacion" class="btn btn-primary">Buscar</button>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
 		<div class="alert alert-success" th:if="${success != null}"
 			th:text="${success}"></div>
 		<div class="alert alert-danger" th:if="${error != null}"
@@ -123,15 +157,16 @@
 	</header>
 
 	<div class="container"></div>
-	
+
 
 	<footer th:fragment="footer" class="container"
 		style="background-color: #0B243B; color: white;">
 		<hr />
 		<img th:src="@{/images/logo.jpeg}" alt="Spring logo" />
 		<p sec:authorize="isAuthenticated()">
-			Usuario logeado: <span sec:authentication="name"></span> | Roles: <span
-				sec:authentication="principal.authorities"></span>
+			Usuario logeado: <span sec:authentication="name"></span> | Role: <span
+				th:if="${#request.isUserInRole('ADMIN')}">ADMINISTRADOR</span> <span
+				th:if="${#request.isUserInRole('USER')}">VENDEDOR</span>
 		</p>
 		<p>
 			Powered by <a href="https://projects.spring.io/spring-boot/">Spring
@@ -151,8 +186,9 @@
 		<script th:src="@{/js/bootstrap-datepicker.min.js}"></script>
 		<script th:src="@{/js/bootstrap-select.min.js}"></script>
 		<script th:src="@{/js/datatables.min.js}"></script>
-		
+		<input type="hidden" id="urlCotizacion" th:value="@{/cotizacion/ver/}" />
 		<script th:inline="javascript">
+		//todo esto es para las alertas de alertify
 	var x = [[${error}]];
 	var y = [[${success}]];
 	
@@ -160,8 +196,15 @@
 	alertify.error(x);
 	}
 	if(y!=null){ alertify.alert('Exito!', y, function(){ alertify.success('Ok'); });}
+	//aqui termina
+	//aqui para buscar cotizacion
+	$("#btncotizacion").click(function(){
+		var urlCotizacion = $("#urlCotizacion").val();
+		location.href = urlCotizacion+$("#cotizacionSearch").val();
+	});
 	
 	</script>
+
 	</footer>
 </body>
 </html>

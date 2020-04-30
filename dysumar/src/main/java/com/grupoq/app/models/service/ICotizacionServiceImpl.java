@@ -38,4 +38,10 @@ public class ICotizacionServiceImpl implements ICotizacionService {
 		return cotizaciondao.findById(id).orElse(null);
 	}
 
+	@Override
+	public Cotizacion listAllById(Long id) {
+		// TODO Auto-generated method stub
+		return cotizaciondao.listAllById(id);
+	}
+
 }

@@ -11,4 +11,5 @@ public interface ICotizacionService {
 	public void delete(Long id);
 	public List<Cotizacion> findAll();
 	public Cotizacion findby(Long id);
+	public Cotizacion listAllById(Long id);
 }

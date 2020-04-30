@@ -6,12 +6,16 @@
 
 		<tbody id="plantillaItemsFactura">
 			<tr id="row_{ID}">
-				<td class="d-none"><input  value="{ID}"
-					name="item_id[]" /></td>
+				<td class="d-none"><input value="{ID}" name="item_id[]" /></td>
 				<td>{NOMBRE}</td>
 				<td>{PRECIO}</td>
+				<td><input type="number" value="1" name="margen_id[]"
+					style="width: auto; visibility:hidden" id="margen_{ID}" class="form-control col-sm-4"
+					onchange="itemsHelper.calcularImporte2({ID}, {PRECIO}, this.value);"
+					disabled /></td>
 				<td><input type="number" value="1" name="cantidad[]"
-					id="cantidad_{ID}" class="form-control col-sm-4"
+					style="width: auto;" id="cantidad_{ID}"
+					class="form-control col-sm-4"
 					onchange="itemsHelper.calcularImporte({ID}, {PRECIO}, this.value);" /></td>
 				<td><span id="total_importe_{ID}">0</span></td>
 				<td><a href="#" class="btn btn-danger btn-xs"

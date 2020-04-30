@@ -65,9 +65,10 @@ public class Producto implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Categoria categoria;
 	
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Margen margen;
+//	@JsonIgnore
+//	@ManyToOne(fetch = FetchType.LAZY)
+	@Column(columnDefinition = "double default 50.0")
+	private double margen;
 	
 	@OneToMany(mappedBy="producto", fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	/* @JoinColumn(name="producto") */
@@ -133,15 +134,24 @@ public class Producto implements Serializable {
 	public void setProveedor(Proveedor proveedor) {
 		this.proveedor = proveedor;
 	}
-	public Margen getMargen() {
-		return margen;
-	}
-	public void setMargen(Margen margen) {
-		this.margen = margen;
-	}
+//	public Margen getMargen() {
+//		return margen;
+//	}
+//	public void setMargen(Margen margen) {
+//		this.margen = margen;
+//	}
+	
 	public Date getFecha() {
 		return fecha;
 	}
+	public double getMargen() {
+		return margen;
+	}
+
+	public void setMargen(double margen) {
+		this.margen = margen;
+	}
+
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
