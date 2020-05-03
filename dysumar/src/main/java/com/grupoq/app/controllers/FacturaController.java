@@ -26,10 +26,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.grupoq.app.models.dao.ICarritoItemsDao;
 import com.grupoq.app.models.entity.CarritoItems;
 import com.grupoq.app.models.entity.Cotizacion;
+import com.grupoq.app.models.entity.Descuento;
 import com.grupoq.app.models.entity.Facturacion;
 import com.grupoq.app.models.entity.Producto;
 import com.grupoq.app.models.service.IClienteService;
 import com.grupoq.app.models.service.ICotizacionService;
+import com.grupoq.app.models.service.IDescuentoService;
 import com.grupoq.app.models.service.IFacturaService;
 import com.grupoq.app.models.service.IProductoService;
 import com.grupoq.app.models.service.IUsuarioService;
@@ -64,6 +66,9 @@ public class FacturaController {
 
 	@Autowired
 	IClienteService clienteService;
+	
+	@Autowired
+	IDescuentoService descuentoService;
 
 	@RequestMapping(value = { "/listar", "/listar/{por}/{param}" }, method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
@@ -193,6 +198,8 @@ public class FacturaController {
 			productos.setPrecio(veamos.getPrecio());
 			productos.setNombrep(veamos.getNombrep());
 			productos.setMargen(veamos.getMargen());
+			productos.setMarcanombre(veamos.getMarca().getNombrem());
+			productos.setPresentacionnombre(veamos.getPresentacion().getDetalle());
 			productos.setCodigo(veamos.getCodigo());
 			list2.add(productos);
 
@@ -221,14 +228,20 @@ public class FacturaController {
 		cotizacion.setFecha(new Date());
 		cotizacionService.save(cotizacion);
 		// contador de cotizacion solo para cambiar estado
-		boolean icotizacion = true;
-
+		boolean icotizacion = true;		
 		Random random = new Random();
 		for (int i = 0; i < itemId.length; i++) {
 			System.out.print("La cantidad es: " + cantidad[i] + " \n");
 			int x = random.nextInt(900) + 100;
 			CarritoItems carrito = new CarritoItems();
 			Producto producto = productoservice.findOne(itemId[i]);
+			//Buscamos si tiene descuento
+			Descuento des = descuentoService.findFirstByProductoIdAndCantidadOrderByCantidadAsc(producto.getId(), cantidad[i]);
+			if(des!=null) {
+				carrito.setDescuento((des.getPorcentaje())/100);
+			}else {
+				carrito.setDescuento(1);
+			}
 			carrito.setProductos(producto);
 			// codigo generado
 			String codigoGenerated = x + "xxx";
@@ -246,7 +259,7 @@ public class FacturaController {
 				if (margen[i] != producto.getMargen()) {
 					if (icotizacion) {
 						Cotizacion cotizacintemporal = cotizacionService.findby(cotizacion.getId());
-						cotizacintemporal.setAprobado(false);
+						cotizacintemporal.setAprobado(false);						
 						cotizacionService.save(cotizacintemporal);
 						icotizacion=false;
 					}

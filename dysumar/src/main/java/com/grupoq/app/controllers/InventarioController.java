@@ -161,7 +161,7 @@ public class InventarioController {
 		}
 		
 		model.put("inventarios", inventario);
-		model.put("proveedor", inventario.getProducto().getProveedor().getId());
+		model.put("proveedor", inventario.getProducto().getProveedor().getNombre());
 		model.put("fecha", inventario.getFecha().toString());
 		model.put("codigopro", id);
 		model.put("titulo", "Detalle del ingreso : " + id);

@@ -8,15 +8,20 @@
 			<tr id="row_{ID}">
 				<td class="d-none"><input value="{ID}" name="item_id[]" /></td>
 				<td>{NOMBRE}</td>
-				<td>{PRECIO}</td>
-				<td><input type="number" value="1" name="margen_id[]"
-					style="width: auto; visibility:hidden" id="margen_{ID}" class="form-control col-sm-4"
-					onchange="itemsHelper.calcularImporte2({ID}, {PRECIO}, this.value);"
+				<td th:if="${#request.isUserInRole('ADMIN')}">{PRECIO}</td>
+<!-- 				<td style="display:none;"><span id="descuento_{ID}">0</span></td> -->
+				<td><span id="descuento_{ID}">1.0</span></td>
+				<td><span id="precio_margen_{ID}">1</span></td>
+				<td class="columnmargen" style="display: none"><input
+					type="number" value="1" name="margen_id[]" id="margen_{ID}"
+					class="form-control col-sm-4"
+					onchange="itemsHelper.calcularImporte2({ID}, {PRECIO}, this.value,document.getElementById('descuento_{ID}').value);"
 					disabled /></td>
+				
 				<td><input type="number" value="1" name="cantidad[]"
 					style="width: auto;" id="cantidad_{ID}"
 					class="form-control col-sm-4"
-					onchange="itemsHelper.calcularImporte({ID}, {PRECIO}, this.value);" /></td>
+					onchange="itemsHelper.calcularImporte({ID}, {PRECIO}, this.value,1,2);" /></td>
 				<td><span id="total_importe_{ID}">0</span></td>
 				<td><a href="#" class="btn btn-danger btn-xs"
 					onclick="itemsHelper.eliminarLineaFactura({ID});">x</a></td>

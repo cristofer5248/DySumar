@@ -55,7 +55,7 @@
 								th:text="'Admin'"></a></td>
 							<td sec:authorize="hasRole('ROLE_ADMIN')"><a
 								class="btn btn-primary btn-xs"
-								th:href="@{/user/adminu/} + ${usuario.id}" th:text="'Usuario'"></a></td>
+								th:href="@{/user/adminU/} + ${usuario.id}" th:text="'Usuario'"></a></td>
 							<td sec:authorize="hasRole('ROLE_ADMIN')"><a
 								class="btn btn-primary btn-xs"
 								th:href="@{/user/form/} + ${usuario.id}" th:text="'editar'"></a></td>

@@ -44,4 +44,10 @@ public class IDescuentoServiceImpl implements IDescuentoService {
 		return descuentoDao.findByProductoId(id);
 	}
 
+	@Override
+	public Descuento findFirstByProductoIdAndCantidadOrderByCantidadAsc(Long id, int cantidad) {
+		// TODO Auto-generated method stub
+		return descuentoDao.findFirstByProductoIdAndCantidadLessThanEqualOrderByCantidadDesc(id, cantidad);
+	}
+
 }

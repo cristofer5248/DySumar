@@ -24,6 +24,7 @@ public class CarritoItems implements Serializable {
 	private Long id;
 	
 	private double margen;
+	private double descuento;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Producto productos;
@@ -88,6 +89,14 @@ public class CarritoItems implements Serializable {
 
 	public void setMargen(double margen) {
 		this.margen = margen;
+	}
+
+	public double getDescuento() {
+		return descuento;
+	}
+
+	public void setDescuento(double descuento) {
+		this.descuento = descuento;
 	}
 	
 }

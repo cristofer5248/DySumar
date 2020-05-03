@@ -36,6 +36,7 @@ public class Inventario implements Serializable{
 	private Date fecha;
 	
 	
+	@Column(unique = true, length = 30)
 	private String codigoProveedor;
 	//descuentos y margenes
 	private static final long serialVersionUID = 1L;

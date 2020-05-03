@@ -45,12 +45,15 @@
 					</div>
 					<table th:replace="facturas/plantilla-items.html ::itemsFactura"></table>
 					<table id="cargarItemProductos"
-						class="table table-sm-striped table-hover">
+						class="table table-responsive-md-striped table-hover">
 						<thead>
 							<tr>
 								<th>Nombre</th>
-								<th>Costo</th>
-								<th>%Margen</th>
+								<th th:if="${#request.isUserInRole('ADMIN')}">Costo</th>
+								<th>Descuento</th>
+								<th>Precio</th>
+								<th id="columnmargen12" style="display: none;">%Margen</th>								
+<!-- 								<th style="display: none;">Descuento</th> -->															
 								<th>Cantidad</th>
 								<th>Total</th>
 								<th>Eliminar</th>
@@ -83,6 +86,8 @@
 	</script>
 	<input type="hidden" id="urlAjaxpro"
 		th:value="@{/factura/cargar_producto/}" />
+	<input type="hidden" id="urlAjaxdes"
+		th:value="@{/descuento/cargar_descuento/}" />
 	<script th:replace="facturas/js/autocomplete :: javascript"></script>
 
 	<script>
@@ -92,7 +97,9 @@
 			$("#tratop").css("visibility", "visible");
 
 			$('input[name="margen_id[]"]').prop("disabled", false);
-			$('input[name="margen_id[]"]').css("visibility", "visible");
+
+			$('.columnmargen').css("display", "block");
+			$('#columnmargen12').css("display", "block");
 		}
 	</script>
 </body>

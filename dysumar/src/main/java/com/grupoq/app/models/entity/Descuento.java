@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "descuentos")
 public class Descuento implements Serializable {
@@ -20,6 +22,7 @@ public class Descuento implements Serializable {
 	private int cantidad;
 	private double porcentaje;
 	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Producto producto;
 		

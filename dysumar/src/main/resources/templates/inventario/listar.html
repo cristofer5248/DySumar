@@ -45,11 +45,11 @@
 							<td th:text="${inventario.producto.nombrep}"></td>													
 							<td th:text="${inventario.producto.proveedor.nombre}"></td>							
 							<td th:text="${inventario.stock}"></td>							
-							<td th:text="${inventario.producto.margen.porcentaje}+'%'"></td>
+							<td th:text="${inventario.producto.margen}+'%'"></td>
 							<td th:text="'$'+${inventario.producto.precio}"></td>							
-							<td class="mm" th:text="'$'+${#numbers.formatDecimal((inventario.producto.precio * (inventario.producto.margen.porcentaje/100)+inventario.producto.precio), 0, 'COMMA', 2, 'POINT')}"></td>
+							<td class="mm" th:text="'$'+${#numbers.formatDecimal((inventario.producto.precio * (inventario.producto.margen/100)+inventario.producto.precio), 0, 'COMMA', 2, 'POINT')}"></td>
 							<td th:text="'$'+${#numbers.formatDecimal((inventario.producto.precio*inventario.stock), 0, 'COMMA', 2, 'POINT')}"></td>
-							<td class="mm" th:text="'$'+${#numbers.formatDecimal(((inventario.producto.precio * (inventario.producto.margen.porcentaje/100)+inventario.producto.precio)*inventario.stock), 0, 'COMMA', 2, 'POINT')}"></td>
+							<td class="mm" th:text="'$'+${#numbers.formatDecimal(((inventario.producto.precio * (inventario.producto.margen/100)+inventario.producto.precio)*inventario.stock), 0, 'COMMA', 2, 'POINT')}"></td>
 <!-- 							<td
 								th:if="${#request.isUserInRole('USER')}"><a
 								class="btn btn-success btn-xs"

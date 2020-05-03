@@ -38,7 +38,7 @@ import com.grupoq.app.util.paginator.PageRender;
 
 @Controller
 @RequestMapping("/user")
-@SessionAttributes("user")
+@SessionAttributes("usuario")
 public class UsuarioController {
 	protected final Log logger = LogFactory.getLog(this.getClass());
 
@@ -128,11 +128,11 @@ public class UsuarioController {
 			usuario = usuarioService.findOne(id);
 			if (usuario == null) {
 				flash.addFlashAttribute("error", "El ID del cliente no existe en la BBDD!");
-				return "redirect:/listar";
+				return "redirect:/user/ver";
 			}
 		} else {
 			flash.addFlashAttribute("error", "El ID del cliente no puede ser cero!");
-			return "redirect:/listar";
+			return "redirect:/user/ver";
 		}
 		model.put("usuario", usuario);
 		model.put("titulo", "Editar Usuario");
@@ -149,18 +149,18 @@ public class UsuarioController {
 			usuario = usuarioService.findOne(id);
 			if (usuario == null) {
 				flash.addFlashAttribute("error", "El ID del cliente no existe en la BBDD!");
-				return "redirect:/listar";
+				return "redirect:/user/ver";
 			}
 		} else {
 			flash.addFlashAttribute("error", "El ID del cliente no puede ser cero!");
-			return "redirect:/listar";
+			return "redirect:/user/ver";
 		}
 
 		usuario.setEnabled(false);
 		usuarioService.save(usuario);
 		model.put("usuario", usuario);
 		model.put("titulo", "Usuarios");
-		return "redirect:/users/ver";
+		return "redirect:/user/ver";
 	}
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/activar/{id}")
@@ -172,11 +172,11 @@ public class UsuarioController {
 			usuario = usuarioService.findOne(id);
 			if (usuario == null) {
 				flash.addFlashAttribute("error", "El ID del cliente no existe en la BBDD!");
-				return "redirect:/listar";
+				return "redirect:/user/ver";
 			}
 		} else {
 			flash.addFlashAttribute("error", "El ID del cliente no puede ser cero!");
-			return "redirect:/listar";
+			return "redirect:/user/ver";
 		}
 
 		usuario.setEnabled(true);

@@ -70,6 +70,7 @@ public class Producto implements Serializable {
 	@Column(columnDefinition = "double default 50.0")
 	private double margen;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy="producto", fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	/* @JoinColumn(name="producto") */
 	private List<Inventario> inventarios;

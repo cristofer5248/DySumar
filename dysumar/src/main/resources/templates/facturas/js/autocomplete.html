@@ -6,6 +6,7 @@
 		$(document).ready(function() {
 
 var urlAjax = $("#urlAjaxpro").val();
+var urlAjaxdes = $("#urlAjaxdes").val();
 			$("#cargar_producto").autocomplete({
 
 				source : function(request, response) {
@@ -22,7 +23,7 @@ var urlAjax = $("#urlAjaxpro").val();
 							response($.map(data, function(item) {
 								return {
 									value : item.id,
-									label : item.codigo+"-" +item.nombrep +" - "+item.proveedornombre,
+									label : item.nombrep +" - "+item.marcanombre + " - " +item.presentacionnombre,
 									precio: item.precio,
 									margen: item.margen
 									
@@ -43,11 +44,13 @@ var urlAjax = $("#urlAjaxpro").val();
 					linea = linea.replace(/{ID}/g,ui.item.value);
 					linea = linea.replace(/{NOMBRE}/g,ui.item.label);
 					linea = linea.replace(/{PRECIO}/g,ui.item.precio);
-// 					linea = linea.replace(/{MARGEN}/g,ui.item.margen);
+// 					linea = linea.replace(/{DESCUENTO}/g,1);
 					
 					$("#cargarItemProductos tbody").append(linea);
-					itemsHelper.calcularImporte(ui.item.value, ui.item.precio,1,ui.item.margen);
+					$("#descuento_"+ui.item.value).val(2.0);
+					itemsHelper.calcularImporte(ui.item.value, ui.item.precio,1,ui.item.margen,parseFloat("1.0"));
 					$("#margen_"+ui.item.value).val(ui.item.margen);
+					
 					return false;
 				}
 			});
@@ -61,19 +64,40 @@ var urlAjax = $("#urlAjaxpro").val();
 		});
 		
 		var itemsHelper = {
-				calcularImporte: function(id, precio, cantidad,margen){
-					if(margen==null){
+				calcularImporte: function(id, precio, cantidad,margen,descuento){
+					var url = "/descuento/cargar_descuento/"+id+"/"+cantidad;
+					var descuentoForm;
+					if(margen==1){
 						margen = $("#margen_"+id).val();
 					}
-					$("#total_importe_"+id).html((parseFloat(precio)* parseInt(cantidad)*(margen/100)).toFixed(2));
+
+					  $.ajax({
+						    url: url,
+						    dataType: 'json',
+						    success: function( data ) {
+						      $("#descuento_"+id).html(data.descuento);
+						      itemsHelper.cambiarTotalyMargen(id,precio,cantidad,margen,data.descuento);
+						      console.log("success: "+data.descuento);
+						    },
+						    error: function( data ) {
+						    	$("#descuento_"+id).html("1.0");
+						    	itemsHelper.cambiarTotalyMargen(id,precio,cantidad,margen,1);
+						    }
+						  });					
+					
+					
+				},
+				cambiarTotalyMargen: function(id,precio,cantidad,margen,descuento){
+					$("#total_importe_"+id).html((parseFloat(precio)* parseInt(cantidad)*(margen/100)*descuento).toFixed(2));
+					$("#precio_margen_"+id).html((parseFloat(precio)*(margen/100)).toFixed(2));
 					this.calcularGranTotal();
 				},
-				calcularImporte2: function(id, precio,margen){
+				calcularImporte2: function(id, precio,margen,descuento){
 					var cantidad = 1;
 					
 						cantidad = $("#cantidad_"+id).val();
 					
-					$("#total_importe_"+id).html((parseFloat(precio)* parseInt(cantidad)*(margen/100)).toFixed(2));
+					$("#total_importe_"+id).html((parseFloat(precio)* parseInt(cantidad)*(margen/100)* descuento).toFixed(2));
 					this.calcularGranTotal();
 				},
 				hasProducto: function(id){
@@ -87,17 +111,37 @@ var urlAjax = $("#urlAjaxpro").val();
 				});
 				return resultado;
 		},
+		obtenerDescuento: function(id,cantidad){		
+			var url = "/descuento/cargar_descuento/"+id+"/"+cantidad;
+			console.log(url);
+			var descuento;
+			$.getJSON(url,function(data){			
+				console.log("mostrado el descuento adquirido por ajax: "+data.descuento);
+				descuento = data.descuento;				
+				return descuento;
+			
+		});
+			return descuento;
+		},
 		incrementaCantidad: function(id,precio){
+			
 			var cantidad = $("#cantidad_" +id).val() ? parseInt($("#cantidad_"+id).val()) : 0;
 			$("#cantidad_"+id).val(++cantidad);
-			margen = $("#margen_"+id).val();
-			alert(margen);
-			this.calcularImporte(id,precio,cantidad,margen);
+			margen = $("#margen_"+id).val();		
+			cantidadajax =++cantidad; 
+			console.log(cantidadajax);
+			var descuento=1;					
+// 					var provid = $("#cargar_proveedor").val();
+			console.log("En incrementarcantida fuction");
+			descuento = this.obtenerDescuento(id,cantidad);
+			
+			this.calcularImporte(id,precio,cantidad,margen,descuento);
 		},
 		eliminarLineaFactura: function(id){
 			$("#row_"+id).remove();
 			this.calcularGranTotal();
 		},
+		
 		calcularGranTotal: function(){
 			var total = 0;
 			$('span[id^="total_importe_"]').each(function(){

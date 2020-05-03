@@ -10,7 +10,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import com.grupoq.app.models.entity.Producto;
 
 public interface ProductosDao extends PagingAndSortingRepository<Producto, Long> {
-	@Query("select p from Producto p where p.nombrep like %?1%")
+	@Query("select p from Producto p join fetch p.proveedor prv join fetch p.marca m join fetch p.presentacion pre where p.nombrep like %?1%")
 	public List<Producto> findByNombrep(String term);
 	
 	@Query(value = "select p from Producto p join fetch p.marca m join fetch p.categoria c join fetch p.proveedor pro join fetch p.presentacion pre", countQuery = "select count(p) from Producto p join p.marca m join p.categoria c join p.proveedor pro join p.presentacion pre")

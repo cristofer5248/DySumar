@@ -69,6 +69,7 @@
 							<th>Costo</th>
 							<th>Margen</th>
 							<th>Precio</th>
+							<th>Descuento</th>
 							<th>Cantidad</th>
 							<th>Total</th>
 
@@ -86,6 +87,8 @@
 							<td th:text="${carritos.margen}+'%'"></td>
 							<td
 								th:text="'$'+${((carritos.margen)/100)*carritos.productos.precio}"></td>
+							<td th:if="${carritos.descuento<1}" th:text="${carritos.descuento*100}+'%'"></td>
+							<td th:if="${carritos.descuento==1}" th:text="'NO'"></td>
 							<td th:text="${carritos.cantidad}"></td>
 							<td
 								th:text="'$'+${((carritos.margen)/100)*carritos.productos.precio * carritos.cantidad}"></td>

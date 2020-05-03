@@ -11,4 +11,7 @@ public interface IDescuentoService {
 	public void delete (Long id);
 	public Descuento findBy(Long id);
 	public List<Descuento> findByProductoId(Long id);
+//	public Descuento findFirstByProductoIdAndCantidadOrderByCantidadAsc(Long id, int cantidad);
+	//borrar si no lo ocupo
+	public Descuento findFirstByProductoIdAndCantidadOrderByCantidadAsc(Long id, int cantidad);
 }
