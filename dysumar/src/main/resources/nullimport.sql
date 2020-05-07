@@ -1,11 +1,11 @@
 use dysumar;
-INSERT INTO users (nombre,apellidos,username, password, enabled,telefono) VALUES('Carlos','Hernandez','andres', '$2a$10$pXSjZhKajePgUvQZplTkOuA6n4ee/wHaOF/UJWornHmRxhN3D0Cd6', 1,71208113);
 INSERT INTO users (nombre,apellidos,username, password, enabled,telefono) VALUES('Christopher Elias','Maldonado Martinez','admin', '$2a$10$pLiT5n4R/wOZ8SyKgNvvOeRuMd07/m9QzguNQFJPfphWUB0ktQ2zS', 1,83208113);
+INSERT INTO users (nombre,apellidos,username, password, enabled,telefono) VALUES('Marina','Hernandez','marina', '$2a$10$pXSjZhKajePgUvQZplTkOuA6n4ee/wHaOF/UJWornHmRxhN3D0Cd6', 1,71208113);
 INSERT INTO users (nombre,apellidos,username, password, enabled,telefono) VALUES('David Tadeo','Ramos','DATARA12', '$2a$10$fpZ3pU63UnhsJcAPopsz1.hBzYFe5ptoCXcP4UXkqwv8MBwdHV6x6', 1,7220853);
 INSERT INTO users (nombre,apellidos,username, password, enabled,telefono) VALUES('Melody','','MLD123', '$2a$10$IBncau/R54WrXROHE/QEnObji7HOoH5TjrLQSzuJnoVsVlSF73stO', 1,7283113);
 
-INSERT INTO roles (user_id, authority) VALUES(1, 'ROLE_USER');
-INSERT INTO roles (user_id, authority) VALUES(2, 'ROLE_ADMIN');
+INSERT INTO roles (user_id, authority) VALUES(1, 'ROLE_ADMIN');
+INSERT INTO roles (user_id, authority) VALUES(2, 'ROLE_JEFEADM');
 INSERT INTO roles (user_id, authority) VALUES(3, 'ROLE_ADMIN');
 INSERT INTO roles (user_id, authority) VALUES(4, 'ROLE_ADMIN');
 INSERT INTO roles (user_id, authority) VALUES(4, 'ROLE_USER');
@@ -527,15 +527,15 @@ insert into descuentos values (null,1000,45,1), (null,800,30,1);
 insert into direcciones values (null,"Boulevar Constitucion, calle zacamil, casa #2"),(null,"Redoldel Masferrer, calle los santos, pasaje 12, casa #5");
 
 insert into cliente_direcciones values (null,1,1),(null,1,2);
-insert into inventario values (null,"02213","2019-03-03",20,1);
-insert into inventario values(null,"02255","2019-02-03",100,1);
-insert into inventario (stock,producto_idp) select stock,idp from productos where idp>1;
 
-update inventario set create_at="2020-02-02", codigo_proveedor=2 where inventario_id>1;
+insert into inventario (stock,producto_idp,codigo_proveedor) select stock,idp,concat(idp,'A') from productos where idp>0;
+update inventario set stock=2 where producto_idp=1;
+
+update inventario set create_at="2020-02-02" where inventario_id>0;
 insert into cdepago values (1,"Credito"), (2,"Contado");
 insert into formadepago values (1,"Efectivo"), (2,"Cheque"), (3, "Transaccion");	
 insert into tipo_factura values (1,"Credito fiscal"),(2,"Consumidor Final"),(3,"Exportacion");
 insert into cotizacion values (1,"2020-02-02",true);
 update cotizacion set create_at="2020-02-02" where id=1;
-insert into carrito_items values(1,300,"536xxx",50.0,1,1), (2,500,"972xxx",50.0,1,4);	
+insert into carrito_items values(1,300,"536xxx",1,50.0,1,1), (2,500,"972xxx",1,50.0,1,4);	
 insert into facturacion values (1,'2221',"un detalle",1,1,1,1,1,1);

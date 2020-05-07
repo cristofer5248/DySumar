@@ -28,7 +28,7 @@ public class CotizacionController {
 		return "cotizaciones/listar";
 	}
 
-	@Secured({"ROLE_ADMIN","ROLE_USER"})
+	@Secured({"ROLE_ADMIN","ROLE_JEFEADM","ROLE_SELLER","ROLE_FACT"})
 	@RequestMapping(value = "/ver/{term}", method = RequestMethod.GET)
 	public String ver(@PathVariable Long term, Map<String, Object> model,
 			RedirectAttributes flash) {
@@ -42,7 +42,7 @@ public class CotizacionController {
 		model.put("titulo", "Detalle de cotizacion");
 		return "cotizaciones/ver";
 	}
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_SELLER"})
 	@RequestMapping(value="/aprobar/{term}", method = RequestMethod.GET)
 	public String aprobar(@PathVariable Long term,Map<String, Object> model, RedirectAttributes flash) {
 		Cotizacion cotizacion = cotizacionService.findby(term);

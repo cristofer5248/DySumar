@@ -19,7 +19,7 @@
 			<div class="card-body">
 
 				<h4 class="card-title">
-					<a th:if="${#request.isUserInRole('ADMIN')}"
+					<a th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"
 						th:href="@{/descuento/nuevo}" class="btn btn-primary btn-xs">Crear
 						Descuento</a>
 
@@ -28,22 +28,22 @@
 					<thead class="thead-inverse">
 						<tr>
 							<th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">id</th>
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}">id</th>
 							<th>Producto</th>
 							<th>Cantidad</th>
 							<th>Porcentaje</th>
 
 
 							<!-- <th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"></th> -->
-							<th th:if="${#request.isUserInRole('ADMIN')}">Editar</th>
-							<th th:if="${#request.isUserInRole('ADMIN')}">Eliminar</th>
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"></th> -->
+							<th th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">Editar</th>
+							<th th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">Eliminar</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="descuento: ${descuentos}">
 							<td
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"><a
 								class="btn btn-primary btn-xs"
 								th:href="@{/verproducto/} + ${descuento.id}"
 								th:text="${descuento.id}"></a></td>
@@ -51,7 +51,7 @@
 							<td th:text="${descuento.cantidad}"></td>
 							<td th:text="${descuento.porcentaje}"></td>
 							<td class="centerMe"
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+								th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"><a
 								th:href="@{'/descuento/editar/' + ${descuento.id}}">
 									<div class='icon'>
 										<i class='fa fa-pencil'></i>
@@ -61,7 +61,7 @@
 									</div>
 							</a></td>
 
-							<td th:if="${#request.isUserInRole('ADMIN')}"><a
+							<td th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"><a
 								class="centerMe"
 								th:href="@{/descuento/eliminar/} + ${descuento.id}"
 								onclick="return confirm('Estas seguro que quieres eliminar?');">

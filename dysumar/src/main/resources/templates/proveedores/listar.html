@@ -7,7 +7,7 @@
 <link rel='stylesheet prefetch'
 	href='https://fonts.googleapis.com/css?family=Roboto:100,300,400'>
 
-<link rel="stylesheet" href="css/deleteanimated_js.css">
+
 <link rel="stylesheet" th:href="@{/css/searchbar.css}" />
 <body>
 
@@ -20,7 +20,7 @@
 			<div class="card-body table-responsive">
 
 				<div class="card-title">
-					<a th:if="${#request.isUserInRole('ADMIN')}"
+					<a th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('INV')}"
 						th:href="@{/proveedor/nuevo}" class="btn btn-primary btn-xs">Crear
 						proveedor</a>
 					<form class="searchbox" th:action="@{/proveedor/listar/}">
@@ -36,7 +36,7 @@
 					<thead class="thead-inverse">
 						<tr>
 							<th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">id</th>
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('INV')}">id</th>
 							<th>Nombre</th>
 							<th>Codigo</th>
 							<!-- 							<th>Giro</th> -->
@@ -44,18 +44,18 @@
 							<th>Email</th>
 							<th>NIT</th>
 							<th>Direccion</th>
-							<th>Borrar</th>
-							<th>Editar</th>
+							<th th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('INV')}">Borrar</th>
+							<th th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('INV')}">Editar</th>
 
 							<!-- <th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"></th> -->
-							<!-- <th th:if="${#request.isUserInRole('ADMIN')}"></th> -->
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"></th> -->
+							<!-- <th th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"></th> -->
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="proveedor: ${proveedores}">
 							<td
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('INV')}"><a
 								class="btn btn-primary btn-xs"
 								th:href="@{/verproducto/} + ${proveedor.id}"
 								th:text="${proveedor.id}"></a></td>
@@ -66,7 +66,7 @@
 							<td th:text="${proveedor.email}"></td>
 							<td th:text="${proveedor.nit}"></td>
 							<td style="font-size: 10px;" th:text="${proveedor.direccion}"></td>
-							<!-- <td	th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+							<!-- <td	th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"><a
 								th:href="@{'/proveedor/nuevo/' + ${proveedor.id}}">
 									<div class='icon'>
 										<i class='fa fa-check'></i>
@@ -76,22 +76,22 @@
 									</div>
 							</a></td> -->
 
-							<td th:if="${#request.isUserInRole('ADMIN')}"><a
-								class="centerMe"
+							<td th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('INV')}"><a
+								
 								th:href="@{/proveedor/eliminar/} + ${proveedor.id}"
 								onclick="return confirm('Estas seguro que quieres eliminar?');">
 									<div class='icon'>
-										<i class='fa fa-trash'></i>
+										<i class='fa fa-trash' onmouseover="quitarcolumns();"></i>
 									</div>
-									<div class='text delete'>
+									<div class='text delete' >
 										<span>Eliminar</span>
 									</div>
 							</a></td>
-							<td th:if="${#request.isUserInRole('ADMIN')}"><a
-								class="centerMe"
+							<td th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('INV')}"><a
+								
 								th:href="@{/proveedor/editar/} + ${proveedor.id}">
 									<div class='icon'>
-										<i class='fa fa-pencil'></i>
+										<i class='fa fa-pencil' onmouseover="quitarcolumns();"></i>
 									</div>
 									<div class='text update'>
 										<span>Editar</span>
@@ -112,5 +112,17 @@
 	<footer th:replace="layout/layout :: footer"></footer>
 	<input type="hidden" id="urlenviar" th:value="@{/proveedor/listar/}" />
 	<script th:src="@{/js/searchbar.js}"></script>
+	<script>
+	var contador=0;
+	function quitarcolumns(){
+		
+		if(contador==0){
+		$('table tr').find('td:eq(6),th:eq(6)').remove();
+		$('table tr').find('td:eq(5),th:eq(5)').remove();
+		contador++;
+		}
+		
+	}
+	</script>
 </body>
 </html>

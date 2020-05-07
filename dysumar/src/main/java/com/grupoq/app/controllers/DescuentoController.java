@@ -75,7 +75,7 @@ public class DescuentoController {
 		return null;
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_JEFEADM"})
 	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
 	public String nuevo(Map<String, Object> model) {
 		Descuento descuentos = new Descuento();
@@ -85,7 +85,7 @@ public class DescuentoController {
 		return "/descuentos/form";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_JEFEADM"})
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String guardar(@Valid Descuento descuento, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
@@ -102,7 +102,7 @@ public class DescuentoController {
 		return "redirect:/descuento/listar/" + descuento.getProducto().getId();
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_JEFEADM"})
 	@RequestMapping(value = "/eliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		Descuento descuentoTemp = null;
@@ -121,6 +121,7 @@ public class DescuentoController {
 		return "redirect:/descuento/listar/" + descuentoTemp.getProducto().getId();
 	}
 
+	@Secured({"ROLE_ADMIN","ROLE_JEFEADM","ROLE_SELLER"})
 	@RequestMapping(value = "/listar/{id}", method = RequestMethod.GET)
 	public String listar(@PathVariable(value = "id") Long id, Model model) {
 		List<Descuento> descuentos = descuentoService.findByProductoId(id);

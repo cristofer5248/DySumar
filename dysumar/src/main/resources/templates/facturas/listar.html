@@ -17,20 +17,23 @@
 
 				<div class="card-title">
 					<a
-						th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('USER')}"
+						th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('FACT')}"
 						th:href="@{/factura/nuevof}" class="btn btn-primary btn-xs">Facturar</a>
+						<a
+						th:if="${#request.isUserInRole('SELLER')}"
+						th:href="@{/factura/nuevof}" class="btn btn-primary btn-xs">REMISION</a>
 					<a
-						th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('USER')}"
+						th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('SELLER')}"
 						th:href="@{/factura/nuevo}" class="btn btn-primary btn-xs">Cotizár</a>
 					<form class="searchbox" th:action="@{/marca/listar/}">
 						<div>
 							<input type="search"
 								placeholder="Introducir el nombre de un cliente para buscar......"
 								class="searchbox-input" onkeyup="buttonUp();" id="btn-search"
-								required><select class="custom-select mr-sm-2"
+								required><select class="custom-select mr-sm-2" 
 								id="opcSearch" style="margin-left: 10px; height: 3.3em;">
 								<option value="cliente">Por cliente</option>
-								<option value="usuario">Por usuario</option>
+								<option th:if="${!#request.isUserInRole('SELLER')}" value="usuario">Por usuario</option>
 							</select> <input type="button" id="vamonos" class="searchbox-submit"
 								value="GO"><span class="searchbox-icon">Buscar</span>
 						</div>
@@ -40,7 +43,7 @@
 					<thead class="thead-inverse">
 						<tr>
 							<th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">Id</th>
+								>Id</th>
 							<th>A Cuenta de</th>
 							<th>Cliente</th>
 							<!-- <th>Stock</th> -->
@@ -50,13 +53,12 @@
 							<th>TF</th>
 							<th>Detalles</th>
 
-							<th th:if="${#request.isUserInRole('ADMIN')}">eliminar</th>
+							<th th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('JEFEADM')}">eliminar</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="factura: ${facturas}">
-							<td
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+							<td><a
 								class="btn btn-primary btn-xs"
 								th:href="@{/factura/ver/} + ${factura.id}"
 								th:text="${factura.id}"></a></td>
@@ -69,11 +71,11 @@
 							<td th:text="${factura.tipoFactura.nombre}"></td>
 							<td th:text="${factura.detalles}"></td>
 							<!-- 							<td
-								th:if="${#request.isUserInRole('USER')}"><a
+								th:if="${#request.isUserInRole('SELLER')}"><a
 								class="btn btn-success btn-xs"
 								th:href="@{'/factura/form/' + ${factura.id}}"
 								th:text="'crear factura'"></a></td> -->
-							<td th:if="${#request.isUserInRole('ADMIN')}"><a
+							<td th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"><a
 								class="btn btn-danger btn-xs"
 								th:href="@{/factura/eliminar/} + ${factura.id}"
 								th:text="'eliminar'"

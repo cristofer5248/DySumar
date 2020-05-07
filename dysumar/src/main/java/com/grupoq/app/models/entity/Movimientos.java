@@ -1,21 +1,17 @@
 package com.grupoq.app.models.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.Date;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import com.grupoq.app.models.entity.Facturacion;
-
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "movimientos")
@@ -24,21 +20,23 @@ public class Movimientos implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Facturacion Facturacion;
 	
-	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern = "MM-dd-yyyy")
-	private Date fecha;
+	@OneToMany(mappedBy="movimientos", fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	/* @JoinColumn(name="producto") */
+	private List<Inventario> inventario;
+	
+//	@ManyToOne(fetch = FetchType.LAZY)
+//	private Inventario inventario;
+		
 	//descuentos o margenes
-	private double precioMargen;
-	private double precioNormal;
-	private double descuento;
+//	private double precioMargen;
+//	private double precioNormal;
+//	private double descuento;
 	
 	private static final long serialVersionUID = 1L;
 
 	public Movimientos() {
+		this.inventario = new ArrayList<Inventario>();
 	}
 
 	public Long getId() {
@@ -49,44 +47,15 @@ public class Movimientos implements Serializable {
 		this.id = id;
 	}
 
-	public Date getFecha() {
-		return fecha;
+	public List<Inventario> getInventario() {
+		return inventario;
 	}
 
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
-	}
+	public void setInventario(List<Inventario> inventario) {
+		this.inventario = inventario;
+	}		
 
-	public Facturacion getFacturacion() {
-		return Facturacion;
-	}
+	
 
-	public void setFacturacion(Facturacion facturacion) {
-		Facturacion = facturacion;
-	}
-
-	public double getPrecioMargen() {
-		return precioMargen;
-	}
-
-	public void setPrecioMargen(double precioMargen) {
-		this.precioMargen = precioMargen;
-	}
-
-	public double getPrecioNormal() {
-		return precioNormal;
-	}
-
-	public void setPrecioNormal(double precioNormal) {
-		this.precioNormal = precioNormal;
-	}
-
-	public double getDescuento() {
-		return descuento;
-	}
-
-	public void setDescuento(double descuento) {
-		this.descuento = descuento;
-	}
 
 }

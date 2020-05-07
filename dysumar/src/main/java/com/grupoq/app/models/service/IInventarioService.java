@@ -24,5 +24,7 @@ public interface IInventarioService {
 	
 	public Inventario findById(Long id);
 	public List<Inventario> findByIdCodigoProveedor(String id);
-	public Inventario findByIdCodigoProveedorOb(String id);
+	public Inventario findByIdCodigoProveedorOb(Long id,String codcompra);
+	public Inventario findByCodigoProveedor(String id);
+	public Inventario findByIdCustom(Long id);
 }

@@ -36,9 +36,12 @@ public class Inventario implements Serializable{
 	private Date fecha;
 	
 	
-	@Column(unique = true, length = 30)
+	@Column(unique = false, length = 30)
 	private String codigoProveedor;
 	//descuentos y margenes
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Movimientos movimientos;
+	
 	private static final long serialVersionUID = 1L;
 
 	public Inventario() {
@@ -83,6 +86,14 @@ public class Inventario implements Serializable{
 
 	public void setCodigoProveedor(String codigoProveedor) {
 		this.codigoProveedor = codigoProveedor;
+	}
+
+	public Movimientos getMovimientos() {
+		return movimientos;
+	}
+
+	public void setMovimientos(Movimientos movimientos) {
+		this.movimientos = movimientos;
 	}
 	
 }

@@ -32,26 +32,29 @@
 			</button>
 			<div class="collapse navbar-collapse">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
+					<li class="nav-item active"><a class="nav-link" th:href="@{/}">Home</a></li>
 
-					<li
-						th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"
-						class="nav-item dropdown"><a class="nav-link dropdown-toggle"
-						href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-						aria-haspopup="true" aria-expanded="false"><i
-							class="fas fa-users"></i> Personas </a>
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"><i class="fas fa-users"></i> Personas </a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="#about" th:href="@{/clientes}"><i
+							<a
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_SELLER')"
+								class="dropdown-item" href="#about" th:href="@{/clientes}"><i
 								class="fas fa-address-book"></i> Clientes</a> <a
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SELLER')"
 								class="dropdown-item" th:href="@{/direcciones}"><i
 								class="fas fa-map-marked"></i> Direcciones</a> <a
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SELLER')"
 								class="dropdown-item" th:href="@{/cdireccion}"><i
 								class="fas fa-map-pin"></i> Asignar direccion</a>
 							<div class="dropdown-divider"></div>
-							<a class="dropdown-item" th:href="@{/giro/listar}"><i
+							<a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SELLER')"
+								class="dropdown-item" th:href="@{/giro/listar}"><i
 								class="fas fa-building"></i> Giros</a>
 							<div class="dropdown-divider"></div>
-							<a th:if="${#request.isUserInRole('ADMIN')}"
+							<a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"
 								class="dropdown-item" th:href="@{/user/ver}"><i
 								class="fas fa-user-friends"></i> Usuarios</a>
 
@@ -63,13 +66,21 @@
 						aria-expanded="false"><i class="fas fa-store"></i> Entradas </a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="#about"
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
 								th:href="@{/producto/listar}"><i class="fas fa-box-open"></i>
 								Productos</a> <a class="dropdown-item"
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
 								th:href="@{/inventario/listar}"><i class="fas fa-arrow-down"></i>
 								Ingresos</a>
 							<!-- 							<div class="dropdown-divider"></div> -->
 							<!-- 							<a class="dropdown-item" href="#">Movimientos</a> -->
 						</div></li>
+
+					<li sec:authorize="hasRole('ROLE_SELLER')"
+						class="nav-item dropdown"><a class="nav-link"
+						th:href="@{/producto/listar}" id="navbarDropdown"
+						aria-haspopup="true"><i class="fas fa-money-check-alt"></i>
+							PRODUCTOS</a></li>
 
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
@@ -78,13 +89,18 @@
 							Salidas </a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="#about"
-								th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('USER')}"
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_FACT','ROLE_SELLER')"
 								th:href="@{/factura/listar}"><i
-								class="fas fa-file-invoice-dollar"></i> Factura</a> <a
-								class="dropdown-item" th:href="@{/ventas/listar}">Historial
-								de Salidas</a>
+								class="fas fa-file-invoice-dollar"></i> Remision</a>
+							<!-- 								<a -->
+							<!-- 								class="dropdown-item" th:href="@{/ventas/listar}">Historial -->
+							<!-- 								de Salidas</a> -->
 							<!-- 							<div class="dropdown-divider"></div> -->
 							<!-- 							<a class="dropdown-item" href="#">Movimientos</a> -->
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" data-toggle="modal"
+								data-target="#exampleModal"><i class="fas fa-search"></i>
+								Buscar una cotizacion</a>
 						</div></li>
 
 					<li class="nav-item dropdown"><a
@@ -92,15 +108,22 @@
 						role="button" data-toggle="dropdown" aria-haspopup="true"
 						aria-expanded="false"><i class="fas fa-store"></i> Productos </a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="#about" th:href="@{/marca/listar}"><i
+							<a
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
+								class="dropdown-item" href="#about" th:href="@{/marca/listar}"><i
 								class="far fa-copyright"></i> Marcas</a> <a class="dropdown-item"
-								th:href="@{/proveedor/listar}"><i class="fas fa-shuttle-van"></i> Proveedores</a> <a
-								class="dropdown-item" th:href="@{/categoria/listar}"><i class="fas fa-server"></i> Categorias</a>
-							<a class="dropdown-item" th:href="@{/descuento/nuevo}"><i class="fas fa-percent"></i> Descuentos</a>
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
+								th:href="@{/proveedor/listar}"><i class="fas fa-shuttle-van"></i>
+								Proveedores</a> <a class="dropdown-item"
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
+								th:href="@{/categoria/listar}"><i class="fas fa-server"></i>
+								Categorias</a> <a
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
+								th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('SELLER')}"
+								class="dropdown-item" th:href="@{/descuento/nuevo}"><i
+								class="fas fa-percent"></i> Descuentos</a>
 							<!-- 								<a	class="dropdown-item" href="#">Margenes</a> -->
-							<div class="dropdown-divider"></div>
-							<a class="dropdown-item" data-toggle="modal"
-								data-target="#exampleModal"><i class="fas fa-search"></i> Buscar una cotizacion</a>
+
 						</div></li>
 
 				</ul>
@@ -108,7 +131,7 @@
 				<ul class="navbar-nav navbar-right">
 					<li sec:authorize="!isAuthenticated()"><a
 						class="btn btn-outline-primary" th:href="@{/login}">Iniciar
-							Sesion</a></li>
+							Session</a></li>
 
 					<li sec:authorize="isAuthenticated()" class="dropdown show"><a
 						class="btn btn-outline-primary dropdown-toggle" href="#"
@@ -120,7 +143,7 @@
 							<form id="logoutForm" th:action="@{/logout}" method="post">
 								<button class="dropdown-item"
 									onclick="document.getElementById('logoutForm').submit();"
-									type="submit">Cerrar Sesion</button>
+									type="submit">Sign Out</button>
 								<input type="hidden" th:name="${_csrf.parameterName}"
 									th:value="${_csrf.token}" />
 							</form>
@@ -177,9 +200,8 @@
 		<hr />
 		<img th:src="@{/images/logo.jpeg}" alt="Spring logo" />
 		<p sec:authorize="isAuthenticated()">
-			Usuario logeado: <span sec:authentication="name"></span> | Role: <span
-				th:if="${#request.isUserInRole('ADMIN')}">ADMINISTRADOR</span> <span
-				th:if="${#request.isUserInRole('USER')}">VENDEDOR</span>
+			Usuario logeado: <span sec:authentication="name"></span> | Roles: <span
+				sec:authentication="principal.authorities"></span>
 		</p>
 		<p>
 			Powered by <a href="https://projects.spring.io/spring-boot/">Spring

@@ -7,7 +7,7 @@
 <link rel='stylesheet prefetch'
 	href='https://fonts.googleapis.com/css?family=Roboto:100,300,400'>
 
-<link rel="stylesheet" href="css/deleteanimated_js.css">
+<!-- <link rel="stylesheet" href="css/deleteanimated_js.css"> -->
 <link rel="stylesheet" th:href="@{/css/searchbar.css}" />
 <body>
 
@@ -20,7 +20,7 @@
 			<div class="card-body">
 
 				<div class="card-title">
-					<a th:if="${#request.isUserInRole('ADMIN')}"
+					<a th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('INV')}"
 						th:href="@{/categoria/nuevo}" class="btn btn-primary btn-xs">Crear
 						Categoria</a>
 					<form class="searchbox" th:action="@{/categoria/listar/}">
@@ -36,25 +36,25 @@
 					<thead class="thead-inverse">
 						<tr>
 							<th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">id</th>
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}">id</th>
 							<th>Nombre</th>
 
 							<!-- <th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"></th> -->
-							<th th:if="${#request.isUserInRole('ADMIN')}">Editar</th>
-							<th th:if="${#request.isUserInRole('ADMIN')}">Eliminar</th>
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"></th> -->
+							<th th:if="${#request.isUserInRole('INV')}">Editar</th>
+							<th th:if="${#request.isUserInRole('INV')}">Eliminar</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="categoria: ${categorias}">
 							<td
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+								th:if="${#request.isUserInRole('INV')}"><a
 								class="btn btn-primary btn-xs"
 								th:href="@{/verproducto/} + ${categoria.id}"
 								th:text="${categoria.id}"></a></td>
 							<td th:text="${categoria.nombre}"></td>
 							<td class="centerMe"
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+								th:if="${#request.isUserInRole('INV')} OR ${#request.isUserInRole('ADMIN')}"><a
 								th:href="@{'/categoria/editar/' + ${categoria.id}}">
 									<div class='icon'>
 										<i class='fa fa-pencil'></i>
@@ -64,7 +64,7 @@
 									</div>
 							</a></td>
 
-							<td th:if="${#request.isUserInRole('ADMIN')}"><a
+							<td th:if="${#request.isUserInRole('INV')}"><a
 								class="centerMe"
 								th:href="@{/categoria/eliminar/} + ${categoria.id}"
 								onclick="return confirm('Estas seguro que quieres eliminar?');">

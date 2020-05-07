@@ -55,9 +55,21 @@ public class IInventarioServiceImpl implements IInventarioService {
 	}
 
 	@Override
-	public Inventario findByIdCodigoProveedorOb(String id) {
+	public Inventario findByIdCodigoProveedorOb(Long id, String idcompra) {
 		// TODO Auto-generated method stub
-		return inventarioDao.findByIdCodigoProveedorOb(id);
+		return inventarioDao.findByIdCodigoProveedorOb(id,idcompra);//aqui
+	}
+
+	@Override
+	public Inventario findByCodigoProveedor(String id) {
+		// TODO Auto-generated method stub
+		return inventarioDao.findFirstByCodigoProveedor(id);
+	}
+
+	@Override
+	public Inventario findByIdCustom(Long id) {
+		// TODO Auto-generated method stub
+		return inventarioDao.findByIdCustom(id);
 	}
 
 

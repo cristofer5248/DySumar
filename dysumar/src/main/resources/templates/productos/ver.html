@@ -20,7 +20,7 @@
 					<a class="btn btn-success btn-xs float-right"
 						th:href="@{'/producto/ver/' + ${producto.id}(format=xlsx)}">XLSX</a>
 
-					<!-- 					<a th:if="${#request.isUserInRole('USER')}" -->
+					<!-- 					<a th:if="${#request.isUserInRole('SELLER')}" -->
 					<!-- 						class="btn btn-primary btn-xs" -->
 					<!-- 						th:href="@{'/factura/form/' + ${producto.id}}" -->
 					<!-- 						th:text="'Crear factura'"></a> -->
@@ -31,7 +31,7 @@
 					<!-- 						th:text="'Nuevo requerimiento'"></a> -->
 					<a class="btn btn-primary btn-xs" th:href="@{/producto/listar}"
 						th:text="'Volver'"></a> <a class="btn btn-primary btn-xs"
-						th:if="${not #lists.isEmpty(producto.inventarios)} AND ${#request.isUserInRole('USER')}"
+						th:if="${not #lists.isEmpty(producto.inventarios)} AND ${#request.isUserInRole('SELLER')}"
 						th:href="@{'/factura/finalizar/' + ${taller.id}}"
 						th:text="'Finalizar factura'"></a>
 

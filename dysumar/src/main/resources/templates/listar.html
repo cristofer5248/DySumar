@@ -13,7 +13,7 @@
 			<div class="card-body">
 
 				<h4 class="card-title">
-					<a th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"
+					<a th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"
 						th:href="@{/clienteform}" class="btn btn-primary btn-xs">crear
 						cliente</a>
 				</h4>
@@ -21,26 +21,27 @@
 					<thead class="thead-inverse">
 						<tr>
 							<th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">id</th>
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}">id</th>
 							<th>Codigo</th>
 							<th>Nombre</th>
 							<th>Apellido</th>
 							<th>Email</th>
-							<th th:if="${#request.isUserInRole('ADMIN')}">DUI</th>
-							<th th:if="${#request.isUserInRole('ADMIN')}">Giro</th>
+							<th>DUI</th>
+<!-- 							<th th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">Giro</th> -->
+							<th>POR</th>
 							<th>Fecha de registro</th>
 							<th
-								th:if="${#request.isUserInRole('USER')}">crear
+								th:if="${#request.isUserInRole('SELLER')}">crear
 								factura</th>
 							<th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">editar</th>
-							<th th:if="${#request.isUserInRole('ADMIN')}">eliminar</th>
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}">editar</th>
+							<th th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">eliminar</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="cliente: ${clientes}">
 							<td
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"><a
 								class="btn btn-primary btn-xs"
 								th:href="@{/vercliente/} + ${cliente.id}"
 								th:text="${cliente.id}"></a></td>
@@ -48,19 +49,19 @@
 							<td th:text="${cliente.nombre}"></td>
 							<td th:text="${cliente.apellido}"></td>
 							<td th:text="${cliente.email}"></td>
-							<td th:if="${#request.isUserInRole('ADMIN')}" th:text="${cliente.dui}"></td>
-							<td style="font-size:10px;" th:if="${#request.isUserInRole('ADMIN')}" th:text="${cliente.giro.categoriagiro.nombre}"></td>
+							<td th:text="${cliente.dui}"></td>
+							<td th:text="${cliente.usuario.nombre}"></td>
 							<td th:text="${cliente.createAt}"></td>
 							<td
-								th:if="${#request.isUserInRole('USER')}"><a
+								th:if="${#request.isUserInRole('SELLER')}"><a
 								class="btn btn-success btn-xs"
 								th:href="@{'/factura/form/' + ${cliente.id}}"
 								th:text="'crear factura'"></a></td>
 							<td
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"><a
 								class="btn btn-primary btn-xs"
 								th:href="@{/clienteform/} + ${cliente.id}" th:text="'editar'"></a></td>
-							<td th:if="${#request.isUserInRole('ADMIN')}"><a
+							<td th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"><a
 								class="btn btn-danger btn-xs"
 								th:href="@{/cleliminar/} + ${cliente.id}" th:text="'eliminar'"
 								onclick="return confirm('Estas seguro que quieres eliminar?');"></a></td>

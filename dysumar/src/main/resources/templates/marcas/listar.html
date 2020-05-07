@@ -20,7 +20,7 @@
 			<div class="card-body">
 
 				<div class="card-title">
-					<a th:if="${#request.isUserInRole('ADMIN')}"
+					<a th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('INV')}"
 						th:href="@{/marca/nuevo}" class="btn btn-primary btn-xs">Crear
 						marca</a>
 					<form class="searchbox" th:action="@{/marca/listar/}">
@@ -36,21 +36,21 @@
 					<thead class="thead-inverse">
 						<tr>
 							<th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">id</th>
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('INV')}">id</th>
 							<th>Nombre</th>
 							<!-- <th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"></th> -->
-							<th th:if="${#request.isUserInRole('ADMIN')}"></th>
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"></th> -->
+							<th th:if="${#request.isUserInRole('INV')}">OP</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="marca: ${marcas}">
 							<td
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('INV')}"><a
 								class="btn btn-primary btn-xs"
 								th:href="@{/verproducto/} + ${marca.idm}" th:text="${marca.idm}"></a></td>
 							<td th:text="${marca.nombrem}"></td>
-							<!-- <td	th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+							<!-- <td	th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"><a
 								th:href="@{'/marca/nuevo/' + ${marca.idm}}">
 									<div class='icon'>
 										<i class='fa fa-check'></i>
@@ -60,7 +60,7 @@
 									</div>
 							</a></td> -->
 
-							<td th:if="${#request.isUserInRole('ADMIN')}"><a
+							<td th:if="${#request.isUserInRole('INV') or #request.isUserInRole('ADMIN')}"><a
 								class="centerMe" th:href="@{/marca/eliminar/} + ${marca.idm}"
 								onclick="return confirm('Estas seguro que quieres eliminar?');">
 									<div class='icon'>

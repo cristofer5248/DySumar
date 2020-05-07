@@ -26,24 +26,28 @@ import com.grupoq.app.models.service.IGiroService;
 @SessionAttributes("giro")
 @RequestMapping("/giro")
 @Controller
+
 public class GiroController {
-	
+
 	@Autowired
 	private IGiroService giroService;
 	
+	@Secured({"ROLE_ADMIN","ROLE_JEFEADM", "ROLE_SELLER"})
 	@GetMapping(value = "/cargar_giro/{term}", produces = { "application/json" })
 	public @ResponseBody List<Giro> giroTodosJson(@PathVariable String term) {
 		List<Giro> list = giroService.findByNombre(term);
 		return list;
 	}
-	@RequestMapping(value = "/listar" , method = RequestMethod.GET)
+	@Secured({"ROLE_ADMIN","ROLE_JEFEADM", "ROLE_SELLER"})
+	@RequestMapping(value = "/listar", method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-		List<Giro> giro=  giroService.listAll();			
+		List<Giro> giro = giroService.listAll();
 		model.addAttribute("titulo", "Listado de marcas");
-		model.addAttribute("giros", giro);		
+		model.addAttribute("giros", giro);
 		return "/giros/listar";
 	}
-	@Secured("ROLE_ADMIN")
+
+	@Secured({"ROLE_ADMIN","ROLE_JEFEADM", "ROLE_SELLER"})
 	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
 	public String nuevo(Map<String, Object> model) {
 		Giro giro = new Giro();
@@ -52,7 +56,8 @@ public class GiroController {
 		model.put("nullchecker", 1);
 		return "/giros/form";
 	}
-	@Secured("ROLE_ADMIN")
+
+	@Secured({"ROLE_ADMIN","ROLE_JEFEADM", "ROLE_SELLER"})
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String guardar(@Valid Giro giro, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
@@ -67,7 +72,8 @@ public class GiroController {
 		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:/giro/listar";
 	}
-	@Secured("ROLE_ADMIN")
+
+	@Secured({"ROLE_ADMIN","ROLE_JEFEADM"})
 	@RequestMapping(value = "/eliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 
@@ -84,6 +90,5 @@ public class GiroController {
 		}
 		return "redirect:/giro/listar";
 	}
-
 
 }

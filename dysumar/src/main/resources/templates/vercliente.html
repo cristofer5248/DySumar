@@ -14,7 +14,7 @@
 			<div class="card-body">
 
 				<h4 class="card-title">
-					<a th:if="${#request.isUserInRole('USER')}"
+					<a th:if="${#request.isUserInRole('SELLER')}"
 						class="btn btn-primary btn-xs"
 						th:href="@{'/factura/form/' + ${cliente.id}}"
 						th:text="'Crear factura'"></a>
@@ -23,11 +23,11 @@
 					<!-- 						class="btn btn-primary btn-xs" -->
 					<!-- 						th:href="@{'/taller/form/' + ${cliente.id}}" -->
 					<!-- 						th:text="'Nuevo requerimiento'"></a> -->
-					<a th:if="${#request.isUserInRole('ADMIN')}"
+					<a th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"
 						class="btn btn-primary btn-xs"
 						th:href="@{'/taller/tallerform/' + ${cliente.id}}"
 						th:text="'Nueva asignacion'"></a> 
-						<a class="btn btn-primary btn-xs" th:if="${not #lists.isEmpty(taller)} AND ${#request.isUserInRole('USER')}" 
+						<a class="btn btn-primary btn-xs" th:if="${not #lists.isEmpty(taller)} AND ${#request.isUserInRole('SELLER')}" 
 						th:href="@{'/factura/finalizar/' + ${taller.id}}"
 						th:text="'Finalizar factura'"></a>
 

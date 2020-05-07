@@ -20,7 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,7 +59,7 @@ public class ProveedorController {
 		return "/proveedores/listar";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
 	public String nuevo(Map<String, Object> model) {
 		Proveedor proveedor = new Proveedor();
@@ -70,7 +69,7 @@ public class ProveedorController {
 		return "/proveedores/form";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String guardar(@Valid Proveedor proveedor, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
@@ -86,7 +85,7 @@ public class ProveedorController {
 		return "redirect:/proveedor/listar";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = "/eliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 
@@ -104,7 +103,7 @@ public class ProveedorController {
 		return "redirect:/proveedor/listar";
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = "/editar/{id}")
 	public String editar(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 

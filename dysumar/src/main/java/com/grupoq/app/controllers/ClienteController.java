@@ -15,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -147,9 +146,12 @@ public class ClienteController {
 		}
 
 		Pageable pageRequest = PageRequest.of(page, 4);
-
-		Page<Cliente> clientes = clienteService.findAll(pageRequest);
-
+		Page<Cliente> clientes = null;
+		if (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_JEFEADM")) {
+		clientes= clienteService.findAll(pageRequest);
+		}else {
+			clientes = clienteService.findAllByUsuarioPage(auth.getName(),pageRequest);
+		}
 		PageRender<Cliente> pageRender = new PageRender<Cliente>("/clientes", clientes);
 		model.addAttribute("titulo", "Listado de clientes");
 		model.addAttribute("clientes", clientes);
@@ -157,7 +159,7 @@ public class ClienteController {
 		return "listar";
 	}
 
-	@Secured({"ROLE_ADMIN","ROLE_USER"})
+	@Secured({"ROLE_ADMIN","ROLE_JEFEADMIN", "ROLE_SELLER"})
 	@RequestMapping(value = "/clienteform")
 	public String crear(Map<String, Object> model) {
 
@@ -168,7 +170,7 @@ public class ClienteController {
 		return "clienteform";
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@Secured({"ROLE_ADMIN","ROLE_SELLER"})
 	@RequestMapping(value = "/clienteform/{id}")
 	public String editar(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 
@@ -185,11 +187,12 @@ public class ClienteController {
 			return "redirect:/listar";
 		}
 		model.put("cliente", cliente);
+		model.put("tipo", tipocliente.findAll());
 		model.put("titulo", "Editar Cliente");
 		return "clienteform";
 	}
 
-	@Secured({"ROLE_ADMIN","ROLE_USER"})	
+	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})	
 	@RequestMapping(value = "/clientesave", method = RequestMethod.POST)
 	public String guardar(@Valid Cliente cliente, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status, Authentication autentication) {
@@ -229,7 +232,7 @@ public class ClienteController {
 		return "redirect:clientes";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_SELLER"})
 	@RequestMapping(value = "/cleliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 
@@ -243,7 +246,7 @@ public class ClienteController {
 		return "redirect:/clientes";
 	}
 
-	@Secured({"ROLE_ADMIN","ROLE_USER"})
+	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
 	@RequestMapping(value = "/direcciones", method = RequestMethod.GET)
 	public String nuevo(Map<String, Object> model) {
 		Direccion direccion = new Direccion();
@@ -253,7 +256,7 @@ public class ClienteController {
 		return "/direcciones/form";
 	}
 	
-	@Secured({"ROLE_ADMIN","ROLE_USER"})
+	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
 	@RequestMapping(value = "/cdireccion", method = RequestMethod.GET)
 	public String nuevoCD(Map<String, Object> model) {
 		ClienteDirecciones cd = new ClienteDirecciones();
@@ -263,7 +266,7 @@ public class ClienteController {
 		return "/direccioncliente/form";
 	}
 
-	@Secured({"ROLE_ADMIN","ROLE_USER"})
+	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
 	@RequestMapping(value = "/direccionsave", method = RequestMethod.POST)
 	public String guardar(@Valid Direccion direccion, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
@@ -280,7 +283,7 @@ public class ClienteController {
 		return "redirect:/direcciones";
 	}
 	
-	@Secured({"ROLE_ADMIN","ROLE_USER"})
+	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
 	@RequestMapping(value = "/direccioncdsave", method = RequestMethod.POST)
 	public String guardarcd(@Valid ClienteDirecciones clientedireccion, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {

@@ -20,7 +20,7 @@
 			<div class="card-body">
 
 				<div class="card-title">
-					<a th:if="${#request.isUserInRole('ADMIN')}"
+					<a 
 						th:href="@{/giro/nuevo}" class="btn btn-primary btn-xs">Registrar
 						Giro</a>
 					
@@ -29,22 +29,22 @@
 					<thead class="thead-inverse">
 						<tr>
 							<th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">id</th>
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}">id</th>
 							<th>Nombre</th>
 							<!-- <th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"></th> -->
-							<th th:if="${#request.isUserInRole('ADMIN')}">OP</th>
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"></th> -->
+							<th th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">OP</th>
 							
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="giro: ${giros}">
 							<td
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"><a
 								
 								 th:text="${giro.id}"></a></td>
 							<td th:text="${giro.detalles}"></td>
-							<!-- <td	th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+							<!-- <td	th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"><a
 								th:href="@{'/giro/nuevo/' + ${giro.idm}}">
 									<div class='icon'>
 										<i class='fa fa-check'></i>
@@ -54,7 +54,7 @@
 									</div>
 							</a></td> -->
 
-							<td th:if="${#request.isUserInRole('ADMIN')}"><a
+							<td th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"><a
 								class="centerMe" th:href="@{/giro/eliminar/} + ${giro.id}"
 								onclick="return confirm('Estas seguro que quieres eliminar?');">
 									<div class='icon'>

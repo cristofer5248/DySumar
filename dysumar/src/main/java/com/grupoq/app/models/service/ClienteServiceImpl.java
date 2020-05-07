@@ -102,6 +102,12 @@ public class ClienteServiceImpl implements IClienteService {
 		return clienteDao.findByUsuario(usuario);
 	}
 
+	@Override
+	public Page<Cliente> findAllByUsuarioPage(String usuario, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return clienteDao.findAllByUsuarioPage(usuario, pageable);
+	}
+
 	
 
 	

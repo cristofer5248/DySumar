@@ -14,9 +14,17 @@ public interface IInventarioDao extends PagingAndSortingRepository<Inventario, L
 	@Query(value= "select sum(stock) from inventario where producto_idp=:id", nativeQuery = true)
 	public List<String> sumarStock(@Param("id") Long id);
 	
-	@Query("select i from Inventario i join fetch i.producto p join fetch p.proveedor pro join fetch p.marca ma join fetch p.categoria c where i.codigoProveedor=?1")
+	@Query("select i from Inventario i join fetch i.producto p join fetch p.proveedor pro join fetch p.marca ma join fetch p.categoria c join fetch p.presentacion pre where i.codigoProveedor=?1")
 	public List<Inventario> findByIdCodigoProveedor(String id);
 	
-	@Query("select i from Inventario i join fetch i.producto p join fetch p.proveedor pro join fetch p.marca ma join fetch p.categoria c where i.codigoProveedor=?1")
-	public Inventario findByIdCodigoProveedorOb(String id);
+	
+	//este es para encontrar por inventario por codigo de proveedor
+	@Query(value ="select i from Inventario i join fetch i.producto p join fetch p.proveedor pro join fetch p.marca ma join fetch p.categoria c where i.id=?1 and i.codigoProveedor=?2 ")
+	public Inventario findByIdCodigoProveedorOb(Long id, String idcompra );
+	
+	//este es para encontrar por inventario por id de INVENTARIO
+	@Query(value ="select i from Inventario i join fetch i.producto p join fetch p.proveedor pro join fetch p.marca ma join fetch p.categoria c where i.id=?1")
+	public Inventario findByIdCustom(Long id);
+	
+	public Inventario findFirstByCodigoProveedor(String id);
 }

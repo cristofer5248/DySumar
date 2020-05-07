@@ -74,7 +74,7 @@ var urlAjaxproveedor = $("#urlAjaxproveedor").val();
 		
 		var itemsHelper = {
 				calcularImporte: function(id, precio, cantidad){
-					$("#total_importe_"+id).html(parseFloat(precio)* parseInt(cantidad));
+					$("#total_importe_"+id).html((parseFloat(precio)* parseInt(cantidad)).toFixed(2));
 					this.calcularGranTotal();
 				},
 				hasProducto: function(id){

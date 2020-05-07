@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.grupoq.app.models.entity.Categoria;
 import com.grupoq.app.models.service.ICategoriaService;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +36,7 @@ public class CategoriaController {
 		return list;
 	}
 
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = { "/listar", "/listar/{param}" }, method = RequestMethod.GET)
 	public String listar(Model model, @PathVariable(value = "param", required = false) String param) {
 		List<Categoria> categorias = null;
@@ -50,7 +50,7 @@ public class CategoriaController {
 		return "/categorias/listar";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
 	public String nuevo(Map<String, Object> model) {
 		Categoria categoria = new Categoria();
@@ -60,7 +60,7 @@ public class CategoriaController {
 		return "/categorias/form";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String guardar(@Valid Categoria categoria, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
@@ -76,7 +76,7 @@ public class CategoriaController {
 		return "redirect:/categoria/listar";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = "/eliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 
@@ -94,7 +94,8 @@ public class CategoriaController {
 		return "redirect:/categoria/listar";
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = "/editar/{id}")
 	public String editar(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 

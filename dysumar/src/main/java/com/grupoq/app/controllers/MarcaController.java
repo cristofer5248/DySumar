@@ -58,7 +58,7 @@ public class MarcaController {
 		return "/marcas/listar";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
 	public String nuevo(Map<String, Object> model) {
 		Marca marcas = new Marca();
@@ -68,7 +68,7 @@ public class MarcaController {
 		return "/marcas/form";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String guardar(@Valid Marca marca, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
@@ -84,7 +84,7 @@ public class MarcaController {
 		return "redirect:/marca/listar";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = "/eliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 

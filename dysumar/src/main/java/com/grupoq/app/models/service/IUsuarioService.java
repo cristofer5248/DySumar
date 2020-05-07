@@ -27,5 +27,8 @@ public interface IUsuarioService {
 	public void saveRol(Role param);
 	
 	public void saveRolNative(Long id, String rol);
+	
+	//buscar todos sin el id puesto y sin admins
+	public Page<Usuario> findByIdNotAndBoss(Long id,Pageable pageable);
 }
 

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,14 +67,16 @@ public class FacturaController {
 
 	@Autowired
 	IClienteService clienteService;
-	
+
 	@Autowired
 	IDescuentoService descuentoService;
 
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_FACT", "ROLE_SELLER" })
 	@RequestMapping(value = { "/listar", "/listar/{por}/{param}" }, method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
 			@PathVariable(value = "por", required = false) String por,
-			@PathVariable(value = "param", required = false) String param) {
+			@PathVariable(value = "param", required = false) String param, HttpServletRequest request,
+			Authentication authentication) {
 		Pageable pageRequest = PageRequest.of(page, 20);
 		Page<Facturacion> facturacion = null;
 		if (por != null) {
@@ -84,7 +87,11 @@ public class FacturaController {
 				facturacion = facturaservice.findByaACuentadeNombre(param, pageRequest);
 			}
 		} else {
-			facturacion = facturaservice.findAll(pageRequest);
+			if (request.isUserInRole("ROLE_INV") || !request.isUserInRole("ROLE_SELLER")) {
+				facturacion = facturaservice.findAll(pageRequest);
+			} else {
+				facturacion = facturaservice.findByaACuentadeNombre(authentication.getName(), pageRequest);
+			}
 		}
 		PageRender<Facturacion> pageRender = new PageRender<>("listar", facturacion);
 		model.addAttribute("titulo", "Listado de Facturacion");
@@ -94,7 +101,7 @@ public class FacturaController {
 	}
 
 //PARA CARRITO
-	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
 	public String nuevo2(Map<String, Object> model, RedirectAttributes flash) {
 		CarritoItems carrito = new CarritoItems();
@@ -104,14 +111,14 @@ public class FacturaController {
 	}
 
 //ESTOS SI SON PARA FACTURA
-	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/nuevof/{term}", method = RequestMethod.GET)
 	public String nuevo(Map<String, Object> model, RedirectAttributes flash, @PathVariable Long term,
 			Authentication authentication) {
 		Facturacion facturacion = new Facturacion();
 		Cotizacion cotizacion = new Cotizacion();
 		cotizacion = cotizacionService.findby(term);
-		model.put("titulo", "Facturacion");
+		model.put("titulo", "Remision");
 		if (cotizacion == null) {
 			model.put("facturacion", facturacion);
 			flash.addFlashAttribute("error", "No existe ese id de cotizacion. Mostrando formulario vacio...");
@@ -119,7 +126,8 @@ public class FacturaController {
 		}
 		if (!cotizacion.aprobado) {
 			flash.addFlashAttribute("error", "Esa cotizacion a sido sometida a evaluacion...");
-			flash.addFlashAttribute("success", "Recuerde: El codigo de su Cotizacion tiene le ID: "+cotizacion.getId());
+			flash.addFlashAttribute("success",
+					"Recuerde: El codigo de su Cotizacion tiene le ID: " + cotizacion.getId());
 			return "redirect:/factura/listar";
 		}
 		facturacion.setCotizacion(cotizacion);
@@ -138,7 +146,7 @@ public class FacturaController {
 	}
 
 //ESTOS SI SON PARA FACTURA
-	@Secured({ "ROLE_ADMIN", "ROLE_USER" })
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/nuevof", method = RequestMethod.GET)
 	public String nuevoSin(Map<String, Object> model, RedirectAttributes flash, Authentication authentication) {
 		Facturacion facturacion = new Facturacion();
@@ -156,7 +164,7 @@ public class FacturaController {
 	}
 
 //guardar final de factura
-	@Secured({"ROLE_ADMIN","ROLE_USER"})
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/savefactura", method = RequestMethod.POST)
 	public String guardarfactura(@Valid Facturacion facturacion, BindingResult result, Model model,
 			RedirectAttributes flash, SessionStatus status, Authentication authentication) {
@@ -168,17 +176,31 @@ public class FacturaController {
 						"El codigo de cotizacion no puede estar vacio, mostrando formulario vacio...");
 //				return "redirect:/factura/nuevof";
 				return "/facturas/form";
-			}			
+			}
 //			return "redirect:/factura/nuevof/"+facturacion.getCotizacion().getId();
 
 			return "/facturas/form";
 		}
-		Cotizacion cotizaciontemporal = cotizacionService.findby(facturacion.getCotizacion().getId());	
-		if(!cotizaciontemporal.aprobado) {
-			return "redirect:/factura/listar";			
+		Cotizacion cotizaciontemporal = cotizacionService.findby(facturacion.getCotizacion().getId());
+		if (!cotizaciontemporal.aprobado) {
+			return "redirect:/factura/listar";
 		}
 		String mensajeFlash = (facturacion.getId() != null) ? "facturacion editado con éxito!"
-				: "Facturacion creado con éxito!";
+				: "Facturacion creada con éxito!";
+		for (CarritoItems pro : cotizaciontemporal.getCarrito()) {			
+			Producto productogetStock = productoservice.findOne(pro.getProductos().getId());
+			System.out.print("COMPARANDO LA CANTIDA PEDIDA: "+pro.getCantidad() +"\n LA CANTIDAD QUE HAY: "+productogetStock.getStock());
+			if (productogetStock.getStock() < pro.getCantidad()) {
+				model.addAttribute("error","No cantidad suficiente de un producto para realizar esta operacion");
+				return "redirect:/factura/nuevof/" + facturacion.getCotizacion().getId();
+			}
+
+			else {
+				productogetStock.setStock(productogetStock.getStock() - pro.getCantidad());
+				productoservice.save(productogetStock);
+			}
+		}
+
 		facturaservice.save(facturacion);
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
@@ -207,7 +229,7 @@ public class FacturaController {
 		return list2;
 	}
 
-	@Secured({"ROLE_ADMIN","ROLE_USER"})
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER", "ROLE_JEFEADM" })
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String guardar(@RequestParam(name = "item_id[]", required = false) Long[] itemId,
 			@RequestParam(name = "cantidad[]", required = false) Integer[] cantidad,
@@ -228,18 +250,19 @@ public class FacturaController {
 		cotizacion.setFecha(new Date());
 		cotizacionService.save(cotizacion);
 		// contador de cotizacion solo para cambiar estado
-		boolean icotizacion = true;		
+		boolean icotizacion = true;
 		Random random = new Random();
 		for (int i = 0; i < itemId.length; i++) {
 			System.out.print("La cantidad es: " + cantidad[i] + " \n");
 			int x = random.nextInt(900) + 100;
 			CarritoItems carrito = new CarritoItems();
 			Producto producto = productoservice.findOne(itemId[i]);
-			//Buscamos si tiene descuento
-			Descuento des = descuentoService.findFirstByProductoIdAndCantidadOrderByCantidadAsc(producto.getId(), cantidad[i]);
-			if(des!=null) {
-				carrito.setDescuento((des.getPorcentaje())/100);
-			}else {
+			// Buscamos si tiene descuento
+			Descuento des = descuentoService.findFirstByProductoIdAndCantidadOrderByCantidadAsc(producto.getId(),
+					cantidad[i]);
+			if (des != null) {
+				carrito.setDescuento((des.getPorcentaje()) / 100);
+			} else {
 				carrito.setDescuento(1);
 			}
 			carrito.setProductos(producto);
@@ -259,9 +282,9 @@ public class FacturaController {
 				if (margen[i] != producto.getMargen()) {
 					if (icotizacion) {
 						Cotizacion cotizacintemporal = cotizacionService.findby(cotizacion.getId());
-						cotizacintemporal.setAprobado(false);						
+						cotizacintemporal.setAprobado(false);
 						cotizacionService.save(cotizacintemporal);
-						icotizacion=false;
+						icotizacion = false;
 					}
 					carrito.setMargen(margen[i]);
 				} else {
@@ -284,6 +307,7 @@ public class FacturaController {
 	}
 
 //para ver el detalle de la FACTURA
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER", "ROLE_JEFEADM", "ROLE_FACT" })
 	@GetMapping(value = "/ver/{id}")
 	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 
@@ -300,7 +324,7 @@ public class FacturaController {
 		return "/facturas/ver";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })
 	@RequestMapping(value = "/eliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 

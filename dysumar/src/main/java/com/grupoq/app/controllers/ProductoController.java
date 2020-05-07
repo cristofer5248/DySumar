@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,11 +31,12 @@ import com.grupoq.app.util.paginator.PageRender;
 @Controller
 @RequestMapping("/producto")
 @SessionAttributes("producto")
+
 public class ProductoController {
 
 	@Autowired
 	private IProductoService productoService;
-
+	@Secured({"ROLE_ADMIN","ROLE_INV","ROLE_JEFEADM","ROLE_SELLER"})
 	@RequestMapping(value = {"/listar","/listar/{nombrep}"}, method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model, @PathVariable(value = "nombrep", required = false) String nombrep) {
 		Pageable pageRequest = PageRequest.of(page, 20);
@@ -54,7 +54,7 @@ public class ProductoController {
 	}
 
 	
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
 	public String nuevo(Map<String, Object> model) {
 		Producto productos = new Producto();
@@ -64,7 +64,7 @@ public class ProductoController {
 		return "/productos/productoform";
 	}
 	
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = "/nuevo10", method = RequestMethod.GET)
 	public String nuevosdjiosjfdoi(Map<String, Object> model) {
 		Producto productos = new Producto();
@@ -74,7 +74,7 @@ public class ProductoController {
 		return "/templates/productos/productoform";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = "/productosave", method = RequestMethod.POST)
 	public String guardar(@Valid Producto producto, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
@@ -92,7 +92,7 @@ public class ProductoController {
 		return "redirect:/producto/listar";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = "/eliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 
@@ -110,7 +110,7 @@ public class ProductoController {
 		return "redirect:/producto/listar";
 	}
 
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@RequestMapping(value = "/editar/{id}")
 	public String editar(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 
@@ -137,13 +137,13 @@ public class ProductoController {
 		model.put("titulo", "Editar Producto");
 		return "/productos/productoform";
 	}
-
+	@Secured({"ROLE_ADMIN","ROLE_INV"})
 	@GetMapping(value = "/cargar_productos", produces = { "application/json" })
 	public @ResponseBody List<Producto> marcaTodosJson() {
 		List<Producto> list = productoService.findAllList();
 		return list;
 	}
-
+	@Secured({"ROLE_ADMIN","ROLE_INV","ROLE_JEFEADM"})
 	@GetMapping(value = "/ver/{id}")
 	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 

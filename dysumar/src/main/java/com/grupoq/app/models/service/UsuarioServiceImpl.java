@@ -80,4 +80,10 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		
 	}
 
+	@Override
+	public Page<Usuario> findByIdNotAndBoss(Long id, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return usuarioDao.findByIdNotAndBoss(id, pageable);
+	}
+
 }

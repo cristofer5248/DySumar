@@ -49,7 +49,7 @@
 						<thead>
 							<tr>
 								<th>Nombre</th>
-								<th th:if="${#request.isUserInRole('ADMIN')}">Costo</th>
+								<th th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">Costo</th>
 								<th>Descuento</th>
 								<th>Precio</th>
 								<th id="columnmargen12" style="display: none;">%Margen</th>								

@@ -9,6 +9,8 @@ public interface IRolesDao extends CrudRepository<Role, Long> {
 	
 	@Query ("select r from Role r where r.user_id =?1 and r.authority=?2")
 	public Role findByUser_idByAuthority(Long id, String rol);
+	
+	
 
 	@Query ("select r from Role r where r.user_id =?1")
 	public Role findByUser_id(Long id);

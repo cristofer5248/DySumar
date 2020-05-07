@@ -18,7 +18,7 @@
 				<a class="btn btn-danger btn-xs float-right" th:href="@{'/inventario/ver/' + ${codigopro}(format=pdf)}">PDF</a>
 				<a class="btn btn-success btn-xs float-right" th:href="@{'/inventario/ver/' + ${codigopro}(format=xlsx)}">XLSX</a>
 				
-					<!-- 					<a th:if="${#request.isUserInRole('USER')}" -->
+					<!-- 					<a th:if="${#request.isUserInRole('SELLER')}" -->
 					<!-- 						class="btn btn-primary btn-xs" -->
 					<!-- 						th:href="@{'/factura/form/' + ${producto.id}}" -->
 					<!-- 						th:text="'Crear factura'"></a> -->
@@ -63,11 +63,11 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="inventario: ${inventarios}">
-							<td th:text="${inventario.producto.id}"></td>
-							<td th:text="${inventario.producto.nombrep}"></td>
-							<td th:text="${inventario.producto.marca.nombrem}"></td>
-							<td th:text="${inventario.producto.presentacion.detalle}"></td>
+						<tr th:each="movimiento: ${inventarios.inventario}">
+							<td th:text="${movimiento.producto.id}"></td>
+							<td th:text="${movimiento.producto.nombrep}"></td>
+							<td th:text="${movimiento.producto.marca.nombrem}"></td>
+							<td th:text="${movimiento.producto.presentacion.detalle}"></td>
 							<!-- 							<td th:text="${inventario.cantidad}"></td> -->
 
 							<!-- 							<td th:text="${factura.cantidad * factura.servicios.precio}"></td> -->

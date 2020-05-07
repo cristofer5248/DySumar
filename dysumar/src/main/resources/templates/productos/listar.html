@@ -21,7 +21,7 @@
 
 
 				<div class="card-title">
-					<a th:if="${#request.isUserInRole('ADMIN')}"
+					<a th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('INV')}"
 						th:href="@{/producto/nuevo}" class="btn btn-primary btn-xs">Crear
 						Producto</a>
 
@@ -39,7 +39,7 @@
 					<thead class="thead-inverse">
 						<tr>
 							<th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">id</th>
+								th:if="!${#request.isUserInRole('FACT')}">id</th>
 							<th>Codigo</th>
 							<th>Nombre</th>
 							<th>Costo</th>
@@ -48,16 +48,15 @@
 							<th id="thproveedor">Proveedor</th>
 							<th>Unidad</th>
 							<th>Stock</th>
-							<th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}">OP</th>
-							<th th:if="${#request.isUserInRole('ADMIN')}">OP</th>
-							<th th:if="${#request.isUserInRole('ADMIN')}">OP</th>
+							<th>OP</th>
+							<th th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('INV')}">OP</th>
+							<th th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('INV')}">OP</th>
 						</tr>
 					</thead>
 					<tbody id="trtable">
 						<tr th:each="producto: ${productos}">
 							<td
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+								th:if="!${#request.isUserInRole('FACT')}"><a
 								class="btn btn-primary btn-xs"
 								th:href="@{/producto/ver/} + ${producto.id}"
 								th:text="${producto.id}"></a></td>
@@ -70,7 +69,7 @@
 							<td th:text="${producto.presentacion.unidad}"></td>
 							<td class="tddata" th:text="${producto.stock}"></td>
 							<td
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('USER')}"><a
+								><a
 								th:href="@{'/descuento/listar/' + ${producto.id}}">
 									<div class='icon'>
 										<i class='fa fa-percent' onmouseover="quitarcolumns();"></i>
@@ -79,7 +78,7 @@
 										<span>Descuentos</span>
 									</div>
 							</a></td>
-							<td th:if="${#request.isUserInRole('ADMIN')}"><a
+							<td th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('INV')}"><a
 								th:href="@{/producto/editar/} + ${producto.id}">
 									<div class='icon'>
 										<i class='fa fa-pencil' onmouseover="quitarcolumns();"></i>
@@ -88,7 +87,7 @@
 										<span>Actualizar</span>
 									</div>
 							</a></td>
-							<td th:if="${#request.isUserInRole('ADMIN')}"><a
+							<td th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('INV')}"><a
 								class="centerMe"
 								th:href="@{/producto/eliminar/} + ${producto.id}"
 								onclick="return confirm('¿Esta seguro?');">
