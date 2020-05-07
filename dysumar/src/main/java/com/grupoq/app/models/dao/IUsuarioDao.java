@@ -23,7 +23,7 @@ public interface IUsuarioDao extends PagingAndSortingRepository<Usuario, Long> {
 	
 	public Page<Usuario> findByIdNot(Long id,Pageable pageable);
 	
-	@Query(value="select u from Usuario u left join fetch u.roles r where r.authority!='ROLE_ADMIN' and u.id!=?1", countQuery = "select count(u) from Usuario u join u.roles r where r.authority!='ROLE_ADMIN' and u.id!=?1")
+	@Query(value="select u from Usuario u left join fetch u.roles r where r.authority!='ROLE_ADMIN' and u.id!=?1", countQuery = "select count(u) from Usuario u left join u.roles r where r.authority!='ROLE_ADMIN' and u.id!=?1")
 	public Page<Usuario> findByIdNotAndBoss(Long id,Pageable pageable);
 	
 	public List<Usuario> findByRoles_AuthorityOrderByUsernameAsc(String param);

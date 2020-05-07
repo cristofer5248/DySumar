@@ -1,5 +1,7 @@
 package com.grupoq.app.models.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,12 @@ public class RolesServiceImpl implements IRolesService {
 	@Override
 	public Role findByUser_id(Long id) {
 		return rolesDao.findById(id).orElse(null);
+	}
+
+	@Override
+	public List<Role> findByUser_idList(Long id) {
+		// TODO Auto-generated method stub
+		return rolesDao.findByUser_idList(id);
 	}
 
 }
