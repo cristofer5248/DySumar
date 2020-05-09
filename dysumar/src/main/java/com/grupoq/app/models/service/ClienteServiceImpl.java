@@ -108,6 +108,20 @@ public class ClienteServiceImpl implements IClienteService {
 		return clienteDao.findAllByUsuarioPage(usuario, pageable);
 	}
 
+	@Override
+	public ClienteDirecciones findByIdByFacturacion(Long id) {
+		// TODO Auto-generated method stub
+		return clientedireccionesdao.findByIdByFacturacion(id);
+	}
+
+	@Override
+	public List<ClienteDirecciones> findByCliente(Long id) {
+		// TODO Auto-generated method stub
+		return clientedireccionesdao.findByCliente(id);
+	}
+
+	
+
 	
 
 	

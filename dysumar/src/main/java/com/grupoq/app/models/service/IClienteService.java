@@ -36,6 +36,7 @@ public interface IClienteService {
 	
 	
 	public void deleteFactura(Long id);
-	
+	public ClienteDirecciones findByIdByFacturacion(Long id);
+	public List<ClienteDirecciones> findByCliente(Long id);
 	
 }

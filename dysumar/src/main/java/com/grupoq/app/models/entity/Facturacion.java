@@ -1,15 +1,20 @@
 package com.grupoq.app.models.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -35,7 +40,7 @@ public class Facturacion implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private ClienteDirecciones cliente;
-	
+	//manytoOne pero desde cliente sera OnetoMany!
 //	private String aCuentade;
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -45,9 +50,14 @@ public class Facturacion implements Serializable {
 	private CDepago condicionesDPago;
 	
 	private String detalles;
-	
+	//
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Formadepago formadepago;
+	
+	@Column(name = "create_at")
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern="yyyy-MM-dd")
+	private Date fecha;
 	
 	public Facturacion() {
 		
@@ -127,6 +137,14 @@ public class Facturacion implements Serializable {
 
 	public void setCodigofactura(int codigofactura) {
 		this.codigofactura = codigofactura;
+	}
+
+	public Date getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
 	}
 	
 

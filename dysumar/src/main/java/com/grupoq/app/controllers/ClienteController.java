@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
+//no me gustan los warning!!!
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -36,7 +37,6 @@ import com.grupoq.app.models.service.IClienteService;
 
 import com.grupoq.app.models.service.ITipoClienteService;
 import com.grupoq.app.models.service.IUsuarioService;
-import com.grupoq.app.models.dao.IClienteDirecciones;
 import com.grupoq.app.models.entity.Cliente;
 import com.grupoq.app.models.entity.ClienteDirecciones;
 import com.grupoq.app.models.entity.Direccion;
@@ -55,7 +55,7 @@ public class ClienteController {
 	private IClienteService clienteService;
 
 	@Autowired
-	private IClienteDirecciones clientedireccionesService;
+	private IClienteService clientedireccionesService;
 
 	@Autowired
 	private ITipoClienteService tipocliente;
@@ -85,26 +85,22 @@ public class ClienteController {
 //				.body(recurso);
 //	}
 
-//	@PreAuthorize("hasRole('ROLE_USER')")
-//	@GetMapping(value = "/vercliente/{id}")
-//	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
-//
-//		Taller taller = clienteService.findByIdTallerWithClienteWithFactura(id);
-////		List<?> taller = facturaService.probando(id);
-//		Cliente cliente;
-//		if (taller == null) {
-//			cliente = clienteService.findOne(id);
-//			flash.addFlashAttribute("error", "El cliente no existe en la base de datos");
-//			model.put("cliente", cliente);
-//			model.put("titulo", "Detalle cliente: " + cliente.getNombre());
-//			return "vercliente";
-//		}
-//
-//		model.put("taller", taller);
-//		model.put("cliente", taller.getCliente());
-//		model.put("titulo", "Detalle cliente: " + taller.getCliente().getNombre());
-//		return "vercliente";
-//	}
+	
+	@GetMapping(value = "/vercliente/{id}")
+	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+
+		ClienteDirecciones cliente = clienteService.findByIdByFacturacion(id);
+//		List<?> taller = facturaService.probando(id);
+		
+		if (cliente == null) {
+			flash.addFlashAttribute("error", "El cliente no tiene facturas");			
+			return "redirect:clientes";
+		}
+
+		model.put("cliente", cliente);		
+		model.put("titulo", "Detalle cliente: " + cliente.getCliente().getNombre());
+		return "vercliente";
+	}
 
 	@RequestMapping(value = { "/clientes", "/" }, method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,

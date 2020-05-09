@@ -21,15 +21,16 @@
 				<form th:action="@{/factura/savefactura}" th:object="${facturacion}"
 					method="post" enctype="multipart/form-data">
 					<div class="form-group row">
-					<label for="cliente" class="col-sm-2 col-form-label"
-						th:text="'Tus clientes'"></label>
-					<div class="col-sm-6">					
-						<select class="selectpicker" id="misclientes" data-live-search="true" >
-							<option value="0" disabled selected>Seleccione uno</option>
-							<option th:each="cl : ${carteraclientes}" th:value="${cl.id}"
-								th:text="${cl.nombre}"></option>
-						</select>
-					</div>
+						<label for="cliente" class="col-sm-2 col-form-label"
+							th:text="'Tus clientes'"></label>
+						<div class="col-sm-6">
+							<select class="selectpicker" id="misclientes"
+								data-live-search="true">
+								<option value="0" disabled selected>Seleccione uno</option>
+								<option th:each="cl : ${carteraclientes}" th:value="${cl.id}"
+									th:text="${cl.nombre}"></option>
+							</select>
+						</div>
 					</div>
 					<div class="form-group row">
 						<label for="direccion" class="col-sm-2 col-form-label"
@@ -63,6 +64,13 @@
 							<input type="text" th:field="*{cotizacion}" class="form-control"
 								id="codigocotizacion"
 								th:errorclass="'form-control alert-danger'" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="fecha" class="col-sm-2 col-form-label">Fecha</label>
+						<div class="col-sm-6">
+							<input type="text" id="mydate" th:field="*{fecha}"
+								class="form-control">
 						</div>
 					</div>
 					<div class="form-group row">
@@ -134,6 +142,10 @@
 		if (codigoc > 0) {
 			$("#codigocotizacion").addClass("alertinput");
 		}
+
+		$('#mydate').datepicker({
+			format : "yyyy-mm-dd"
+		});
 	</script>
 
 

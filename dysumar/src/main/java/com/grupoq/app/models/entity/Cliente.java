@@ -2,6 +2,7 @@ package com.grupoq.app.models.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -70,7 +71,10 @@ public class Cliente implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Usuario usuario;
 	
+	
+	
 	public Cliente() {
+		
 		
 	}
 

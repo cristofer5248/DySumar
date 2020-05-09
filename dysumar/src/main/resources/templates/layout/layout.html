@@ -137,7 +137,7 @@
 						class="btn btn-outline-primary dropdown-toggle" href="#"
 						role="button" id="dropdownMenuLink" data-toggle="dropdown"
 						aria-haspopup="true" aria-expanded="false"><span
-							sec:authentication="name"></span></a>
+							sec:authentication="name"></span>  <i sec:authorize="hasRole('ROLE_JEFEADM')" class="fab fa-evernote"></i></a>
 
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 							<form id="logoutForm" th:action="@{/logout}" method="post">

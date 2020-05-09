@@ -108,7 +108,7 @@ public class UsuarioController {
 				return "redirect:/user/ver";
 			}
 			flash.addFlashAttribute("error",
-					"El usuario no fue eliminado porque se quedaria sin ningun ROL, asignar uno primero");
+					"El rol de ese usuario no pudo ser eliminado porque se quedaria sin ningun ROL, asignar uno primero");
 			return "redirect:/user/ver";
 		}
 		rolesService.delete(rolcheck);
@@ -135,7 +135,7 @@ public class UsuarioController {
 				return "redirect:/user/ver";
 			}
 			flash.addFlashAttribute("error",
-					"El usuario no fue eliminado porque se quedaria sin ningun ROL, asignar uno primero");
+					"El rol de ese usuario no pudo ser eliminado porque se quedaria sin ningun ROL, asignar uno primero");
 			return "redirect:/user/ver";
 		}
 		rolesService.delete(rolcheck);
@@ -162,7 +162,7 @@ public class UsuarioController {
 				return "redirect:/user/ver";
 			}
 			flash.addFlashAttribute("error",
-					"El usuario no fue eliminado porque se quedaria sin ningun ROL, asignar uno primero");
+					"El rol de ese usuario no pudo ser eliminado porque se quedaria sin ningun ROL, asignar uno primero");
 			return "redirect:/user/ver";
 		}
 		rolesService.delete(rolcheck);
@@ -189,7 +189,7 @@ public class UsuarioController {
 				return "redirect:/user/ver";
 			}
 			flash.addFlashAttribute("error",
-					"El usuario no fue eliminado porque se quedaria sin ningun ROL, asignar uno primero");
+					"El rol de ese usuario no pudo ser eliminado porque se quedaria sin ningun ROL, asignar uno primero");
 			return "redirect:/user/ver";
 		}
 		rolesService.delete(rolcheck);
@@ -216,7 +216,7 @@ public class UsuarioController {
 				return "redirect:/user/ver";
 			}
 			flash.addFlashAttribute("error",
-					"El usuario no fue eliminado porque se quedaria sin ningun ROL, asignar uno primero");
+					"El rol de ese usuario no pudo ser eliminado porque se quedaria sin ningun ROL, asignar uno primero");
 			return "redirect:/user/ver";
 		}
 		rolesService.delete(rolcheck);
