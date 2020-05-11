@@ -82,7 +82,7 @@ public class UsuarioController {
 
 //				clienteService.findAll(pageRequest);
 
-		PageRender<Usuario> pageRender = new PageRender<Usuario>("/ver", usuario);
+		PageRender<Usuario> pageRender = new PageRender<Usuario>("/user/ver", usuario);
 		model.addAttribute("titulo", "Listado de clientes");
 		model.addAttribute("usuario", usuario);
 		model.addAttribute("page", pageRender);

@@ -111,4 +111,10 @@ public class IFacturaServiceImpl implements IFacturaService {
 		// TODO Auto-generated method stub
 		return facturadao.findByaACuentadeNombre(nombre, page);
 	}
+
+	@Override
+	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatus(Long id) {
+		// TODO Auto-generated method stub
+		return facturadao.findByCotizacionByCarritoItemsByIdByStatus(id);
+	}
 }

@@ -10,6 +10,8 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,6 +46,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 
 @Controller
 @SessionAttributes("facturacion")
@@ -71,13 +74,15 @@ public class FacturaController {
 	@Autowired
 	IDescuentoService descuentoService;
 
+	protected final Log logger = LogFactory.getLog(this.getClass());
+
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_FACT", "ROLE_SELLER" })
 	@RequestMapping(value = { "/listar", "/listar/{por}/{param}" }, method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
 			@PathVariable(value = "por", required = false) String por,
 			@PathVariable(value = "param", required = false) String param, HttpServletRequest request,
 			Authentication authentication) {
-		Pageable pageRequest = PageRequest.of(page, 20);
+		Pageable pageRequest = PageRequest.of(page, 30);
 		Page<Facturacion> facturacion = null;
 		if (por != null) {
 			if (por.equals("cliente")) {
@@ -87,7 +92,8 @@ public class FacturaController {
 				facturacion = facturaservice.findByaACuentadeNombre(param, pageRequest);
 			}
 		} else {
-			if (request.isUserInRole("ROLE_INV") || !request.isUserInRole("ROLE_SELLER")) {
+			if (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_FACT")
+					|| request.isUserInRole("ROLE_JEFEADM")) {
 				facturacion = facturaservice.findAll(pageRequest);
 			} else {
 				facturacion = facturaservice.findByaACuentadeNombre(authentication.getName(), pageRequest);
@@ -114,7 +120,7 @@ public class FacturaController {
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/nuevof/{term}", method = RequestMethod.GET)
 	public String nuevo(Map<String, Object> model, RedirectAttributes flash, @PathVariable Long term,
-			Authentication authentication) {
+			HttpServletRequest request, Authentication authentication) {
 		Facturacion facturacion = new Facturacion();
 		Cotizacion cotizacion = new Cotizacion();
 		cotizacion = cotizacionService.findby(term);
@@ -135,6 +141,15 @@ public class FacturaController {
 			System.out.print(
 					"La cotizacion no esta vacia, es mas este tiene el id \n" + facturacion.getCotizacion().getId());
 		}
+
+		SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request,
+				"");
+		if (securityContext.isUserInRole("ROLE_SELLER")) {
+			facturacion.setStatus(2);
+		} else {
+			facturacion.setStatus(1);
+		}
+
 		// llenando select a lo dundo
 		model.put("fdePago", facturaservice.listFdp());
 		model.put("cdePago", facturaservice.listCdp());
@@ -148,8 +163,16 @@ public class FacturaController {
 //ESTOS SI SON PARA FACTURA
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/nuevof", method = RequestMethod.GET)
-	public String nuevoSin(Map<String, Object> model, RedirectAttributes flash, Authentication authentication) {
+	public String nuevoSin(Map<String, Object> model, RedirectAttributes flash, Authentication authentication,
+			HttpServletRequest request) {
 		Facturacion facturacion = new Facturacion();
+		SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request,
+				"");
+		if (securityContext.isUserInRole("ROLE_SELLER")) {
+			facturacion.setStatus(2);
+		} else {
+			facturacion.setStatus(1);
+		}
 		model.put("facturacion", facturacion);
 
 		// llenando select a lo dundo
@@ -167,7 +190,7 @@ public class FacturaController {
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/savefactura", method = RequestMethod.POST)
 	public String guardarfactura(@Valid Facturacion facturacion, BindingResult result, Model model,
-			RedirectAttributes flash, SessionStatus status, Authentication authentication) {
+			RedirectAttributes flash, SessionStatus status, Authentication authentication, HttpServletRequest request) {
 		facturacion.setaCuentade(usuarioService.findByUsername(authentication.getName()));
 		if (result.hasErrors()) {
 			model.addAttribute("titulo", "Formulario de Facturacions");
@@ -185,14 +208,31 @@ public class FacturaController {
 		if (!cotizaciontemporal.aprobado) {
 			return "redirect:/factura/listar";
 		}
+		SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request,
+				"");
+
+		if (securityContext.isUserInRole("ROLE_SELLER")) {
+			facturacion.setStatus(2);
+		} else {
+			facturacion.setStatus(1);
+		}
 		String mensajeFlash = (facturacion.getId() != null) ? "facturacion editado con éxito!"
 				: "Facturacion creada con éxito!";
-		for (CarritoItems pro : cotizaciontemporal.getCarrito()) {			
+
+		for (CarritoItems pro : cotizaciontemporal.getCarrito()) {
 			Producto productogetStock = productoservice.findOne(pro.getProductos().getId());
-			System.out.print("COMPARANDO LA CANTIDA PEDIDA: "+pro.getCantidad() +"\n LA CANTIDAD QUE HAY: "+productogetStock.getStock());
+			System.out.print("COMPARANDO LA CANTIDA PEDIDA: " + pro.getCantidad() + "\n LA CANTIDAD QUE HAY: "
+					+ productogetStock.getStock());
 			if (productogetStock.getStock() < pro.getCantidad()) {
-				model.addAttribute("error","No cantidad suficiente de un producto para realizar esta operacion");
-				return "redirect:/factura/nuevof/" + facturacion.getCotizacion().getId();
+				if (productogetStock.getStock() < 0) {
+					productogetStock.setStock(productogetStock.getStock() - pro.getCantidad());
+					model.addAttribute("error", "Stock insuficiente, se encuentra en numeros negativos");
+					facturacion.setStatus(3);
+				} else {
+					productogetStock.setStock(productogetStock.getStock() - pro.getCantidad());
+					productoservice.save(productogetStock);
+					facturacion.setStatus(3);
+				}
 			}
 
 			else {
@@ -338,6 +378,26 @@ public class FacturaController {
 				return "redirect:/factura/listar";
 			}
 
+		}
+		return "redirect:/factura/listar";
+	}
+
+	@Secured({ "ROLE_ADMIN", "ROLE_FACT" })
+	@RequestMapping(value = "/statusChange", method = RequestMethod.POST)
+	public String finalizandoFactura(@RequestParam(name = "id") Long id, @RequestParam(name = "codigo") int codigo,
+			RedirectAttributes flash) {
+		if (id > 0 && codigo > 0) {
+			try {
+				Facturacion factura = facturaservice.findBy(id);
+				factura.setStatus(1);
+				factura.setCodigofactura(codigo);
+				facturaservice.save(factura);
+				flash.addFlashAttribute("success", "Operacion exitosa!");
+			} catch (Exception e) {
+				flash.addFlashAttribute("error", "No se pudo cambiar el estado ni guardar la operacion!");
+				return "redirect:/factura/listar";
+			}
+			
 		}
 		return "redirect:/factura/listar";
 	}

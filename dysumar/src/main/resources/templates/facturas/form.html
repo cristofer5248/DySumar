@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="layout/layout :: head"></head>
 <body>
 
@@ -41,11 +42,11 @@
 							</select>
 						</div>
 					</div>
-					<div class="form-group row">
+					<div class="form-group row" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT')">
 						<label for="codigo" class="col-sm-2 col-form-label">Codigo
 							de factura </label>
 						<div class="col-sm-6">
-							<input th:field="*{codigofactura}" type="text"
+							<input th:field="*{codigofactura}" type="text" 
 								class="form-control" />
 						</div>
 					</div>

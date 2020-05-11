@@ -8,7 +8,7 @@
             
             vamonos.click(function(){                       	
             	var opc = $("#opcSearch").val();            	
-            	location.href = $("#urlenviar").val()+opc+"/"+$("#btn-search").val();
+            	location.href = $("#urlenviar").val()+$("#btn-search").val();
             	
             });
             submitIcon.click(function(){
@@ -48,6 +48,6 @@
                     $('.searchbox-input').val('');
                     $('.searchbox-icon').css('display','block');
                 }                                    
-                var opc = $("#opcSearch").val();
-                $('#formsearch').attr('action', $("#urlenviar").val()+opc+"/"+$("#btn-search").val());
+                
+                $('#formsearch').attr('action', $("#urlenviar").val()+$("#btn-search").val());
             }

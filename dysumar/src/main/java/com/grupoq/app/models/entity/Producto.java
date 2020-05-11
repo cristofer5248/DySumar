@@ -70,6 +70,8 @@ public class Producto implements Serializable {
 	@Column(columnDefinition = "double default 50.0")
 	private double margen;
 	
+	private boolean status=true;
+	
 	@JsonIgnore
 	@OneToMany(mappedBy="producto", fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	/* @JoinColumn(name="producto") */
@@ -167,6 +169,14 @@ public class Producto implements Serializable {
 	}
 	public void setInventarios(List<Inventario> inventarios) {
 		this.inventarios = inventarios;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 
 	

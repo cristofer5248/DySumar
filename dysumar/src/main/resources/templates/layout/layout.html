@@ -68,7 +68,11 @@
 							<a class="dropdown-item" href="#about"
 								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
 								th:href="@{/producto/listar}"><i class="fas fa-box-open"></i>
-								Productos</a> <a class="dropdown-item"
+								Productos</a><a class="dropdown-item" href="#about"
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
+								th:href="@{/producto/listarS}"><i
+								class="fas fa-business-time"></i> Solitudes</a> <a
+								class="dropdown-item"
 								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
 								th:href="@{/inventario/listar}"><i class="fas fa-arrow-down"></i>
 								Ingresos</a>
@@ -137,7 +141,8 @@
 						class="btn btn-outline-primary dropdown-toggle" href="#"
 						role="button" id="dropdownMenuLink" data-toggle="dropdown"
 						aria-haspopup="true" aria-expanded="false"><span
-							sec:authentication="name"></span>  <i sec:authorize="hasRole('ROLE_JEFEADM')" class="fab fa-evernote"></i></a>
+							sec:authentication="name"></span> <i
+							sec:authorize="hasRole('ROLE_JEFEADM')" class="fab fa-evernote"></i></a>
 
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 							<form id="logoutForm" th:action="@{/logout}" method="post">

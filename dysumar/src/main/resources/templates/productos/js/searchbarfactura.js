@@ -10,6 +10,7 @@
             	var opc = $("#opcSearch").val();            	
             	location.href = $("#urlenviar").val()+opc+"/"+$("#btn-search").val();
             });
+                        
             submitIcon.click(function(){
                 if(isOpen == false){
                     searchBox.addClass('searchbox-open');
@@ -38,6 +39,7 @@
                 });
         
             function buttonUp(){
+            	
                 var inputVal = $('.searchbox-input').val();
                 inputVal = $.trim(inputVal).length;
                 if( inputVal !== 0){
@@ -46,5 +48,7 @@
                 	
                     $('.searchbox-input').val('');
                     $('.searchbox-icon').css('display','block');
+                    var opc = $("#opcSearch").val();                    
+                    $('#formsearch').attr('action', $("#urlenviar").val()+opc+"/"+$("#btn-search").val());
                 }
             }

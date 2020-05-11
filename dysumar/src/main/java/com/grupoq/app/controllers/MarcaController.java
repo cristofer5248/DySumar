@@ -44,7 +44,7 @@ public class MarcaController {
 	@RequestMapping(value = { "/listar", "/listar/{param}" }, method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
 			@PathVariable(value = "param", required = false) String param) {
-		Pageable pageRequest = PageRequest.of(page, 20);
+		Pageable pageRequest = PageRequest.of(page, 80);
 		Page<Marca> marcas=  null;
 		if (param != null) {
 			marcas = marcaService.findByNombre(param, pageRequest);

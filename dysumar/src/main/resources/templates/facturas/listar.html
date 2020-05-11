@@ -19,31 +19,32 @@
 					<a
 						th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('FACT')}"
 						th:href="@{/factura/nuevof}" class="btn btn-primary btn-xs">Facturar</a>
-						<a
-						th:if="${#request.isUserInRole('SELLER')}"
+					<a th:if="${#request.isUserInRole('SELLER')}"
 						th:href="@{/factura/nuevof}" class="btn btn-primary btn-xs">REMISION</a>
 					<a
 						th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('SELLER')}"
 						th:href="@{/factura/nuevo}" class="btn btn-primary btn-xs">Cotizár</a>
-					<form class="searchbox" th:action="@{/marca/listar/}">
+					<form id="formsearch" class="searchbox"
+						th:action="@{/marca/listar/}">
 						<div>
 							<input type="search"
 								placeholder="Introducir el nombre de un cliente para buscar......"
 								class="searchbox-input" onkeyup="buttonUp();" id="btn-search"
-								required><select class="custom-select mr-sm-2" 
+								required><select class="custom-select mr-sm-2"
 								id="opcSearch" style="margin-left: 10px; height: 3.3em;">
 								<option value="cliente">Por cliente</option>
-								<option th:if="${!#request.isUserInRole('SELLER')}" value="usuario">Por usuario</option>
+								<option th:if="${!#request.isUserInRole('SELLER')}"
+									value="usuario">Por usuario</option>
 							</select> <input type="button" id="vamonos" class="searchbox-submit"
 								value="GO"><span class="searchbox-icon">Buscar</span>
 						</div>
 					</form>
 				</div>
-				<table class="table table-striped table-bordered">
+				<table id="example" class="table table-striped table-bordered">
 					<thead class="thead-inverse">
 						<tr>
-							<th
-								>Id</th>
+							<th>Id</th>
+							<th>Codigo de facturacion</th>
 							<th>A Cuenta de</th>
 							<th>Cliente</th>
 							<!-- <th>Stock</th> -->
@@ -53,15 +54,18 @@
 							<th>TF</th>
 							<th>Detalles</th>
 
-							<th th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('JEFEADM')}">eliminar</th>
+							<th
+								th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('JEFEADM')}">eliminar</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="factura: ${facturas}">
-							<td><a
-								class="btn btn-primary btn-xs"
+							<td><a class="btn btn-primary btn-xs"
 								th:href="@{/factura/ver/} + ${factura.id}"
 								th:text="${factura.id}"></a></td>
+							<td th:if="${factura.status==1}" th:text="${factura.codigofactura}"></td>
+							<td th:if="${factura.status==2}" style="color:orange" th:text="'EN ESPERA'"></td>
+							<td th:if="${factura.status==3}" style="color:red" th:text="'Stock insuficiente'"></td>
 							<td th:text="${factura.aCuentade.username}"></td>
 							<td th:text="${factura.cliente.cliente.nombre}"></td>
 							<!-- <td th:text="${facturas.}"></td> -->
@@ -75,7 +79,8 @@
 								class="btn btn-success btn-xs"
 								th:href="@{'/factura/form/' + ${factura.id}}"
 								th:text="'crear factura'"></a></td> -->
-							<td th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"><a
+							<td
+								th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"><a
 								class="btn btn-danger btn-xs"
 								th:href="@{/factura/eliminar/} + ${factura.id}"
 								th:text="'eliminar'"
@@ -95,5 +100,13 @@
 	<footer th:replace="layout/layout :: footer"></footer>
 	<input type="hidden" id="urlenviar" th:value="@{/factura/listar/}" />
 	<script th:src="@{/js/searchbarfactura.js}"></script>
+	<script>
+	$('#example').DataTable( {
+        "paging":   false,
+        
+        "searching": false,
+        "info":     false
+    } );
+	</script>
 </body>
 </html>

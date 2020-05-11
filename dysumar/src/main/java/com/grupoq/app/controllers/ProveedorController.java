@@ -45,7 +45,7 @@ public class ProveedorController {
 	@RequestMapping(value = { "/listar", "/listar/{term}" }, method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
 			@PathVariable(value = "term", required = false) String term) {
-		Pageable pageRequest = PageRequest.of(page, 20);
+		Pageable pageRequest = PageRequest.of(page, 100);
 		Page<Proveedor> proveedors = null;
 		if (term != null) {
 			proveedors = proveedoresService.findByNombreStartsWith(term, pageRequest);

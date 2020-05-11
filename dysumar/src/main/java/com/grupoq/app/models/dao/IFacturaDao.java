@@ -4,6 +4,9 @@ package com.grupoq.app.models.dao;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,7 +17,9 @@ public interface IFacturaDao extends PagingAndSortingRepository<Facturacion, Lon
 //	@Query("select f from Facturacion f where f.id=?1")
 	public Facturacion fetchByIdWithClienteWithCarritoItemsWithProducto(Long id);
 	
-	@Query(value="select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join fetch f.tipoFactura tp join fetch f.condicionesDPago cp join fetch f.formadepago fp join fetch f.aCuentade usu",countQuery = "select count(f) from Facturacion f join f.cliente cd join cd.cliente c join f.tipoFactura tp join f.condicionesDPago cp join f.formadepago fp join f.aCuentade usu")
+	
+	//este es el listar del controlador este sera para solo los true
+	@Query(value="select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join fetch f.tipoFactura tp join fetch f.condicionesDPago cp join fetch f.formadepago fp join fetch f.aCuentade usu order by f.id desc",countQuery = "select count(f) from Facturacion f join f.cliente cd join cd.cliente c join f.tipoFactura tp join f.condicionesDPago cp join f.formadepago fp join f.aCuentade usu order by f.id desc")
 	public Page<Facturacion> findAllCustom(Pageable page);
 	
 	//buscar factura por cliente
@@ -24,5 +29,8 @@ public interface IFacturaDao extends PagingAndSortingRepository<Facturacion, Lon
 	//buscar por comision de usuario
 	@Query(value ="select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join fetch f.tipoFactura tp join fetch f.condicionesDPago cp join fetch f.formadepago fp join fetch c.giro g join fetch cd.direcciones di join fetch f.aCuentade us where us.nombre like %?1", countQuery="select count(f) from Facturacion f join f.cliente cd join cd.cliente c join f.tipoFactura tp join f.condicionesDPago cp join f.formadepago fp join c.giro g join cd.direcciones di join f.aCuentade us where us.nombre like %?1")
 	public Page<Facturacion> findByaACuentadeNombre(String nombre, Pageable page);
-
+	
+//	para encontrar si una factura esta en estado 3 que es insuficiente y al meter en inventario cambie de estado
+	@Query(value="select f from Facturacion f join fetch f.cotizacion c join fetch c.carrito ca join fetch ca.productos pro where f.status=3 and pro.id=?1")
+	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatus(Long id);
 }

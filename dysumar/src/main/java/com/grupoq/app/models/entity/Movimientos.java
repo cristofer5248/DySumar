@@ -21,6 +21,7 @@ public class Movimientos implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	
 	@OneToMany(mappedBy="movimientos", fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 	/* @JoinColumn(name="producto") */
 	private List<Inventario> inventario;
@@ -53,7 +54,8 @@ public class Movimientos implements Serializable {
 
 	public void setInventario(List<Inventario> inventario) {
 		this.inventario = inventario;
-	}		
+	}
+		
 
 	
 

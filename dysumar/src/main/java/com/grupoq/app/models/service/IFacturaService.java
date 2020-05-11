@@ -26,4 +26,7 @@ public interface IFacturaService {
 	public Page<Facturacion> findAllCustom(Pageable page); 
 	public Page<Facturacion> findByClienteClienteNombreStartsWith(String nombre, Pageable page);
 	public Page<Facturacion> findByaACuentadeNombre(String nombre, Pageable page);
+	
+	//para encontrar si una factura esta en estado 3 que es insuficiente y al meter en inventario cambie de estado
+	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatus(Long id);
 }

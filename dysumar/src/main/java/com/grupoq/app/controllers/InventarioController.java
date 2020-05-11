@@ -3,9 +3,8 @@ package com.grupoq.app.controllers;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
-
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,9 +22,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.grupoq.app.models.entity.Facturacion;
 import com.grupoq.app.models.entity.Inventario;
 import com.grupoq.app.models.entity.Movimientos;
 import com.grupoq.app.models.entity.Producto;
+import com.grupoq.app.models.service.IFacturaService;
 import com.grupoq.app.models.service.IInventarioService;
 import com.grupoq.app.models.service.IMovimientosService;
 import com.grupoq.app.models.service.IProductoService;
@@ -34,18 +35,20 @@ import com.grupoq.app.util.paginator.PageRender;
 @Controller
 @SessionAttributes("inventario")
 @RequestMapping("/inventario")
-@Secured({"ROLE_ADMIN","ROLE_INV","ROLE_JEFEADM"})
+@Secured({ "ROLE_ADMIN", "ROLE_INV", "ROLE_JEFEADM" })
 public class InventarioController {
 
 	@Autowired
 	private IInventarioService inventarioService;
 	@Autowired
 	private IProductoService productoService;
-	
+
 	@Autowired
 	private IMovimientosService movimientosService;
 
-	
+	@Autowired
+	private IFacturaService facturaService;
+
 	@RequestMapping(value = "/listar", method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
 		Pageable pageRequest = PageRequest.of(page, 20);
@@ -57,8 +60,6 @@ public class InventarioController {
 		return "/inventario/listar";
 	}
 
-	
-	
 	@RequestMapping(value = "/nuevo/{id}", method = RequestMethod.GET)
 	public String nuevo(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 		Inventario inventario = new Inventario();
@@ -82,24 +83,20 @@ public class InventarioController {
 		return "/inventario/form";
 	}
 
-	
 	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
 	public String nuevo2(Map<String, Object> model, RedirectAttributes flash) {
-		Inventario inventario = new Inventario();			
-		model.put("inventario", inventario);		
-		model.put("titulo", "Inventariar");		
+		Inventario inventario = new Inventario();
+		model.put("inventario", inventario);
+		model.put("titulo", "Inventariar");
 		return "/inventario/form2";
 	}
-	
 
-	
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public String guardar(
-			@RequestParam(name="fecha", required=true) String fecha,
-			@RequestParam(name="codigo", required=true) String codigo,
-			@RequestParam(name="item_id[]", required=false) Long[] itemId,
-			@RequestParam(name="cantidad[]", required=false) Integer[] cantidad , Model model, RedirectAttributes flash,
-			SessionStatus status) throws ParseException {
+	public String guardar(@RequestParam(name = "fecha", required = true) String fecha,
+			@RequestParam(name = "codigo", required = true) String codigo,
+			@RequestParam(name = "item_id[]", required = false) Long[] itemId,
+			@RequestParam(name = "cantidad[]", required = false) Integer[] cantidad, Model model,
+			RedirectAttributes flash, SessionStatus status) throws ParseException {
 		String pattern = "MM-dd-yyyy";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		Date date1 = simpleDateFormat.parse(fecha);
@@ -108,8 +105,7 @@ public class InventarioController {
 //			model.addAttribute("titulo", "Inventariado");
 //			return "/producto/listar";
 //		}
-		String mensajeFlash = (itemId != null) ? "inventario editado con éxito!"
-				: "Inventario creado con éxito!";
+		String mensajeFlash = (itemId != null) ? "inventario editado con éxito!" : "Inventario creado con éxito!";
 //		Inventario justCodeRepetead = null;
 //		justCodeRepetead = inventarioService.findByCodigoProveedor(codigo);
 //		if(justCodeRepetead!=null) {
@@ -117,15 +113,31 @@ public class InventarioController {
 //			model.addAttribute("titulo","Nuevo");
 //			return "/inventario/form2";
 //		}
-		
-		if(itemId == null || itemId.length==0) {
-			model.addAttribute("titulo","Nuevo ingreso");
-			model.addAttribute("error","Error: El nuevo no puede tener lineas de productos vacias!");
+
+		if (itemId == null || itemId.length == 0) {
+			model.addAttribute("titulo", "Nuevo ingreso");
+			model.addAttribute("error", "Error: El nuevo no puede tener lineas de productos vacias!");
 			return "/inventario/form2";
+		}
+
+		for (int i = 0; i < itemId.length; i++) {
+			Producto producto = productoService.findOne(itemId[i]);	
+			int stockenpositivo =  producto.getStock();
+			System.out.print("Stock para comparar: "+stockenpositivo+ "la cantidad a meter "+cantidad[i]+"\n");
+			if (producto.getStock() < 0) {
+				stockenpositivo = producto.getStock() * -1;
+				System.out.print("Stock para comparar: "+stockenpositivo+ "la cantidad a meter "+cantidad[i]+"\n");
+				if (stockenpositivo > cantidad[i]) {
+					System.out.print("Entre a a la condicion Cantidad de ingreso insuficiente para el stock");					
+					flash.addFlashAttribute("error" + "El producto " + producto.getNombrep()
+							+ " exige un ingreso superior a " + (producto.getStock() * -1) + " para suplir la demanda");
+					return "redirect:/inventario/listar";
+				}
+			}
 		}
 		Movimientos movimiento = new Movimientos();
 		movimientosService.save(movimiento);
-		for(int i = 0; i<itemId.length; i++) {
+		for (int i = 0; i < itemId.length; i++) {
 			Inventario inventario = new Inventario();
 			Producto producto = productoService.findOne(itemId[i]);
 			inventario.setProducto(producto);
@@ -133,20 +145,28 @@ public class InventarioController {
 			inventario.setFecha(date1);
 			inventario.setCodigoProveedor(codigo);
 			inventario.setMovimientos(movimiento);
-			inventarioService.save(inventario);			
-			// llenado de nuevo stock/ suma con inventario DEPRECATED PORQUE ES MEJOR SOLO SUMAR, LA FACTURA RESTARÁ
+
+			if (producto.getStock() < 0) {
+				// aqui vamos a cambiar automaticamente el estado de la factura de 3 a 2
+				List<Facturacion> factura = facturaService.findByCotizacionByCarritoItemsByIdByStatus(producto.getId());
+				for (Facturacion fa : factura) {
+					fa.setStatus(2);
+					facturaService.save(fa);
+				}
+			}
+			inventarioService.save(inventario);
+			// llenado de nuevo stock/ suma con inventario DEPRECATED PORQUE ES MEJOR SOLO
+			// SUMAR, LA FACTURA RESTARÁ
 //			List<String> total = inventarioService.sumarStock(itemId[i]);
-			producto.setStock(producto.getStock()+cantidad[i]);
+			producto.setStock(producto.getStock() + cantidad[i]);
 			productoService.save(producto);
 		}
-		
 
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:/inventario/listar";
 	}
 
-	
 	@RequestMapping(value = "/eliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 
@@ -165,31 +185,30 @@ public class InventarioController {
 		}
 		return "redirect:/inventario/listar";
 	}
-	
+
 	@GetMapping(value = "/ver/{id}")
 	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 //para una solo entity
-		//		Inventario inventario;
+		// Inventario inventario;
 		Movimientos movimientos;
 		try {
-			 
-			 movimientos = movimientosService.findById(id);
+
+			movimientos = movimientosService.findById(id);
 		} catch (Exception e) {
 			flash.addFlashAttribute("error", "El ingreso con ese codigo no existe en la base de datos");
 			return "redirect:/inventario/listar";
 		}
-		
+
 //		Inventario inventario = inventarioService.findByIdCodigoProveedorOb(id);
-		
+
 //		List<Inventario> inventario = inventarioService.findByIdCodigoProveedor(id);
-		
-		
-		model.put("inventarios",movimientos);
+
+		model.put("inventarios", movimientos);
 		model.put("proveedor", movimientos.getInventario().get(0).getCodigoProveedor());
 		model.put("fecha", movimientos.getInventario().get(0).getFecha());
 		model.put("codigopro", id);
 		model.put("titulo", "Detalle del ingreso : " + id);
-		
+
 //		model.put("inventarios", inventario);
 //		model.put("proveedor", inventario.get(0).getProducto().getProveedor().getNombre());
 //		model.put("fecha", inventario.get(0).getFecha().toString());

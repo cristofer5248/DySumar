@@ -23,7 +23,7 @@
 					<a th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('INV')}"
 						th:href="@{/proveedor/nuevo}" class="btn btn-primary btn-xs">Crear
 						proveedor</a>
-					<form class="searchbox" th:action="@{/proveedor/listar/}">
+					<form id="formsearch" class="searchbox" th:action="@{/proveedor/listar/}">
 						<input type="search"
 							placeholder="Introducir un indicio del nombre de la marca......"
 							class="searchbox-input" onkeyup="buttonUp();" id="btn-search"
@@ -32,7 +32,7 @@
 							class="searchbox-icon">Buscar</span>
 					</form>
 				</div>
-				<table class="table table-striped table-bordered table-sm">
+				<table id="example" class="table table-striped table-bordered table-sm">
 					<thead class="thead-inverse">
 						<tr>
 							<th
@@ -111,7 +111,7 @@
 
 	<footer th:replace="layout/layout :: footer"></footer>
 	<input type="hidden" id="urlenviar" th:value="@{/proveedor/listar/}" />
-	<script th:src="@{/js/searchbar.js}"></script>
+	<script th:src="@{/js/searchbargeneric.js}"></script>
 	<script>
 	var contador=0;
 	function quitarcolumns(){
@@ -123,6 +123,12 @@
 		}
 		
 	}
+    $('#example').DataTable( {
+        "paging":   false,
+        
+        "searching": false,
+        "info":     false
+    } );
 	</script>
 </body>
 </html>

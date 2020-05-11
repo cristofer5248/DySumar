@@ -86,4 +86,34 @@ public class IProductoServiceImpl implements IProductoService {
 		return productosDao.findAllLike(termn, page);
 	}
 
+	@Override
+	public Page<Producto> findAllJoinFalse(Pageable page) {
+		// TODO Auto-generated method stub
+		return productosDao.findAllJoinFalse(page);
+	}
+
+	@Override
+	public Page<Producto> findByCodigo(String codigo, Pageable page) {
+		// TODO Auto-generated method stub
+		return productosDao.findByCodigo(codigo, page);
+	}
+
+	@Override
+	public Page<Producto> findByProveedor(String codigo, Pageable page) {
+		// TODO Auto-generated method stub
+		return productosDao.findByProveedor(codigo, page);
+	}
+
+	@Override
+	public Page<Producto> findByMarca(String codigo, Pageable page) {
+		// TODO Auto-generated method stub
+		return productosDao.findByMarca(codigo, page);
+	}
+
+	@Override
+	public Page<Producto> findByCategoria(String codigo, Pageable page) {
+		// TODO Auto-generated method stub
+		return productosDao.findByCategoria(codigo, page);
+	}
+
 }

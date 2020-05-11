@@ -49,7 +49,7 @@
 					<div class="form-group row">
 						<label for="email" class="col-sm-2 col-form-label">Email</label>
 						<div class="col-sm-6">
-							<input type="text" th:field="*{correo}" class="form-control"
+							<input type="email" th:field="*{correo}" class="form-control"
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
 								th:if="${#fields.hasErrors('correo')}" th:errors="*{email}"></small>

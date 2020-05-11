@@ -58,7 +58,8 @@ public class Facturacion implements Serializable {
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date fecha;
-	
+	@Column(length = 1)
+	private int status;
 	public Facturacion() {
 		
 	}
@@ -146,7 +147,16 @@ public class Facturacion implements Serializable {
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
-	
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+
 
 //	public FormaDePago getFormaDePago() {
 //		return formaDePago;

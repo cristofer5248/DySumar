@@ -13,8 +13,14 @@ public interface ProductosDao extends PagingAndSortingRepository<Producto, Long>
 	@Query("select p from Producto p join fetch p.proveedor prv join fetch p.marca m join fetch p.presentacion pre where p.nombrep like %?1%")
 	public List<Producto> findByNombrep(String term);
 	
-	@Query(value = "select p from Producto p join fetch p.marca m join fetch p.categoria c join fetch p.proveedor pro join fetch p.presentacion pre", countQuery = "select count(p) from Producto p join p.marca m join p.categoria c join p.proveedor pro join p.presentacion pre")
+	
+	//este es el eque lista todo en el get listar
+	@Query(value = "select p from Producto p join fetch p.marca m join fetch p.categoria c join fetch p.proveedor pro join fetch p.presentacion pre where p.status=true", countQuery = "select count(p) from Producto p join p.marca m join p.categoria c join p.proveedor pro join p.presentacion pre where p.status=true")
 	public Page<Producto> findAllJoin(Pageable page);
+
+	@Query(value = "select p from Producto p join fetch p.marca m join fetch p.categoria c join fetch p.proveedor pro join fetch p.presentacion pre where p.status=false", countQuery = "select count(p) from Producto p join p.marca m join p.categoria c join p.proveedor pro join p.presentacion pre where p.status=false")
+	public Page<Producto> findAllJoinFalse(Pageable page);
+	
 	
 	@Query(value = "select p from Producto p join fetch p.marca m join fetch p.categoria c join fetch p.proveedor pro join fetch p.presentacion pre where p.nombrep like %?1%", countQuery = "select count(p) from Producto p join p.marca m join p.categoria c join p.proveedor pro join p.presentacion pre where p.nombrep like %?1%")
 	public Page<Producto> findAllLike(String termn,Pageable page);
@@ -27,4 +33,19 @@ public interface ProductosDao extends PagingAndSortingRepository<Producto, Long>
 //	@Query("select p from Producto p join fetch p.proveedor pro join fetch p.marca m join fetch p.categoria c join fetch p.margen mar join fetch p.inventarios i where i.codigoProveedor=?1")
 	@Query("select p from Producto p join fetch p.proveedor pro join fetch p.marca m join fetch p.categoria c join fetch p.inventarios i where i.codigoProveedor=?1")
 	public Producto fetchByIdWithInventarioByCodigoP(String id);
+	
+	
+	//filtro para searchbar
+	
+	@Query(value = "select p from Producto p join fetch p.marca m join fetch p.categoria c join fetch p.proveedor pro join fetch p.presentacion pre where p.codigo like %?1%", countQuery = "select count(p) from Producto p join p.marca m join p.categoria c join p.proveedor pro join p.presentacion pre where p.codigo like %?1%")
+	public Page<Producto> findByCodigo(String codigo, Pageable page);
+	
+	@Query(value = "select p from Producto p join fetch p.marca m join fetch p.categoria c join fetch p.proveedor pro join fetch p.presentacion pre where pro.nombre like %?1%", countQuery = "select count(p) from Producto p join p.marca m join p.categoria c join p.proveedor pro join p.presentacion pre where pro.nombre like %?1%")
+	public Page<Producto> findByProveedor(String codigo, Pageable page);
+	
+	@Query(value = "select p from Producto p join fetch p.marca m join fetch p.categoria c join fetch p.proveedor pro join fetch p.presentacion pre where m.nombrem like %?1%", countQuery = "select count(p) from Producto p join p.marca m join p.categoria c join p.proveedor pro join p.presentacion pre where m.nombrem like %?1%")
+	public Page<Producto> findByMarca(String codigo, Pageable page);
+	
+	@Query(value = "select p from Producto p join fetch p.marca m join fetch p.categoria c join fetch p.proveedor pro join fetch p.presentacion pre where c.nombre like %?1%", countQuery = "select count(p) from Producto p join p.marca m join p.categoria c join p.proveedor pro join p.presentacion pre where c.nombre like %?1%")
+	public Page<Producto> findByCategoria(String codigo, Pageable page);
 }
