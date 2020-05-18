@@ -70,6 +70,9 @@ public class Producto implements Serializable {
 	@Column(columnDefinition = "double default 50.0")
 	private double margen;
 	
+	@Column(length = 4, columnDefinition = "integer default 1")
+	private int minimo=1;
+	
 	private boolean status=true;
 	
 	@JsonIgnore
@@ -177,6 +180,14 @@ public class Producto implements Serializable {
 
 	public void setStatus(boolean status) {
 		this.status = status;
+	}
+
+	public int getMinimo() {
+		return minimo;
+	}
+
+	public void setMinimo(int minimo) {
+		this.minimo = minimo;
 	}
 
 	

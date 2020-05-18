@@ -38,6 +38,7 @@ public class CarritoItems implements Serializable {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Cotizacion cotizacionid;
+	private boolean status=true;
 	
 	public CarritoItems() {
 		
@@ -97,6 +98,14 @@ public class CarritoItems implements Serializable {
 
 	public void setDescuento(double descuento) {
 		this.descuento = descuento;
+	}
+
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
 	}
 	
 }

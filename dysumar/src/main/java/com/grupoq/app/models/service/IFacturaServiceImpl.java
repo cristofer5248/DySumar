@@ -117,4 +117,10 @@ public class IFacturaServiceImpl implements IFacturaService {
 		// TODO Auto-generated method stub
 		return facturadao.findByCotizacionByCarritoItemsByIdByStatus(id);
 	}
+
+	@Override
+	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatusByCarritoStatus(Long id) {
+		// TODO Auto-generated method stub
+		return facturadao.findByCotizacionByCarritoItemsByIdByStatusByCarritoStatus(id);
+	}
 }

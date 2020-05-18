@@ -3,6 +3,8 @@ package com.grupoq.app.models.dao;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +15,9 @@ public interface IInventarioDao extends PagingAndSortingRepository<Inventario, L
 	
 	@Query(value= "select sum(stock) from inventario where producto_idp=:id", nativeQuery = true)
 	public List<String> sumarStock(@Param("id") Long id);
+	
+	@Query(value="select i from Inventario i join fetch i.producto p join fetch p.proveedor prov", countQuery = "select count(i) from Inventario i join i.producto p join p.proveedor prov")
+	public Page<Inventario> findAllCustom(Pageable page);
 	
 	@Query("select i from Inventario i join fetch i.producto p join fetch p.proveedor pro join fetch p.marca ma join fetch p.categoria c join fetch p.presentacion pre where i.codigoProveedor=?1")
 	public List<Inventario> findByIdCodigoProveedor(String id);

@@ -133,6 +133,14 @@
 				</ul>
 
 				<ul class="navbar-nav navbar-right">
+					<li class="nav-item dropdown" sec:authorize="isAuthenticated()"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"><i class="fas fa-globe-americas"></i></a>
+						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" id="notiContent">
+<!-- 							contenido de las notificaciones							 -->
+
+						</div></li>
 					<li sec:authorize="!isAuthenticated()"><a
 						class="btn btn-outline-primary" th:href="@{/login}">Iniciar
 							Session</a></li>
@@ -227,6 +235,8 @@
 		<script th:src="@{/js/bootstrap-select.min.js}"></script>
 		<script th:src="@{/js/datatables.min.js}"></script>
 		<input type="hidden" id="urlCotizacion" th:value="@{/cotizacion/ver/}" />
+		<input type="hidden" id="urldeServer" th:value="@{/}"/>
+		<script th:replace="layout/notificaciones :: javascript"></script>
 		<script th:inline="javascript">
 		//todo esto es para las alertas de alertify
 	var x = [[${error}]];

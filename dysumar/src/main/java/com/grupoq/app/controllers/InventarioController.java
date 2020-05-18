@@ -22,10 +22,12 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.grupoq.app.models.entity.CarritoItems;
 import com.grupoq.app.models.entity.Facturacion;
 import com.grupoq.app.models.entity.Inventario;
 import com.grupoq.app.models.entity.Movimientos;
 import com.grupoq.app.models.entity.Producto;
+import com.grupoq.app.models.service.ICarritoItemsService;
 import com.grupoq.app.models.service.IFacturaService;
 import com.grupoq.app.models.service.IInventarioService;
 import com.grupoq.app.models.service.IMovimientosService;
@@ -48,6 +50,9 @@ public class InventarioController {
 
 	@Autowired
 	private IFacturaService facturaService;
+
+	@Autowired
+	private ICarritoItemsService carritoService;
 
 	@RequestMapping(value = "/listar", method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
@@ -121,16 +126,18 @@ public class InventarioController {
 		}
 
 		for (int i = 0; i < itemId.length; i++) {
-			Producto producto = productoService.findOne(itemId[i]);	
-			int stockenpositivo =  producto.getStock();
-			System.out.print("Stock para comparar: "+stockenpositivo+ "la cantidad a meter "+cantidad[i]+"\n");
+			Producto producto = productoService.findOne(itemId[i]);
+			int stockenpositivo = producto.getStock();
+			System.out.print("Stock para comparar: " + stockenpositivo + "la cantidad a meter " + cantidad[i] + "\n");
 			if (producto.getStock() < 0) {
 				stockenpositivo = producto.getStock() * -1;
-				System.out.print("Stock para comparar: "+stockenpositivo+ "la cantidad a meter "+cantidad[i]+"\n");
+				System.out
+						.print("Stock para comparar: " + stockenpositivo + "la cantidad a meter " + cantidad[i] + "\n");
 				if (stockenpositivo > cantidad[i]) {
-					System.out.print("Entre a a la condicion Cantidad de ingreso insuficiente para el stock");					
-					flash.addFlashAttribute("error" + "El producto " + producto.getNombrep()
+					System.out.print("Entre a a la condicion Cantidad de ingreso insuficiente para el stock");
+					flash.addFlashAttribute("error", "El producto " + producto.getNombrep()
 							+ " exige un ingreso superior a " + (producto.getStock() * -1) + " para suplir la demanda");
+
 					return "redirect:/inventario/listar";
 				}
 			}
@@ -149,10 +156,41 @@ public class InventarioController {
 			if (producto.getStock() < 0) {
 				// aqui vamos a cambiar automaticamente el estado de la factura de 3 a 2
 				List<Facturacion> factura = facturaService.findByCotizacionByCarritoItemsByIdByStatus(producto.getId());
-				for (Facturacion fa : factura) {
-					fa.setStatus(2);
-					facturaService.save(fa);
+				// vamos a cambiar el estado de la factura solo aquella que tengan pendiente
+				// ESTE PRODUCTO EN FALSE
+				
+				for (Facturacion facturas : factura) {
+					for (CarritoItems carritoFactura : facturas.getCotizacion().getCarrito()) {
+						if (carritoFactura.getProductos().getId().equals(producto.getId())) {
+							carritoFactura.setStatus(true);
+							carritoService.save(carritoFactura);
+
+						}
+					}
 				}
+//				List<Facturacion> factura2 = facturaService
+//						.findByCotizacionByCarritoItemsByIdByStatusByCarritoStatus(producto.getId());
+//				System.out.print("Size " + factura2.size() + "\n");
+//				for (int j = 0; j < factura2.size(); j++) {
+//
+//					for (int k = 0; k < factura2.get(j).getCotizacion().getCarrito().size(); k++) {
+//						CarritoItems carritoFacturaObject = carritoService
+//								.findById(factura2.get(j).getCotizacion().getCarrito().get(k).getId());
+//						System.out.print("Estado original " + carritoFacturaObject.isStatus() + "\n");
+//						cambiarFacturastatus = carritoFacturaObject.isStatus() ? true : false;
+//						System.out.print(
+//								"producto de carrito: " + carritoFacturaObject.getProductos().getNombrep() + "\n");
+//						System.out.print("Valor " + cambiarFacturastatus + "\n");
+//
+//					}
+//					System.out.print("Valor de la factura es " + cambiarFacturastatus + "\n");
+//					if (cambiarFacturastatus) {
+//						Facturacion facturaCambiar = factura2.get(j);
+//						facturaService.save(facturaCambiar);
+//
+//					}
+//				}
+
 			}
 			inventarioService.save(inventario);
 			// llenado de nuevo stock/ suma con inventario DEPRECATED PORQUE ES MEJOR SOLO

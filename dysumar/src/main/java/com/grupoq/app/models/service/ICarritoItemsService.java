@@ -9,4 +9,5 @@ public interface ICarritoItemsService {
 	public void save(CarritoItems carritoitems);
 	public void delete(Long id);
 	public List<CarritoItems> findAll();
+	public CarritoItems findById(Long id);
 }

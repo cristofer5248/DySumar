@@ -31,4 +31,10 @@ public class ICarritoItemsServiceImpl implements ICarritoItemsService {
 		return (List<CarritoItems>) carritoitemdao.findAll();
 	}
 
+	@Override
+	public CarritoItems findById(Long id) {
+		// TODO Auto-generated method stub
+		return carritoitemdao.findById(id).orElse(null);
+	}
+
 }

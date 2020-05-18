@@ -25,17 +25,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.grupoq.app.models.dao.ICarritoItemsDao;
 import com.grupoq.app.models.entity.CarritoItems;
 import com.grupoq.app.models.entity.Cotizacion;
 import com.grupoq.app.models.entity.Descuento;
 import com.grupoq.app.models.entity.Facturacion;
+import com.grupoq.app.models.entity.Notificaciones;
 import com.grupoq.app.models.entity.Producto;
+import com.grupoq.app.models.service.ICarritoItemsService;
 import com.grupoq.app.models.service.IClienteService;
 import com.grupoq.app.models.service.ICotizacionService;
 import com.grupoq.app.models.service.IDescuentoService;
 import com.grupoq.app.models.service.IFacturaService;
+import com.grupoq.app.models.service.INotificacionesService;
 import com.grupoq.app.models.service.IProductoService;
 import com.grupoq.app.models.service.IUsuarioService;
 import com.grupoq.app.util.paginator.PageRender;
@@ -63,7 +64,7 @@ public class FacturaController {
 	ICotizacionService cotizacionService;
 
 	@Autowired
-	ICarritoItemsDao carritoitemsdao;
+	ICarritoItemsService carritoitemsservice;
 
 	@Autowired
 	IUsuarioService usuarioService;
@@ -73,6 +74,9 @@ public class FacturaController {
 
 	@Autowired
 	IDescuentoService descuentoService;
+
+	@Autowired
+	INotificacionesService notificacionesService;
 
 	protected final Log logger = LogFactory.getLog(this.getClass());
 
@@ -227,11 +231,20 @@ public class FacturaController {
 				if (productogetStock.getStock() < 0) {
 					productogetStock.setStock(productogetStock.getStock() - pro.getCantidad());
 					model.addAttribute("error", "Stock insuficiente, se encuentra en numeros negativos");
+					// aqui debo cambiar el estado del carrito segun el que tiene insuficientes en
+					// stock
+					System.out.print("ENTRANDO A LA CONDICION DE NUMEROS NEGATIVOS EN STOCK Y PONER SEST STATUS FALSE");
+					pro.setStatus(false);
+					// aqui
+					carritoitemsservice.save(pro);
 					facturacion.setStatus(3);
 				} else {
 					productogetStock.setStock(productogetStock.getStock() - pro.getCantidad());
+					System.out.print("ENTRANDO A LA CONDICION DE NUMEROS NEGATIVOS EN STOCK Y PONER SEST STATUS TRUE");
 					productoservice.save(productogetStock);
 					facturacion.setStatus(3);
+					pro.setStatus(false);
+					carritoitemsservice.save(pro);
 				}
 			}
 
@@ -239,14 +252,33 @@ public class FacturaController {
 				productogetStock.setStock(productogetStock.getStock() - pro.getCantidad());
 				productoservice.save(productogetStock);
 			}
+			// notificar cuando ya quedo en minimo
+			if (productogetStock.getStock() - pro.getCantidad() <= productogetStock.getMinimo()) {
+				Notificaciones noti = new Notificaciones();
+				nuevaNotificacion("far fa-star-half", productogetStock.getNombrep() + " en minimo!", "/producto/ver/" + productogetStock.getId());														
+				notificacionesService.save(noti);
+
+			}
+			// fin
 		}
 
 		facturaservice.save(facturacion);
+		String url = "/factura/ver/"+facturacion.getId();
+		nuevaNotificacion("fas fa-money-check-alt", "Nueva remision a nombre de "+facturacion.getaCuentade().getNombre(),url);		
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:/factura/ver/" + facturacion.getId();
 	}
 
+	public void nuevaNotificacion(String icono, String nombre, String url) {
+		Notificaciones noti = new Notificaciones();
+		noti.setFecha(new Date());
+		noti.setIcono(icono);
+		noti.setNombre(nombre);
+		noti.setUrl(url);
+		notificacionesService.save(noti);		
+	}
+	
 	@GetMapping(value = "/cargar_producto/{term}", produces = { "application/json" })
 	public @ResponseBody List<ProductosWB> listarByNombreJson(@PathVariable String term) {
 		List<ProductosWB> list2 = new ArrayList<ProductosWB>();
@@ -336,7 +368,7 @@ public class FacturaController {
 				// margen default
 			}
 			carrito.setCantidad(cantidad[i]);
-			carritoitemsdao.save(carrito);
+			carritoitemsservice.save(carrito);
 
 		}
 		mensajeFlash = mensajeFlash + " \nEl codigo de cotizacion es: " + cotizacion.getId();
@@ -397,7 +429,7 @@ public class FacturaController {
 				flash.addFlashAttribute("error", "No se pudo cambiar el estado ni guardar la operacion!");
 				return "redirect:/factura/listar";
 			}
-			
+
 		}
 		return "redirect:/factura/listar";
 	}

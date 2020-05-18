@@ -21,7 +21,7 @@ public class IInventarioServiceImpl implements IInventarioService {
 	@Transactional(readOnly = true)
 	public Page<Inventario> findAll(Pageable pageable) {
 		// TODO Auto-generated method stub
-		return inventarioDao.findAll(pageable);
+		return inventarioDao.findAllCustom(pageable);
 	}
 
 	@Override

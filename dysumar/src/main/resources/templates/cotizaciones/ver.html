@@ -63,6 +63,7 @@
 					<thead class="thead-inverse">
 						<tr>
 							<th>ID</th>
+							<th>ESTADO</th>
 							<th>Producto</th>
 							<th>Marca</th>
 							<th>Proveedor</th>
@@ -80,8 +81,10 @@
 					<tbody>
 						<tr th:each="carritos: ${cotizacion.carrito}">
 							<td th:text="${carritos.productos.id}"></td>
+							<td th:if="${carritos.status}" style="color:blue">Stock suficiente</td>
+							<td th:if="${!carritos.status}" style="color:red">Stock insuficiente</td>							
 							<td th:text="${carritos.productos.nombrep}"></td>
-							<td th:text="${carritos.productos.proveedor.nombre}"></td>
+							<td th:text="${carritos.productos.proveedor.nombre}"></td>							
 							<td th:text="${carritos.productos.marca.nombrem}"></td>
 							<td th:text="'$'+${carritos.productos.precio}"></td>
 							<td th:text="${carritos.margen}+'%'"></td>
