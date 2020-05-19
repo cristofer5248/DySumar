@@ -26,11 +26,13 @@ import com.grupoq.app.models.entity.CarritoItems;
 import com.grupoq.app.models.entity.Facturacion;
 import com.grupoq.app.models.entity.Inventario;
 import com.grupoq.app.models.entity.Movimientos;
+import com.grupoq.app.models.entity.Notificaciones;
 import com.grupoq.app.models.entity.Producto;
 import com.grupoq.app.models.service.ICarritoItemsService;
 import com.grupoq.app.models.service.IFacturaService;
 import com.grupoq.app.models.service.IInventarioService;
 import com.grupoq.app.models.service.IMovimientosService;
+import com.grupoq.app.models.service.INotificacionesService;
 import com.grupoq.app.models.service.IProductoService;
 import com.grupoq.app.util.paginator.PageRender;
 
@@ -53,6 +55,9 @@ public class InventarioController {
 
 	@Autowired
 	private ICarritoItemsService carritoService;
+	
+	@Autowired
+	private INotificacionesService notificacionesService;
 
 	@RequestMapping(value = "/listar", method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
@@ -164,6 +169,7 @@ public class InventarioController {
 						if (carritoFactura.getProductos().getId().equals(producto.getId())) {
 							carritoFactura.setStatus(true);
 							carritoService.save(carritoFactura);
+							nuevaNotificacion("far fa-clock", "Producto "+carritoFactura.getProductos().getNombrep()+" en remision cambió de estado", "/cotizacion/ver/"+carritoFactura.getCotizacionid().getId(), "green");
 
 						}
 					}
@@ -192,6 +198,7 @@ public class InventarioController {
 //				}
 
 			}
+			nuevaNotificacion("fas fa-parachute-box", "Ingreso nuevo de "+inventario.getProducto().getNombrep(), "/inventario/ver/"+inventario.getId(), "blue");
 			inventarioService.save(inventario);
 			// llenado de nuevo stock/ suma con inventario DEPRECATED PORQUE ES MEJOR SOLO
 			// SUMAR, LA FACTURA RESTARÁ
@@ -253,5 +260,14 @@ public class InventarioController {
 //		model.put("codigopro", id);
 //		model.put("titulo", "Detalle del ingreso : " + id);		
 		return "/inventario/ver";
+	}
+	public void nuevaNotificacion(String icono, String nombre, String url,String color) {
+		Notificaciones noti = new Notificaciones();
+		noti.setFecha(new Date());
+		noti.setIcono(icono);
+		noti.setNombre(nombre);
+		noti.setUrl(url);
+		noti.setColor(color);
+		notificacionesService.save(noti);		
 	}
 }

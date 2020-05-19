@@ -11,8 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 @Entity
 public class Notificaciones implements Serializable {
 
@@ -24,18 +22,20 @@ public class Notificaciones implements Serializable {
 	@GeneratedValue( strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(length = 50)
+	@Column(length = 80)
 	private String nombre;
 	@Column(length = 50)
 	private String url;
 	
 	@Column(name = "create_at")
-	@Temporal(TemporalType.DATE)
-	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@Temporal(TemporalType.TIMESTAMP)	
 	private Date fecha;	
 	
 	@Column(length = 30)
 	private String icono;
+	
+	@Column(length = 30)
+	private String color;
 
 	public Notificaciones() {
 		
@@ -83,6 +83,14 @@ public class Notificaciones implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 
 	

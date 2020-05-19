@@ -5,97 +5,22 @@
 	<script type="text/javascript" th:fragment="javascript">
 		$(document).ready(function() {
 
-
-
-
 let noti = $('#notiContent')
 const url = $("#urldeServer").val()+"notificaciones/ver";
-
-//populate dropdown list wujuu
 $.getJSON(url,function(data){
 	$.each(data,function(key,entry){
-		noti.append($('<a class="dropdown-item"></a>').attr('href',entry.url).html("<i class='"+entry.icono+"'></i> "+entry.nombre));
-// 		noti.append($('<a class="dropdown-item"></a>').attr('href',window.location.host+entry.url));
-// 		noti.append($('<i class="'+entry.icono+'"></i>'));
-// 		noti.text(entry.nombre)
+		noti.append($('<a class="dropdown-item"></a>').attr('href',entry.url).html("<i class='"+entry.icono+"' style='color:"+entry.color+";'></i> "+entry.nombre+" <time class='timeago' datetime='"+entry.fecha+"'></time>"));
+// 		noti.append($('<a class="dropdown-item"></a>').attr('href',entry.url).html("<i class='"+entry.icono+"' style='color:"+entry.color+";'></i> "+entry.nombre+"<time class='timeago' datetime='17 September 2014 12:00'></time>"));
+// 		noti.append($('<a class="dropdown-item"></a>').attr('href',entry.url).html("<i class='"+entry.icono+"' style='color:"+entry.color+";'></i> "+entry.nombre+" "+entry.fecha));
 		
 		
 	})
 });
-// 	document.getElementById("cargar_categoria").value=2;
 
-let marca = $('#cargar_marca')
-marca.empty();
-marca.append('<option selected="true" disabled>Selecciona</option>');
-marca.prop('selectedIndex',0);
-const url2 = $("#urlAjaxmarca").val();
-//populate dropdown list wujuu
-$.getJSON(url2,function(data){
-	$.each(data,function(key,entry){
-		if(id2==entry.idm){
-		marca.append($('<option selected></option>').attr('value',entry.idm).text(entry.nombrem));
-		}
-		else{
-			marca.append($('<option></option>').attr('value',entry.idm).text(entry.nombrem));	
-		}
-	})
 });
-
-let margen = $('#cargar_margen')
-margen.empty();
-margen.append('<option selected="true" disabled>Selecciona</option>');
-margen.prop('selectedIndex',0);
-const url3 = $("#urlAjaxmargen").val();
-//populate dropdown list wujuu
-$.getJSON(url3,function(data){
-	$.each(data,function(key,entry){
-		if(id3==entry.id){
-		margen.append($('<option selected></option>').attr('value',entry.id).text(entry.porcentaje+"%"));
-		}else{
-			margen.append($('<option></option>').attr('value',entry.id).text(entry.porcentaje+"%"));	
-		}
-	})
-});
-
-let presentacion = $('#cargar_presentacion')
-presentacion.empty();
-presentacion.append('<option selected="true" disabled>Selecciona</option>');
-presentacion.prop('selectedIndex',0);
-const url4 = $("#urlAjaxpresentacion").val();
-//populate dropdown list wujuu
-$.getJSON(url4,function(data){
-	$.each(data,function(key,entry){		
-		if(id4==entry.id){
-		presentacion.append($('<option selected></option>').attr('value',entry.id).text(entry.detalle));
-		}else{
-		presentacion.append($('<option></option>').attr('value',entry.id).text(entry.detalle));
-		}
-	})
-});
-
-let proveedor = $('#cargar_proveedor')
-proveedor.empty();
-proveedor.append('<option selected="true" disabled>Selecciona</option>');
-proveedor.prop('selectedIndex',0);
-const url5 = $("#urlAjaxproveedor").val();
-//populate dropdown list wujuu
-$.getJSON(url5,function(data){
-	$.each(data,function(key,entry){
-		
-		if(id5==entry.id){
-		proveedor.append($('<option selected></option>').attr('value',entry.id).text(entry.nombre));
-		}else{
-		proveedor.append($('<option></option>').attr('value',entry.id).text(entry.nombre));	
-		}
-	})
-});
-													
-			
-					
-				
-
-
-		});
+		function cambiarAgo(){
+		$('time.timeago').timeago();
+		}					
 		
 	</script>
 	<script type="text/javascript">

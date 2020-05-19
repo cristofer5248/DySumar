@@ -1,5 +1,6 @@
 package com.grupoq.app.controllers;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.grupoq.app.models.entity.Notificaciones;
 import com.grupoq.app.models.entity.Producto;
+import com.grupoq.app.models.service.INotificacionesService;
 import com.grupoq.app.models.service.IProductoService;
 import com.grupoq.app.util.paginator.PageRender;
 
@@ -35,6 +38,9 @@ public class ProductoController {
 
 	@Autowired
 	private IProductoService productoService;
+	
+	@Autowired
+	INotificacionesService notificacionesService;
 
 	@Secured({ "ROLE_ADMIN", "ROLE_INV", "ROLE_JEFEADM", "ROLE_SELLER" })
 	@RequestMapping(value = { "/listar", "/listar/{op}/{nombrep}" }, method = RequestMethod.GET)
@@ -149,6 +155,7 @@ public class ProductoController {
 		}
 		productoService.save(producto);
 		status.setComplete();
+		nuevaNotificacion("fas fa-box-open", "Producto '"+producto.getNombrep()+"' agregado o modificado","/producto/ver/"+producto.getId(), "blue");
 		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:/producto/listar";
 	}
@@ -161,6 +168,7 @@ public class ProductoController {
 			try {
 				productoService.delete(id);
 				flash.addFlashAttribute("success", "Producto eliminado con éxito!");
+				nuevaNotificacion("fas fa-box-open", "Producto con ID'"+id+"' eliminado!","#", "red");
 			} catch (Exception e) {
 				flash.addFlashAttribute("error",
 						"El producto posiblemente tiene registros de inventariado, no se puede eliminar!");
@@ -223,5 +231,13 @@ public class ProductoController {
 		model.put("titulo", "Detalle producto: " + producto.getNombrep());
 		return "/productos/ver";
 	}
-
+	public void nuevaNotificacion(String icono, String nombre, String url,String color) {
+		Notificaciones noti = new Notificaciones();
+		noti.setFecha(new Date());
+		noti.setIcono(icono);
+		noti.setNombre(nombre);
+		noti.setUrl(url);
+		noti.setColor(color);
+		notificacionesService.save(noti);		
+	}
 }

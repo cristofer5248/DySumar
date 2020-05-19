@@ -133,7 +133,7 @@
 				</ul>
 
 				<ul class="navbar-nav navbar-right">
-					<li class="nav-item dropdown" sec:authorize="isAuthenticated()"><a
+					<li class="nav-item dropdown" sec:authorize="isAuthenticated()" onclick="cambiarAgo();"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
 						role="button" data-toggle="dropdown" aria-haspopup="true"
 						aria-expanded="false"><i class="fas fa-globe-americas"></i></a>
@@ -156,7 +156,7 @@
 							<form id="logoutForm" th:action="@{/logout}" method="post">
 								<button class="dropdown-item"
 									onclick="document.getElementById('logoutForm').submit();"
-									type="submit">Sign Out</button>
+									type="submit">Salir</button>
 								<input type="hidden" th:name="${_csrf.parameterName}"
 									th:value="${_csrf.token}" />
 							</form>
@@ -234,6 +234,7 @@
 		<script th:src="@{/js/bootstrap-datepicker.min.js}"></script>
 		<script th:src="@{/js/bootstrap-select.min.js}"></script>
 		<script th:src="@{/js/datatables.min.js}"></script>
+		<script th:src="@{/js/jquery.timeago.js}"></script>
 		<input type="hidden" id="urlCotizacion" th:value="@{/cotizacion/ver/}" />
 		<input type="hidden" id="urldeServer" th:value="@{/}"/>
 		<script th:replace="layout/notificaciones :: javascript"></script>
@@ -252,6 +253,7 @@
 		var urlCotizacion = $("#urlCotizacion").val();
 		location.href = urlCotizacion+$("#cotizacionSearch").val();
 	});
+	
 	
 	</script>
 

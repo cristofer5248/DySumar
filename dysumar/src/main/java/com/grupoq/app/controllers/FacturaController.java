@@ -235,8 +235,12 @@ public class FacturaController {
 					// stock
 					System.out.print("ENTRANDO A LA CONDICION DE NUMEROS NEGATIVOS EN STOCK Y PONER SEST STATUS FALSE");
 					pro.setStatus(false);
+					
 					// aqui
 					carritoitemsservice.save(pro);
+					//mando notificacion
+					nuevaNotificacion("far fa-clock", "Producto "+pro.getProductos().getNombrep()+" en remision cambió de estado", "/cotizacion/ver/"+pro.getCotizacionid().getId(), "red");
+					//fin
 					facturacion.setStatus(3);
 				} else {
 					productogetStock.setStock(productogetStock.getStock() - pro.getCantidad());
@@ -254,9 +258,8 @@ public class FacturaController {
 			}
 			// notificar cuando ya quedo en minimo
 			if (productogetStock.getStock() - pro.getCantidad() <= productogetStock.getMinimo()) {
-				Notificaciones noti = new Notificaciones();
-				nuevaNotificacion("far fa-star-half", productogetStock.getNombrep() + " en minimo!", "/producto/ver/" + productogetStock.getId());														
-				notificacionesService.save(noti);
+				nuevaNotificacion("fas fa-exclamation-triangle", productogetStock.getNombrep() + " en minimo!", "/producto/ver/" + productogetStock.getId(),"yellow");														
+				
 
 			}
 			// fin
@@ -264,18 +267,19 @@ public class FacturaController {
 
 		facturaservice.save(facturacion);
 		String url = "/factura/ver/"+facturacion.getId();
-		nuevaNotificacion("fas fa-money-check-alt", "Nueva remision a nombre de "+facturacion.getaCuentade().getNombre(),url);		
+		nuevaNotificacion("fas fa-money-check-alt", "Nueva remision a nombre de "+facturacion.getaCuentade().getNombre(),url,"green");		
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:/factura/ver/" + facturacion.getId();
 	}
 
-	public void nuevaNotificacion(String icono, String nombre, String url) {
+	public void nuevaNotificacion(String icono, String nombre, String url,String color) {
 		Notificaciones noti = new Notificaciones();
 		noti.setFecha(new Date());
 		noti.setIcono(icono);
 		noti.setNombre(nombre);
 		noti.setUrl(url);
+		noti.setColor(color);
 		notificacionesService.save(noti);		
 	}
 	
@@ -368,6 +372,7 @@ public class FacturaController {
 				// margen default
 			}
 			carrito.setCantidad(cantidad[i]);
+			nuevaNotificacion("fas fa-cart-plus", "Nueva cotizacion realizada", "/cotizacion/ver/"+carrito.getCotizacionid().getId(), "blue");
 			carritoitemsservice.save(carrito);
 
 		}
@@ -425,6 +430,7 @@ public class FacturaController {
 				factura.setCodigofactura(codigo);
 				facturaservice.save(factura);
 				flash.addFlashAttribute("success", "Operacion exitosa!");
+				nuevaNotificacion("fas fa-file-alt", "Nueva remision finalizada!", "/factura/ver/"+factura.getId(), "green");
 			} catch (Exception e) {
 				flash.addFlashAttribute("error", "No se pudo cambiar el estado ni guardar la operacion!");
 				return "redirect:/factura/listar";

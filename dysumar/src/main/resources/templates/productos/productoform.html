@@ -51,7 +51,7 @@
 					<div class="form-group row">
 						<label for="createAt" class="col-sm-2 col-form-label">Fecha</label>
 						<div class="col-sm-6">
-							<input type="text" class="form-control" th:field="*{fecha}"
+							<input type="text" class="form-control" id="mydate" th:field="*{fecha}"
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
 								th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}"></small>
@@ -125,7 +125,11 @@
 	<input type="hidden" id="urlAjaxproveedor" th:value="@{/proveedor/cargar_proveedor}"/>
 	<script th:replace="productos/js/setselected :: javascript"></script>
 	<script th:replace="productos/js/autocomplete :: javascript"></script>
-	
+<script>
+$('#mydate').datepicker({
+	format : "yyyy-mm-dd"
+});
+</script>	
 
 </body>
 </html>
