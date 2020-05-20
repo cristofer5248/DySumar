@@ -1,5 +1,6 @@
 package com.grupoq.app.models.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -26,6 +27,7 @@ public interface IFacturaService {
 	public Page<Facturacion> findAllCustom(Pageable page); 
 	public Page<Facturacion> findByClienteClienteNombreStartsWith(String nombre, Pageable page);
 	public Page<Facturacion> findByaACuentadeNombre(String nombre, Pageable page);
+	public Page<Facturacion> findAllByFecha(Pageable page, Date date1, Date date2);
 	
 	//para encontrar si una factura esta en estado 3 que es insuficiente y al meter en inventario cambie de estado
 	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatus(Long id);

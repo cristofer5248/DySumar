@@ -24,6 +24,8 @@
 					<a
 						th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('SELLER')}"
 						th:href="@{/factura/nuevo}" class="btn btn-primary btn-xs">Cotizár</a>
+					<button type="button" class="btn btn-info" data-toggle="modal"
+						data-target="#filterByDate" data-whatever="@mdo">Filtrar</button>
 					<form id="formsearch" class="searchbox"
 						th:action="@{/marca/listar/}">
 						<div>
@@ -63,9 +65,12 @@
 							<td><a class="btn btn-primary btn-xs"
 								th:href="@{/factura/ver/} + ${factura.id}"
 								th:text="${factura.id}"></a></td>
-							<td th:if="${factura.status==1}" th:text="${factura.codigofactura}"></td>
-							<td th:if="${factura.status==2}" style="color:orange" th:text="'EN ESPERA'"></td>
-							<td th:if="${factura.status==3}" style="color:red" th:text="'Stock insuficiente'"></td>
+							<td th:if="${factura.status==1}"
+								th:text="${factura.codigofactura}"></td>
+							<td th:if="${factura.status==2}" style="color: orange"
+								th:text="'EN ESPERA'"></td>
+							<td th:if="${factura.status==3}" style="color: red"
+								th:text="'Stock insuficiente'"></td>
 							<td th:text="${factura.aCuentade.username}"></td>
 							<td th:text="${factura.cliente.cliente.nombre}"></td>
 							<!-- <td th:text="${facturas.}"></td> -->
@@ -89,7 +94,51 @@
 					</tbody>
 
 				</table>
-
+				<div class="modal fade" id="filterByDate" tabindex="-1"
+					role="dialog" aria-labelledby="exampleModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog modal-lg" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Filtrar por
+									fechas</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form th:action="@{/factura/listarfecha}" method="post">
+									<div class="container">
+										<div class="row">
+											<div class="col-1">
+												<label for="createAt">Inicio</label>
+											</div>
+											<div class="col-5">
+												<input type="text" class="form-control mydate" id="filterstart"
+													name="inicio" />
+											</div>
+											
+											<div class="col-1">
+												<label for="createAt">Final</label>
+											</div>
+											<div class="col-5">
+												<input type="text" class="form-control mydate" id="filterend"
+													name="final" />
+											</div>
+										</div>
+									</div>
+									<button type="submit" class="btn btn-primary">Enviar</button>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									data-dismiss="modal">Cerrar</button>
+								<button type="button" id="datefilter" class="btn btn-primary">Enviar</button>
+							</div>
+						</div>
+					</div>
+				</div>
 				<nav th:replace="paginator-nav :: paginator"></nav>
 			</div>
 		</div>
@@ -98,15 +147,25 @@
 	</div>
 
 	<footer th:replace="layout/layout :: footer"></footer>
-	<input type="hidden" id="urlenviar" th:value="@{/factura/listar/}" />
+	<input type="hidden" id="urlenviar" th:value="@{/factura/listar/}" />	
 	<script th:src="@{/js/searchbarfactura.js}"></script>
 	<script>
-	$('#example').DataTable( {
-        "paging":   false,
-        
-        "searching": false,
-        "info":     false
-    } );
+		$('#example').DataTable({
+			"paging" : false,
+
+			"searching" : false,
+			"info" : false
+		});
+		$('.mydate').datepicker({
+			format : "yyyy-mm-dd"
+		});
+		
+		var datefilter = $('#datefilter');
+		datefilter.click(function(){                       	
+        	            	
+        	location.href = $("#urlenviar").val()+"fechas/"+$("#filterstart").val()+"/"+$("#filterend").val();
+        	
+        });
 	</script>
 </body>
 </html>

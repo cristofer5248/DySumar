@@ -1,6 +1,7 @@
 package com.grupoq.app.controllers;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -81,20 +82,37 @@ public class FacturaController {
 	protected final Log logger = LogFactory.getLog(this.getClass());
 
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_FACT", "ROLE_SELLER" })
-	@RequestMapping(value = { "/listar", "/listar/{por}/{param}" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/listar", "/listar/{por}/{param}/{param2}","/listar/{por}/{param}" }, method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
 			@PathVariable(value = "por", required = false) String por,
-			@PathVariable(value = "param", required = false) String param, HttpServletRequest request,
+			@PathVariable(value = "param", required = false) String param,
+			@PathVariable(value = "param2", required = false) String param2, HttpServletRequest request,
 			Authentication authentication) {
 		Pageable pageRequest = PageRequest.of(page, 30);
 		Page<Facturacion> facturacion = null;
+		String sPath= "listar";
 		if (por != null) {
 			if (por.equals("cliente")) {
 				facturacion = facturaservice.findByClienteClienteNombreStartsWith(param, pageRequest);
+				sPath = facturacion!=null ? "listar/cliente/"+param : "listar";
 			}
 			if (por.equals("usuario")) {
 				facturacion = facturaservice.findByaACuentadeNombre(param, pageRequest);
+				sPath = facturacion!=null ? "listar/usuario/"+param : "listar";
 			}
+			if (por.equals("fechas")) {
+				try {
+				Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(param);
+				Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(param2);
+				facturacion = facturaservice.findAllByFecha(pageRequest, date1, date2);
+				sPath = facturacion!=null ? "listar/fechas/"+param+"/"+param2 : "listar";  
+				}catch (Exception e) {
+					model.addAttribute("error","Error en las fechas");
+					return "/facturas/listar";
+				}
+				
+			}
+			  
 		} else {
 			if (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_FACT")
 					|| request.isUserInRole("ROLE_JEFEADM")) {
@@ -103,12 +121,14 @@ public class FacturaController {
 				facturacion = facturaservice.findByaACuentadeNombre(authentication.getName(), pageRequest);
 			}
 		}
-		PageRender<Facturacion> pageRender = new PageRender<>("listar", facturacion);
+		PageRender<Facturacion> pageRender = new PageRender<>("", facturacion);
 		model.addAttribute("titulo", "Listado de Facturacion");
 		model.addAttribute("facturas", facturacion);
 		model.addAttribute("page", pageRender);
 		return "/facturas/listar";
 	}
+
+
 
 //PARA CARRITO
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
@@ -235,12 +255,14 @@ public class FacturaController {
 					// stock
 					System.out.print("ENTRANDO A LA CONDICION DE NUMEROS NEGATIVOS EN STOCK Y PONER SEST STATUS FALSE");
 					pro.setStatus(false);
-					
+
 					// aqui
 					carritoitemsservice.save(pro);
-					//mando notificacion
-					nuevaNotificacion("far fa-clock", "Producto "+pro.getProductos().getNombrep()+" en remision cambió de estado", "/cotizacion/ver/"+pro.getCotizacionid().getId(), "red");
-					//fin
+					// mando notificacion
+					nuevaNotificacion("far fa-clock",
+							"Producto " + pro.getProductos().getNombrep() + " en remision cambió de estado",
+							"/cotizacion/ver/" + pro.getCotizacionid().getId(), "red");
+					// fin
 					facturacion.setStatus(3);
 				} else {
 					productogetStock.setStock(productogetStock.getStock() - pro.getCantidad());
@@ -258,31 +280,32 @@ public class FacturaController {
 			}
 			// notificar cuando ya quedo en minimo
 			if (productogetStock.getStock() - pro.getCantidad() <= productogetStock.getMinimo()) {
-				nuevaNotificacion("fas fa-exclamation-triangle", productogetStock.getNombrep() + " en minimo!", "/producto/ver/" + productogetStock.getId(),"yellow");														
-				
+				nuevaNotificacion("fas fa-exclamation-triangle", productogetStock.getNombrep() + " en minimo!",
+						"/producto/ver/" + productogetStock.getId(), "yellow");
 
 			}
 			// fin
 		}
 
 		facturaservice.save(facturacion);
-		String url = "/factura/ver/"+facturacion.getId();
-		nuevaNotificacion("fas fa-money-check-alt", "Nueva remision a nombre de "+facturacion.getaCuentade().getNombre(),url,"green");		
+		String url = "/factura/ver/" + facturacion.getId();
+		nuevaNotificacion("fas fa-money-check-alt",
+				"Nueva remision a nombre de " + facturacion.getaCuentade().getNombre(), url, "green");
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:/factura/ver/" + facturacion.getId();
 	}
 
-	public void nuevaNotificacion(String icono, String nombre, String url,String color) {
+	public void nuevaNotificacion(String icono, String nombre, String url, String color) {
 		Notificaciones noti = new Notificaciones();
 		noti.setFecha(new Date());
 		noti.setIcono(icono);
 		noti.setNombre(nombre);
 		noti.setUrl(url);
 		noti.setColor(color);
-		notificacionesService.save(noti);		
+		notificacionesService.save(noti);
 	}
-	
+
 	@GetMapping(value = "/cargar_producto/{term}", produces = { "application/json" })
 	public @ResponseBody List<ProductosWB> listarByNombreJson(@PathVariable String term) {
 		List<ProductosWB> list2 = new ArrayList<ProductosWB>();
@@ -372,7 +395,9 @@ public class FacturaController {
 				// margen default
 			}
 			carrito.setCantidad(cantidad[i]);
-			nuevaNotificacion("fas fa-cart-plus", "Nueva cotizacion realizada", "/cotizacion/ver/"+carrito.getCotizacionid().getId(), "blue");
+			carrito.setPrecio(producto.getPrecio());
+			nuevaNotificacion("fas fa-cart-plus", "Nueva cotizacion realizada",
+					"/cotizacion/ver/" + carrito.getCotizacionid().getId(), "blue");
 			carritoitemsservice.save(carrito);
 
 		}
@@ -430,7 +455,8 @@ public class FacturaController {
 				factura.setCodigofactura(codigo);
 				facturaservice.save(factura);
 				flash.addFlashAttribute("success", "Operacion exitosa!");
-				nuevaNotificacion("fas fa-file-alt", "Nueva remision finalizada!", "/factura/ver/"+factura.getId(), "green");
+				nuevaNotificacion("fas fa-file-alt", "Nueva remision finalizada!", "/factura/ver/" + factura.getId(),
+						"green");
 			} catch (Exception e) {
 				flash.addFlashAttribute("error", "No se pudo cambiar el estado ni guardar la operacion!");
 				return "redirect:/factura/listar";

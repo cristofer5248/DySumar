@@ -4,6 +4,7 @@ package com.grupoq.app.models.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,5 +123,11 @@ public class IFacturaServiceImpl implements IFacturaService {
 	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatusByCarritoStatus(Long id) {
 		// TODO Auto-generated method stub
 		return facturadao.findByCotizacionByCarritoItemsByIdByStatusByCarritoStatus(id);
+	}
+
+	@Override
+	public Page<Facturacion> findAllByFecha(Pageable page, Date date1, Date date2) {
+		// TODO Auto-generated method stub
+		return facturadao.findAllByFecha(page, date1, date2);
 	}
 }

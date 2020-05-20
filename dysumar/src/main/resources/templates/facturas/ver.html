@@ -137,7 +137,7 @@
 							<td th:if="${carritos.descuento==1}" th:text="'NO'"></td>
 							<td th:text="${carritos.cantidad}"></td>
 							<td
-								th:text="'$'+${#numbers.formatDecimal((((carritos.margen)/100)*carritos.productos.precio * carritos.cantidad* carritos.descuento),0, 'COMMA', 2, 'POINT')}"></td>
+								th:text="'$'+${#numbers.formatDecimal((((carritos.margen)/100)*carritos.precio * carritos.cantidad* carritos.descuento),0, 'COMMA', 2, 'POINT')}"></td>
 							<!-- 							<td th:text="${factura.cantidad}"></td> -->
 
 							<!-- 							<td th:text="${factura.cantidad * factura.servicios.precio}"></td> -->

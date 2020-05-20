@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
 
+import com.sun.istack.NotNull;
+
 @Entity
 public class CarritoItems implements Serializable {
 
@@ -25,6 +27,9 @@ public class CarritoItems implements Serializable {
 	
 	private double margen;
 	private double descuento;
+	
+	@NotNull
+	private double precio;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Producto productos;
@@ -106,6 +111,14 @@ public class CarritoItems implements Serializable {
 
 	public void setStatus(boolean status) {
 		this.status = status;
+	}
+
+	public double getPrecio() {
+		return precio;
+	}
+
+	public void setPrecio(double precio) {
+		this.precio = precio;
 	}
 	
 }
