@@ -29,7 +29,7 @@ xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 								data-live-search="true">
 								<option value="0" disabled selected>Seleccione uno</option>
 								<option th:each="cl : ${carteraclientes}" th:value="${cl.id}"
-									th:text="${cl.nombre}"></option>
+									th:text="${cl.nombre +' '+ cl.apellido} "></option>
 							</select>
 						</div>
 					</div>

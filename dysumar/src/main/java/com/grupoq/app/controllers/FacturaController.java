@@ -1,5 +1,6 @@
 package com.grupoq.app.controllers;
 
+import java.io.Console;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -82,37 +83,45 @@ public class FacturaController {
 	protected final Log logger = LogFactory.getLog(this.getClass());
 
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_FACT", "ROLE_SELLER" })
-	@RequestMapping(value = { "/listar", "/listar/{por}/{param}/{param2}","/listar/{por}/{param}" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/listar", "/listar/{por}/{param}/{param2}/{opc}",
+			"/listar/{por}/{param}" }, method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
 			@PathVariable(value = "por", required = false) String por,
 			@PathVariable(value = "param", required = false) String param,
-			@PathVariable(value = "param2", required = false) String param2, HttpServletRequest request,
+			@PathVariable(value = "param2", required = false) String param2,
+			@PathVariable(value = "opc", required = false) String opc, HttpServletRequest request,
 			Authentication authentication) {
 		Pageable pageRequest = PageRequest.of(page, 30);
 		Page<Facturacion> facturacion = null;
-		String sPath= "listar";
+//		String sPath= "listar";
 		if (por != null) {
 			if (por.equals("cliente")) {
 				facturacion = facturaservice.findByClienteClienteNombreStartsWith(param, pageRequest);
-				sPath = facturacion!=null ? "listar/cliente/"+param : "listar";
+				model.addAttribute("activePivot", false);
 			}
 			if (por.equals("usuario")) {
 				facturacion = facturaservice.findByaACuentadeNombre(param, pageRequest);
-				sPath = facturacion!=null ? "listar/usuario/"+param : "listar";
+				model.addAttribute("activePivot", false);
 			}
 			if (por.equals("fechas")) {
 				try {
-				Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(param);
-				Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(param2);
-				facturacion = facturaservice.findAllByFecha(pageRequest, date1, date2);
-				sPath = facturacion!=null ? "listar/fechas/"+param+"/"+param2 : "listar";  
-				}catch (Exception e) {
-					model.addAttribute("error","Error en las fechas");
+					Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(param);
+					Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(param2);
+					if (opc.equals("vendedor")) {
+						facturacion = facturaservice.findAllByFechaGroupBy(pageRequest, date1, date2);
+						model.addAttribute("activePivot", true);
+					} else {
+						facturacion = facturaservice.findAllByFecha(pageRequest, date1, date2);
+						model.addAttribute("activePivot", false);
+					}
+//				sPath = facturacion!=null ? "listar/fechas/"+param+"/"+param2 : "listar";  
+				} catch (Exception e) {
+					model.addAttribute("error", "Error en las fechas");
 					return "/facturas/listar";
 				}
-				
+
 			}
-			  
+
 		} else {
 			if (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_FACT")
 					|| request.isUserInRole("ROLE_JEFEADM")) {
@@ -120,6 +129,7 @@ public class FacturaController {
 			} else {
 				facturacion = facturaservice.findByaACuentadeNombre(authentication.getName(), pageRequest);
 			}
+			model.addAttribute("activePivot", false);
 		}
 		PageRender<Facturacion> pageRender = new PageRender<>("", facturacion);
 		model.addAttribute("titulo", "Listado de Facturacion");
@@ -127,8 +137,6 @@ public class FacturaController {
 		model.addAttribute("page", pageRender);
 		return "/facturas/listar";
 	}
-
-
 
 //PARA CARRITO
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
@@ -242,7 +250,7 @@ public class FacturaController {
 		}
 		String mensajeFlash = (facturacion.getId() != null) ? "facturacion editado con éxito!"
 				: "Facturacion creada con éxito!";
-
+		double totalParaFactura = 0;
 		for (CarritoItems pro : cotizaciontemporal.getCarrito()) {
 			Producto productogetStock = productoservice.findOne(pro.getProductos().getId());
 			System.out.print("COMPARANDO LA CANTIDA PEDIDA: " + pro.getCantidad() + "\n LA CANTIDAD QUE HAY: "
@@ -285,6 +293,35 @@ public class FacturaController {
 
 			}
 			// fin
+			// poniendo total en factura entity
+
+			totalParaFactura += (pro.getPrecio() * (pro.getMargen() / 100) * pro.getCantidad() * pro.getDescuento());
+		}
+		facturacion.setTotaRegistrado(totalParaFactura);
+		// duplicaremos la cotizacin para despues no haber errores
+		boolean cotiRepeated = facturaservice.cotizacionRepetida(facturacion.getCotizacion().getId()) > 0 ? true
+				: false;
+		System.out.print("El estado es "+cotiRepeated);
+		if (cotiRepeated) {
+			Cotizacion nCotizacion = new Cotizacion();
+			nCotizacion.setFecha(new Date());
+			cotizacionService.save(nCotizacion);
+			for (CarritoItems c : cotizaciontemporal.getCarrito()) {
+				CarritoItems carroNuevo = new CarritoItems();
+				carroNuevo.setCantidad(c.getCantidad());
+				carroNuevo.setCodigo(c.getCodigo());
+				carroNuevo.setDescuento(c.getDescuento());
+				carroNuevo.setMargen(c.getMargen());
+				carroNuevo.setPrecio(c.getPrecio());
+				carroNuevo.setStatus(c.isStatus());
+				carroNuevo.setCotizacionid(nCotizacion);
+				carroNuevo.setProductos(c.getProductos());
+				carritoitemsservice.save(carroNuevo);
+			}
+			
+			facturacion.setCotizacion(nCotizacion);
+			
+			//fin guardamos
 		}
 
 		facturaservice.save(facturacion);

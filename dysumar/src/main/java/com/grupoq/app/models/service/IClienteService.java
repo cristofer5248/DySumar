@@ -30,6 +30,9 @@ public interface IClienteService {
 	
 	public List<Cliente> findByNombre(String term);
 	
+	//buscar por nombre pero tambien like
+	public List<Cliente> findByUsuarioLike(String term, String nombre);
+	
 	public Cliente fetchByIdWithTallerWithFactura(Long id);
 	
 	public void delete(Long id);		

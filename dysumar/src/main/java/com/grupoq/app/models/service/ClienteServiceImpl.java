@@ -120,6 +120,12 @@ public class ClienteServiceImpl implements IClienteService {
 		return clientedireccionesdao.findByCliente(id);
 	}
 
+	@Override
+	public List<Cliente> findByUsuarioLike(String term, String nombre) {
+		// TODO Auto-generated method stub
+		return clienteDao.findByUsuarioLike(term, nombre);
+	}
+
 	
 
 	

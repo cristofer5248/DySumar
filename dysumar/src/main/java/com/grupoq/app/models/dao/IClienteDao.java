@@ -18,6 +18,9 @@ public interface IClienteDao extends PagingAndSortingRepository<Cliente, Long> {
 	@Query("select c from Cliente c join fetch c.usuario u where u.username=?1")
 	public List<Cliente> findByUsuario(String term);
 	
+	@Query("select c from Cliente c join fetch c.usuario u where u.username=?1 and c.nombre like %?2")
+	public List<Cliente> findByUsuarioLike(String term, String nombre);
+	
 	@Query(value="select c from Cliente c join fetch c.usuario u where u.username=?1", countQuery = "select count(c) from Cliente c join c.usuario u where u.username=?1")
 	public Page <Cliente> findAllByUsuarioPage(String usuario, Pageable pageable);
 	

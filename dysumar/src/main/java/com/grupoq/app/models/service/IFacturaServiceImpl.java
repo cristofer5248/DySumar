@@ -130,4 +130,16 @@ public class IFacturaServiceImpl implements IFacturaService {
 		// TODO Auto-generated method stub
 		return facturadao.findAllByFecha(page, date1, date2);
 	}
+
+	@Override
+	public Page<Facturacion> findAllByFechaGroupBy(Pageable page, Date date1, Date date2) {
+		// TODO Auto-generated method stub
+		return facturadao.findAllByFechaGroupBy(page, date1, date2);
+	}
+
+	@Override
+	public Long cotizacionRepetida(Long id) {
+		// TODO Auto-generated method stub
+		return facturadao.cotizacionRepetida(id);
+	}
 }

@@ -60,6 +60,8 @@ public class Facturacion implements Serializable {
 	private Date fecha;
 	@Column(length = 1)
 	private int status;
+	
+	private double totaRegistrado;
 	public Facturacion() {
 		
 	}
@@ -156,6 +158,14 @@ public class Facturacion implements Serializable {
 		this.status = status;
 	}
 
+	public double getTotaRegistrado() {
+		return totaRegistrado;
+	}
+
+	public void setTotaRegistrado(double totaRegistrado) {
+		this.totaRegistrado = totaRegistrado;
+	}
+
 
 
 //	public FormaDePago getFormaDePago() {
@@ -165,5 +175,6 @@ public class Facturacion implements Serializable {
 //	public void setFormaDePago(FormaDePago formaDePago) {
 //		this.formaDePago = formaDePago;
 //	}
+	
 	
 }

@@ -46,7 +46,7 @@
 							<tr th:each="usuario: ${usuario}">
 								<td sec:authorize="hasRole('ROLE_ADMIN')"><a
 									class="btn btn-primary btn-xs"
-									th:href="@{/verusuario/} + ${usuario.id}"
+									th:href="@{/user/verusuario/} + ${usuario.id}"
 									th:text="${usuario.id}"></a></td>
 								<td th:text="${usuario.nombre}"></td>
 								<td th:text="${usuario.apellidos}"></td>

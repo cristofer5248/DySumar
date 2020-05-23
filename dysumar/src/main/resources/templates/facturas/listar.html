@@ -42,19 +42,21 @@
 						</div>
 					</form>
 				</div>
-				<table id="example" class="table table-striped table-bordered">
+				<table id="example"
+					class="table table-sm table-striped table-bordered">
 					<thead class="thead-inverse">
 						<tr>
 							<th>Id</th>
-							<th>Codigo de facturacion</th>
-							<th>A Cuenta de</th>
+							<th>Cod</th>
+							<th>Por</th>
 							<th>Cliente</th>
 							<!-- <th>Stock</th> -->
 							<th>CC</th>
 							<th>CP</th>
 							<th>FP</th>
 							<th>TF</th>
-							<th>Detalles</th>
+							<th>Fecha</th>
+							<th>Total</th>
 
 							<th
 								th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('JEFEADM')}">eliminar</th>
@@ -78,7 +80,9 @@
 							<td th:text="${factura.condicionesDPago.nombre}"></td>
 							<td th:text="${factura.formadepago.nombre}"></td>
 							<td th:text="${factura.tipoFactura.nombre}"></td>
-							<td th:text="${factura.detalles}"></td>
+							<td th:text="${factura.fecha}"></td>
+							
+							<td th:text="${#numbers.formatDecimal(factura.totaRegistrado,0, 'COMMA', 2, 'POINT')}"></td>
 							<!-- 							<td
 								th:if="${#request.isUserInRole('SELLER')}"><a
 								class="btn btn-success btn-xs"
@@ -92,7 +96,12 @@
 								onclick="return confirm('Estas seguro que quieres eliminar?');"></a></td>
 						</tr>
 					</tbody>
-
+					<tfoot>
+						<tr>
+							<th colspan="8" style="text-align: right">Total:</th>
+							<th></th>
+						</tr>
+					</tfoot>
 				</table>
 				<div class="modal fade" id="filterByDate" tabindex="-1"
 					role="dialog" aria-labelledby="exampleModalLabel"
@@ -115,20 +124,29 @@
 												<label for="createAt">Inicio</label>
 											</div>
 											<div class="col-5">
-												<input type="text" class="form-control mydate" id="filterstart"
-													name="inicio" />
+												<input type="text" class="form-control mydate"
+													id="filterstart" name="inicio" />
 											</div>
-											
+
 											<div class="col-1">
 												<label for="createAt">Final</label>
 											</div>
 											<div class="col-5">
-												<input type="text" class="form-control mydate" id="filterend"
-													name="final" />
+												<input type="text" class="form-control mydate"
+													id="filterend" name="final" />
+											</div>
+											<div class="col-1">
+												<label for="createAt">Ver:</label>
+											</div>
+											<div class="col-5">
+												<select id="opcfilter" class="form-control">
+													<option value="listado" selected>Listado de
+														registros</option>
+													<option value="vendedor">Agrupado por vendedor</option>
+												</select>
 											</div>
 										</div>
 									</div>
-									<button type="submit" class="btn btn-primary">Enviar</button>
 								</form>
 							</div>
 							<div class="modal-footer">
@@ -147,25 +165,62 @@
 	</div>
 
 	<footer th:replace="layout/layout :: footer"></footer>
-	<input type="hidden" id="urlenviar" th:value="@{/factura/listar/}" />	
+	<input type="hidden" id="urlenviar" th:value="@{/factura/listar/}" />
 	<script th:src="@{/js/searchbarfactura.js}"></script>
-	<script>
-		$('#example').DataTable({
+	<script th:inline="javascript" th:if="${!activePivot}">
+	$('#example').DataTable({
 			"paging" : false,
 
 			"searching" : false,
 			"info" : false
 		});
-		$('.mydate').datepicker({
-			format : "yyyy-mm-dd"
-		});
+	</script>
+	<script th:inline="javascript" th:if="${activePivot}">
+		$('#example').DataTable( {
+			"paging" : false,
+
+			"searching" : false,
+			"info" : false,	        
+	        rowGroup: {
+	            startRender: null,
+	            endRender: function ( rows, group ) {
+	                var salaryAvg = rows
+	                    .data()
+	                    .pluck(9)
+	                    .reduce( function (a, b) {
+// 	                    	alert("a:"+a+" b: "+b);
+// 	                        return a + b.replace(/[^\d]/g,licar '')*1;
+	                        
+							return parseFloat(a)+parseFloat(b);
+// 	                    	return a + b.replace(/[^\d]/g, '')*1;
+	                        
+	                    });
+// 	                salaryAvg = $.fn.dataTable.render.number(',', '.', 0, '$').display( salaryAvg );
+	 
+	                
+	 
+	                return $('<tr/>')
+	                    .append( '<td colspan="9" class="totalclass">Total del usuario: '+group+'</td>' )
+	                    
+	                    
+	                    .append( '<td class="totalclass">'+salaryAvg+'</td>' );
+	            },
+	            dataSrc: 2
+	        }
+	    } );
 		
-		var datefilter = $('#datefilter');
-		datefilter.click(function(){                       	
-        	            	
-        	location.href = $("#urlenviar").val()+"fechas/"+$("#filterstart").val()+"/"+$("#filterend").val();
-        	
-        });
+	</script>
+	<script>
+	$('.mydate').datepicker({
+		format : "yyyy-mm-dd"
+	});
+
+	var datefilter = $('#datefilter');
+	datefilter.click(function() {
+		location.href = $("#urlenviar").val() + "fechas/"
+				+ $("#filterstart").val() + "/" + $("#filterend").val()
+				+ "/" + $("#opcfilter").val();
+	});
 	</script>
 </body>
 </html>

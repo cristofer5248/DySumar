@@ -297,8 +297,16 @@ public class ClienteController {
 	}
 
 	@GetMapping(value = "/cargar_cliente/{term}", produces = { "application/json" })
-	public @ResponseBody List<Cliente> buscarclienteJson(@PathVariable String term) {
-		List<Cliente> list = clienteService.findByNombre(term);
+	public @ResponseBody List<Cliente> buscarclienteJson(@PathVariable String term,Authentication authentication) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		List<Cliente> list=null;
+		
+		if(hasRole("ROLE_ADMIN")) {
+			list = clienteService.findByNombre(term);
+		}
+		else {
+		 list = clienteService.findByUsuarioLike(auth.getName(),term);
+		}
 		return list;
 	}
 

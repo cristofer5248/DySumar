@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+//import com.grupoq.app.models.entity.ClienteDirecciones;
 import com.grupoq.app.models.entity.Role;
 import com.grupoq.app.models.entity.Usuario;
 import com.grupoq.app.models.service.IRolesService;
@@ -89,6 +90,22 @@ public class UsuarioController {
 		return "users/ver";
 	}
 
+	@GetMapping(value = "/verusuario/{id}")
+	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+
+		Usuario usuario = usuarioService.findOne(id);
+//		List<?> taller = facturaService.probando(id);
+		
+		if (usuario == null) {
+			flash.addFlashAttribute("error", "El cliente no tiene facturas");			
+			return "redirect:users/ver";
+		}
+
+		model.put("usuario", usuario);		
+		model.put("titulo", "Detalle del usuario: " + usuario.getNombre()+" "+usuario.getApellidos());
+		return "users/verusuario";
+	}
+	
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/admin/{id}")
 	public String hacerAdmin(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
@@ -99,7 +116,7 @@ public class UsuarioController {
 		List<Role> countRoles;
 		countRoles = rolesService.findByUser_idList(id);
 		System.out.print("El size es: " + countRoles.size());
-		if (countRoles.size() == 1) {
+		if (countRoles.size() <= 1){
 			if (rolcheck == null) {
 				rol.setAuthority("ROLE_ADMIN");
 				rol.setUser_id(id);
@@ -126,7 +143,7 @@ public class UsuarioController {
 		List<Role> countRoles;
 		countRoles = rolesService.findByUser_idList(id);
 		System.out.print("El size es: " + countRoles.size());
-		if (countRoles.size() == 1) {
+		if (countRoles.size() <= 1) {
 			if (rolcheck == null) {
 				rol.setAuthority("ROLE_JEFEADM");
 				rol.setUser_id(id);
@@ -153,7 +170,7 @@ public class UsuarioController {
 		List<Role> countRoles;
 		countRoles = rolesService.findByUser_idList(id);
 		System.out.print("El size es: " + countRoles.size());
-		if (countRoles.size() == 1) {
+		if (countRoles.size() <= 1) {
 			if (rolcheck == null) {
 				rol.setAuthority("ROLE_INV");
 				rol.setUser_id(id);
@@ -180,7 +197,7 @@ public class UsuarioController {
 		List<Role> countRoles;
 		countRoles = rolesService.findByUser_idList(id);
 		System.out.print("El size es: " + countRoles.size());
-		if (countRoles.size() == 1) {
+		if (countRoles.size() <= 1) {
 			if (rolcheck == null) {
 				rol.setAuthority("ROLE_SELLER");
 				rol.setUser_id(id);
@@ -207,7 +224,7 @@ public class UsuarioController {
 		List<Role> countRoles;
 		countRoles = rolesService.findByUser_idList(id);
 		System.out.print("El size es: " + countRoles.size());
-		if (countRoles.size() == 1) {
+		if (countRoles.size() <= 1) {
 			if (rolcheck == null) {
 				rol.setAuthority("ROLE_FACT");
 				rol.setUser_id(id);
@@ -264,7 +281,7 @@ public class UsuarioController {
 
 		usuario.setEnabled(false);
 		usuarioService.save(usuario);
-		model.put("usuario", usuario);
+		flash.addFlashAttribute("success", "Usuario Desactivado!");
 		model.put("titulo", "Usuarios");
 		return "redirect:/user/ver";
 	}
@@ -288,9 +305,9 @@ public class UsuarioController {
 
 		usuario.setEnabled(true);
 		usuarioService.save(usuario);
-		model.put("usuario", usuario);
 		model.put("titulo", "Usuarios");
-		return "redirect:/users/ver";
+		flash.addFlashAttribute("success", "Usuario Activado!");
+		return "redirect:/user/ver";
 	}
 
 	@GetMapping(value = "/carga_tipou", produces = { "application/json" })

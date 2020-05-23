@@ -120,5 +120,8 @@ public class CarritoItems implements Serializable {
 	public void setPrecio(double precio) {
 		this.precio = precio;
 	}
+	public double getTotal(){
+		return ((precio * (margen/100) * descuento)* cantidad); 
+	}
 	
 }
