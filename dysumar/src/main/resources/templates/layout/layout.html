@@ -26,14 +26,14 @@
 
 	<header th:fragment="header">
 		<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-			<a class="navbar-brand" href="#">DySumar</a>
+			<a class="navbar-brand" href="/">DySumar</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse"
 				aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item active"><a class="nav-link" th:href="@{/}">Home</a></li>
+<!-- 					<li class="nav-item active"><a class="nav-link" th:href="@{/}">Home</a></li> -->
 
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
@@ -64,6 +64,7 @@
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
 						role="button" data-toggle="dropdown" aria-haspopup="true"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_SELLER','ROLE_SELLER')"
 						aria-expanded="false"><i class="fas fa-store"></i> Entradas </a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="#about"
@@ -104,6 +105,7 @@
 							<!-- 							<a class="dropdown-item" href="#">Movimientos</a> -->
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" data-toggle="modal"
+							sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_FACT','ROLE_SELLER')"
 								data-target="#exampleModal"><i class="fas fa-search"></i>
 								Buscar una cotizacion</a>
 						</div></li>
@@ -123,8 +125,7 @@
 								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
 								th:href="@{/categoria/listar}"><i class="fas fa-server"></i>
 								Categorias</a> <a
-								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
-								th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('SELLER')}"
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"								
 								class="dropdown-item" th:href="@{/descuento/nuevo}"><i
 								class="fas fa-percent"></i> Descuentos</a>
 							<!-- 								<a	class="dropdown-item" href="#">Margenes</a> -->

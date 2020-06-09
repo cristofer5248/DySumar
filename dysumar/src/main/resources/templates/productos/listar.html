@@ -47,7 +47,7 @@
 						id="example">
 						<thead class="thead-inverse">
 							<tr>
-								<th th:if="!${#request.isUserInRole('FACT')}">id</th>
+								<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')">id</th>
 								<th>Codigo</th>
 								<th>Nombre</th>
 								<th>Costo</th>
@@ -65,7 +65,7 @@
 						</thead>
 						<tbody id="trtable">
 							<tr th:each="producto: ${productos}">
-								<td th:if="!${#request.isUserInRole('FACT')}"><a
+								<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')"><a
 									class="btn btn-primary btn-xs"
 									th:href="@{/producto/ver/} + ${producto.id}"
 									th:text="${producto.id}"></a></td>

@@ -13,14 +13,14 @@
 			<div class="card-body">
 
 				<h4 class="card-title">
-					<a th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('INV')}"
+					<a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"
 						th:href="@{/inventario/nuevo}" class="btn btn-primary btn-xs">Ingresar</a>
 				</h4>
-				<table id="example" class="table table-striped table-bordered">
+				<table id="example" class="table table-striped table-bordered table-sm">
 					<thead class="thead-inverse">
 						<tr>
 							<th
-								th:if="!${#request.isUserInRole('FACT') OR #request.isUserInRole('SELLER')}">Id</th>
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')">Id</th>
 							<th>Id compra</th>
 							<th>Nombre</th>
 							<th>Proveedor</th>							
@@ -31,13 +31,13 @@
 							<th>Inversion</th>					
 							<th>Estimacion</th>							
 														
-							<th th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">eliminar</th>
+							<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')">OP</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="inventario: ${inventarios}">
 							<td
-								th:if="!${#request.isUserInRole('FACT') OR #request.isUserInRole('SELLER')}"><a
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')"><a
 								class="btn btn-primary btn-xs"
 								th:href="@{/inventario/ver/} + ${inventario.movimientos.id}"
 								th:text="${inventario.id}"></a></td>
@@ -55,10 +55,17 @@
 								class="btn btn-success btn-xs"
 								th:href="@{'/factura/form/' + ${inventario.id}}"
 								th:text="'crear factura'"></a></td> -->							
-							<td th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"><a
-								class="btn btn-danger btn-xs"
-								th:href="@{/inventario/eliminar/} + ${inventario.id}" th:text="'eliminar'"
-								onclick="return confirm('Estas seguro que quieres eliminar?');"></a></td>
+							<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"><a
+									class="centerMe"
+									th:href="@{/inventario/eliminar/} + ${inventario.id}"
+									onclick="return confirm('¿Esta seguro?');">
+										<div class='icon'>
+											<i class='fa fa-trash' onmouseover="quitarcolumns();"></i>
+										</div>
+										<div class="text delete">
+											<span>Eliminar</span>
+										</div>
+								</a></td>
 						</tr>
 					</tbody>
 

@@ -1,14 +1,17 @@
 use dysumar;
 INSERT INTO users (nombre,apellidos,username, password, enabled,telefono) VALUES('Christopher Elias','Maldonado Martinez','admin', '$2a$10$pLiT5n4R/wOZ8SyKgNvvOeRuMd07/m9QzguNQFJPfphWUB0ktQ2zS', 1,83208113);
-INSERT INTO users (nombre,apellidos,username, password, enabled,telefono) VALUES('Marina','Hernandez','marina', '$2a$10$pXSjZhKajePgUvQZplTkOuA6n4ee/wHaOF/UJWornHmRxhN3D0Cd6', 1,71208113);
-INSERT INTO users (nombre,apellidos,username, password, enabled,telefono) VALUES('David Tadeo','Ramos','DATARA12', '$2a$10$fpZ3pU63UnhsJcAPopsz1.hBzYFe5ptoCXcP4UXkqwv8MBwdHV6x6', 1,7220853);
-INSERT INTO users (nombre,apellidos,username, password, enabled,telefono) VALUES('Melody','','MLD123', '$2a$10$IBncau/R54WrXROHE/QEnObji7HOoH5TjrLQSzuJnoVsVlSF73stO', 1,7283113);
+INSERT INTO users (nombre,apellidos,username, password, enabled,telefono) VALUES('Marina','Hernandez','MARINA', '$2a$10$pXSjZhKajePgUvQZplTkOuA6n4ee/wHaOF/UJWornHmRxhN3D0Cd6', 1,71208113);
+INSERT INTO users (nombre,apellidos,username, password, enabled,telefono) VALUES('David Tadeo','Ramos','TADEO', '$2a$10$fpZ3pU63UnhsJcAPopsz1.hBzYFe5ptoCXcP4UXkqwv8MBwdHV6x6', 1,7220853);
+INSERT INTO users (nombre,apellidos,username, password, enabled,telefono) VALUES('Melody','','MELODY', '$2a$10$IBncau/R54WrXROHE/QEnObji7HOoH5TjrLQSzuJnoVsVlSF73stO', 1,7283113);
+INSERT INTO users (nombre,apellidos,username, password, enabled,telefono) VALUES('Mirna','','MIRNA', '$2a$10$ZVfuUozuJzeB7qYcxyfJXOHpBzY5LGog4oABGjXUuVAN3t/w7vxv.', 1,7634533);
+INSERT INTO `users` (`id`, `apellidos`, `correo`, `direccion`, `enabled`, `genero`, `nombre`, `password`, `telefono`, `username`) VALUES (NULL, 'Del Carmen', 'maria@gmail.com', NULL, b'1111111111111111111111111111111', NULL, 'Maria', '$2a$10$/YXRj1N49b6ENxDe9uaNLeVJud8RTyWl1s.oeZhJl5m5dGaVHO7PK', '71233', 'MARIA');
 
 INSERT INTO roles (user_id, authority) VALUES(1, 'ROLE_ADMIN');
 INSERT INTO roles (user_id, authority) VALUES(2, 'ROLE_JEFEADM');
-INSERT INTO roles (user_id, authority) VALUES(3, 'ROLE_ADMIN');
-INSERT INTO roles (user_id, authority) VALUES(4, 'ROLE_ADMIN');
-INSERT INTO roles (user_id, authority) VALUES(4, 'ROLE_USER');
+INSERT INTO roles (user_id, authority) VALUES(3, 'ROLE_INV');
+INSERT INTO roles (user_id, authority) VALUES(4, 'ROLE_FACT');
+INSERT INTO roles (user_id, authority) VALUES(5, 'ROLE_SELLER');
+INSERT INTO `roles` (`id`, `authority`, `user_id`) VALUES (NULL, 'ROLE_SELLER', '6');
 
 insert into tipo_cliente values (null,"privada"), (null,"publica");
 
@@ -19,10 +22,11 @@ insert into giro values (null,"Encargadas de la transformación de la materia pr
 
 insert into giro values (null,"Se dedican a la explotación de recursos naturales, ya sean o no renovables, para iniciar la cadena de su transformación en productos elaborados de distinto tipo",4);
 
-INSERT INTO clientes (nombre, apellido, email, create_at,dui,codigo,giro_id,tipo_cliente_id,usuario_id) VALUES('Andres', 'Guzman', 'profesor@bolsadeideas.com', '2017-08-01',"01-2324123","44123",1,1,1);
-INSERT INTO clientes (nombre, apellido, email, create_at,dui,codigo,giro_id,tipo_cliente_id,usuario_id) VALUES('John', 'Doe', 'john.doe@gmail.com', '2017-08-02',"01-2333098", "65123",1,1,4);
-INSERT INTO clientes (nombre, apellido, email, create_at,dui,codigo,giro_id,tipo_cliente_id,usuario_id) VALUES('Linus', 'Torvalds', 'linus.torvalds@gmail.com', '2017-08-03',"99-012398","66412",1,1,4);
-INSERT INTO clientes (nombre, apellido, email, create_at,dui,codigo,giro_id,tipo_cliente_id,usuario_id) VALUES('Jane', 'Doe', 'jane.doe@gmail.com', '2017-08-04',"12-012356","86012",1,1,4);
+INSERT INTO clientes (nombre, apellido, email, create_at,dui,codigo,giro_id,tipo_cliente_id,usuario_id) VALUES('Andres', 'Guzman', 'profesor@bolsadeideas.com', '2017-08-01',"01-2324123","44123",1,1,5);
+INSERT INTO clientes (nombre, apellido, email, create_at,dui,codigo,giro_id,tipo_cliente_id,usuario_id) VALUES('John', 'Doe', 'john.doe@gmail.com', '2017-08-02',"01-2333098", "65123",1,1,5);
+INSERT INTO clientes (nombre, apellido, email, create_at,dui,codigo,giro_id,tipo_cliente_id,usuario_id) VALUES('Linus', 'Torvalds', 'linus.torvalds@gmail.com', '2017-08-03',"99-012398","66412",1,1,5);
+INSERT INTO clientes (nombre, apellido, email, create_at,dui,codigo,giro_id,tipo_cliente_id,usuario_id) VALUES('Jane', 'Doe', 'jane.doe@gmail.com', '2017-08-04',"12-012356","86012",1,1,5);
+INSERT INTO `clientes` (`id`, `apellido`, `codigo`, `create_at`, `dui`, `email`, `nombre`, `giro_id`, `tipo_cliente_id`, `usuario_id`) VALUES (NULL, 'Calderon', '1331', '2020-02-02', '12313111', 'marioc@gmail.com', 'Mario', '1', '1', '6');
 
 insert into proveedor values
 (1,'VIDRI','Urbanización Lorem ipsum, 124','correoexample@correoexample.gov','34415806','ALMACENES VIDRÍ SA DE CV',null,'7169162422',1),
@@ -518,24 +522,48 @@ INSERT INTO PRODUCTOS (idp,codigo,create_at,nombrep,precio,stock,categoria_id,ma
 (323,'1930','20/01/11','YESO PASTEL 241 NC25',2.96,1,3,72,50.0,26,17),
 (324,'361738','20/01/12','ZAPATO ESCOLAR',19.46,1,3,26,50.0,38,25);
 
+update productos set status=true where idp>0;
 
-
-
-insert into productos values (null,"LAP123","2019-02-02", "Lapiz Graduado",2.50,120,1,1,1,1,1), (null, "LAP124", "2019-02-02", "Lapiz Graduado",2.70,0,1,1,1,1,2);
-insert into productos values (null,"LAP126","2019-02-02", "Lapicero Azul",1.50,0,1,1,1,1,1), (null, "LAP127","2019-02-02", "Lapicero negro",1.70,0,1,1,1,1,1);
 insert into descuentos values (null,1000,45,1), (null,800,30,1);
 insert into direcciones values (null,"Boulevar Constitucion, calle zacamil, casa #2"),(null,"Redoldel Masferrer, calle los santos, pasaje 12, casa #5");
+	INSERT INTO `direcciones` (`id`, `nombre`) VALUES (NULL, 'Reparto Las Arboleras');
 
 insert into cliente_direcciones values (null,1,1),(null,1,2);
-
-insert into inventario (stock,producto_idp,codigo_proveedor) select stock,idp,concat(idp,'A') from productos where idp>0;
+INSERT INTO `cliente_direcciones` (`id`, `cliente_id`, `direcciones_id`) VALUES (NULL, '5', '3');
+insert into movimientos (id) select idp from productos where idp>0;
+insert into inventario (stock,producto_idp,codigo_proveedor,movimientos_id) select stock,idp,concat(idp,'A'),idp from productos where idp>0;
 update inventario set stock=2 where producto_idp=1;
 
 update inventario set create_at="2020-02-02" where inventario_id>0;
 insert into cdepago values (1,"Credito"), (2,"Contado");
 insert into formadepago values (1,"Efectivo"), (2,"Cheque"), (3, "Transaccion");	
 insert into tipo_factura values (1,"Credito fiscal"),(2,"Consumidor Final"),(3,"Exportacion");
-insert into cotizacion values (1,"2020-02-02",true);
-update cotizacion set create_at="2020-02-02" where id=1;
-insert into carrito_items values(1,300,"536xxx",1,50.0,1,1), (2,500,"972xxx",1,50.0,1,4);	
-insert into facturacion values (1,'2221',"un detalle",1,1,1,1,1,1);
+INSERT INTO `cotizacion` (`id`, `aprobado`, `create_at`) VALUES (NULL, true, '2020-05-16');
+INSERT INTO `carrito_items` (`id`, `cantidad`, `codigo`, `descuento`, `margen`, `status`,`cotizacionid_id`, `productos_idp` ,`precio` ) VALUES (1, 20, '494xxx', 1, 50, b'1111111111111111111111111111111', 1, 1,56.12);
+INSERT INTO `cotizacion` (`id`, `aprobado`, `create_at`) VALUES (NULL,true, '2020-05-16');
+INSERT INTO `carrito_items` (`id`, `cantidad`, `codigo`, `descuento`, `margen`, `status`, `cotizacionid_id`, `productos_idp`,`precio`) VALUES (NULL, '20', '273xxx', '1', '50', b'1111111111111111111111111111111', 2, '1',56.12), (NULL, '30', '653xxx', '1', '50', b'1111111111111111111111111111111', 2, '3',1.28);
+INSERT INTO `facturacion` (`id`, `codigofactura`, `detalles`, `create_at`, `status`, `a_cuentade_id`, `cliente_id`, `condicionesdpago_id`, `cotizacion_id`, `formadepago_id`, `tipo_factura_id`) VALUES (NULL, '0', '123', '2020-07-28', '3', '5', '2', '1', '1', '1', '1');
+update productos set stock=-18 where idp=1;
+INSERT INTO `facturacion` (`id`, `codigofactura`, `detalles`, `create_at`, `status`, `a_cuentade_id`, `cliente_id`, `condicionesdpago_id`, `cotizacion_id`, `formadepago_id`, `tipo_factura_id`) VALUES (NULL, '0', '123', '2020-05-20', '3', '5', '2', '1', '2', '1', '1');
+update productos set stock=-38 where idp=1;
+update productos set stock=-18 where idp=3;
+update carrito_items set status=false where id>0;
+
+--
+-- Triggers `productos`
+--
+DELIMITER $$
+CREATE TRIGGER `facturastatus` AFTER UPDATE ON `productos` FOR EACH ROW BEGIN
+DECLARE fid int;
+set fid = (select f.id as fid from facturacion f inner join cotizacion c on c.id=f.cotizacion_id inner join carrito_items ci on ci.cotizacionid_id=c.id where f.status=3 and ci.status=true and ci.productos_idp=old.idp  group by ci.productos_idp);
+
+IF fid>0 and old.stock<=0
+THEN
+UPDATE facturacion SET STATUS=2 WHERE id=fid;
+END IF;
+END
+$$
+DELIMITER ;
+
+
+-- insert into facturacion values(null,0,123,'2020-02-02',1,5,2,1,1,1,1);
