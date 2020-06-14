@@ -21,7 +21,7 @@
 
 				<div class="card-title">
 					<a
-						th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('INV')}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"
 						th:href="@{/marca/nuevo}" class="btn btn-primary btn-xs">Crear
 						marca</a>
 					<form id="formsearch" class="searchbox" th:action="@{/marca/listar/}">
@@ -37,17 +37,17 @@
 					<thead class="thead-inverse">
 						<tr>
 							<th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('INV')}">id</th>
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')">id</th>
 							<th>Nombre</th>
 							<!-- <th
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"></th> -->
-							<th th:if="${#request.isUserInRole('INV')}">OP</th>
+							<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')">OP</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="marca: ${marcas}">
 							<td
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('INV')}"><a
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"><a
 								class="btn btn-primary btn-xs"
 								th:href="@{/verproducto/} + ${marca.idm}" th:text="${marca.idm}"></a></td>
 							<td th:text="${marca.nombrem}"></td>
@@ -62,7 +62,7 @@
 							</a></td> -->
 
 							<td
-								th:if="${#request.isUserInRole('INV') or #request.isUserInRole('ADMIN')}"><a
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"><a
 								class="centerMe" th:href="@{/marca/eliminar/} + ${marca.idm}"
 								onclick="return confirm('Estas seguro que quieres eliminar?');">
 									<div class='icon'>

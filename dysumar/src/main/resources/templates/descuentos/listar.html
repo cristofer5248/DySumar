@@ -19,7 +19,7 @@
 			<div class="card-body">
 
 				<h4 class="card-title">
-					<a th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"
+					<a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"
 						th:href="@{/descuento/nuevo}" class="btn btn-primary btn-xs">Crear
 						Descuento</a>
 
@@ -28,7 +28,7 @@
 					<thead class="thead-inverse">
 						<tr>
 							<th
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}">id</th>
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_SELLER')">id</th>
 							<th>Producto</th>
 							<th>Cantidad</th>
 							<th>Porcentaje</th>
@@ -36,32 +36,32 @@
 
 							<!-- <th
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"></th> -->
-							<th th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">Editar</th>
-							<th th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">Eliminar</th>
+<!-- 							<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')">Editar</th> -->
+							<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')">Eliminar</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="descuento: ${descuentos}">
 							<td
-								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"><a
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_SELLER')"><a
 								class="btn btn-primary btn-xs"
-								th:href="@{/verproducto/} + ${descuento.id}"
+								th:href="@{/producto/ver/} + ${descuento.id}"
 								th:text="${descuento.id}"></a></td>
 							<td th:text="${descuento.producto.nombrep}"></td>
 							<td th:text="${descuento.cantidad}"></td>
 							<td th:text="${descuento.porcentaje}"></td>
-							<td class="centerMe"
-								th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"><a
-								th:href="@{'/descuento/editar/' + ${descuento.id}}">
-									<div class='icon'>
-										<i class='fa fa-pencil'></i>
-									</div>
-									<div class='text update'>
-										<span>Editar</span>
-									</div>
-							</a></td>
+<!-- 							<td class="centerMe" -->
+<!-- 								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"><a -->
+<!-- 								th:href="@{'/descuento/editar/' + ${descuento.id}}"> -->
+<!-- 									<div class='icon'> -->
+<!-- 										<i class='fa fa-pencil'></i> -->
+<!-- 									</div> -->
+<!-- 									<div class='text update'> -->
+<!-- 										<span>Editar</span> -->
+<!-- 									</div> -->
+<!-- 							</a></td> -->
 
-							<td th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"><a
+							<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"><a
 								class="centerMe"
 								th:href="@{/descuento/eliminar/} + ${descuento.id}"
 								onclick="return confirm('Estas seguro que quieres eliminar?');">

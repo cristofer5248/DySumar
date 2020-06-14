@@ -36,7 +36,7 @@ public class CategoriaController {
 		return list;
 	}
 
-	@Secured({"ROLE_ADMIN","ROLE_INV"})
+	@Secured({"ROLE_ADMIN","ROLE_INV","ROLE_JEFEADM"})
 	@RequestMapping(value = { "/listar", "/listar/{param}" }, method = RequestMethod.GET)
 	public String listar(Model model, @PathVariable(value = "param", required = false) String param) {
 		List<Categoria> categorias = null;

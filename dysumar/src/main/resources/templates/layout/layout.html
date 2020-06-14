@@ -33,9 +33,10 @@
 			</button>
 			<div class="collapse navbar-collapse">
 				<ul class="navbar-nav mr-auto">
-<!-- 					<li class="nav-item active"><a class="nav-link" th:href="@{/}">Home</a></li> -->
+					<!-- 					<li class="nav-item active"><a class="nav-link" th:href="@{/}">Home</a></li> -->
 
-					<li class="nav-item dropdown"><a
+					<li class="nav-item dropdown"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_SELLER')"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
 						role="button" data-toggle="dropdown" aria-haspopup="true"
 						aria-expanded="false"><i class="fas fa-users"></i> Personas </a>
@@ -64,7 +65,7 @@
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
 						role="button" data-toggle="dropdown" aria-haspopup="true"
-						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_SELLER','ROLE_SELLER')"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
 						aria-expanded="false"><i class="fas fa-store"></i> Entradas </a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" href="#about"
@@ -88,7 +89,7 @@
 						aria-haspopup="true"><i class="fas fa-money-check-alt"></i>
 							PRODUCTOS</a></li>
 
-					<li class="nav-item dropdown"><a
+					<li class="nav-item dropdown" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_SELLER','ROLE_FACT')"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
 						role="button" data-toggle="dropdown" aria-haspopup="true"
 						aria-expanded="false"><i class="fas fa-money-check-alt"></i>
@@ -105,12 +106,12 @@
 							<!-- 							<a class="dropdown-item" href="#">Movimientos</a> -->
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" data-toggle="modal"
-							sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_FACT','ROLE_SELLER')"
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_FACT','ROLE_SELLER')"
 								data-target="#exampleModal"><i class="fas fa-search"></i>
 								Buscar una cotizacion</a>
 						</div></li>
 
-					<li class="nav-item dropdown"><a
+					<li class="nav-item dropdown" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"><a
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
 						role="button" data-toggle="dropdown" aria-haspopup="true"
 						aria-expanded="false"><i class="fas fa-store"></i> Productos </a>
@@ -125,7 +126,7 @@
 								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
 								th:href="@{/categoria/listar}"><i class="fas fa-server"></i>
 								Categorias</a> <a
-								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"								
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"
 								class="dropdown-item" th:href="@{/descuento/nuevo}"><i
 								class="fas fa-percent"></i> Descuentos</a>
 							<!-- 								<a	class="dropdown-item" href="#">Margenes</a> -->
@@ -135,12 +136,14 @@
 				</ul>
 
 				<ul class="navbar-nav navbar-right">
-					<li class="nav-item dropdown" sec:authorize="isAuthenticated()" onclick="cambiarAgo();"><a
-						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
-						role="button" data-toggle="dropdown" aria-haspopup="true"
-						aria-expanded="false"><i class="fas fa-globe-americas"></i></a>
-						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" id="notiContent">
-<!-- 							contenido de las notificaciones							 -->
+					<li class="nav-item dropdown" sec:authorize="isAuthenticated()"
+						onclick="cambiarAgo();"><a class="nav-link dropdown-toggle"
+						href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false"><i
+							class="fas fa-globe-americas"></i></a>
+						<div class="dropdown-menu dropdown-menu-right"
+							aria-labelledby="navbarDropdown" id="notiContent">
+							<!-- 							contenido de las notificaciones							 -->
 
 						</div></li>
 					<li sec:authorize="!isAuthenticated()"><a
@@ -239,9 +242,9 @@
 		<script th:src="@{/js/jquery.timeago.js}"></script>
 		<script th:src="@{/js/jquery.rowspanizer.min.js}"></script>
 		<script th:src="@{/js/dataTables.rowGroup.min.js}"></script>
-		
+
 		<input type="hidden" id="urlCotizacion" th:value="@{/cotizacion/ver/}" />
-		<input type="hidden" id="urldeServer" th:value="@{/}"/>
+		<input type="hidden" id="urldeServer" th:value="@{/}" />
 		<script th:replace="layout/notificaciones :: javascript"></script>
 		<script th:inline="javascript">
 		//todo esto es para las alertas de alertify

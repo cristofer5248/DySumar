@@ -121,7 +121,7 @@ public class DescuentoController {
 		return "redirect:/descuento/listar/" + descuentoTemp.getProducto().getId();
 	}
 
-	@Secured({"ROLE_ADMIN","ROLE_JEFEADM","ROLE_SELLER"})
+	@Secured({"ROLE_ADMIN","ROLE_JEFEADM","ROLE_SELLER","ROLE_INV"})
 	@RequestMapping(value = "/listar/{id}", method = RequestMethod.GET)
 	public String listar(@PathVariable(value = "id") Long id, Model model) {
 		List<Descuento> descuentos = descuentoService.findByProductoId(id);

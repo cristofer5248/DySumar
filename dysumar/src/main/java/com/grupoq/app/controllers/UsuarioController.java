@@ -90,6 +90,7 @@ public class UsuarioController {
 		return "users/ver";
 	}
 
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })
 	@GetMapping(value = "/verusuario/{id}")
 	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 

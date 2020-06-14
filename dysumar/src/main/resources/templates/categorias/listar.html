@@ -21,7 +21,7 @@
 
 				<div class="card-title">
 					<a
-						th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('INV')}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"
 						th:href="@{/categoria/nuevo}" class="btn btn-primary btn-xs">Crear
 						Categoria</a>
 					<form id="formsearch" class="searchbox"
