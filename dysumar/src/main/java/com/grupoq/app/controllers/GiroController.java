@@ -32,13 +32,13 @@ public class GiroController {
 	@Autowired
 	private IGiroService giroService;
 	
-	@Secured({"ROLE_ADMIN","ROLE_JEFEADM", "ROLE_SELLER"})
+	@Secured({"ROLE_ADMIN","ROLE_JEFEADM", "ROLE_SELLER","ROLE_INV"})
 	@GetMapping(value = "/cargar_giro/{term}", produces = { "application/json" })
 	public @ResponseBody List<Giro> giroTodosJson(@PathVariable String term) {
 		List<Giro> list = giroService.findByNombre(term);
 		return list;
 	}
-	@Secured({"ROLE_ADMIN","ROLE_JEFEADM", "ROLE_SELLER"})
+	@Secured({"ROLE_ADMIN","ROLE_JEFEADM", "ROLE_SELLER","ROLE_INV"})
 	@RequestMapping(value = "/listar", method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
 		List<Giro> giro = giroService.listAll();

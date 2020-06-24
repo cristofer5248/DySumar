@@ -19,7 +19,7 @@
 			<div class="card-header"></div>
 			<div class="card-body">
 
-				<div class="card-title">
+				<div class="card-title" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SELLER','ROLE_INV')">
 					<a 
 						th:href="@{/giro/nuevo}" class="btn btn-primary btn-xs">Registrar
 						Giro</a>
