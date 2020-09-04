@@ -52,6 +52,7 @@
 								<th>Nombre</th>
 								<th>Costo</th>
 								<th>Marca</th>
+								<th>Ubicacion</th>
 								<th>Categoria</th>
 								<th id="thproveedor">Proveedor</th>
 								<th>Unidad</th>
@@ -73,6 +74,7 @@
 								<td class="tddata" th:text="${producto.nombrep}"></td>
 								<td class="tddata" th:text="'$'+${producto.precio}"></td>
 								<td class="tddata" th:text="${producto.marca.nombrem}"></td>
+								<td class="tddata" th:text="${producto.bodega}"></td>
 								<td class="tddata" th:text="${producto.categoria.nombre}"></td>
 								<td class="tdproveedor" th:text="${producto.proveedor.nombre}"></td>
 								<td th:text="${producto.presentacion.detalle}"></td>

@@ -11,3 +11,6 @@
 	align-items: center; 
 	justify-content: center;
 }
+.dropdown:hover>.dropdown-menu {
+  display: block;
+}

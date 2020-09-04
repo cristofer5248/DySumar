@@ -41,6 +41,8 @@ public class Producto implements Serializable {
 	@Length (min = 2, max = 10)
 	private String codigo;
 	private String nombrep;
+	@Length (min = 5, max = 30)
+	private String bodega;
 	
 	@NotNull
 	@Column(name = "create_at")
@@ -188,6 +190,14 @@ public class Producto implements Serializable {
 
 	public void setMinimo(int minimo) {
 		this.minimo = minimo;
+	}
+
+	public String getBodega() {
+		return bodega;
+	}
+
+	public void setBodega(String bodega) {
+		this.bodega = bodega;
 	}
 
 	
