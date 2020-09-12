@@ -6,12 +6,15 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,9 +22,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.grupoq.app.models.entity.Giro;
 import com.grupoq.app.models.service.IGiroService;
+import org.springframework.http.ResponseEntity;
 
 @SessionAttributes("giro")
 @RequestMapping("/giro")
@@ -31,14 +34,15 @@ public class GiroController {
 
 	@Autowired
 	private IGiroService giroService;
-	
-	@Secured({"ROLE_ADMIN","ROLE_JEFEADM", "ROLE_SELLER","ROLE_INV"})
+
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_SELLER", "ROLE_INV" })
 	@GetMapping(value = "/cargar_giro/{term}", produces = { "application/json" })
 	public @ResponseBody List<Giro> giroTodosJson(@PathVariable String term) {
 		List<Giro> list = giroService.findByNombre(term);
 		return list;
 	}
-	@Secured({"ROLE_ADMIN","ROLE_JEFEADM", "ROLE_SELLER","ROLE_INV"})
+
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_SELLER", "ROLE_INV" })
 	@RequestMapping(value = "/listar", method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
 		List<Giro> giro = giroService.listAll();
@@ -47,7 +51,7 @@ public class GiroController {
 		return "/giros/listar";
 	}
 
-	@Secured({"ROLE_ADMIN","ROLE_JEFEADM", "ROLE_SELLER"})
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_SELLER" })
 	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
 	public String nuevo(Map<String, Object> model) {
 		Giro giro = new Giro();
@@ -57,7 +61,7 @@ public class GiroController {
 		return "/giros/form";
 	}
 
-	@Secured({"ROLE_ADMIN","ROLE_JEFEADM", "ROLE_SELLER"})
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_SELLER" })
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String guardar(@Valid Giro giro, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
@@ -73,7 +77,28 @@ public class GiroController {
 		return "redirect:/giro/listar";
 	}
 
-	@Secured({"ROLE_ADMIN","ROLE_JEFEADM"})
+//	@Secured({"ROLE_ADMIN","ROLE_JEFEADM", "ROLE_SELLER"})
+//	@RequestMapping(value= "/saveExpress", method= RequestMethod.POST)
+//	public @ResponseBody void saveExpress(@RequestParam String nombreGiro, SessionStatus status,RedirectAttributes flash) {
+//		Giro giro = new Giro();
+//		giro.setDetalles(nombreGiro);		
+//		giroService.save(giro);
+//		status.setComplete();
+//		String mensajeFlash = (giro.getId() != null) ? "Giro editado con éxito!" : "Giro creado con éxito!";
+//		flash.addFlashAttribute("success", mensajeFlash);		
+//	}
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_SELLER" })
+	@RequestMapping(value = "/saveExpress", method = RequestMethod.POST)
+	@ResponseBody
+	public String saveExpress(@RequestParam String nombreGiro) {
+		Giro giro = new Giro();
+		giro.setDetalles(nombreGiro);
+		giroService.save(giro);		
+		return "exito";
+		
+	}
+
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })
 	@RequestMapping(value = "/eliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 

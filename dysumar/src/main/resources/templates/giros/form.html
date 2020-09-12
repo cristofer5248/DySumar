@@ -24,9 +24,7 @@
 						<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
 						<div class="col-sm-6">
 							<textarea th:field="*{detalles}" class="form-control"
-								th:errorclass="'form-control alert-danger'" ></textarea> <small
-								class="form-text text-danger"
-								th:if="${#fields.hasErrors('detalles')}" th:errors="*{detalles}"></small>
+								th:errorclass="'form-control alert-danger'" ></textarea>
 						</div>
 					</div>
 

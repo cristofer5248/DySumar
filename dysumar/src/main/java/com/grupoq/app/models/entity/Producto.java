@@ -40,6 +40,8 @@ public class Producto implements Serializable {
 	@Column(unique = true)
 	@Length (min = 2, max = 10)
 	private String codigo;
+	
+	@NotEmpty
 	private String nombrep;
 	@Length (min = 5, max = 30)
 	private String bodega;

@@ -25,7 +25,7 @@ public class Proveedor implements Serializable {
 	private String nombre;
 	
 	@NotEmpty
-	@Column(length = 15)
+	@Column(length = 20)
 	private String nit;
 	
 	@JsonIgnore
@@ -33,7 +33,7 @@ public class Proveedor implements Serializable {
 	private Giro giro;
 	
 	@NotEmpty
-	@Column(length= 80)
+	@Column(length= 90)
 	private String direccion;
 	
 	@NotEmpty
@@ -49,7 +49,7 @@ public class Proveedor implements Serializable {
 	private String codigoP;
 	
 	@NotEmpty
-	@Column(length= 40)
+	@Column(length= 80)
 	private String razonsocial;
 	/**
 	 * 

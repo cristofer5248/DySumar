@@ -66,10 +66,11 @@
 						</div>
 					</div>
 					<div class="form-group row">
-						<label for="createAt" class="col-sm-2 col-form-label">Fecha de registro</label>
+						<label for="createAt" class="col-sm-2 col-form-label">Fecha
+							de registro</label>
 						<div class="col-sm-6">
-							<input type="text" class="form-control" th:field="*{createAt}" id="mydate"
-								th:errorclass="'form-control alert-danger'" /> <small
+							<input type="text" class="form-control" th:field="*{createAt}"
+								id="mydate" th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
 								th:if="${#fields.hasErrors('createAt')}" th:errors="*{createAt}"></small>
 						</div>
@@ -88,10 +89,13 @@
 					<div class="form-group row">
 						<label for="cargar_giros" class="col-sm-2 col-form-label"
 							th:text="'Giro'"></label>
-						<div class="col-sm-6">
+						<div class="col-sm-4">
 							<input type="text" th:field="*{giro}" name="cargar_giro"
-								id="cargar_giro" class="form-control" />
+								placeholder="Buscar un giro ya existente..." id="cargar_giro"
+								class="form-control" />
 						</div>
+						<button type="button" class="btn btn-primary" data-toggle="modal"
+							data-target="#exampleModal2">Registrar uno nuevo</button>
 					</div>
 
 					<div class="form-group row">
@@ -104,14 +108,48 @@
 			</div>
 		</div>
 	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Ingreso rapido
+						de nuevo giro</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group row">
+						<form id="btnGiro" method="POST" enctype="multipart/form-data">
+							<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
+							<div class="col-sm-6">
+								<textarea name="nombreGiro" id="nombreGiro" class="form-control"></textarea>
+							</div>
+							<button type="submit" class="btn btn-primary">Guardar</button>
+						</form>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cerrar</button>					
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<footer th:replace="layout/layout :: footer"></footer>
 	<input type="hidden" id="urlAjax" th:value="@{/giro/cargar_giro/}" />
 	<script th:replace="proveedores/js/autocomplete :: javascript"></script>
+
 	<script>
-	$('#mydate').datepicker({
-		format : "yyyy-mm-dd"
-	});
+		$('#mydate').datepicker({
+			format : "yyyy-mm-dd"
+		});
 	</script>
+
 </body>
 </html>
