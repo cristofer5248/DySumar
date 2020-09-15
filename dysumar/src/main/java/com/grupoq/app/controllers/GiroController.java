@@ -25,6 +25,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.grupoq.app.models.entity.Giro;
 import com.grupoq.app.models.service.IGiroService;
 import org.springframework.http.ResponseEntity;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @SessionAttributes("giro")
 @RequestMapping("/giro")
@@ -87,14 +89,14 @@ public class GiroController {
 //		String mensajeFlash = (giro.getId() != null) ? "Giro editado con éxito!" : "Giro creado con éxito!";
 //		flash.addFlashAttribute("success", mensajeFlash);		
 //	}
-	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_SELLER" })
-	@RequestMapping(value = "/saveExpress", method = RequestMethod.POST)
-	@ResponseBody
-	public String saveExpress(@RequestParam String nombreGiro) {
+	/* @Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_SELLER" }) */
+	
+	@RequestMapping(value = "/saveExpress/{nombre}", method = {RequestMethod.GET}, produces = { "application/json" })
+	public @ResponseBody Giro saveExpress(HttpServletRequest request, HttpServletResponse response, @PathVariable(value = "nombre", required = true) String nombre) {
 		Giro giro = new Giro();
-		giro.setDetalles(nombreGiro);
+		giro.setDetalles(nombre);
 		giroService.save(giro);		
-		return "exito";
+		return giro; 
 		
 	}
 

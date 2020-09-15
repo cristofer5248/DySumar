@@ -17,7 +17,7 @@ public class LoginController {
 			RedirectAttributes flash) {
 		if (principal != null) {
 			flash.addFlashAttribute("info", "Ya ha iniciado sesion antetiormente");
-			return "redictect:/";
+			return "redirect:/";
 		}
 		if (error != null) {
 			model.addAttribute("error", "Error en el login");

@@ -30,13 +30,15 @@
 						</div>
 					</div>
 					<div class="form-group row">
-						<label for="apellido" class="col-sm-2 col-form-label">Apellido</label>
-						<div class="col-sm-6">
-							<input type="text" th:field="*{apellido}" class="form-control"
+						<label for="apellido" class="col-sm-2 col-form-label">Direccion</label>
+						<div class="col-sm-4">
+							<input type="text" th:field="*{apellido}" class="form-control" id="direccionapellido"
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
-								th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></small>
+								th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></small>							
 						</div>
+							<button type="button" class="btn btn-primary" data-toggle="modal"
+							data-target="#exampleModal3">Registrar uno nuevo</button>
 					</div>
 					<div class="form-group row">
 						<label for="email" class="col-sm-2 col-form-label">Email</label>
@@ -48,7 +50,7 @@
 						</div>
 					</div>
 					<div class="form-group row">
-						<label for="codigo" class="col-sm-2 col-form-label">Codigo</label>
+						<label for="codigo" class="col-sm-2 col-form-label">Codigo de registro</label>
 						<div class="col-sm-6">
 							<input type="text" th:field="*{codigo}" class="form-control"
 								th:errorclass="'form-control alert-danger'" /> <small
@@ -57,7 +59,7 @@
 						</div>
 					</div>
 					<div class="form-group row">
-						<label for="dui" class="col-sm-2 col-form-label">Dui</label>
+						<label for="dui" class="col-sm-2 col-form-label">NIT/DUI</label>
 						<div class="col-sm-6">
 							<input type="text" th:field="*{dui}" class="form-control"
 								th:errorclass="'form-control alert-danger'" /> <small
@@ -122,24 +124,56 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<div class="form-group row">
-						<form id="btnGiro" method="POST" enctype="multipart/form-data">
+
+					<form id="formGiro" method="POST" enctype="multipart/form-data">
+						<div class="form-group row">
 							<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
-							<div class="col-sm-6">
+							<div class="col-sm-8">
 								<textarea name="nombreGiro" id="nombreGiro" class="form-control"></textarea>
 							</div>
-							<button type="submit" class="btn btn-primary">Guardar</button>
-						</form>
-					</div>
+
+						</div>
+						<button type="submit" id="btnGiro" class="btn btn-primary">Guardar</button>
+					</form>
 
 				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary"
-						data-dismiss="modal">Cerrar</button>					
-				</div>
+
 			</div>
 		</div>
 	</div>
+
+	<!-- Modal para direcciones-->
+	<div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Ingreso rapido
+						de nueva direccion</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+
+					<form id="formDireccion" method="POST" enctype="multipart/form-data">
+						<div class="form-group row">
+							<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
+							<div class="col-sm-8">
+								<textarea name="nombreDireccion" id="nombreDireccion" class="form-control"></textarea>
+							</div>
+
+						</div>
+						<button type="submit" id="btnDireccion" class="btn btn-primary">Guardar</button>
+					</form>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
 
 	<footer th:replace="layout/layout :: footer"></footer>
 	<input type="hidden" id="urlAjax" th:value="@{/giro/cargar_giro/}" />
@@ -150,6 +184,8 @@
 			format : "yyyy-mm-dd"
 		});
 	</script>
+	<script th:src="@{/js/postrequestGiro.js}"></script>
+	
 
 </body>
 </html>

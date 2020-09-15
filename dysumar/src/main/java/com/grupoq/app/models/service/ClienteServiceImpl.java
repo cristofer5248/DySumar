@@ -126,6 +126,12 @@ public class ClienteServiceImpl implements IClienteService {
 		return clienteDao.findByUsuarioLike(term, nombre);
 	}
 
+	@Override
+	public Direccion findByidDireccion(Long id) {
+		return direccionesdao.findById(id).orElse(null);
+		
+	}
+
 	
 
 	

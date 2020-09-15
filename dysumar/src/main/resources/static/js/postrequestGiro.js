@@ -2,58 +2,68 @@ $(document).ready(
 		function() {
 
 			// SUBMIT FORM
-			$("#btnGiro").submit(function(event) {
-				alert('hi');
+			$("#formGiro").submit(function(event) {
+				
 				// Prevent the form from submitting via the browser.
 				event.preventDefault();
 				ajaxPost();
 			});
+			
 
+				// SUBMIT FORM
+				$("#formDireccion").submit(function(event) {
+					
+					// Prevent the form from submitting via the browser.
+					event.preventDefault();
+					ajaxPost2();
+				});
+			
 			function ajaxPost() {
-				var data = {}
-				data["nombreGiro"] = $("#nombreGiro").val();
-				
+				var data = $("#nombreGiro").val();
 				$.ajax({
-		             type: "POST",
-		             contentType: "application/json",
-		             url: "/saveExpress",
-		             data: JSON.stringify(data),
-		             dataType: 'json',
+		             type: "get",
+		             dataType : "json",
+		             url: "/giro/saveExpress/"+$("#nombreGiro").val(),
 		             timeout: 600000,
-		             success: function (data) {
-		                 $("#btnGiro").prop("disabled", false);
-		                 //...
+		             
+		             success: function (response) {
+		            	 console.log(data);
+		                 $("#btnGiro").prop("disabled", true);
+		                 $('#exampleModal2').modal('toggle');
+		                 alertify.alert('Exito!', 'Nuevo giro registrado, ahora puedes buscarlo en el formulario!', function(){ alertify.success('Ok'); });
+		                 // ...
 		             },
-		             error: function (e) {
+		             error: function () {
+		            	 alertify.alert('Error!', 'No se pudo guardar, contactar a soporte tecnico.', function(){ alertify.success('Ok'); });
 		                 $("#btnGiro").prop("disabled", false);
-		                 //...
+		                 // ...
 		             }
 			});
-				
 
-//				// DO POST
-//				$.ajax({
-//					type : "POST",
-//					contentType : "application/json",
-//					url : "/saveExpress",
-//					data : JSON.stringify(giroOb),
-//					dataType : 'json',
-//					success : function(result) {
-//						if (result.status == "success") {
-////							$("#postResultDiv").html(
-////									"" + result.data.bookName
-////											+ "Post Successfully! <br>"
-////											+ "---> Congrats !!" + "</p>");
-//						} else {
-////							$("#postResultDiv").html("<strong>Error</strong>");
-//						}
-//						console.log(result);
-//					},
-//					error : function(e) {
-//						alert("Error!")
-//						console.log("ERROR: ", e);
-//					}
-//				});
+			}
+			function ajaxPost2() {
+				var data = $("#nombreDireccion").val();
+				$.ajax({
+		             type: "get",
+		             dataType : "json",
+		             url: "saveDExpress/"+$("#nombreDireccion").val(),
+		             timeout: 600000,
+		             
+		             success: function (data) {
+		            	 console.log(data);
+		                 $("#btnDireccion").prop("disabled", true);		                 
+		                 $('#exampleModal3').modal('toggle');
+		                 alertify.alert('Exito!', 'Nueva direccion registrada y agregada al formulario', function(){ alertify.success('Ok'); });
+		                 $('#direccionapellido').val(data);
+		                 $("#direccionapellido").prop("disabled", true);
+		                 // ...
+		             },
+		             error: function () {
+		            	 alertify.alert('Error!', 'No se pudo guardar, contactar a soporte tecnico.', function(){ alertify.success('Ok'); });
+		                 $("#btnDireccion").prop("disabled", false);
+		                 // ...
+		             }
+			});
 
 			}
 

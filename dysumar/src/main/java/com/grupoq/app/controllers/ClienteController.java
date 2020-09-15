@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.commons.logging.Log;
@@ -221,8 +222,12 @@ public class ClienteController {
 //		}
 
 		String mensajeFlash = (cliente.getId() != null) ? "Cliente editado con éxito!" : "Cliente creado con éxito!";
-		cliente.setUsuario(userservice.findByUsername(autentication.getName()));
+		cliente.setUsuario(userservice.findByUsername(autentication.getName()));		
 		clienteService.save(cliente);
+		ClienteDirecciones cd = new ClienteDirecciones();
+		cd.setCliente(cliente);
+		cd.setDirecciones(clientedireccionesService.findByidDireccion(Long.parseLong(cliente.getApellido())));
+		clienteService.savecd(cd);
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:clientes";
@@ -277,6 +282,14 @@ public class ClienteController {
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:/direcciones";
+	}
+	@RequestMapping(value = "/saveDExpress/{nombre}", method = {RequestMethod.GET}, produces = { "application/json" })
+	public @ResponseBody Long saveExpress(HttpServletRequest request, HttpServletResponse response, @PathVariable(value = "nombre", required = true) String nombre) {
+		Direccion direccion = new Direccion();
+		direccion.setNombre(nombre);
+		clienteService.save(direccion);		
+		return direccion.getId(); 
+		
 	}
 	
 	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})

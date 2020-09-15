@@ -14,14 +14,18 @@ public class GiroRestController {
 	@Autowired
 	private IGiroService giroService;
 	
-	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_SELLER" })
-	@RequestMapping(value = "/saveExpress", method = RequestMethod.POST)	
-	public String saveExpress(@RequestParam String nombreGiro) {
+	@RequestMapping(value = "/saveExpress/{nombre}", method = {RequestMethod.GET}, produces = { "application/json" })
+	@ResponseBody
+	public String saveExpress(@PathVariable(value = "nombre", required = true) String nombre) {
 		Giro giro = new Giro();
-		giro.setDetalles(nombreGiro);
+		giro.setDetalles(nombre);
 		giroService.save(giro);		
 		return "exito";
 		
+	}
+	@RequestMapping(value = "/nada", method= RequestMethod.GET)	
+	public String nada(String nada) {
+		return "nada";
 	}
 	
 
