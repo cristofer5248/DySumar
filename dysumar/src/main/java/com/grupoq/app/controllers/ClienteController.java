@@ -196,31 +196,10 @@ public class ClienteController {
 
 		if (result.hasErrors()) {
 			model.addAttribute("titulo", "Formulario de Cliente");
+			model.addAttribute("tipo", tipocliente.findAll());
+			model.addAttribute(cliente);
 			return "clienteform";
 		}
-
-//		if (!foto.isEmpty()) {
-//
-//			if (cliente.getId() != null && cliente.getId() > 0 && cliente.getFoto() != null
-//					&& cliente.getFoto().length() > 0) {
-//
-//				uploadFileService.delete(cliente.getFoto());
-//			}
-//
-//			String uniqueFilename = null;
-//			try {
-//				uniqueFilename = uploadFileService.copy(foto);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//
-//			flash.addFlashAttribute("info", "Has subido correctamente '" + uniqueFilename + "'");
-//
-////			cliente.setFoto(uniqueFilename);
-//
-//		}
-
 		String mensajeFlash = (cliente.getId() != null) ? "Cliente editado con éxito!" : "Cliente creado con éxito!";
 		cliente.setUsuario(userservice.findByUsername(autentication.getName()));		
 		clienteService.save(cliente);

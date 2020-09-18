@@ -32,7 +32,7 @@
 					<div class="form-group row">
 						<label for="apellido" class="col-sm-2 col-form-label">Direccion</label>
 						<div class="col-sm-4">
-							<input type="text" th:field="*{apellido}" class="form-control" id="direccionapellido"
+							<input type="text" th:field="*{apellido}" class="form-control" id="direccionapellido" readonly="readonly" placeholder='Para ingresar su direccion de en "Registrar uno nuevo"'
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
 								th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></small>							
@@ -61,7 +61,7 @@
 					<div class="form-group row">
 						<label for="dui" class="col-sm-2 col-form-label">NIT/DUI</label>
 						<div class="col-sm-6">
-							<input type="text" th:field="*{dui}" class="form-control"
+							<input type="text" th:field="*{dui}" class="form-control" id="dui"
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
 								th:if="${#fields.hasErrors('dui')}" th:errors="*{dui}"></small>

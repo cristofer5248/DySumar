@@ -1,4 +1,6 @@
 $(document).ready(
+//		var regExdui= document.getElementById('dui').value;
+//		var duiRegEx= /^\d{8}-\d{1}$/g;
 		function() {
 
 			// SUBMIT FORM
@@ -55,7 +57,7 @@ $(document).ready(
 		                 $('#exampleModal3').modal('toggle');
 		                 alertify.alert('Exito!', 'Nueva direccion registrada y agregada al formulario', function(){ alertify.success('Ok'); });
 		                 $('#direccionapellido').val(data);
-		                 $("#direccionapellido").prop("disabled", true);
+		                 $("#direccionapellido").prop("readonly", true);
 		                 // ...
 		             },
 		             error: function () {

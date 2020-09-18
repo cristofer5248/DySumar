@@ -35,15 +35,21 @@ public class Cotizacion implements Serializable {
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date fecha;	
 	
+	
 	@OneToMany(mappedBy="cotizacionid", fetch= FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 //	@JoinColumn(name="cotizacionid")
 	private List<CarritoItems> carrito;
+	
+	//si algo se arruina quitemos esto
+	@OneToMany(mappedBy="cotizacion", fetch= FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Facturacion> factura;
 	
 	public boolean aprobado = true;
 
 	
 	public Cotizacion() {
 		this.carrito = new ArrayList<CarritoItems>();
+		this.factura = new ArrayList<Facturacion>();
 	}
 
 	public void addProductoCotizacion(CarritoItems carritos) {
@@ -89,6 +95,14 @@ public class Cotizacion implements Serializable {
 
 	public void setAprobado(boolean aprobado) {
 		this.aprobado = aprobado;
+	}
+
+	public List<Facturacion> getFactura() {
+		return factura;
+	}
+
+	public void setFactura(List<Facturacion> factura) {
+		this.factura = factura;
 	}	
 
 	

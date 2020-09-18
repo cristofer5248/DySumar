@@ -32,6 +32,10 @@ public interface IFacturaService {
 	
 	//para encontrar si una factura esta en estado 3 que es insuficiente y al meter en inventario cambie de estado
 	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatus(Long id);
+	
+	//para encontrar si una factura esta en estado 3 que es insuficiente y al meter en inventario cambie de estado
+	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatusWithoutProducto();
+	
 	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatusByCarritoStatus(Long id);
 	
 	//buscar si hay cotizacion repetida en factura

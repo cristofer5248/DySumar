@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
- <meta charset="UTF-8">
+<meta charset="UTF-8">
 <head th:replace="layout/layout :: head"></head>
 
 <body>
@@ -34,10 +34,12 @@
 						th:text="'Volver'"></a> <a class="btn btn-danger btn-xs"
 						th:href="@{/factura/eliminar/}+${codigofa}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT','ROLE_JEFEADM')"
-						th:text="'Descarcar ahora'" onclick="confirm ('Esta seguro?')"></a> <a th:if="${facturaciones.status==2}" class="btn btn-success btn-xs"
-						data-toggle="modal" data-target="#exampleModal2" style="color:white;"
-						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT')" onclick="meterid();"
-						th:text="'Procesar'"></a>
+						th:text="'Descarcar ahora'" onclick="confirm ('Esta seguro?')"></a>
+					<a th:if="${facturaciones.status==2}"
+						class="btn btn-success btn-xs" data-toggle="modal"
+						data-target="#exampleModal2" style="color: white;"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT')"
+						onclick="meterid();" th:text="'Procesar'"></a>
 
 
 				</h4>
@@ -53,14 +55,17 @@
 								</button>
 							</div>
 							<div class="modal-body">
-								<form id="statuschangeform" th:action="@{/factura/statusChange/}" class="form-control" method="post">
-								<input id="idinput" type="hidden" name="id"/>
-								<label>Codigo unico de remisión:</label>
-								<input id="codigoinput" type="number" name="codigo" class="form-control"/>
+								<form id="statuschangeform"
+									th:action="@{/factura/statusChange/}" class="form-control"
+									method="post">
+									<input id="idinput" type="hidden" name="id" /> <label>Codigo
+										unico de remisión:</label> <input id="codigoinput" type="number"
+										name="codigo" class="form-control" />
 								</form>
 							</div>
 							<div class="modal-footer">
-								<button type="submit" class="btn btn-primarm yhgy" onclick="cambiarcodigo()">Enviar</button>
+								<button type="submit" class="btn btn-primarm yhgy"
+									onclick="cambiarcodigo()">Enviar</button>
 								<button type="button" class="btn btn-secondary"
 									data-dismiss="modal">Cerrar</button>
 							</div>
@@ -98,6 +103,12 @@
 						th:text="'Pago: ' +${facturaciones.formadepago.nombre}"></li>
 					<li class="list-group-item"
 						th:text="'Fecha: ' +${facturaciones.cotizacion.fecha}"></li>
+					<li class="list-group-item"
+						sec:authorize="hasAnyRole('ROLE_ADMIN')"
+						th:text="'Status en tabla cotizacion: ' +${facturaciones.cotizacion.aprobado}"></li>
+					<li class="list-group-item"
+						sec:authorize="hasAnyRole('ROLE_ADMIN')"
+						th:text="'Status en tabla cotizacion: ' +${facturaciones.status}"></li>
 				</ul>
 
 				<!-- <div th:if="${#lists.isEmpty(factura)}"
@@ -109,14 +120,16 @@
 						<tr>
 							<th>ID</th>
 							<th>Producto</th>
+							<th>Proveedor</th>							
 							<th>Marca</th>
-							<th>Proveedor</th>
 							<th>Costo</th>
 							<th>Margen</th>
 							<th>Precio</th>
 							<th>Descuento</th>
 							<th>Cantidad</th>
 							<th>Total</th>
+							<th>Status</th>
+							<th>Stock actual</th>
 
 							<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">ver</th> -->
 							<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th> -->
@@ -138,6 +151,10 @@
 							<td th:text="${carritos.cantidad}"></td>
 							<td
 								th:text="'$'+${#numbers.formatDecimal((((carritos.margen)/100)*carritos.precio * carritos.cantidad* carritos.descuento),0, 'COMMA', 2, 'POINT')}"></td>
+							<td sec:authorize="hasAnyRole('ROLE_ADMIN')"
+								th:text="${carritos.status}"></td>
+							<td sec:authorize="hasAnyRole('ROLE_ADMIN')"
+								th:text="${carritos.productos.stock}"></td>
 							<!-- 							<td th:text="${factura.cantidad}"></td> -->
 
 							<!-- 							<td th:text="${factura.cantidad * factura.servicios.precio}"></td> -->
@@ -160,32 +177,33 @@
 	</div>
 
 	<footer th:replace="layout/layout :: footer"></footer>
-	<input type="hidden" id="urlenviar" th:value="@{/factura/statusChange/}" />
+	<input type="hidden" id="urlenviar"
+		th:value="@{/factura/statusChange/}" />
 	<script>
-	function enviarcodigo(){
-		location.href = $("#urlenviar").val()+$("#codigoinput").val();
-	}
-	function cambiarAction(){
-		
-		$('#statuschangeform').attr('action', $("#urlenviar").val()+$("#codigoinput").val());
-	}
-	function meterid(){
-		
-		var elID = $("#idli").text(); 
-		$("#idinput").val(elID);
-	}
- 
-    function getConfirmation() {
-       var retVal = confirm("Do you want to continue ?");
-       if( retVal == true ) {
-          document.write ("User wants to continue!");
-          return true;
-       } else {
-          document.write ("User does not want to continue!");
-          return false;
-       }
-    }
- 
+		function enviarcodigo() {
+			location.href = $("#urlenviar").val() + $("#codigoinput").val();
+		}
+		function cambiarAction() {
+
+			$('#statuschangeform').attr('action',
+					$("#urlenviar").val() + $("#codigoinput").val());
+		}
+		function meterid() {
+
+			var elID = $("#idli").text();
+			$("#idinput").val(elID);
+		}
+
+		function getConfirmation() {
+			var retVal = confirm("Do you want to continue ?");
+			if (retVal == true) {
+				document.write("User wants to continue!");
+				return true;
+			} else {
+				document.write("User does not want to continue!");
+				return false;
+			}
+		}
 	</script>
 </body>
 </html>

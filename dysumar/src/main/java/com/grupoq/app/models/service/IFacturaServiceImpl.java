@@ -142,4 +142,9 @@ public class IFacturaServiceImpl implements IFacturaService {
 		// TODO Auto-generated method stub
 		return facturadao.cotizacionRepetida(id);
 	}
+
+	@Override
+	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatusWithoutProducto() {	
+		return facturadao.findByCotizacionByCarritoItemsByIdByStatusWithoutProducto();
+	}
 }

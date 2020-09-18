@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+//import java.util.Vector;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -55,7 +56,7 @@ public class InventarioController {
 
 	@Autowired
 	private ICarritoItemsService carritoService;
-	
+
 	@Autowired
 	private INotificacionesService notificacionesService;
 
@@ -158,22 +159,46 @@ public class InventarioController {
 			inventario.setCodigoProveedor(codigo);
 			inventario.setMovimientos(movimiento);
 
+			// hacemos esta evaluacion para solo empezar a evaluar a los que estaban en
+			// negativo
 			if (producto.getStock() < 0) {
+				System.out.print("Entro al if del stock de cada producto >0");
 				// aqui vamos a cambiar automaticamente el estado de la factura de 3 a 2
 				List<Facturacion> factura = facturaService.findByCotizacionByCarritoItemsByIdByStatus(producto.getId());
 				// vamos a cambiar el estado de la factura solo aquella que tengan pendiente
 				// ESTE PRODUCTO EN FALSE
-				
+
+//				Vector<String> vecOfIds = new Vector<String>();
+
 				for (Facturacion facturas : factura) {
 					for (CarritoItems carritoFactura : facturas.getCotizacion().getCarrito()) {
+						System.out.print("El tamaño del carrito PERO EN CAMBIO DE ESTADO CARRITO ES: "
+								+ facturas.getCotizacion().getCarrito().size());
 						if (carritoFactura.getProductos().getId().equals(producto.getId())) {
 							carritoFactura.setStatus(true);
 							carritoService.save(carritoFactura);
-							nuevaNotificacion("far fa-clock", "Producto "+carritoFactura.getProductos().getNombrep()+" en remision cambió de estado", "/cotizacion/ver/"+carritoFactura.getCotizacionid().getId(), "green");
-
+							nuevaNotificacion("far fa-clock",
+									"Producto " + carritoFactura.getProductos().getNombrep()
+											+ " en remision cambió de estado",
+									"/cotizacion/ver/" + carritoFactura.getCotizacionid().getId(), "green");
 						}
 					}
 				}
+
+				try {
+					System.out.print("BUSCO HABER SI HAY ALGUN REGISTRO QUE ESTE CON CARRITO FALSE");
+					factura = facturaService.findByCotizacionByCarritoItemsByIdByStatusWithoutProducto();
+				} catch (Exception e) {
+					System.out.print("ENTRO AL ERROR PARA PODER CAMBIAR ESTADO");
+					factura = facturaService.findByCotizacionByCarritoItemsByIdByStatus(producto.getId());
+					for (Facturacion facturaCambioStatus : factura) {
+						System.out.print("Index final de factura: " + factura.size());
+						facturaCambioStatus.setStatus(2);
+						facturaService.save(facturaCambioStatus);
+					}
+
+				}
+
 //				List<Facturacion> factura2 = facturaService
 //						.findByCotizacionByCarritoItemsByIdByStatusByCarritoStatus(producto.getId());
 //				System.out.print("Size " + factura2.size() + "\n");
@@ -198,7 +223,8 @@ public class InventarioController {
 //				}
 
 			}
-			nuevaNotificacion("fas fa-parachute-box", "Ingreso nuevo de "+inventario.getProducto().getNombrep(), "/inventario/ver/"+inventario.getId(), "blue");
+			nuevaNotificacion("fas fa-parachute-box", "Ingreso nuevo de " + inventario.getProducto().getNombrep(),
+					"/inventario/ver/" + inventario.getId(), "blue");
 			inventarioService.save(inventario);
 			// llenado de nuevo stock/ suma con inventario DEPRECATED PORQUE ES MEJOR SOLO
 			// SUMAR, LA FACTURA RESTARÁ
@@ -261,13 +287,14 @@ public class InventarioController {
 //		model.put("titulo", "Detalle del ingreso : " + id);		
 		return "/inventario/ver";
 	}
-	public void nuevaNotificacion(String icono, String nombre, String url,String color) {
+
+	public void nuevaNotificacion(String icono, String nombre, String url, String color) {
 		Notificaciones noti = new Notificaciones();
 		noti.setFecha(new Date());
 		noti.setIcono(icono);
 		noti.setNombre(nombre);
 		noti.setUrl(url);
 		noti.setColor(color);
-		notificacionesService.save(noti);		
+		notificacionesService.save(noti);
 	}
 }
