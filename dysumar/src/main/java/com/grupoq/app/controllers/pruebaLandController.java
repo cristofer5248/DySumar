@@ -36,35 +36,18 @@ public class pruebaLandController {
 	public String verSQLFacturaStatuses(@PathVariable(value = "opc") int opc,
 			@PathVariable(value = "valor") String valor) {
 		String result = "";
-		int anyCounter = 0;
 		if (opc == 1) {
 			try {
-				List<Facturacion> veamos = facturaService.findByCotizacionByCarritoItemsByIdByStatusWithoutProducto();
-				for (Facturacion factura : veamos) {
-					result = "El size de carrito es: " + factura.getCotizacion().getCarrito().size() + "<br/>";
-					result += "Datos en el carrito:<br/>";
-					for (CarritoItems carro : factura.getCotizacion().getCarrito()) {
-						result += "Estatus: " + carro.isStatus() + "<br/>";
-						if (!carro.isStatus()) {
-							veamos.remove(anyCounter);
-
-						}
-						anyCounter++;
-					}
-
+				List<Facturacion> veamos = facturaService
+						.findByCotizacionByCarritoItemsByIdByStatusWithoutProducto(Long.parseLong(valor));
+				result="AUN NO ESTAN TODOS POSITIVOS, A ESPERAR";
+				if(veamos.isEmpty()) {
+					result = "Eliminar porque no hay ningun falso de mas";	
 				}
-
-				for (Facturacion factura : veamos) {
-
-					for (CarritoItems carro : factura.getCotizacion().getCarrito()) {
-
-						result += "id: " + carro.getId() + "<br/>";
-					}
-				}
-
+				
 			} catch (Exception e) {
-				e.printStackTrace();
-				result += "vacio";
+
+				result += "Eliminar porque no hay ningun falso de mas";
 			}
 
 		}

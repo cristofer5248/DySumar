@@ -144,7 +144,7 @@ public class IFacturaServiceImpl implements IFacturaService {
 	}
 
 	@Override
-	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatusWithoutProducto() {	
-		return facturadao.findByCotizacionByCarritoItemsByIdByStatusWithoutProducto();
+	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatusWithoutProducto(Long id) {	
+		return facturadao.findByCotizacionByCarritoItemsByIdByStatusWithoutProducto(id);
 	}
 }

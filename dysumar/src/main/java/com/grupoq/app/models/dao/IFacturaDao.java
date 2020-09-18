@@ -34,8 +34,8 @@ public interface IFacturaDao extends PagingAndSortingRepository<Facturacion, Lon
 	
 	//para encontrar si una factura esta en estado 3 que es insuficiente y al meter en inventario cambie de estado pero sin producto
 //	@Query(value = "select f from Facturacion f join fetch f.cotizacion c join fetch c.carrito ca where f.status=3 and ca.status=true")
-	@Query(value = "select f from Facturacion f join fetch f.cotizacion c join fetch c.carrito ca where f.status=3 and ca.status!=true")
-	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatusWithoutProducto();
+	@Query(value = "select f from Facturacion f join fetch f.cotizacion c join fetch c.carrito ca join fetch ca.productos p where f.status=3 and ca.status!=true and p.id=?1")
+	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatusWithoutProducto(Long id);
 
 	@Query(value = "select f from Facturacion f where f.status=3")
 	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatusByCarritoStatus(Long id);

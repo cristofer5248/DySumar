@@ -119,8 +119,9 @@
 					<thead class="thead-inverse">
 						<tr>
 							<th>ID</th>
+							<th>ID carrito</th>
 							<th>Producto</th>
-							<th>Proveedor</th>							
+							<th>Proveedor</th>
 							<th>Marca</th>
 							<th>Costo</th>
 							<th>Margen</th>
@@ -138,6 +139,8 @@
 					<tbody>
 						<tr th:each="carritos: ${facturaciones.cotizacion.carrito}">
 							<td th:text="${carritos.productos.id}"></td>
+							<td sec:authorize="hasAnyRole('ROLE_ADMIN')"
+								th:text="${carritos.id}"></td>
 							<td th:text="${carritos.productos.nombrep}"></td>
 							<td th:text="${carritos.productos.proveedor.nombre}"></td>
 							<td th:text="${carritos.productos.marca.nombrem}"></td>

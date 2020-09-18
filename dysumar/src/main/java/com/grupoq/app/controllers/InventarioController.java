@@ -187,7 +187,16 @@ public class InventarioController {
 
 				try {
 					System.out.print("BUSCO HABER SI HAY ALGUN REGISTRO QUE ESTE CON CARRITO FALSE");
-					factura = facturaService.findByCotizacionByCarritoItemsByIdByStatusWithoutProducto();
+					factura = facturaService
+							.findByCotizacionByCarritoItemsByIdByStatusWithoutProducto(producto.getId());
+					if (factura.isEmpty()) {
+						factura = facturaService.findByCotizacionByCarritoItemsByIdByStatus(producto.getId());
+						for (Facturacion facturaCambioStatus : factura) {
+							System.out.print("Index final de factura: " + factura.size());
+							facturaCambioStatus.setStatus(2);
+							facturaService.save(facturaCambioStatus);
+						}
+					}
 				} catch (Exception e) {
 					System.out.print("ENTRO AL ERROR PARA PODER CAMBIAR ESTADO");
 					factura = facturaService.findByCotizacionByCarritoItemsByIdByStatus(producto.getId());
