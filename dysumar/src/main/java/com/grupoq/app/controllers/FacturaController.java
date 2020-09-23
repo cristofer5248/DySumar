@@ -104,13 +104,17 @@ public class FacturaController {
 			}
 			if (por.equals("fechas")) {
 				try {
+					System.out.print("Entro a 'fecha'\n");
 					Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(param);
 					Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(param2);
 					if (opc.equals("vendedor")) {
+						System.out.print("Entro a 'vendedor'\n");
 						facturacion = facturaservice.findAllByFechaGroupBy(pageRequest, date1, date2);
 						model.addAttribute("activePivot", true);
 					} else {
 						facturacion = facturaservice.findAllByFecha(pageRequest, date1, date2);
+						System.out.print("Entro a 'admin' tamaño:"+facturacion.getSize()+"\n");
+						System.out.print("ID:"+facturacion.getNumberOfElements()+"\n");
 						model.addAttribute("activePivot", false);
 					}
 //				sPath = facturacion!=null ? "listar/fechas/"+param+"/"+param2 : "listar";  
@@ -223,6 +227,7 @@ public class FacturaController {
 	public String guardarfactura(@Valid Facturacion facturacion, BindingResult result, Model model,
 			RedirectAttributes flash, SessionStatus status, Authentication authentication, HttpServletRequest request) {
 		facturacion.setaCuentade(usuarioService.findByUsername(authentication.getName()));
+		
 		if (result.hasErrors()) {
 			model.addAttribute("titulo", "Formulario de Facturacions");
 			if (facturacion.getCotizacion() == null) {
@@ -294,7 +299,7 @@ public class FacturaController {
 			// fin
 			// poniendo total en factura entity
 
-			totalParaFactura += (pro.getPrecio() * (pro.getMargen() / 100) * pro.getCantidad() * pro.getDescuento());
+			totalParaFactura += ((pro.getPrecio() / ((100-pro.getMargen())/100)) * pro.getCantidad() * pro.getDescuento());
 		}
 		facturacion.setTotaRegistrado(totalParaFactura);
 		// duplicaremos la cotizacin para despues no haber errores
@@ -411,8 +416,9 @@ public class FacturaController {
 
 			// margen default
 			// evaluar si era un cotizacin evaluada
+			//aqui pondremos si es menor a 15 entoncs sera avaluada
 
-			if (margen != null) {
+			if (margen[i] <= 15) {
 
 				if (margen[i] != producto.getMargen()) {
 					if (icotizacion) {
@@ -427,7 +433,7 @@ public class FacturaController {
 				}
 			} else {
 				// evaluar si era un cotizacin evaluada
-				carrito.setMargen(producto.getMargen());
+				carrito.setMargen(margen[i]);
 				// margen default
 			}
 			carrito.setCantidad(cantidad[i]);
@@ -454,11 +460,12 @@ public class FacturaController {
 			flash.addFlashAttribute("error", "El ingreso con ese codigo no existe en la base de datos");
 			return "redirect:/facturacion/listar";
 		}
+		model.put("activePivot", true);
 		model.put("facturaciones", facturacion);
 //		model.put("proveedor", facturacion.get(0).getProducto().getProveedor().getNombre());
 //		model.put("fecha", facturacion.get(0).getFecha().toString());
 		model.put("codigofa", id);
-		model.put("titulo", "Detalle de factura # : " + id);
+		model.put("titulo", "Detalle de factura # : " + id);		
 		return "/facturas/ver";
 	}
 

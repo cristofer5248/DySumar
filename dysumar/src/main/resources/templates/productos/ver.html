@@ -46,15 +46,17 @@
 					<li class="list-group-item"
 						th:text="'Categoria:    '+${producto.categoria.nombre}"></li>
 					<li class="list-group-item"
-						th:text="'Costo unitario:  $'+${producto.precio}"></li>
-					<li class="list-group-item"
 						th:text="'En stock:  ' +${producto.stock}"></li>
 					<li class="list-group-item"
 						th:text="'Proveedor:    '+${producto.proveedor.nombre}"></li>
 					<li class="list-group-item"
 						th:text="'Marca:    '+${producto.marca.nombrem}"></li>
 					<li class="list-group-item"
+						th:text="'Costo unitario:  $'+${producto.precio}"></li>
+					<li class="list-group-item"
 						th:text="'Margen:    '+${producto.margen}+'%'"></li>
+					<li class="list-group-item"
+						th:text="'Precio de venta:  $'+${precioventa}"></li>
 				</ul>
 
 				<div th:if="${#lists.isEmpty(producto.inventarios)}"

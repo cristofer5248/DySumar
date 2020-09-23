@@ -41,11 +41,11 @@ public interface IFacturaDao extends PagingAndSortingRepository<Facturacion, Lon
 	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatusByCarritoStatus(Long id);
 
 	// rindiendo cuentas por vendedor en lista segun recientes 
-	@Query(value = "select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join fetch f.tipoFactura tp join fetch f.condicionesDPago cp join fetch f.formadepago fp join fetch f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by f.id desc", countQuery = "select count(f) from Facturacion f join f.cliente cd join cd.cliente c join f.tipoFactura tp join f.condicionesDPago cp join f.formadepago fp join f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by f.id desc")
+	@Query(value = "select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join fetch f.tipoFactura tp join fetch f.condicionesDPago cp join fetch f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by f.id desc", countQuery = "select count(f) from Facturacion f join f.cliente cd join cd.cliente c join f.tipoFactura tp join f.condicionesDPago cp join f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by f.id desc")
 	public Page<Facturacion> findAllByFecha(Pageable page, Date date1, Date date2);
 
 	// rindiendo cuentas por vendedor agrupado
-	@Query(value = "select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join fetch f.tipoFactura tp join fetch f.condicionesDPago cp join fetch f.formadepago fp join fetch f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by c.nombre asc", countQuery = "select count(f) from Facturacion f join f.cliente cd join cd.cliente c join f.tipoFactura tp join f.condicionesDPago cp join f.formadepago fp join f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by c.nombre asc")
+	@Query(value = "select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join fetch f.tipoFactura tp join fetch f.condicionesDPago cp join fetch f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by c.nombre asc", countQuery="select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join f.tipoFactura tp join f.condicionesDPago cp join f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by c.nombre asc")
 	public Page<Facturacion> findAllByFechaGroupBy(Pageable page, Date date1, Date date2);
 	//buscar si esta la cotizacion repetida en factura
 	@Query("SELECT COUNT(f) FROM Facturacion f join f.cotizacion c where c.id=?1")

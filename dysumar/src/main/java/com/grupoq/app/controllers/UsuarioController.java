@@ -96,17 +96,19 @@ public class UsuarioController {
 
 		Usuario usuario = usuarioService.findOne(id);
 //		List<?> taller = facturaService.probando(id);
-		
+
 		if (usuario == null) {
-			flash.addFlashAttribute("error", "El cliente no tiene facturas");			
+			flash.addFlashAttribute("error", "El cliente no tiene facturas");
 			return "redirect:users/ver";
 		}
 
-		model.put("usuario", usuario);		
-		model.put("titulo", "Detalle del usuario: " + usuario.getNombre()+" "+usuario.getApellidos());
+		model.put("usuario", usuario);
+		model.put("titulo", "Detalle del usuario: " + usuario.getNombre() + " " + usuario.getApellidos());
+		model.put("rolesUsuario", rolesService.findByUser_idList(usuario.getId()));
+
 		return "users/verusuario";
 	}
-	
+
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/admin/{id}")
 	public String hacerAdmin(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
@@ -117,7 +119,7 @@ public class UsuarioController {
 		List<Role> countRoles;
 		countRoles = rolesService.findByUser_idList(id);
 		System.out.print("El size es: " + countRoles.size());
-		if (countRoles.size() <= 1){
+		if (countRoles.size() <= 1) {
 			if (rolcheck == null) {
 				rol.setAuthority("ROLE_ADMIN");
 				rol.setUser_id(id);
@@ -127,6 +129,11 @@ public class UsuarioController {
 			}
 			flash.addFlashAttribute("error",
 					"El rol de ese usuario no pudo ser eliminado porque se quedaria sin ningun ROL, asignar uno primero");
+			return "redirect:/user/ver";
+		}
+		if (countRoles.size() > 1) {
+			flash.addFlashAttribute("error",
+					"No puedes poner mas de 2 roles a este usuario, remuevelo de uno primero");
 			return "redirect:/user/ver";
 		}
 		rolesService.delete(rolcheck);
@@ -156,6 +163,11 @@ public class UsuarioController {
 					"El rol de ese usuario no pudo ser eliminado porque se quedaria sin ningun ROL, asignar uno primero");
 			return "redirect:/user/ver";
 		}
+		if (countRoles.size() > 1) {
+			flash.addFlashAttribute("error",
+					"No puedes poner mas de 2 roles a este usuario, remuevelo de uno primero");
+			return "redirect:/user/ver";
+		}
 		rolesService.delete(rolcheck);
 		flash.addFlashAttribute("error", "El usuario removido de role de JEFE/A");
 		return "redirect:/user/ver";
@@ -181,6 +193,11 @@ public class UsuarioController {
 			}
 			flash.addFlashAttribute("error",
 					"El rol de ese usuario no pudo ser eliminado porque se quedaria sin ningun ROL, asignar uno primero");
+			return "redirect:/user/ver";
+		}
+		if (countRoles.size() > 1) {
+			flash.addFlashAttribute("error",
+					"No puedes poner mas de 2 roles a este usuario, remuevelo de uno primero");
 			return "redirect:/user/ver";
 		}
 		rolesService.delete(rolcheck);
@@ -210,6 +227,11 @@ public class UsuarioController {
 					"El rol de ese usuario no pudo ser eliminado porque se quedaria sin ningun ROL, asignar uno primero");
 			return "redirect:/user/ver";
 		}
+		if (countRoles.size() > 1) {
+			flash.addFlashAttribute("error",
+					"No puedes poner mas de 2 roles a este usuario, remuevelo de uno primero");
+			return "redirect:/user/ver";
+		}
 		rolesService.delete(rolcheck);
 		flash.addFlashAttribute("error", "El usuario removido de role de VENDEDOR");
 		return "redirect:/user/ver";
@@ -237,8 +259,13 @@ public class UsuarioController {
 					"El rol de ese usuario no pudo ser eliminado porque se quedaria sin ningun ROL, asignar uno primero");
 			return "redirect:/user/ver";
 		}
+		if (countRoles.size() > 1) {
+			flash.addFlashAttribute("error",
+					"No puedes poner mas de 2 roles a este usuario, remuevelo de uno primero");
+			return "redirect:/user/ver";
+		}
 		rolesService.delete(rolcheck);
-		flash.addFlashAttribute("error", "El usuario removido de role de FACTURACION");		
+		flash.addFlashAttribute("error", "El usuario removido de role de FACTURACION");
 		return "redirect:/user/ver";
 	}
 

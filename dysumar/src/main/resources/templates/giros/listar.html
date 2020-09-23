@@ -40,7 +40,8 @@
 						<tr th:each="giro: ${giros}">
 							<td
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"><a
-								
+								class="btn btn-primary btn-xs"
+								th:href="@{/clientes/giro/} + ${giro.id}"								
 								 th:text="${giro.id}"></a></td>
 							<td th:text="${giro.detalles}"></td>
 							<!-- <td	th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"><a

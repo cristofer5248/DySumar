@@ -13,9 +13,8 @@
 			<div class="card-header" th:text="${titulo}"></div>
 
 			<div class="card-body">
-				<a th:href="@{/user/ver}" class="btn btn-primary">
-					Volver</a><br></br>
-					
+				<a th:href="@{/user/ver}" class="btn btn-primary"> Volver</a><br></br>
+
 				<ul class="list-group">
 					<li class="list-group-item active" th:text="'ID: ' +${usuario.id}"></li>
 					<li class="list-group-item"
@@ -30,8 +29,14 @@
 					<li th:if="${!usuario.enabled}" class="list-group-item"
 						style="color: red" th:text="'Desactivado: '"></li>
 					<li class="list-group-item" th:text="'Genero: '+${usuario.genero}"></li>
-					<li class="list-group-item"
+					<li class="list-group-item" id="phone"
 						th:text="'Telefono: '+${usuario.telefono}"></li>
+					<li class="list-group-item" style="color: blue;">Roles:</li>
+					<li th:each="rolesuser: ${rolesUsuario}" class="list-group-item">
+						<p th:text="${rolesuser.authority}"></p>
+					</li>
+
+
 
 				</ul>
 
@@ -82,5 +87,6 @@
 	<script>
 		$(this).tooltip();
 	</script>
+	
 </body>
 </html>

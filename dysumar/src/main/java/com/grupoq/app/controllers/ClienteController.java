@@ -60,10 +60,9 @@ public class ClienteController {
 
 	@Autowired
 	private ITipoClienteService tipocliente;
-	
+
 	@Autowired
 	private IUsuarioService userservice;
-	
 
 //	@Autowired
 //	private IUploadFileService uploadFileService;
@@ -86,26 +85,27 @@ public class ClienteController {
 //				.body(recurso);
 //	}
 
-	
 	@GetMapping(value = "/vercliente/{id}")
 	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 
 		ClienteDirecciones cliente = clienteService.findByIdByFacturacion(id);
 //		List<?> taller = facturaService.probando(id);
-		
+
 		if (cliente == null) {
-			flash.addFlashAttribute("error", "El cliente no tiene facturas");			
+			flash.addFlashAttribute("error", "El cliente no tiene facturas");
 			return "redirect:clientes";
 		}
 
-		model.put("cliente", cliente);		
+		model.put("cliente", cliente);
 		model.put("titulo", "Detalle cliente: " + cliente.getCliente().getNombre());
 		return "vercliente";
 	}
 
-	@RequestMapping(value = { "/clientes", "/" }, method = RequestMethod.GET)
-	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
-			Authentication authentication, HttpServletRequest request) {
+	@RequestMapping(value = { "/clientes", "/", "/clientes/{opc}/{param}" }, method = RequestMethod.GET)
+	public String listar(@RequestParam(name = "page", defaultValue = "0") int page,
+			@PathVariable(value = "opc", required = false) String opc,
+			@PathVariable(value = "param", required = false) String param, Model model, Authentication authentication,
+			HttpServletRequest request) {
 
 		if (authentication != null) {
 			logger.info("Hola usuario autenticado, tu username es: ".concat(authentication.getName()));
@@ -145,9 +145,21 @@ public class ClienteController {
 		Pageable pageRequest = PageRequest.of(page, 4);
 		Page<Cliente> clientes = null;
 		if (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_JEFEADM")) {
-		clientes= clienteService.findAll(pageRequest);
-		}else {
-			clientes = clienteService.findAllByUsuarioPage(auth.getName(),pageRequest);
+			if (opc == null) {
+				clientes = clienteService.findAll(pageRequest);
+			} else {
+				clientes = opc.equals("giro") ? clienteService.findAllByGiroAdmin(Long.parseLong(param), pageRequest)
+						: null;
+			}
+
+		} else {
+			if (opc == null) {
+				clientes = clienteService.findAllByUsuarioPage(auth.getName(), pageRequest);
+			} else {
+				clientes = opc.equals("giro")
+						? clienteService.findAllByGiro(Long.parseLong(param), auth.getName(), pageRequest)
+						: null;
+			}
 		}
 		PageRender<Cliente> pageRender = new PageRender<Cliente>("/clientes", clientes);
 		model.addAttribute("titulo", "Listado de clientes");
@@ -156,7 +168,7 @@ public class ClienteController {
 		return "listar";
 	}
 
-	@Secured({"ROLE_ADMIN","ROLE_JEFEADMIN", "ROLE_SELLER"})
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/clienteform")
 	public String crear(Map<String, Object> model) {
 
@@ -167,7 +179,7 @@ public class ClienteController {
 		return "clienteform";
 	}
 
-	@Secured({"ROLE_ADMIN","ROLE_SELLER"})
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/clienteform/{id}")
 	public String editar(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 
@@ -189,7 +201,7 @@ public class ClienteController {
 		return "clienteform";
 	}
 
-	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})	
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/clientesave", method = RequestMethod.POST)
 	public String guardar(@Valid Cliente cliente, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status, Authentication autentication) {
@@ -201,7 +213,7 @@ public class ClienteController {
 			return "clienteform";
 		}
 		String mensajeFlash = (cliente.getId() != null) ? "Cliente editado con éxito!" : "Cliente creado con éxito!";
-		cliente.setUsuario(userservice.findByUsername(autentication.getName()));		
+		cliente.setUsuario(userservice.findByUsername(autentication.getName()));
 		clienteService.save(cliente);
 		ClienteDirecciones cd = new ClienteDirecciones();
 		cd.setCliente(cliente);
@@ -212,7 +224,7 @@ public class ClienteController {
 		return "redirect:clientes";
 	}
 
-	@Secured({"ROLE_ADMIN","ROLE_SELLER"})
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/cleliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 
@@ -226,7 +238,7 @@ public class ClienteController {
 		return "redirect:/clientes";
 	}
 
-	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/direcciones", method = RequestMethod.GET)
 	public String nuevo(Map<String, Object> model) {
 		Direccion direccion = new Direccion();
@@ -235,8 +247,8 @@ public class ClienteController {
 		model.put("nullchecker", 1);
 		return "/direcciones/form";
 	}
-	
-	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
+
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/cdireccion", method = RequestMethod.GET)
 	public String nuevoCD(Map<String, Object> model) {
 		ClienteDirecciones cd = new ClienteDirecciones();
@@ -246,7 +258,7 @@ public class ClienteController {
 		return "/direccioncliente/form";
 	}
 
-	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/direccionsave", method = RequestMethod.POST)
 	public String guardar(@Valid Direccion direccion, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
@@ -254,34 +266,38 @@ public class ClienteController {
 			model.addAttribute("titulo", "Formulario de Direccions");
 			return "/direcciones/form";
 		}
-		String mensajeFlash = (direccion.getId() != null) ? "direccion editada con éxito!" : "Direccion creada con éxito!";
+		String mensajeFlash = (direccion.getId() != null) ? "direccion editada con éxito!"
+				: "Direccion creada con éxito!";
 
-		//aqui
+		// aqui
 		clienteService.save(direccion);
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:/direcciones";
 	}
-	@RequestMapping(value = "/saveDExpress/{nombre}", method = {RequestMethod.GET}, produces = { "application/json" })
-	public @ResponseBody Long saveExpress(HttpServletRequest request, HttpServletResponse response, @PathVariable(value = "nombre", required = true) String nombre) {
+
+	@RequestMapping(value = "/saveDExpress/{nombre}", method = { RequestMethod.GET }, produces = { "application/json" })
+	public @ResponseBody Long saveExpress(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable(value = "nombre", required = true) String nombre) {
 		Direccion direccion = new Direccion();
 		direccion.setNombre(nombre);
-		clienteService.save(direccion);		
-		return direccion.getId(); 
-		
+		clienteService.save(direccion);
+		return direccion.getId();
+
 	}
-	
-	@Secured({"ROLE_ADMIN", "ROLE_SELLER"})
+
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/direccioncdsave", method = RequestMethod.POST)
-	public String guardarcd(@Valid ClienteDirecciones clientedireccion, BindingResult result, Model model, RedirectAttributes flash,
-			SessionStatus status) {
+	public String guardarcd(@Valid ClienteDirecciones clientedireccion, BindingResult result, Model model,
+			RedirectAttributes flash, SessionStatus status) {
 		if (result.hasErrors()) {
 			model.addAttribute("titulo", "Formulario de Direcciones con cliente");
 			return "/cdireccion";
 		}
-		String mensajeFlash = (clientedireccion.getId() != null) ? "Direccion en cliente editada con éxito!" : "Direccion con cliente creada con éxito!";
+		String mensajeFlash = (clientedireccion.getId() != null) ? "Direccion en cliente editada con éxito!"
+				: "Direccion con cliente creada con éxito!";
 
-		//aqui
+		// aqui
 		clienteService.savecd(clientedireccion);
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
@@ -289,15 +305,14 @@ public class ClienteController {
 	}
 
 	@GetMapping(value = "/cargar_cliente/{term}", produces = { "application/json" })
-	public @ResponseBody List<Cliente> buscarclienteJson(@PathVariable String term,Authentication authentication) {
+	public @ResponseBody List<Cliente> buscarclienteJson(@PathVariable String term, Authentication authentication) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		List<Cliente> list=null;
-		
-		if(hasRole("ROLE_ADMIN")) {
+		List<Cliente> list = null;
+
+		if (hasRole("ROLE_ADMIN")) {
 			list = clienteService.findByNombre(term);
-		}
-		else {
-		 list = clienteService.findByUsuarioLike(auth.getName(),term);
+		} else {
+			list = clienteService.findByUsuarioLike(auth.getName(), term);
 		}
 		return list;
 	}
@@ -307,6 +322,7 @@ public class ClienteController {
 		List<ClienteDirecciones> list = clientedireccionesService.findByCliente(term);
 		return list;
 	}
+
 	@GetMapping(value = "/cargar_direccionesnombre/{term}", produces = { "application/json" })
 	public @ResponseBody List<Direccion> listarDireccionesJsonall(@PathVariable String term) {
 		List<Direccion> list = clienteService.findAlld(term);

@@ -132,6 +132,18 @@ public class ClienteServiceImpl implements IClienteService {
 		
 	}
 
+	@Override
+	public Page<Cliente> findAllByGiro(Long id, String user, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return clienteDao.findAllByGiro(id, user, pageable);
+	}
+
+	@Override
+	public Page<Cliente> findAllByGiroAdmin(Long id, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return clienteDao.findAllByGiroAdmin(id, pageable);
+	}
+
 	
 
 	

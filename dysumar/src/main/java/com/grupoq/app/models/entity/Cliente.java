@@ -33,9 +33,10 @@ public class Cliente implements Serializable {
 
 	
 	@Column(length = 12)
-	private int codigo;
+	private String codigo;
 	
 	@NotEmpty
+	@Column(length = 60)
 	private String nombre;
 	
 	@NotEmpty
@@ -46,7 +47,7 @@ public class Cliente implements Serializable {
 	private String email;
 	
 	@NotEmpty
-	@Column(length = 10)
+	@Column(length = 22)
 	private String dui;
 	
 	@JsonIgnore
@@ -136,11 +137,11 @@ public class Cliente implements Serializable {
 		return nombre + " " + apellido;
 	}
 
-	public int getCodigo() {
+	public String getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(int codigo) {
+	public void setCodigo(String codigo) {
 		this.codigo = codigo;
 	}
 

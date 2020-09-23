@@ -80,21 +80,25 @@
 					</thead>
 					<tbody>
 						<tr th:each="carritos: ${cotizacion.carrito}">
-							<td th:text="${carritos.productos.id}"></td>
-							<td th:if="${carritos.status}" style="color:blue">Stock suficiente</td>
-							<td th:if="${!carritos.status}" style="color:red">Stock insuficiente</td>							
+							<td><a th:text="${carritos.productos.id}"
+								class="btn btn-primary btn-xs"
+								th:href="@{/producto/ver/} + ${carritos.productos.id}"></a></td>
+							<td th:if="${carritos.status}" style="color: blue">Stock
+								suficiente</td>
+							<td th:if="${!carritos.status}" style="color: red">Stock
+								insuficiente</td>
 							<td th:text="${carritos.productos.nombrep}"></td>
-							<td th:text="${carritos.productos.proveedor.nombre}"></td>							
 							<td th:text="${carritos.productos.marca.nombrem}"></td>
+							<td th:text="${carritos.productos.proveedor.nombre}"></td>							
 							<td th:text="'$'+${carritos.productos.precio}"></td>
 							<td th:text="${carritos.margen}+'%'"></td>
-							<td
-								th:text="'$'+${((carritos.margen)/100)*carritos.productos.precio}"></td>
-							<td th:if="${carritos.descuento<1}" th:text="${carritos.descuento*100}+'%'"></td>
+							<td th:text="'$'+${carritos.precio}"></td>
+							<td th:if="${carritos.descuento<1}"
+								th:text="${carritos.descuento*100}+'%'"></td>
 							<td th:if="${carritos.descuento==1}" th:text="'NO'"></td>
 							<td th:text="${carritos.cantidad}"></td>
 							<td
-								th:text="'$'+${#numbers.formatDecimal((((carritos.margen)/100)*carritos.precio * carritos.cantidad),0, 'COMMA', 2, 'POINT')}"></td>
+								th:text="'$'+${#numbers.formatDecimal(((carritos.precio/((100-carritos.margen)/100))* carritos.cantidad),0, 'COMMA', 2, 'POINT')}"></td>
 							<!-- 							<td th:text="${factura.cantidad}"></td> -->
 
 							<!-- 							<td th:text="${factura.cantidad * factura.servicios.precio}"></td> -->

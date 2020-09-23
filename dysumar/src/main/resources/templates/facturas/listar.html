@@ -52,8 +52,8 @@
 							<th>Cliente</th>
 							<!-- <th>Stock</th> -->
 							<th>CC</th>
-							<th>CP</th>
 							<th>FP</th>
+<!-- 							<th>FP</th> -->
 							<th>TF</th>
 							<th>Fecha</th>
 							<th>Total</th>
@@ -78,11 +78,11 @@
 							<!-- <td th:text="${facturas.}"></td> -->
 							<td th:text="${factura.cotizacion.id}"></td>
 							<td th:text="${factura.condicionesDPago.nombre}"></td>
-							<td th:text="${factura.formadepago.nombre}"></td>
+<!-- 							<td th:text="${factura.formadepago.nombre}"></td> -->
 							<td th:text="${factura.tipoFactura.nombre}"></td>
 							<td th:text="${factura.fecha}"></td>
 							
-							<td th:text="${#numbers.formatDecimal(factura.totaRegistrado,0, 'COMMA', 2, 'POINT')}"></td>
+							<td th:text="'$'+${#numbers.formatDecimal(factura.totaRegistrado,0, 'COMMA', 2, 'POINT')}"></td>
 							<!-- 							<td
 								th:if="${#request.isUserInRole('SELLER')}"><a
 								class="btn btn-success btn-xs"
@@ -186,7 +186,7 @@
 	            endRender: function ( rows, group ) {
 	                var salaryAvg = rows
 	                    .data()
-	                    .pluck(9)
+	                    .pluck(8)
 	                    .reduce( function (a, b) {
 // 	                    	alert("a:"+a+" b: "+b);
 // 	                        return a + b.replace(/[^\d]/g,licar '')*1;
@@ -200,7 +200,7 @@
 	                
 	 
 	                return $('<tr/>')
-	                    .append( '<td colspan="9" class="totalclass">Total del usuario: '+group+'</td>' )
+	                    .append( '<td colspan="9" class="totalclass">Total del vendedor: '+group+'</td>' )
 	                    
 	                    
 	                    .append( '<td class="totalclass">'+salaryAvg+'</td>' );

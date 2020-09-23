@@ -3,7 +3,16 @@
 <body>
 
 	<script type="text/javascript" th:fragment="javascript">
+	
 		$(document).ready(function() {
+			function cambiomargen() {			
+				$("#tratoh4").text("Esta cotizacion estará siendo evaluada");
+				$("#tratop").css("visibility", "visible");			
+			}
+			function nocambiomargen() {			
+				$("#tratoh4").text("Estado: Con normalidad");
+				$("#tratop").css("visibility", "visible");			
+			}
 
 var urlAjax = $("#urlAjaxpro").val();
 var urlAjaxdes = $("#urlAjaxdes").val();
@@ -88,16 +97,27 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 					
 				},
 				cambiarTotalyMargen: function(id,precio,cantidad,margen,descuento){
-					$("#total_importe_"+id).html((parseFloat(precio)* parseInt(cantidad)*(margen/100)*descuento).toFixed(2));
-					$("#precio_margen_"+id).html((parseFloat(precio)*(margen/100)).toFixed(2));
+					$("#precio_margen_"+id).html(((parseFloat(precio))/((100-margen)/100)).toFixed(2));
+					$("#total_importe_"+id).html(((parseFloat(precio)*parseInt(cantidad))/(((100-margen)/100)*descuento)).toFixed(2));
+					
 					this.calcularGranTotal();
 				},
 				calcularImporte2: function(id, precio,margen,descuento){
 					var cantidad = 1;
 					
-						cantidad = $("#cantidad_"+id).val();
+						cantidad = $("#cantidad_"+id).val();						
+						if(parseInt(margen)<=15){
+							$("#tratoh4").text("Esta cotizacion estará siendo evaluada antes de facturar");
+							$("#tratop").css("color", "orange");
+							$("#trato").css("color", "orange");
+						}else{
+							$("#tratoh4").text("Estado: Con normalidad");
+							$("#tratop").css("visibility", "visible");
+							$("#tratop").css("color", "green");
+							$("#trato").css("color", "green");
+						}
 					
-					$("#total_importe_"+id).html((parseFloat(precio)* parseInt(cantidad)*(margen/100)* descuento).toFixed(2));
+					$("#total_importe_"+id).html(((parseFloat(precio)*parseInt(cantidad))/(((100-margen)/100)*descuento)).toFixed(2));
 					this.calcularGranTotal();
 				},
 				hasProducto: function(id){

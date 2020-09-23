@@ -3,6 +3,7 @@
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <meta charset="UTF-8">
 <head th:replace="layout/layout :: head"></head>
+<link rel="stylesheet" th:href="@{/css/tbwoborder.css}" />
 
 <body>
 
@@ -114,65 +115,68 @@
 				<!-- <div th:if="${#lists.isEmpty(factura)}"
 					class="alert alert-info my-4"
 					th:text="'No hay facturas de este producto ' + ${producto.nombrep} + ' ' + ${producto.codigo}"></div> -->
+				<div style="overflow-x: auto;">
+					<table class="table table-bordered table-striped my-4" id="carrito">
+						<thead class="thead-inverse">
+							<tr>
+								<th>ID</th>
+								<th style="font-size: 10px" sec:authorize="hasAnyRole('ROLE_ADMIN')">ID carrito</th>
+								<th style="font-size: 10px">CO ID</th>
+								<th>Producto</th>
+								<th>Proveedor</th>
+								<th>Marca</th>
+								<th>Costo</th>
+								<th>Margen</th>
+								<th>Precio</th>
+								<th>Descuento</th>
+								<th>Cantidad</th>
+								<th>Total</th>
+								<th sec:authorize="hasAnyRole('ROLE_ADMIN')">Status</th>
+								<th sec:authorize="hasAnyRole('ROLE_ADMIN')">Stock actual</th>
 
-				<table class="table table-bordered table-striped my-4">
-					<thead class="thead-inverse">
-						<tr>
-							<th>ID</th>
-							<th>ID carrito</th>
-							<th>Producto</th>
-							<th>Proveedor</th>
-							<th>Marca</th>
-							<th>Costo</th>
-							<th>Margen</th>
-							<th>Precio</th>
-							<th>Descuento</th>
-							<th>Cantidad</th>
-							<th>Total</th>
-							<th>Status</th>
-							<th>Stock actual</th>
+								<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">ver</th> -->
+								<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th> -->
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="carritos: ${facturaciones.cotizacion.carrito}">
+								<td th:text="${carritos.productos.id}"></td>
+								<td th:text="${carritos.id}"></td>
+								<td style="font-size: 10px"
+									th:text="${carritos.cotizacionid.id}"></td>
+								<td th:text="${carritos.productos.nombrep}"></td>
+								<td th:text="${carritos.productos.proveedor.nombre}"></td>
+								<td th:text="${carritos.productos.marca.nombrem}"></td>
+								<td th:text="'$'+${carritos.productos.precio}"></td>
+								<td th:text="${carritos.margen}+'%'"></td>
+								<td
+									th:text="'$'+${#numbers.formatDecimal(((carritos.productos.precio)/((100-carritos.margen)/100)),0,'COMMA',3,'POINT')}"></td>
+								<td th:if="${carritos.descuento<1}"
+									th:text="${carritos.descuento*100}+'%'"></td>
+								<td th:if="${carritos.descuento==1}" th:text="'NO'"></td>
+								<td th:text="${carritos.cantidad}"></td>
+								<td
+									th:text="${#numbers.formatDecimal(((carritos.productos.precio)/((100-carritos.margen)/100))*carritos.cantidad,0, 'COMMA', 3, 'POINT')}"></td>
+								<td sec:authorize="hasAnyRole('ROLE_ADMIN')"
+									th:text="${carritos.status}"></td>
+								<td sec:authorize="hasAnyRole('ROLE_ADMIN')"
+									th:text="${carritos.productos.stock}"></td>
+								<!-- 							<td th:text="${factura.cantidad}"></td> -->
 
-							<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">ver</th> -->
-							<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th> -->
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="carritos: ${facturaciones.cotizacion.carrito}">
-							<td th:text="${carritos.productos.id}"></td>
-							<td sec:authorize="hasAnyRole('ROLE_ADMIN')"
-								th:text="${carritos.id}"></td>
-							<td th:text="${carritos.productos.nombrep}"></td>
-							<td th:text="${carritos.productos.proveedor.nombre}"></td>
-							<td th:text="${carritos.productos.marca.nombrem}"></td>
-							<td th:text="'$'+${carritos.productos.precio}"></td>
-							<td th:text="${carritos.margen}+'%'"></td>
-							<td
-								th:text="'$'+${((carritos.margen)/100)*carritos.productos.precio}"></td>
-							<td th:if="${carritos.descuento<1}"
-								th:text="${carritos.descuento*100}+'%'"></td>
-							<td th:if="${carritos.descuento==1}" th:text="'NO'"></td>
-							<td th:text="${carritos.cantidad}"></td>
-							<td
-								th:text="'$'+${#numbers.formatDecimal((((carritos.margen)/100)*carritos.precio * carritos.cantidad* carritos.descuento),0, 'COMMA', 2, 'POINT')}"></td>
-							<td sec:authorize="hasAnyRole('ROLE_ADMIN')"
-								th:text="${carritos.status}"></td>
-							<td sec:authorize="hasAnyRole('ROLE_ADMIN')"
-								th:text="${carritos.productos.stock}"></td>
-							<!-- 							<td th:text="${factura.cantidad}"></td> -->
+								<!-- 							<td th:text="${factura.cantidad * factura.servicios.precio}"></td> -->
+								<!-- 							<td sec:authorize="hasRole('ROLE_ADMIN')"><a -->
+								<!-- 								class="btn btn-primary btn-xs" -->
+								<!-- 								th:href="@{'/factura/ver/' + ${factura.id}}" th:text="'detalle'"></a></td> -->
+								<!-- 							<td sec:authorize="hasRole('ROLE_ADMIN')"><a -->
+								<!-- 								class="btn btn-danger btn-xs" -->
+								<!-- 								th:href="@{'/factura/eliminar/' + ${codigofa}}" -->
+								<!-- 								th:text="'eliminar'" -->
+								<!-- 								onclick="return confirm('Â¿Estas seguro que desea eliminar la factura?');"></a></td> -->
+							</tr>
+						</tbody>
 
-							<!-- 							<td th:text="${factura.cantidad * factura.servicios.precio}"></td> -->
-							<!-- 							<td sec:authorize="hasRole('ROLE_ADMIN')"><a -->
-							<!-- 								class="btn btn-primary btn-xs" -->
-							<!-- 								th:href="@{'/factura/ver/' + ${factura.id}}" th:text="'detalle'"></a></td> -->
-							<!-- 							<td sec:authorize="hasRole('ROLE_ADMIN')"><a -->
-							<!-- 								class="btn btn-danger btn-xs" -->
-							<!-- 								th:href="@{'/factura/eliminar/' + ${codigofa}}" -->
-							<!-- 								th:text="'eliminar'" -->
-							<!-- 								onclick="return confirm('Â¿Estas seguro que desea eliminar la factura?');"></a></td> -->
-						</tr>
-					</tbody>
-
-				</table>
+					</table>
+				</div>
 
 			</div>
 		</div>
@@ -208,5 +212,46 @@
 			}
 		}
 	</script>
+	<script th:inline="javascript" th:if="${!activePivot}">
+		$('#carrito').DataTable({
+			"paging" : false,
+
+			"searching" : false,
+			"info" : false
+		});
+	</script>
+	<script th:inline="javascript" th:if="${activePivot}">
+		$('#carrito').DataTable(
+				{
+					"paging" : false,
+
+					"searching" : false,
+					"info" : false,
+					rowGroup : {
+						startRender : null,
+						endRender : function(rows, group) {
+							var salaryAvg = rows.data().pluck(11).reduce(
+									function(a, b) {
+										return parseFloat(a) + parseFloat(b);
+									});
+
+							return $('<tr/>').append(
+									'<td colspan="11" class="totalclass">Cotizacion: '
+											+ group + '</td>')
+
+							.append(
+									'<td class="totalclass">' + salaryAvg
+											+ '</td>');
+						},
+						dataSrc : 2
+					}
+				});
+	</script>
+	<script>
+	function cambiarcodigo(){
+		$('#statuschangeform').submit();
+	}
+	</script>
+
 </body>
 </html>

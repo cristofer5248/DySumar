@@ -38,7 +38,7 @@ public class ProductoController {
 
 	@Autowired
 	private IProductoService productoService;
-	
+
 	@Autowired
 	INotificacionesService notificacionesService;
 
@@ -155,7 +155,8 @@ public class ProductoController {
 		}
 		productoService.save(producto);
 		status.setComplete();
-		nuevaNotificacion("fas fa-box-open", "Producto '"+producto.getNombrep()+"' agregado o modificado","/producto/ver/"+producto.getId(), "blue");
+		nuevaNotificacion("fas fa-box-open", "Producto '" + producto.getNombrep() + "' agregado o modificado",
+				"/producto/ver/" + producto.getId(), "blue");
 		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:/producto/listar";
 	}
@@ -168,7 +169,7 @@ public class ProductoController {
 			try {
 				productoService.delete(id);
 				flash.addFlashAttribute("success", "Producto eliminado con éxito!");
-				nuevaNotificacion("fas fa-box-open", "Producto con ID'"+id+"' eliminado!","#", "red");
+				nuevaNotificacion("fas fa-box-open", "Producto con ID'" + id + "' eliminado!", "#", "red");
 			} catch (Exception e) {
 				flash.addFlashAttribute("error",
 						"El producto posiblemente tiene registros de inventariado, no se puede eliminar!");
@@ -229,15 +230,18 @@ public class ProductoController {
 		}
 		model.put("producto", producto);
 		model.put("titulo", "Detalle producto: " + producto.getNombrep());
+		double precioventa = (producto.getPrecio()/((100-producto.getMargen())/100));
+		model.put("precioventa", precioventa);
 		return "/productos/ver";
 	}
-	public void nuevaNotificacion(String icono, String nombre, String url,String color) {
+
+	public void nuevaNotificacion(String icono, String nombre, String url, String color) {
 		Notificaciones noti = new Notificaciones();
 		noti.setFecha(new Date());
 		noti.setIcono(icono);
 		noti.setNombre(nombre);
 		noti.setUrl(url);
 		noti.setColor(color);
-		notificacionesService.save(noti);		
+		notificacionesService.save(noti);
 	}
 }

@@ -29,8 +29,7 @@
 					<!-- 						</div> -->
 					<!-- 					</div>					 -->
 					<div id="trato">
-						<h4 id="tratoh4" onclick="cambiomargen();">¿Generar un nuevo
-							trato?</h4>
+						<h4 id="tratoh4">Estado: Con normalidad</h4>
 						<p style="visibility: hidden;" id="tratop">
 							<i class="far fa-handshake fa-3x"></i>
 						</p>
@@ -83,6 +82,7 @@
 		$('#mydate').datepicker({
 			format : "dd-mm-yyyy"
 		});
+		
 	</script>
 	<input type="hidden" id="urlAjaxpro"
 		th:value="@{/factura/cargar_producto/}" />
@@ -91,16 +91,11 @@
 	<script th:replace="facturas/js/autocomplete :: javascript"></script>
 
 	<script>
-		function cambiomargen() {
-			console.log('aqui toy');
-			$("#tratoh4").text("Esta cotizacion estará siendo evaluada");
-			$("#tratop").css("visibility", "visible");
+	
+	$('input[name="margen_id[]"]').prop("disabled", false);
+	$('.columnmargen').css("display", "block");
+	$('#columnmargen12').css("display", "block");
 
-			$('input[name="margen_id[]"]').prop("disabled", false);
-
-			$('.columnmargen').css("display", "block");
-			$('#columnmargen12').css("display", "block");
-		}
 	</script>
 </body>
 </html>
