@@ -111,161 +111,91 @@ public class UsuarioController {
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/admin/{id}")
-	public String hacerAdmin(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
-		Role rol = new Role();
+	public String hacerAdmin(@PathVariable(value = "id") Long id, RedirectAttributes flash) {		
 		Role rolcheck = new Role();
 		rolcheck = rolesService.findByUser_idByAuthority(id, "ROLE_ADMIN");
-
 		List<Role> countRoles;
 		countRoles = rolesService.findByUser_idList(id);
-		System.out.print("El size es: " + countRoles.size());
-		if (countRoles.size() <= 1) {
-			if (rolcheck == null) {
-				rol.setAuthority("ROLE_ADMIN");
-				rol.setUser_id(id);
-				rolesService.save(rol);
-				flash.addFlashAttribute("success", "El usuario ahora tiene rol de ADMINISTRADOR");
-				return "redirect:/user/ver";
-			}
-			flash.addFlashAttribute("error",
-					"El rol de ese usuario no pudo ser eliminado porque se quedaria sin ningun ROL, asignar uno primero");
-			return "redirect:/user/ver";
-		}
-		if (countRoles.size() > 1) {
-			flash.addFlashAttribute("error",
-					"No puedes poner mas de 2 roles a este usuario, remuevelo de uno primero");
-			return "redirect:/user/ver";
-		}
-		rolesService.delete(rolcheck);
-		flash.addFlashAttribute("error", "El usuario removido de role de ADMINISTRADOR");
+		String mensaje = checkRoles(countRoles, rolcheck, id, "ROLE_ADMIN");
+		mensaje+="Administrador";
+		String tipo = (rolcheck==null)?"success":"error";
+		flash.addFlashAttribute(tipo, mensaje);
 		return "redirect:/user/ver";
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })
 	@RequestMapping(value = "/adminJ/{id}")
 	public String hacerJefe(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
-		Role rol = new Role();
 		Role rolcheck = new Role();
 		rolcheck = rolesService.findByUser_idByAuthority(id, "ROLE_JEFEADM");
-
 		List<Role> countRoles;
 		countRoles = rolesService.findByUser_idList(id);
-		System.out.print("El size es: " + countRoles.size());
-		if (countRoles.size() <= 1) {
-			if (rolcheck == null) {
-				rol.setAuthority("ROLE_JEFEADM");
-				rol.setUser_id(id);
-				rolesService.save(rol);
-				flash.addFlashAttribute("success", "El usuario ahora tiene rol de JEFE/A");
-				return "redirect:/user/ver";
-			}
-			flash.addFlashAttribute("error",
-					"El rol de ese usuario no pudo ser eliminado porque se quedaria sin ningun ROL, asignar uno primero");
-			return "redirect:/user/ver";
-		}
-		if (countRoles.size() > 1) {
-			flash.addFlashAttribute("error",
-					"No puedes poner mas de 2 roles a este usuario, remuevelo de uno primero");
-			return "redirect:/user/ver";
-		}
-		rolesService.delete(rolcheck);
-		flash.addFlashAttribute("error", "El usuario removido de role de JEFE/A");
+		String mensaje = checkRoles(countRoles, rolcheck, id, "ROLE_JEFEADM");
+		mensaje+="Jefe/a de administracion";
+		String tipo = (rolcheck==null)?"success":"error";
+		flash.addFlashAttribute(tipo, mensaje);
 		return "redirect:/user/ver";
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })
 	@RequestMapping(value = "/adminINV/{id}")
-	public String hacerInv(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
-		Role rol = new Role();
+	public String hacerInv(@PathVariable(value = "id") Long id, RedirectAttributes flash) {		
 		Role rolcheck = new Role();
 		rolcheck = rolesService.findByUser_idByAuthority(id, "ROLE_INV");
-
 		List<Role> countRoles;
 		countRoles = rolesService.findByUser_idList(id);
-		System.out.print("El size es: " + countRoles.size());
-		if (countRoles.size() <= 1) {
-			if (rolcheck == null) {
-				rol.setAuthority("ROLE_INV");
-				rol.setUser_id(id);
-				rolesService.save(rol);
-				flash.addFlashAttribute("success", "El usuario ahora tiene rol de JEFE DE INVENTARIO");
-				return "redirect:/user/ver";
-			}
-			flash.addFlashAttribute("error",
-					"El rol de ese usuario no pudo ser eliminado porque se quedaria sin ningun ROL, asignar uno primero");
-			return "redirect:/user/ver";
-		}
-		if (countRoles.size() > 1) {
-			flash.addFlashAttribute("error",
-					"No puedes poner mas de 2 roles a este usuario, remuevelo de uno primero");
-			return "redirect:/user/ver";
-		}
-		rolesService.delete(rolcheck);
-		flash.addFlashAttribute("error", "El usuario removido de role de JEFE DE INVENTARIO");
+		String mensaje = checkRoles(countRoles, rolcheck, id, "ROLE_INV");
+		mensaje+="Inventario";
+		String tipo = (rolcheck==null)?"success":"error";
+		flash.addFlashAttribute(tipo, mensaje);
 		return "redirect:/user/ver";
+	}
+	public String checkRoles(List<Role> countRoles, Role rolcheck, Long id, String rolName) {
+		Role rol = new Role();			
+		if(countRoles.size()<2 && rolcheck==null) {
+			//no tiene ese rol y tiene menos de 2 roles
+			rol.setAuthority(rolName);
+			rol.setUser_id(id);
+			rolesService.save(rol);						
+			return "Al usuario se le asigno el rol de ";
+		}
+		if(rolcheck!=null && countRoles.size()!=1) {
+			//tiene repetido el rol y solo tiene uno que es ese mismo
+			rol.setAuthority(rolName);
+			rol.setUser_id(id);
+			rolesService.delete(rolcheck);
+			return "Usuario removido del rol de ";
+		}
+		return countRoles.size()==2?"Error, un usuario no puede tener mas de dos roles, remuevelo de uno":"Error, el usuario se quedaria sin ningun rol, no puede remover el rol de ";		
+		
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })
 	@RequestMapping(value = "/adminS/{id}")
-	public String hacerSeller(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
-		Role rol = new Role();
+	public String hacerSeller(@PathVariable(value = "id") Long id, RedirectAttributes flash) {	
 		Role rolcheck = new Role();
 		rolcheck = rolesService.findByUser_idByAuthority(id, "ROLE_SELLER");
-
 		List<Role> countRoles;
 		countRoles = rolesService.findByUser_idList(id);
-		System.out.print("El size es: " + countRoles.size());
-		if (countRoles.size() <= 1) {
-			if (rolcheck == null) {
-				rol.setAuthority("ROLE_SELLER");
-				rol.setUser_id(id);
-				rolesService.save(rol);
-				flash.addFlashAttribute("success", "El usuario ahora tiene rol de VENDEDOR");
-				return "redirect:/user/ver";
-			}
-			flash.addFlashAttribute("error",
-					"El rol de ese usuario no pudo ser eliminado porque se quedaria sin ningun ROL, asignar uno primero");
-			return "redirect:/user/ver";
-		}
-		if (countRoles.size() > 1) {
-			flash.addFlashAttribute("error",
-					"No puedes poner mas de 2 roles a este usuario, remuevelo de uno primero");
-			return "redirect:/user/ver";
-		}
-		rolesService.delete(rolcheck);
-		flash.addFlashAttribute("error", "El usuario removido de role de VENDEDOR");
+		String mensaje = checkRoles(countRoles, rolcheck, id, "ROLE_SELLER");
+		mensaje+="Vendedor";
+		String tipo = (rolcheck==null)?"success":"error";
+		flash.addFlashAttribute(tipo, mensaje);
 		return "redirect:/user/ver";
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })
 	@RequestMapping(value = "/adminF/{id}")
-	public String hacerFacturero(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
-		Role rol = new Role();
+	public String hacerFacturero(@PathVariable(value = "id") Long id, RedirectAttributes flash) {		
 		Role rolcheck = new Role();
 		rolcheck = rolesService.findByUser_idByAuthority(id, "ROLE_FACT");
 
 		List<Role> countRoles;
 		countRoles = rolesService.findByUser_idList(id);
-		System.out.print("El size es: " + countRoles.size());
-		if (countRoles.size() <= 1) {
-			if (rolcheck == null) {
-				rol.setAuthority("ROLE_FACT");
-				rol.setUser_id(id);
-				rolesService.save(rol);
-				flash.addFlashAttribute("success", "El usuario ahora tiene rol de FACTURACION");
-				return "redirect:/user/ver";
-			}
-			flash.addFlashAttribute("error",
-					"El rol de ese usuario no pudo ser eliminado porque se quedaria sin ningun ROL, asignar uno primero");
-			return "redirect:/user/ver";
-		}
-		if (countRoles.size() > 1) {
-			flash.addFlashAttribute("error",
-					"No puedes poner mas de 2 roles a este usuario, remuevelo de uno primero");
-			return "redirect:/user/ver";
-		}
-		rolesService.delete(rolcheck);
-		flash.addFlashAttribute("error", "El usuario removido de role de FACTURACION");
+		String mensaje = checkRoles(countRoles, rolcheck, id, "ROLE_FACT");
+		mensaje+="Facturacion";
+		String tipo = (rolcheck==null)?"success":"error";
+		flash.addFlashAttribute(tipo, mensaje);
 		return "redirect:/user/ver";
 	}
 
