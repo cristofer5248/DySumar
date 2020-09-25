@@ -16,14 +16,14 @@
 			<div class="card-body">
 
 				<div class="card-title">
-					<a
+					<!-- <a
 						th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('FACT')}"
-						th:href="@{/factura/nuevof}" class="btn btn-primary btn-xs">Facturar</a>
-					<a th:if="${#request.isUserInRole('SELLER')}"
-						th:href="@{/factura/nuevof}" class="btn btn-primary btn-xs">REMISION</a>
+						th:href="@{/factura/nuevof}" class="btn btn-primary btn-xs">Facturar</a> -->
+<!-- 					<a th:if="${#request.isUserInRole('SELLER')}" -->
+<!-- 						th:href="@{/factura/nuevof}" class="btn btn-primary btn-xs">REMISION</a> -->
 					<a
 						th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('SELLER')}"
-						th:href="@{/factura/nuevo}" class="btn btn-primary btn-xs">Cotizár</a>
+						th:href="@{/factura/nuevo}" class="btn btn-primary btn-xs">Crear remision o cotizacion</a>
 					<button type="button" class="btn btn-info" data-toggle="modal"
 						data-target="#filterByDate" data-whatever="@mdo">Filtrar</button>
 					<form id="formsearch" class="searchbox"

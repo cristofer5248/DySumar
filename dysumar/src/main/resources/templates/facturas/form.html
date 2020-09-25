@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="layout/layout :: head"></head>
+<meta charset="utf-8">
 <body>
 
 	<header th:replace="layout/layout :: header"></header>
@@ -21,6 +22,17 @@
 
 				<form th:action="@{/factura/savefactura}" th:object="${facturacion}"
 					method="post" enctype="multipart/form-data">
+<!-- 					<div class="form-group row">
+						<label for="cliente" class="col-sm-2 col-form-label"
+							th:text="'¿Solo cotizacion?'"></label>
+						<div class="col-sm-6">
+							<label class="switch"> <input type="checkbox"
+								onchange="checkopc();" id="opc" /> <span class="slider round"></span>
+							</label><input type="number" name="tipoC" id="tipoC"
+								style="visibility: hidden" />
+						</div>
+
+					</div> -->
 					<div class="form-group row">
 						<label for="cliente" class="col-sm-2 col-form-label"
 							th:text="'Tus clientes'"></label>
@@ -147,6 +159,15 @@
 		$('#mydate').datepicker({
 			format : "yyyy-mm-dd"
 		});
+/* 		function checkopc() {
+			if ($('#opc').is(':checked')) {
+				$('#tipoC').val(1);
+			}
+
+			else {
+				$('#tipoC').val(0);
+			}
+		} */
 	</script>
 
 

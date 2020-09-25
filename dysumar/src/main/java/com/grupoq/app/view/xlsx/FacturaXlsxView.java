@@ -27,7 +27,7 @@ public class FacturaXlsxView extends AbstractXlsView {
 	protected void buildExcelDocument(Map<String, Object> model, Workbook workbook, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
-		response.setHeader("Content-Disposition", "attachment; filename=\"Detalles_de_factura.xlsx\"");
+		response.setHeader("Content-Disposition", "attachment; filename=\"Detalles_de_factura.xls\"");
 		Facturacion factura = (Facturacion) model.get("facturaciones");
 		Sheet sheet = workbook.createSheet("Detalles");
 		sheet.autoSizeColumn(0);

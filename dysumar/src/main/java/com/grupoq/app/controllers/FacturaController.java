@@ -113,8 +113,8 @@ public class FacturaController {
 						model.addAttribute("activePivot", true);
 					} else {
 						facturacion = facturaservice.findAllByFecha(pageRequest, date1, date2);
-						System.out.print("Entro a 'admin' tamaño:"+facturacion.getSize()+"\n");
-						System.out.print("ID:"+facturacion.getNumberOfElements()+"\n");
+						System.out.print("Entro a 'admin' tamaño:" + facturacion.getSize() + "\n");
+						System.out.print("ID:" + facturacion.getNumberOfElements() + "\n");
 						model.addAttribute("activePivot", false);
 					}
 //				sPath = facturacion!=null ? "listar/fechas/"+param+"/"+param2 : "listar";  
@@ -227,7 +227,7 @@ public class FacturaController {
 	public String guardarfactura(@Valid Facturacion facturacion, BindingResult result, Model model,
 			RedirectAttributes flash, SessionStatus status, Authentication authentication, HttpServletRequest request) {
 		facturacion.setaCuentade(usuarioService.findByUsername(authentication.getName()));
-		
+
 		if (result.hasErrors()) {
 			model.addAttribute("titulo", "Formulario de Facturacions");
 			if (facturacion.getCotizacion() == null) {
@@ -299,13 +299,14 @@ public class FacturaController {
 			// fin
 			// poniendo total en factura entity
 
-			totalParaFactura += ((pro.getPrecio() / ((100-pro.getMargen())/100)) * pro.getCantidad() * pro.getDescuento());
+			totalParaFactura += ((pro.getPrecio() / ((100 - pro.getMargen()) / 100)) * pro.getCantidad()
+					* pro.getDescuento());
 		}
 		facturacion.setTotaRegistrado(totalParaFactura);
 		// duplicaremos la cotizacin para despues no haber errores
 		boolean cotiRepeated = facturaservice.cotizacionRepetida(facturacion.getCotizacion().getId()) > 0 ? true
 				: false;
-		System.out.print("El estado es "+cotiRepeated);
+		System.out.print("El estado es " + cotiRepeated);
 		if (cotiRepeated) {
 			Cotizacion nCotizacion = new Cotizacion();
 			nCotizacion.setFecha(new Date());
@@ -322,10 +323,10 @@ public class FacturaController {
 				carroNuevo.setProductos(c.getProductos());
 				carritoitemsservice.save(carroNuevo);
 			}
-			
+
 			facturacion.setCotizacion(nCotizacion);
-			
-			//fin guardamos
+
+			// fin guardamos
 		}
 
 		facturaservice.save(facturacion);
@@ -373,13 +374,20 @@ public class FacturaController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String guardar(@RequestParam(name = "item_id[]", required = false) Long[] itemId,
 			@RequestParam(name = "cantidad[]", required = false) Integer[] cantidad,
-			@RequestParam(name = "margen_id[]", required = false) double[] margen, Model model,
-			RedirectAttributes flash, SessionStatus status) throws ParseException {
+			@RequestParam(name = "margen_id[]", required = false) double[] margen,
+			@RequestParam(name = "tipoC", required = true) int tipoC, Model model, RedirectAttributes flash,
+			SessionStatus status) throws ParseException {
+
 //		if (result.hasErrors()) {
 //			model.addAttribute("titulo", "Inventariado");
 //			return "/producto/listar";
 //		}
-		String mensajeFlash = "Cotizacion registrada con éxito!";
+		String mensajeFlash;
+		/*
+		 * para probar que el switch funciona if(tipoC==1) {
+		 * System.out.print("\n"+tipoC+"\n"); return "redirect:/factura/listar"; }
+		 */
+
 		if (itemId == null || itemId.length == 0) {
 			model.addAttribute("titulo", "Nuevo ingreso");
 			model.addAttribute("error", "Error: No puede haber linea productos vacias!");
@@ -416,7 +424,7 @@ public class FacturaController {
 
 			// margen default
 			// evaluar si era un cotizacin evaluada
-			//aqui pondremos si es menor a 15 entoncs sera avaluada
+			// aqui pondremos si es menor a 15 entoncs sera avaluada
 
 			if (margen[i] <= 15) {
 
@@ -438,16 +446,22 @@ public class FacturaController {
 			}
 			carrito.setCantidad(cantidad[i]);
 			carrito.setPrecio(producto.getPrecio());
-			nuevaNotificacion("fas fa-cart-plus", "Nueva cotizacion realizada",
-					"/cotizacion/ver/" + carrito.getCotizacionid().getId(), "blue");
+			String msjCo_Remi = (tipoC == 1) ? "Nueva cotizacion realizada" : "Nueva remesion realizada";
+			nuevaNotificacion("fas fa-cart-plus", msjCo_Remi, "/cotizacion/ver/" + carrito.getCotizacionid().getId(),
+					"blue");
 			carritoitemsservice.save(carrito);
 
 		}
-		mensajeFlash = mensajeFlash + " \nEl codigo de cotizacion es: " + cotizacion.getId();
-		flash.addFlashAttribute("error", "Recuerde no borrar los datos con el campo en rojo");
+		mensajeFlash = (tipoC == 1) ? " \nEl codigo de cotizacion es: " + cotizacion.getId()
+				: "El codigo de la remision es: " + cotizacion.getId();
+		String mensajeflash2 = (tipoC == 1)
+				? "No olvidar el numero de la cotizacion para poder asi consultar y posteriormente usarla para una remision"
+				: "Recuerde no borrar los datos con el campo en rojo de su cotizacion";
+		flash.addFlashAttribute("error", mensajeflash2);
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
-		return "redirect:/factura/nuevof/" + cotizacion.getId();
+		return (tipoC == 1) ? "redirect:/factura/listar/" : "redirect:/factura/nuevof/" + cotizacion.getId();
+
 	}
 
 //para ver el detalle de la FACTURA
@@ -465,7 +479,7 @@ public class FacturaController {
 //		model.put("proveedor", facturacion.get(0).getProducto().getProveedor().getNombre());
 //		model.put("fecha", facturacion.get(0).getFecha().toString());
 		model.put("codigofa", id);
-		model.put("titulo", "Detalle de factura # : " + id);		
+		model.put("titulo", "Detalle de factura # : " + id);
 		return "/facturas/ver";
 	}
 

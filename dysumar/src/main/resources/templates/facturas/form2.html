@@ -34,6 +34,13 @@
 							<i class="far fa-handshake fa-3x"></i>
 						</p>
 					</div>
+					<div>
+						<h4>¿Solo cotizacion?</h4>
+						<label class="switch"> <input type="checkbox"
+							onchange="checkopc();" id="opc" /> <span class="slider round"></span>
+						</label><input type="number" name="tipoC" id="tipoC"
+							style="visibility: hidden" />
+					</div>
 					<div class="form-group row">
 						<label for="cargar_producto" class="col-sm-2 col-form-label"
 							th:text="'Busqueda de Productos'"></label>
@@ -48,11 +55,12 @@
 						<thead>
 							<tr>
 								<th>Nombre</th>
-								<th th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">Costo</th>
-								<th style="visibility:hidden">Descuento</th>
+								<th
+									th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">Costo</th>
+								<th style="visibility: hidden">Descuento</th>
 								<th>Precio</th>
-								<th id="columnmargen12" style="display: none;">%Margen</th>								
-<!-- 								<th style="display: none;">Descuento</th> -->															
+								<th id="columnmargen12" style="display: none;">%Margen</th>
+								<!-- 								<th style="display: none;">Descuento</th> -->
 								<th>Cantidad</th>
 								<th>Total</th>
 								<th>Eliminar</th>
@@ -82,7 +90,6 @@
 		$('#mydate').datepicker({
 			format : "dd-mm-yyyy"
 		});
-		
 	</script>
 	<input type="hidden" id="urlAjaxpro"
 		th:value="@{/factura/cargar_producto/}" />
@@ -91,11 +98,20 @@
 	<script th:replace="facturas/js/autocomplete :: javascript"></script>
 
 	<script>
-	
-	$('input[name="margen_id[]"]').prop("disabled", false);
-	$('.columnmargen').css("display", "block");
-	$('#columnmargen12').css("display", "block");
+		$('input[name="margen_id[]"]').prop("disabled", false);
+		$('.columnmargen').css("display", "block");
+		$('#columnmargen12').css("display", "block");
 
+		$('#tipoC').val(0);
+		function checkopc() {
+			if ($('#opc').is(':checked')) {
+				$('#tipoC').val(1);
+			}
+
+			else {
+				$('#tipoC').val(0);
+			}
+		}
 	</script>
 </body>
 </html>
