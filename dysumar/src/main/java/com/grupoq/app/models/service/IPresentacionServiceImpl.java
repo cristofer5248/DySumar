@@ -19,6 +19,19 @@ public class IPresentacionServiceImpl implements IPresentacionService {
 		// TODO Auto-generated method stub
 		return (List<Presentacion>) presentacionDao.findAll();
 	}
+
+	@Override
+	public List<Presentacion> findByOrderByUnidadDesc() {
+		// TODO Auto-generated method stub
+		return presentacionDao.findByOrderByUnidadAsc();
+	}
+
+	@Override
+	public void save(Presentacion presentacion) {
+		// TODO Auto-generated method stub
+		presentacionDao.save(presentacion);
+		
+	}
 	
 
 }

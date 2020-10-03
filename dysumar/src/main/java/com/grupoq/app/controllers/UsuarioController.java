@@ -92,13 +92,12 @@ public class UsuarioController {
 
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })
 	@GetMapping(value = "/verusuario/{id}")
-	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+	public String ver(@PathVariable(value = "id", required = false) Long id, Map<String, Object> model,
+			RedirectAttributes flash) {
 
 		Usuario usuario = usuarioService.findOne(id);
-//		List<?> taller = facturaService.probando(id);
-
 		if (usuario == null) {
-			flash.addFlashAttribute("error", "El cliente no tiene facturas");
+			flash.addFlashAttribute("error", "No pudimos encontrar el usuario.");
 			return "redirect:users/ver";
 		}
 
@@ -111,14 +110,14 @@ public class UsuarioController {
 
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/admin/{id}")
-	public String hacerAdmin(@PathVariable(value = "id") Long id, RedirectAttributes flash) {		
+	public String hacerAdmin(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		Role rolcheck = new Role();
 		rolcheck = rolesService.findByUser_idByAuthority(id, "ROLE_ADMIN");
 		List<Role> countRoles;
 		countRoles = rolesService.findByUser_idList(id);
 		String mensaje = checkRoles(countRoles, rolcheck, id, "ROLE_ADMIN");
-		mensaje+="Administrador";
-		String tipo = (rolcheck==null)?"success":"error";
+		mensaje += "Administrador";
+		String tipo = (rolcheck == null) ? "success" : "error";
 		flash.addFlashAttribute(tipo, mensaje);
 		return "redirect:/user/ver";
 	}
@@ -131,90 +130,88 @@ public class UsuarioController {
 		List<Role> countRoles;
 		countRoles = rolesService.findByUser_idList(id);
 		String mensaje = checkRoles(countRoles, rolcheck, id, "ROLE_JEFEADM");
-		mensaje+="Jefe/a de administracion";
-		String tipo = (rolcheck==null)?"success":"error";
+		mensaje += "Jefe/a de administracion";
+		String tipo = (rolcheck == null) ? "success" : "error";
 		flash.addFlashAttribute(tipo, mensaje);
 		return "redirect:/user/ver";
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })
 	@RequestMapping(value = "/adminINV/{id}")
-	public String hacerInv(@PathVariable(value = "id") Long id, RedirectAttributes flash) {		
+	public String hacerInv(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		Role rolcheck = new Role();
 		rolcheck = rolesService.findByUser_idByAuthority(id, "ROLE_INV");
 		List<Role> countRoles;
 		countRoles = rolesService.findByUser_idList(id);
 		String mensaje = checkRoles(countRoles, rolcheck, id, "ROLE_INV");
-		mensaje+="Inventario";
-		String tipo = (rolcheck==null)?"success":"error";
+		mensaje += "Inventario";
+		String tipo = (rolcheck == null) ? "success" : "error";
 		flash.addFlashAttribute(tipo, mensaje);
 		return "redirect:/user/ver";
 	}
+
 	public String checkRoles(List<Role> countRoles, Role rolcheck, Long id, String rolName) {
-		Role rol = new Role();			
-		if(countRoles.size()<2 && rolcheck==null) {
-			//no tiene ese rol y tiene menos de 2 roles
+		Role rol = new Role();
+		if (countRoles.size() < 2 && rolcheck == null) {
+			// no tiene ese rol y tiene menos de 2 roles
 			rol.setAuthority(rolName);
 			rol.setUser_id(id);
-			rolesService.save(rol);						
+			rolesService.save(rol);
 			return "Al usuario se le asigno el rol de ";
 		}
-		if(rolcheck!=null && countRoles.size()!=1) {
-			//tiene repetido el rol y solo tiene uno que es ese mismo
+		if (rolcheck != null && countRoles.size() != 1) {
+			// tiene repetido el rol y solo tiene uno que es ese mismo
 			rol.setAuthority(rolName);
 			rol.setUser_id(id);
 			rolesService.delete(rolcheck);
 			return "Usuario removido del rol de ";
 		}
-		return countRoles.size()==2?"Error, un usuario no puede tener mas de dos roles, remuevelo de uno":"Error, el usuario se quedaria sin ningun rol, no puede remover el rol de ";		
-		
+		return countRoles.size() == 2 ? "Error, un usuario no puede tener mas de dos roles, remuevelo de uno"
+				: "Error, el usuario se quedaria sin ningun rol, no puede remover el rol de ";
+
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })
 	@RequestMapping(value = "/adminS/{id}")
-	public String hacerSeller(@PathVariable(value = "id") Long id, RedirectAttributes flash) {	
+	public String hacerSeller(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		Role rolcheck = new Role();
 		rolcheck = rolesService.findByUser_idByAuthority(id, "ROLE_SELLER");
 		List<Role> countRoles;
 		countRoles = rolesService.findByUser_idList(id);
 		String mensaje = checkRoles(countRoles, rolcheck, id, "ROLE_SELLER");
-		mensaje+="Vendedor";
-		String tipo = (rolcheck==null)?"success":"error";
+		mensaje += "Vendedor";
+		String tipo = (rolcheck == null) ? "success" : "error";
 		flash.addFlashAttribute(tipo, mensaje);
 		return "redirect:/user/ver";
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })
 	@RequestMapping(value = "/adminF/{id}")
-	public String hacerFacturero(@PathVariable(value = "id") Long id, RedirectAttributes flash) {		
+	public String hacerFacturero(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		Role rolcheck = new Role();
 		rolcheck = rolesService.findByUser_idByAuthority(id, "ROLE_FACT");
 
 		List<Role> countRoles;
 		countRoles = rolesService.findByUser_idList(id);
 		String mensaje = checkRoles(countRoles, rolcheck, id, "ROLE_FACT");
-		mensaje+="Facturacion";
-		String tipo = (rolcheck==null)?"success":"error";
+		mensaje += "Facturacion";
+		String tipo = (rolcheck == null) ? "success" : "error";
 		flash.addFlashAttribute(tipo, mensaje);
 		return "redirect:/user/ver";
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })
-	@RequestMapping(value = "/form/{id}")
-	public String editar(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+//	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })
+	@RequestMapping(value = { "/form/{id}", "/form" })
+	public String editar(@PathVariable(value = "id", required = false) Long id, Map<String, Object> model,
+			RedirectAttributes flash, Authentication authentication, HttpServletRequest request) {
 
-		Usuario usuario = null;
+		Usuario usuario = ((request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_JEFEADM")) && id != null)
+				? usuarioService.findOne(id)
+				: usuarioService.findByUsername(authentication.getName());
 
-		if (id > 0) {
-			usuario = usuarioService.findOne(id);
-			if (usuario == null) {
-				flash.addFlashAttribute("error", "El ID del cliente no existe en la BBDD!");
-				return "redirect:/user/ver";
-			}
-		} else {
-			flash.addFlashAttribute("error", "El ID del cliente no puede ser cero!");
-			return "redirect:/user/ver";
-		}
+		String mensaje = (usuario == null) ? "El usuario no fue encontrado" : "Edita con cuidado";
+		flash.addFlashAttribute("error", mensaje);
+
 		model.put("usuario", usuario);
 		model.put("titulo", "Editar Usuario");
 		return "users/form";
@@ -273,7 +270,7 @@ public class UsuarioController {
 		return usuarioService.findAllRole();
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })
+	
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String guardar(@Valid Usuario usuario, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {

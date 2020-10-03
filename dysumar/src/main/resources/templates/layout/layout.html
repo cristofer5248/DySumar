@@ -88,9 +88,8 @@
 						th:href="@{/producto/listar}" id="navbarDropdown"
 						aria-haspopup="true"><i class="fas fa-money-check-alt"></i>
 							PRODUCTOS</a></li>
-					<li sec:authorize="hasRole('ROLE_INV')"
-						class="nav-item dropdown"><a class="nav-link"
-						th:href="@{/giro/listar}" id="navbarDropdown"
+					<li sec:authorize="hasRole('ROLE_INV')" class="nav-item dropdown"><a
+						class="nav-link" th:href="@{/giro/listar}" id="navbarDropdown"
 						aria-haspopup="true"><i class="fas fa-money-check-alt"></i>
 							GIROS</a></li>
 
@@ -134,8 +133,8 @@
 								th:href="@{/categoria/listar}"><i class="fas fa-server"></i>
 								Categorias</a> <a
 								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"
-								class="dropdown-item" th:href="@{/descuento/nuevo}"><i
-								class="fas fa-percent"></i> Descuentos</a>
+								class="dropdown-item" th:href="@{/presentacion/form}"><i
+								class="fas fa-pencil-ruler"></i> Unidades</a>
 							<!-- 								<a	class="dropdown-item" href="#">Margenes</a> -->
 
 						</div></li>
@@ -166,11 +165,11 @@
 
 						<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 							<form id="logoutForm" th:action="@{/logout}" method="post">
-								<button class="dropdown-item"
-									onclick="document.getElementById('logoutForm').submit();"
-									type="submit">Salir</button>
-								<input type="hidden" th:name="${_csrf.parameterName}"
-									th:value="${_csrf.token}" />
+								<a class="dropdown-item" th:href="@{/user/form}">Perfil</a>									
+									<button class="dropdown-item"
+										onclick="document.getElementById('logoutForm').submit();"
+										type="submit">Salir</button> <input type="hidden"
+									th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 							</form>
 
 						</div></li>
@@ -272,7 +271,7 @@
 	
 	
 	</script>
-	
+
 
 	</footer>
 </body>

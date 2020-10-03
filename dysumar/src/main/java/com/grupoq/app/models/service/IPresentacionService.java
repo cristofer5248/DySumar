@@ -7,4 +7,6 @@ import com.grupoq.app.models.entity.Presentacion;
 public interface IPresentacionService {
 
 	public List<Presentacion> findAll();
+	public List<Presentacion> findByOrderByUnidadDesc();
+	public void save(Presentacion presentacion);
 }

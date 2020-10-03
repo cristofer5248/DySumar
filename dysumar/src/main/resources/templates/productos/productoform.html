@@ -42,7 +42,7 @@
 					<div class="form-group row">
 						<label for="precio" class="col-sm-2 col-form-label">Costo</label>
 						<div class="col-sm-6">
-							<input type="text" th:field="*{precio}" class="form-control"
+							<input type="number" th:field="*{precio}" class="form-control" min="1" step="0.01"
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
 								th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}"></small>
@@ -90,7 +90,7 @@
 							th:text="Margen"></label>
 						<div class="col-sm-6">
 							<input class="form-control" th:field="*{margen}" type="number"
-								step="0.1" min="10" />
+								step="0.1" min="10" max="90" />
 
 							<!-- 							<select th:field="*{margen}" id="cargar_margen" -->
 							<!-- 								name="cargar_margen" class="custom-select mr-sm-2"> -->
@@ -101,7 +101,7 @@
 						<label for="presentacion" class="col-sm-2 col-form-label"
 							th:text="Presentacion"></label>
 						<div class="col-sm-6">
-							<select th:field="*{presentacion}" id="cargar_presentacion"
+							<select th:field="*{presentacion}" id="cargar_presentacion" 
 								name="cargar_presentacion" class="custom-select mr-sm-2">
 							</select>
 						</div>

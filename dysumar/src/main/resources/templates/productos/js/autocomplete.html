@@ -122,9 +122,9 @@ const url4 = $("#urlAjaxpresentacion").val();
 $.getJSON(url4,function(data){
 	$.each(data,function(key,entry){		
 		if(id4==entry.id){
-		presentacion.append($('<option selected></option>').attr('value',entry.id).text(entry.detalle));
+		presentacion.append($('<option selected></option>').attr('value',entry.id).text(entry.unidad+" "+entry.detalle));
 		}else{
-		presentacion.append($('<option></option>').attr('value',entry.id).text(entry.detalle));
+		presentacion.append($('<option></option>').attr('value',entry.id).text(entry.unidad+" "+entry.detalle));
 		}
 	})
 });
