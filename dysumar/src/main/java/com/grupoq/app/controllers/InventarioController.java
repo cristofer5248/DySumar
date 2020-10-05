@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -64,8 +65,8 @@ public class InventarioController {
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
 		Pageable pageRequest = PageRequest.of(page, 20);
 		Page<Inventario> inventario = inventarioService.findAll(pageRequest);
-		PageRender<Inventario> pageRender = new PageRender<>("listar", inventario);
 		model.addAttribute("titulo", "Listado de inventario");
+		PageRender<Inventario> pageRender = new PageRender<>("listar", inventario);
 		model.addAttribute("inventarios", inventario);
 		model.addAttribute("page", pageRender);
 		return "/inventario/listar";
@@ -107,11 +108,10 @@ public class InventarioController {
 			@RequestParam(name = "codigo", required = true) String codigo,
 			@RequestParam(name = "item_id[]", required = false) Long[] itemId,
 			@RequestParam(name = "cantidad[]", required = false) Integer[] cantidad, Model model,
-			RedirectAttributes flash, SessionStatus status) throws ParseException {
+			RedirectAttributes flash, SessionStatus status, Authentication authentication) throws ParseException {
 		String pattern = "MM-dd-yyyy";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		Date date1 = simpleDateFormat.parse(fecha);
-
+		Date date1 = simpleDateFormat.parse(fecha);	
 //		if (result.hasErrors()) {
 //			model.addAttribute("titulo", "Inventariado");
 //			return "/producto/listar";
@@ -148,6 +148,7 @@ public class InventarioController {
 				}
 			}
 		}
+		
 		Movimientos movimiento = new Movimientos();
 		movimientosService.save(movimiento);
 		for (int i = 0; i < itemId.length; i++) {
@@ -234,6 +235,7 @@ public class InventarioController {
 			}
 			nuevaNotificacion("fas fa-parachute-box", "Ingreso nuevo de " + inventario.getProducto().getNombrep(),
 					"/inventario/ver/" + inventario.getId(), "blue");
+			inventario.setZaNombrede(authentication.getName());
 			inventarioService.save(inventario);
 			// llenado de nuevo stock/ suma con inventario DEPRECATED PORQUE ES MEJOR SOLO
 			// SUMAR, LA FACTURA RESTARÁ

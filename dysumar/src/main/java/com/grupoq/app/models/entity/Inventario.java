@@ -42,6 +42,9 @@ public class Inventario implements Serializable{
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Movimientos movimientos;
 	
+	@Column(unique=false, length=25, name = "zanombrede")
+	private String zaNombrede;
+	
 	private static final long serialVersionUID = 1L;
 
 	public Inventario() {
@@ -94,6 +97,14 @@ public class Inventario implements Serializable{
 
 	public void setMovimientos(Movimientos movimientos) {
 		this.movimientos = movimientos;
+	}
+
+	public String getZaNombrede() {
+		return zaNombrede;
+	}
+
+	public void setZaNombrede(String zaNombrede) {
+		this.zaNombrede = zaNombrede;
 	}
 	
 }

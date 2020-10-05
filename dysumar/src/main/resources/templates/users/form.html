@@ -23,17 +23,18 @@
 					<div class="form-group row">
 						<label for="username" class="col-sm-2 col-form-label">username</label>
 						<div class="col-sm-6">
-							<input type="text" th:field="*{username}" class="form-control" readonly="readonly"
-								placeholder="Se creativo, con este usuario se podra entrar al sistema" required="required"
-								th:errorclass="'form-control alert-danger'" />
+							<input type="text" th:field="*{username}" class="form-control"
+								id="username"
+								placeholder="Se creativo, con este usuario se podra entrar al sistema"
+								required="required" th:errorclass="'form-control alert-danger'" />
 						</div>
 					</div>
 					<div class="form-group row">
 						<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
 						<div class="col-sm-6">
 							<input type="text" th:field="*{nombre}" class="form-control"
-								th:errorclass="'form-control alert-danger'" required="required" /> <small
-								class="form-text text-danger"
+								th:errorclass="'form-control alert-danger'" required="required" />
+							<small class="form-text text-danger"
 								th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
 						</div>
 					</div>
@@ -61,8 +62,8 @@
 						<label for="email" class="col-sm-2 col-form-label">Password</label>
 						<div class="col-sm-6">
 							<input type="password" th:field="*{password}"
-								placeholder="Ejemplo: YOAMODYSUMAR" class="form-control" required="required"
-								th:errorclass="'form-control alert-danger'" />
+								placeholder="Ejemplo: YOAMODYSUMAR" class="form-control"
+								required="required" th:errorclass="'form-control alert-danger'" />
 						</div>
 					</div>
 					<div class="form-group row">
@@ -100,6 +101,17 @@
 			mask : '00000000'
 		};
 		var mask = IMask(element, maskOptions);
+	</script>
+	<script th:inline="javascript">
+	var edituser = [[${edituser}]];
+	
+	/*<![CDATA[*/
+	if(edituser==0){
+		$('#username').attr('readonly', true);
+	}else{
+		$('#username').attr('readonly', false);
+	}
+	/*]]>*/
 	</script>
 </body>
 </html>

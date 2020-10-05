@@ -30,10 +30,7 @@
 					<!-- 						th:href="@{'/taller/form/' + ${producto.id}}" -->
 					<!-- 						th:text="'Nuevo requerimiento'"></a> -->
 					<a class="btn btn-primary btn-xs" th:href="@{/producto/listar}"
-						th:text="'Volver'"></a> <a class="btn btn-primary btn-xs"
-						th:if="${not #lists.isEmpty(producto.inventarios)} AND ${#request.isUserInRole('SELLER')}"
-						th:href="@{'/factura/finalizar/' + ${taller.id}}"
-						th:text="'Finalizar factura'"></a>
+						th:text="'Volver'"></a> 
 
 				</h4>
 
@@ -90,7 +87,7 @@
 							<!-- 								th:href="@{'/factura/ver/' + ${factura.id}}" th:text="'detalle'"></a></td> -->
 							<td sec:authorize="hasRole('ROLE_ADMIN')"><a
 								class="btn btn-danger btn-xs"
-								th:href="@{'/factura/eliminar/' + ${producto.id}}"
+								th:href="@{'/inventario/eliminar/' + ${producto.id}}"
 								th:text="'eliminar'"
 								onclick="return confirm('¿Estas seguro que desea eliminar la factura?');"></a></td>
 						</tr>

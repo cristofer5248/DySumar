@@ -74,7 +74,8 @@ public class UsuarioController {
 			if (rolcheck.getAuthority().equals("ROLE_ADMIN")) {
 				usuario = usuarioService.findByIdNot(user1.getId(), pageRequest);
 			} else {
-				usuario = usuarioService.findByIdNotAndBoss(rolcheck.getId(), pageRequest);
+				//si es jefe/a
+				usuario = usuarioService.findByIdNotAndBoss(rolcheck.getUser_id(), pageRequest);
 			}
 		} else {
 			usuario = usuarioService.findByRoles_Authority("ROLE_USER", pageRequest);
@@ -84,7 +85,7 @@ public class UsuarioController {
 //				clienteService.findAll(pageRequest);
 
 		PageRender<Usuario> pageRender = new PageRender<Usuario>("/user/ver", usuario);
-		model.addAttribute("titulo", "Listado de clientes");
+		model.addAttribute("titulo", "Listado de usuarios");
 		model.addAttribute("usuario", usuario);
 		model.addAttribute("page", pageRender);
 		return "users/ver";
@@ -211,7 +212,9 @@ public class UsuarioController {
 
 		String mensaje = (usuario == null) ? "El usuario no fue encontrado" : "Edita con cuidado";
 		flash.addFlashAttribute("error", mensaje);
-
+		
+		int edUsrnm=(id==null)?0:1;
+		model.put("edituser", edUsrnm);
 		model.put("usuario", usuario);
 		model.put("titulo", "Editar Usuario");
 		return "users/form";

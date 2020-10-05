@@ -44,7 +44,7 @@ public class RolesServiceImpl implements IRolesService {
 
 	@Override
 	public Role findByUser_id(Long id) {
-		return rolesDao.findById(id).orElse(null);
+		return rolesDao.findByUser_idUnique(id);
 	}
 
 	@Override

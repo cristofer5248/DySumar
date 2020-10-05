@@ -22,14 +22,15 @@
 							<th
 								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')">Id</th>
 							<th>Id compra</th>
-							<th>Nombre</th>
+<!-- 							<th>Nombre</th> -->
 							<th>Proveedor</th>							
-							<th>Stock</th>
-							<th>M</th>
-							<th>P</th>							
-							<th>P.V</th>		
-							<th>Inversion</th>					
-							<th>Estimacion</th>							
+<!-- 							<th>Stock</th> -->
+<!-- 							<th>M</th> -->
+<!-- 							<th>P</th>							 -->
+<!-- 							<th>P.V</th>		 -->
+<!-- 							<th>Inversion</th>					 -->
+<!-- 							<th>Estimacion</th>			 -->
+							<th>Por</th>						
 														
 							<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')">OP</th>
 						</tr>
@@ -42,14 +43,15 @@
 								th:href="@{/inventario/ver/} + ${inventario.movimientos.id}"
 								th:text="${inventario.id}"></a></td>
 							<td th:text="${inventario.codigoProveedor}"></td>	
-							<td th:text="${inventario.producto.nombrep}"></td>													
+<!-- 							<td th:text="${inventario.producto.nombrep}"></td>													 -->
 							<td th:text="${inventario.producto.proveedor.nombre}"></td>							
-							<td th:text="${inventario.stock}"></td>							
-							<td th:text="${inventario.producto.margen}+'%'"></td>
-							<td th:text="'$'+${inventario.producto.precio}"></td>							
-							<td class="mm" th:text="'$'+${#numbers.formatDecimal((inventario.producto.precio * (inventario.producto.margen/100)+inventario.producto.precio), 0, 'COMMA', 2, 'POINT')}"></td>
-							<td th:text="'$'+${#numbers.formatDecimal((inventario.producto.precio*inventario.stock), 0, 'COMMA', 2, 'POINT')}"></td>
-							<td class="mm" th:text="'$'+${#numbers.formatDecimal(((inventario.producto.precio * (inventario.producto.margen/100)+inventario.producto.precio)*inventario.stock), 0, 'COMMA', 2, 'POINT')}"></td>
+<!-- 							<td th:text="${inventario.stock}"></td>							 -->
+<!-- 							<td th:text="${inventario.producto.margen}+'%'"></td> -->
+<!-- 							<td th:text="'$'+${inventario.producto.precio}"></td>							 -->
+<!-- 							<td class="mm" th:text="'$'+${#numbers.formatDecimal((inventario.producto.precio * (inventario.producto.margen/100)+inventario.producto.precio), 0, 'COMMA', 2, 'POINT')}"></td> -->
+<!-- 							<td th:text="'$'+${#numbers.formatDecimal((inventario.producto.precio*inventario.stock), 0, 'COMMA', 2, 'POINT')}"></td> -->
+<!-- 							<td class="mm" th:text="'$'+${#numbers.formatDecimal(((inventario.producto.precio * (inventario.producto.margen/100)+inventario.producto.precio)*inventario.stock), 0, 'COMMA', 2, 'POINT')}"></td> -->
+							<td th:text="${inventario.zaNombrede}"></td>
 <!-- 							<td
 								th:if="${#request.isUserInRole('SELLER')}"><a
 								class="btn btn-success btn-xs"
@@ -80,12 +82,12 @@
 
 	<footer th:replace="layout/layout :: footer"></footer>
 	<script>
-	$('#example').DataTable( {
-        "paging":   false,
+// 	$('#example').DataTable( {
+//         "paging":   false,
         
-        "searching": false,
-        "info":     false
-    } );
+//         "searching": false,
+//         "info":     false
+//     } );
 	</script>
 </body>
 </html>
