@@ -33,7 +33,8 @@ public class PresentacionController {
 		List<Presentacion> list = presentacionService.findByOrderByUnidadDesc();
 		return list;
 	}
-
+	
+	@Secured({ "ROLE_ADMIN", "ROLE_INV"})
 	@GetMapping(value = "/form")
 	public String nuevo(Map<String, Object> model) {
 		Presentacion presentacion = new Presentacion();
