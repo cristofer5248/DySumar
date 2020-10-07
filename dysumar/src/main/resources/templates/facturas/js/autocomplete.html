@@ -52,13 +52,19 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 					var linea = $("#plantillaItemsFactura").html();
 					linea = linea.replace(/{ID}/g,ui.item.value);
 					linea = linea.replace(/{NOMBRE}/g,ui.item.label);
-					linea = linea.replace(/{PRECIO}/g,ui.item.precio);
+					linea = linea.replace(/{COSTO}/g,ui.item.precio);
 // 					linea = linea.replace(/{DESCUENTO}/g,1);
 					
 					$("#cargarItemProductos tbody").append(linea);
 					$("#descuento_"+ui.item.value).val(2.0);
-					itemsHelper.calcularImporte(ui.item.value, ui.item.precio,1,ui.item.margen,parseFloat("1.0"));
-					$("#margen_"+ui.item.value).val(ui.item.margen);
+					//esto es mas que todo si usamos descuento pero lo quitamos
+					//itemHelper.calcularimporte....();
+					//sin descuento
+					itemsHelper.cambiarTotalyMargen(ui.item.value, ui.item.precio,1,ui.item.margen,1);
+					var margenOP = (100-ui.item.margen)/100;
+					//aqui ponemos costo! no precio de venta
+					$("#margen_"+ui.item.value).html(ui.item.margen);
+					
 					
 					return false;
 				}
@@ -73,6 +79,7 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 		});
 		
 		var itemsHelper = {
+				//aqui usariamos el descuento pero hoy no
 				calcularImporte: function(id, precio, cantidad,margen,descuento){
 					var url = "/descuento/cargar_descuento/"+id+"/"+cantidad;
 					var descuentoForm;
@@ -101,15 +108,27 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 					if(margen==1){
 						margen = $("#margen_"+id).val();
 					}
-					$("#precio_margen_"+id).html(((parseFloat(precio))/((100-margen)/100)).toFixed(2));
+					
+					//operacion apenas pones un producto
+					$("#precio_"+id).val(((parseFloat(precio))/(((100-margen)/100)*descuento)).toFixed(2));
 					$("#total_importe_"+id).html(((parseFloat(precio)*parseInt(cantidad))/(((100-margen)/100)*descuento)).toFixed(2));
 					
 					this.calcularGranTotal();
 				},
-				calcularImporte2: function(id, precio,margen,descuento){
+// 				cambiarTotalyMargen: function(id,precio,cantidad,margen,descuento){ quitamos descuento de nuevo
+				multiplicarxCantidad: function(id,cantidad){
+					var precio = $("#precio_"+id).val();
+					$("#total_importe_"+id).html((precio*cantidad).toFixed(2));
+					
+					this.calcularGranTotal();
+				},
+				
+				calcularImporte2: function(id,precio,descuento,costo){
 					var cantidad = 1;
 					
-						cantidad = $("#cantidad_"+id).val();						
+						margen = $("#margen_"+id).text();
+						cantidad = $("#cantidad_"+id).val();
+						
 						if(parseInt(margen)<=15){
 							$("#tratoh4").text("Esta cotizacion estará siendo evaluada antes de facturar");
 							$("#tratop").css("color", "orange");
@@ -124,8 +143,11 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 						}
 						
 // 						alert(precio+" "+margen+" "+descuento);
-						
-					$("#total_importe_"+id).html(((parseFloat(precio)*parseInt(cantidad))/(((100-margen)/100))).toFixed(2));
+					var csobrep = (((costo/precio)*-1)*100)+100;
+					var lodeabajo=(100-csobrep)/100;
+
+					$("#margen_"+id).text(csobrep.toFixed(2));
+					$("#total_importe_"+id).html((((costo/lodeabajo))*cantidad).toFixed(2));
 					this.calcularGranTotal();
 				},
 				hasProducto: function(id){
@@ -164,7 +186,7 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 // 			si un dia se va usar el descuento aqui se activaria
 			descuento = this.obtenerDescuento(id,cantidad);
 			
-			this.calcularImporte(id,precio,cantidad,margen,descuento);
+			this.multiplicarxCantidad(id,cantidad);
 		},
 		eliminarLineaFactura: function(id){
 			$("#row_"+id).remove();

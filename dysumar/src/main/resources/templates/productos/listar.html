@@ -9,6 +9,7 @@
 
 <!-- <link rel="stylesheet" th:href="@{/css/deleteanimated_js.css}"> -->
 <link rel="stylesheet" th:href="@{/css/searchbar.css}" />
+<meta charset="UTF-8" />
 <body>
 
 	<header th:replace="layout/layout :: header"></header>
@@ -113,7 +114,7 @@
 								<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"><a
 									
 									th:href="@{/producto/eliminar/} + ${producto.id}"
-									onclick="return confirm('¿Esta seguro?');">
+									onclick="return confirm('Â¿Esta seguro?');">
 										<div class='icon'>
 											<i class='fa fa-trash' onmouseover="quitarcolumns();"></i>
 										</div>

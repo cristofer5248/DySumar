@@ -9,23 +9,22 @@
 				<td class="d-none"><input value="{ID}" name="item_id[]" /></td>
 				<td>{NOMBRE}</td>
 				<td
-					th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">{PRECIO}</td>
+					th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">{COSTO}</td>
 				<!-- 				<td style="display:none;"><span id="descuento_{ID}">0</span></td> -->
-				<td style="visibility:hidden"><span id="descuento_{ID}">1.0</span></td>
-				<td><span id="precio_margen_{ID}">1</span></td>
-				<td class="columnmargen" style="display: none"><input
-					type="number" value="1" name="margen_id[]" id="margen_{ID}"
-					class="form-control col-sm-6"
-					onchange="itemsHelper.calcularImporte2({ID},{PRECIO}, this.value,1);"
-					disabled /></td>
+				<td style="visibility: hidden"><span id="descuento_{ID}">1.0</span></td>
+				<td><input type="number" min="0.000001" step="0.000001"
+					name="precio_id[]" id="precio_{ID}" class="form-control col-sm-10"
+					onchange="itemsHelper.calcularImporte2({ID},this.value,1,{COSTO});" /></td>
+				<td class="columnmargen" style="display: none"><span
+					id="margen_{ID}"></span></td>
 				<!--Esto es con descuento igual no funciona aun no agarro el id bien el valor onchange="itemsHelper.calcularImporte2({ID},{PRECIO}, this.value,document.getElementById('descuento_{ID}').value);" -->
 
 				<td><input type="number" value="1" name="cantidad[]"
 					style="width: auto;" id="cantidad_{ID}"
 					class="form-control col-sm-4"
-					onchange="itemsHelper.cambiarTotalyMargen({ID}, {PRECIO}, this.value,1,1);" /></td>
-<!-- 					esto es para llamar a buscar descuentos pero ya no se ocupara -->
-<!-- 					onchange="itemsHelper.calcularImporte({ID}, {PRECIO}, this.value,1,2);" /></td> -->
+					onchange="itemsHelper.multiplicarxCantidad({ID},this.value);" /></td>
+				<!-- 					esto es para llamar a buscar descuentos pero ya no se ocupara -->
+				<!-- 					onchange="itemsHelper.calcularImporte({ID}, {PRECIO}, this.value,1,2);" /></td> -->
 				<td><span id="total_importe_{ID}">0</span></td>
 				<td><a href="#" class="btn btn-danger btn-xs"
 					onclick="itemsHelper.eliminarLineaFactura({ID});">x</a></td>

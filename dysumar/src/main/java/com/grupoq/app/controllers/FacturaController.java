@@ -362,7 +362,7 @@ public class FacturaController {
 			productos.setNombrep(veamos.getNombrep());
 			productos.setMargen(veamos.getMargen());
 			productos.setMarcanombre(veamos.getMarca().getNombrem());
-			productos.setPresentacionnombre(veamos.getPresentacion().getDetalle());
+			productos.setPresentacionnombre(veamos.getPresentacion().getUnidad());
 			productos.setCodigo(veamos.getCodigo());
 			list2.add(productos);
 
