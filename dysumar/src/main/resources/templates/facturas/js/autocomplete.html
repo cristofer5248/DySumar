@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8" />
 <body>
 
 	<script type="text/javascript" th:fragment="javascript">
 	var evaluated=false;
 		$(document).ready(function() {
 			function cambiomargen() {			
-				$("#tratoh4").text("Esta cotizacion estar· siendo evaluada");
+				$("#tratoh4").text("Esta cotizacion estar√° siendo evaluada");
 				$("#tratop").css("visibility", "visible");			
 			}
 			function nocambiomargen() {			
@@ -130,7 +131,7 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 						cantidad = $("#cantidad_"+id).val();
 						
 						if(parseInt(margen)<=15){
-							$("#tratoh4").text("Esta cotizacion estar· siendo evaluada antes de facturar");
+							$("#tratoh4").text("Esta cotizacion estar√° siendo evaluada antes de facturar");
 							$("#tratop").css("color", "orange");
 							$("#trato").css("color", "orange");
 							evaluated = true;
@@ -183,10 +184,11 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 			var descuento=1;					
 // 					var provid = $("#cargar_proveedor").val();
 			console.log("En incrementarcantida fuction");
+			console.log("cantidad: "+cantidad);
 // 			si un dia se va usar el descuento aqui se activaria
-			descuento = this.obtenerDescuento(id,cantidad);
+// 			descuento = this.obtenerDescuento(id,cantidad);
 			
-			this.multiplicarxCantidad(id,cantidad);
+			this.multiplicarxCantidad(id,cantidad-1);
 		},
 		eliminarLineaFactura: function(id){
 			$("#row_"+id).remove();

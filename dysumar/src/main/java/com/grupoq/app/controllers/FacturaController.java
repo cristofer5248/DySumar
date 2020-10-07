@@ -374,7 +374,7 @@ public class FacturaController {
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String guardar(@RequestParam(name = "item_id[]", required = false) Long[] itemId,
 			@RequestParam(name = "cantidad[]", required = false) Integer[] cantidad,
-			@RequestParam(name = "margen_id[]", required = false) double[] margen,
+			@RequestParam(name = "precio_id[]", required = false) double[] precio,
 			@RequestParam(name = "tipoC", required = true) int tipoC, Model model, RedirectAttributes flash,
 			SessionStatus status) throws ParseException {
 
@@ -425,27 +425,29 @@ public class FacturaController {
 			// margen default
 			// evaluar si era un cotizacin evaluada
 			// aqui pondremos si es menor a 15 entoncs sera avaluada
+			double cSobrep = (producto.getPrecio()/precio[i])*-1;
+			double margenGenerado = (cSobrep*100)+100;
 
-			if (margen[i] <= 15) {
+			if (margenGenerado <= 15) {
 
-				if (margen[i] != producto.getMargen()) {
+				if (margenGenerado != producto.getMargen()) {
 					if (icotizacion) {
 						Cotizacion cotizacintemporal = cotizacionService.findby(cotizacion.getId());
 						cotizacintemporal.setAprobado(false);
 						cotizacionService.save(cotizacintemporal);
 						icotizacion = false;
 					}
-					carrito.setMargen(margen[i]);
+					carrito.setMargen(margenGenerado);
 				} else {
 					carrito.setMargen(producto.getMargen());
 				}
 			} else {
 				// evaluar si era un cotizacin evaluada
-				carrito.setMargen(margen[i]);
+				carrito.setMargen(margenGenerado);
 				// margen default
 			}
 			carrito.setCantidad(cantidad[i]);
-			carrito.setPrecio(producto.getPrecio());
+			carrito.setPrecio(precio[i]);
 			String msjCo_Remi = (tipoC == 1) ? "Nueva cotizacion realizada" : "Nueva remesion realizada";
 			nuevaNotificacion("fas fa-cart-plus", msjCo_Remi, "/cotizacion/ver/" + carrito.getCotizacionid().getId(),
 					"blue");

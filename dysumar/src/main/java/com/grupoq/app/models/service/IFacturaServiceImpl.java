@@ -147,4 +147,10 @@ public class IFacturaServiceImpl implements IFacturaService {
 	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatusWithoutProducto(Long id) {	
 		return facturadao.findByCotizacionByCarritoItemsByIdByStatusWithoutProducto(id);
 	}
+
+	@Override
+	public List<Facturacion> findHistorialPrecios(Long id) {
+		// TODO Auto-generated method stub
+		return facturadao.findHistorialPrecios(id);
+	}
 }

@@ -1,5 +1,6 @@
 package com.grupoq.app.controllers;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -23,9 +24,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import com.grupoq.app.webservice.HistorialDePrecios;
+import com.grupoq.app.models.entity.CarritoItems;
+import com.grupoq.app.models.entity.Facturacion;
 import com.grupoq.app.models.entity.Notificaciones;
 import com.grupoq.app.models.entity.Producto;
+import com.grupoq.app.models.service.IFacturaService;
 import com.grupoq.app.models.service.INotificacionesService;
 import com.grupoq.app.models.service.IProductoService;
 import com.grupoq.app.util.paginator.PageRender;
@@ -41,6 +45,9 @@ public class ProductoController {
 
 	@Autowired
 	INotificacionesService notificacionesService;
+
+	@Autowired
+	IFacturaService facturaService;
 
 	@Secured({ "ROLE_ADMIN", "ROLE_INV", "ROLE_JEFEADM", "ROLE_SELLER" })
 	@RequestMapping(value = { "/listar", "/listar/{op}/{nombrep}" }, method = RequestMethod.GET)
@@ -229,10 +236,30 @@ public class ProductoController {
 			return "redirect:/producto/listar";
 		}
 		model.put("producto", producto);
+		model.put("idp", producto.getId());
 		model.put("titulo", "Detalle producto: " + producto.getNombrep());
-		double precioventa = (producto.getPrecio()/((100-producto.getMargen())/100));
+		double precioventa = (producto.getPrecio() / ((100 - producto.getMargen()) / 100));
 		model.put("precioventa", precioventa);
 		return "/productos/ver";
+	}
+
+	@GetMapping(value = "/historialDePrecios/{id}", produces = { "application/json" })
+	public @ResponseBody List<HistorialDePrecios> historialDePrecios(@PathVariable(value = "id") String idp) {		
+		List<HistorialDePrecios> historyList = new ArrayList<HistorialDePrecios>();
+		List<Facturacion> lista = facturaService.findHistorialPrecios(Long.parseLong(idp));
+		for (int i = 0; i < lista.size(); i++) {
+			HistorialDePrecios hp = new HistorialDePrecios();
+			hp.setId(lista.get(i).getId());
+			hp.setFecha(lista.get(i).getFecha());
+			for (CarritoItems carrito : lista.get(i).getCotizacion().getCarrito()) {
+				if (carrito.getProductos().getId() == Long.parseLong(idp)) {
+					hp.setIdCotizacion(carrito.getCotizacionid().getId());
+					hp.setPrecio(carrito.getPrecio());
+				}
+			}
+			historyList.add(hp);
+		}
+		return historyList;
 	}
 
 	public void nuevaNotificacion(String icono, String nombre, String url, String color) {

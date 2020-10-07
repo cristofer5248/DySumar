@@ -40,11 +40,11 @@ public class pruebaLandController {
 			try {
 				List<Facturacion> veamos = facturaService
 						.findByCotizacionByCarritoItemsByIdByStatusWithoutProducto(Long.parseLong(valor));
-				result="AUN NO ESTAN TODOS POSITIVOS, A ESPERAR";
-				if(veamos.isEmpty()) {
-					result = "Eliminar porque no hay ningun falso de mas";	
+				result = "AUN NO ESTAN TODOS POSITIVOS, A ESPERAR";
+				if (veamos.isEmpty()) {
+					result = "Eliminar porque no hay ningun falso de mas";
 				}
-				
+
 			} catch (Exception e) {
 
 				result += "Eliminar porque no hay ningun falso de mas";
@@ -54,5 +54,21 @@ public class pruebaLandController {
 
 		return result;
 	}
+
+//	@RequestMapping(value = "/probador/{opc}/{valor}", method = RequestMethod.GET)
+//	public String probador(@PathVariable(value = "opc") int opc, @PathVariable(value = "valor") String valor) {
+//		String mensaje = "";
+//		List<Facturacion> lista = facturaService.findHistorialPrecios(Long.parseLong(valor));
+//		for (int i = 0; i < lista.size(); i++) {
+//			mensaje += "<H1>" + i + "</H1><br>";
+//			mensaje += "ID: " + lista.get(i).getId()+"<br>";
+//			for (CarritoItems carrito : lista.get(i).getCotizacion().getCarrito()) {
+//				if (carrito.getProductos().getId() == Long.parseLong(valor)) {
+//					mensaje += "PRECIO: "+carrito.getPrecio()+"<br>";
+//				}
+//			}
+//		}
+//		return mensaje;
+//	}
 
 }

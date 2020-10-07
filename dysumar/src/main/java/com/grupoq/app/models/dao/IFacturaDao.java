@@ -50,4 +50,7 @@ public interface IFacturaDao extends PagingAndSortingRepository<Facturacion, Lon
 	//buscar si esta la cotizacion repetida en factura
 	@Query("SELECT COUNT(f) FROM Facturacion f join f.cotizacion c where c.id=?1")
 	public Long cotizacionRepetida(Long id);
+	//el nombre lo dice, busco precios ya dados en factura de un producto
+	@Query("SELECT f FROM Facturacion f join fetch f.cotizacion c join fetch c.carrito ca join fetch ca.productos p where p.id=?1")
+	public List<Facturacion> findHistorialPrecios(Long id);
 }
