@@ -3,11 +3,11 @@ package com.grupoq.app.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.http.MediaType;
+//import org.springframework.security.access.annotation.Secured;
+//import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import com.grupoq.app.models.entity.CarritoItems;
+//import com.grupoq.app.models.entity.CarritoItems;
 import com.grupoq.app.models.entity.Facturacion;
 import com.grupoq.app.models.entity.Giro;
 import com.grupoq.app.models.service.IFacturaService;

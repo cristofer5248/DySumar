@@ -32,7 +32,8 @@
 					<a class="btn btn-primary btn-xs" th:href="@{/producto/listar}"
 						th:text="'Volver'"></a> <a class="btn btn-warning btn-xs"
 						th:text="'Historial de precio'" data-target="#historialmodal"
-						data-toggle="modal" onclick="modalHistorialdePrecios(71);"></a>
+						data-toggle="modal" onclick="modalHistorialdePrecios(document.getElementById('idp').textContent);"></a>
+						<label th:text='${idp}' id="idp" style="visibility:hidden"></label>
 
 
 				</h4>
@@ -42,7 +43,7 @@
 					th:src="@{'/uploads/' + ${producto.foto}}" th:alt="${producto.foto}" /> -->
 
 				<ul class="list-group">
-					<li class="list-group-item active" th:text="${producto.nombrep}"></li>
+					<li class="list-group-item active" th:text="${producto.nombrep}"></li>					
 					<li class="list-group-item"
 						th:text="'Categoria:    '+${producto.categoria.nombre}"></li>
 					<li class="list-group-item"
@@ -107,7 +108,8 @@
 			<div class="modal-dialog modal-dialog-centered" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLongTitle">Este es un listado de los precios hechos en facturas recientemente</h5>
+						<h5 class="modal-title" id="exampleModalLongTitle">Este es un
+							listado de los precios hechos en facturas recientemente</h5>
 						<button type="button" class="close" data-dismiss="modal"
 							aria-label="Close">
 							<span aria-hidden="true">&times;</span>

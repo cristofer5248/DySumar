@@ -247,6 +247,7 @@ public class ProductoController {
 	public @ResponseBody List<HistorialDePrecios> historialDePrecios(@PathVariable(value = "id") String idp) {		
 		List<HistorialDePrecios> historyList = new ArrayList<HistorialDePrecios>();
 		List<Facturacion> lista = facturaService.findHistorialPrecios(Long.parseLong(idp));
+
 		for (int i = 0; i < lista.size(); i++) {
 			HistorialDePrecios hp = new HistorialDePrecios();
 			hp.setId(lista.get(i).getId());
@@ -259,6 +260,7 @@ public class ProductoController {
 			}
 			historyList.add(hp);
 		}
+		
 		return historyList;
 	}
 

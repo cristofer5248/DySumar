@@ -33,7 +33,7 @@
 						th:text="'Telefono: '+${usuario.telefono}"></li>
 					<li class="list-group-item" style="color: blue;">Roles:</li>
 					<li th:each="rolesuser: ${rolesUsuario}" class="list-group-item">
-						<p th:text="${rolesuser.authority}"></p>
+						<p class="roletext" th:text="${rolesuser.authority}"></p>
 					</li>
 
 
@@ -86,7 +86,29 @@
 	<footer th:replace="layout/layout :: footer"></footer>
 	<script>
 		$(this).tooltip();
+		$(document).ready(function() {
+			var roletext = $(".roletext");
+			for (var i = 0; i < roletext.length; i++) {
+				if (roletext[i].textContent === "ROLE_INV") {
+					roletext[i].innerHTML = "INVENTARIO";
+				}
+				if (roletext[i].textContent === "ROLE_SELLER") {
+					roletext[i].innerHTML = "VENDEDOR";
+				}
+				if (roletext[i].textContent === "ROLE_JEFEADM") {
+					roletext[i].innerHTML = "JEFE/A";
+				}
+				if (roletext[i].textContent === "ROLE_FACT") {
+					roletext[i].innerHTML = "FACTURACION";
+				}
+				if (roletext[i].textContent === "ROLE_ADMIN") {
+					roletext[i].innerHTML = "ADMINISTRADOR";
+				}
+
+			}
+
+		})
 	</script>
-	
+
 </body>
 </html>

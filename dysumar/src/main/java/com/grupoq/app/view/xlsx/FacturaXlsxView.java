@@ -30,6 +30,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			HttpServletResponse response) throws Exception {
 		response.setHeader("Content-Disposition", "attachment; filename=\"factura.xlsx\"");
 		Facturacion factura = (Facturacion) model.get("facturaciones");
+		boolean creditoFiscal=(factura.getTipoFactura().getId()==Long.parseLong("1"))?true:false;
 		Numeros_Letras numeroALetras = new Numeros_Letras();
 		Sheet sheet = workbook.createSheet();
 		
@@ -297,6 +298,14 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		rowFinal.getCell(1)
 				.setCellValue(numeroALetras.Convertir(String.format("%.2f", factura.getTotaRegistrado()), true));
 		rowFinal.getCell(1).setCellStyle(ennegritacell);
+		rowFinal.getCell(6).setCellStyle(celltext);
+		rowFinal.getCell(6).setCellValue(factura.getTotaRegistrado());
+		
+		//mostrar iva ahi
+		if(creditoFiscal) {
+			rowvacios_abajo26.getCell(25).setCellValue(factura.getTotaRegistrado()*0.13);
+		}
+		
 		Row rowFinal_total = sheet.createRow(29);
 		rowFinal_total.createCell(6);
 		rowFinal_total.getCell(6).setCellValue("$  " + String.format("%.2f", factura.getTotaRegistrado()));

@@ -49,6 +49,10 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 						itemsHelper.incrementaCantidad(ui.item.value, ui.item.precio,ui.item.margen)
 						return false;
 					}
+					if(($('input[name="item_id[]"]').length)==13){
+						alert("El limite para una solo factura ha sido superado");
+						return false;
+					};
 					
 					var linea = $("#plantillaItemsFactura").html();
 					linea = linea.replace(/{ID}/g,ui.item.value);
@@ -65,7 +69,7 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 					var margenOP = (100-ui.item.margen)/100;
 					//aqui ponemos costo! no precio de venta
 					$("#margen_"+ui.item.value).html(ui.item.margen);
-					
+					$("#cargar_producto").val('');
 					
 					return false;
 				}
