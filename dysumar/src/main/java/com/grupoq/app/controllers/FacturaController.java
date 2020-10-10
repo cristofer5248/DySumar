@@ -299,8 +299,8 @@ public class FacturaController {
 			// fin
 			// poniendo total en factura entity
 
-			totalParaFactura += ((pro.getPrecio() / ((100 - pro.getMargen()) / 100)) * pro.getCantidad()
-					* pro.getDescuento());
+			totalParaFactura += (pro.getPrecio() * pro.getCantidad() * pro.getDescuento());
+			System.out.print("\n" + totalParaFactura + "\n");
 		}
 		facturacion.setTotaRegistrado(totalParaFactura);
 		// duplicaremos la cotizacin para despues no haber errores
@@ -425,8 +425,8 @@ public class FacturaController {
 			// margen default
 			// evaluar si era un cotizacin evaluada
 			// aqui pondremos si es menor a 15 entoncs sera avaluada
-			double cSobrep = (producto.getPrecio()/precio[i])*-1;
-			double margenGenerado = (cSobrep*100)+100;
+			double cSobrep = (producto.getPrecio() / precio[i]) * -1;
+			double margenGenerado = (cSobrep * 100) + 100;
 
 			if (margenGenerado <= 15) {
 

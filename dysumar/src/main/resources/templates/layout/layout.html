@@ -282,6 +282,26 @@
 	    	
 	    }
 	});		
+// 	console.log(Notification.permission);
+	
+	function showNotification(){
+		const notification = new Notification("New message from Dysumar",{
+		body: "hey! we need money, how are you?"
+		});
+	}
+	
+// 	if(Notification.permission==="granted"){
+// 		showNotification();
+// 	}else if(Notification.permission!=="denied"){
+// 		Notification.requestPermission().then(permission=>{
+// 		if(permission==="granted"){
+// 			showNotification();
+// 		}
+		
+		
+// 		});
+// 	}
+	
 	</script>
 
 

@@ -61,6 +61,10 @@ public class Cliente implements Serializable {
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date createAt;
 	
+	@NotNull
+	@Column(length = 1)
+	private Boolean agente;
+	
 //	@Column(length = 60, unique = true)
 //	private String password;
 		
@@ -175,6 +179,14 @@ public class Cliente implements Serializable {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	public Boolean getAgente() {
+		return agente;
+	}
+
+	public void setAgente(Boolean agente) {
+		this.agente = agente;
 	}
 
 }

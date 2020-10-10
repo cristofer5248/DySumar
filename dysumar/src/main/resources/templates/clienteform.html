@@ -32,27 +32,33 @@
 					<div class="form-group row">
 						<label for="apellido" class="col-sm-2 col-form-label">Direccion</label>
 						<div class="col-sm-4">
-							<input type="text" th:field="*{apellido}" class="form-control" id="direccionapellido" readonly="readonly" placeholder='Para ingresar su direccion de en "Registrar uno nuevo"'
+							<input type="text" th:field="*{apellido}" class="form-control"
+								id="direccionapellido" readonly="readonly"
+								placeholder='Para ingresar su direccion de en "Registrar uno nuevo"'
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
-								th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></small>							
+								th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></small>
 						</div>
-							<button type="button" class="btn btn-primary" data-toggle="modal"
+						<button type="button" class="btn btn-primary" data-toggle="modal"
 							data-target="#exampleModal3">Registrar uno nuevo</button>
 					</div>
 					<div class="form-group row">
 						<label for="email" class="col-sm-2 col-form-label">Email</label>
 						<div class="col-sm-6">
-							<input type="email" th:field="*{email}" class="form-control"  placeholder="En caso que no hay, dejar vacio o uno temporal"
+							<input type="email" th:field="*{email}" class="form-control"
+								placeholder="En caso que no hay, dejar vacio o uno temporal"
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
 								th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
 						</div>
 					</div>
 					<div class="form-group row">
-						<label for="codigo" class="col-sm-2 col-form-label">Registro fiscal</label>
+						<label for="codigo" class="col-sm-2 col-form-label">Registro
+							fiscal</label>
 						<div class="col-sm-6">
-							<input type="text" th:field="*{codigo}" class="form-control" maxlength="11" pattern="(\d|-)+" min="3" placeholder="Este campo no es obligatorio, puede dejar el 0 para saltarlo"
+							<input type="text" th:field="*{codigo}" class="form-control"
+								maxlength="11" pattern="(\d|-)+" min="3"
+								placeholder="Este campo no es obligatorio, puede dejar el 0 para saltarlo"
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
 								th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}"></small>
@@ -61,10 +67,22 @@
 					<div class="form-group row">
 						<label for="dui" class="col-sm-2 col-form-label">NIT/DUI</label>
 						<div class="col-sm-6">
-							<input type="text" th:field="*{dui}" class="form-control" id="dui" maxlength="22" pattern="(\d|-)+" min="3"  title="Solo numeros y guiones" placeholder="Escribirlo correctamente, esta limitado a numero y guiones"
+							<input type="text" th:field="*{dui}" class="form-control"
+								id="dui" maxlength="22" pattern="(\d|-)+" min="3"
+								title="Solo numeros y guiones"
+								placeholder="Escribirlo correctamente, esta limitado a numero y guiones"
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger duinitmask"
 								th:if="${#fields.hasErrors('dui')}" th:errors="*{dui}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="dui" class="col-sm-2 col-form-label">AGENTE</label>
+						<div class="col-sm-6">
+							<input type="checkbox" th:field="*{agente}"
+								id="dui" th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger duinitmask"
+								th:if="${#fields.hasErrors('agente')}" th:errors="*{agente}"></small>
 						</div>
 					</div>
 					<div class="form-group row">
@@ -157,11 +175,13 @@
 				</div>
 				<div class="modal-body">
 
-					<form id="formDireccion" method="POST" enctype="multipart/form-data">
+					<form id="formDireccion" method="POST"
+						enctype="multipart/form-data">
 						<div class="form-group row">
 							<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
 							<div class="col-sm-8">
-								<textarea name="nombreDireccion" id="nombreDireccion" class="form-control"></textarea>
+								<textarea name="nombreDireccion" id="nombreDireccion"
+									class="form-control"></textarea>
 							</div>
 
 						</div>
@@ -185,7 +205,7 @@
 		});
 	</script>
 	<script th:src="@{/js/postrequestGiro.js}"></script>
-	
+
 
 </body>
 </html>
