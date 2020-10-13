@@ -116,14 +116,24 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 					
 					//operacion apenas pones un producto
 					$("#precio_"+id).val(((parseFloat(precio))/(((100-margen)/100)*descuento)).toFixed(2));
-					$("#total_importe_"+id).html(((parseFloat(precio)*parseInt(cantidad))/(((100-margen)/100)*descuento)).toFixed(2));
+					if($("#iva").is(":checked")){											
+						var total_temp = ((parseFloat(precio)*parseInt(cantidad))/(((100-margen)/100)*descuento));
+						var total_temp = total_temp*1.13
+						$("#total_importe_"+id).html(total_temp.toFixed(2));						
+					}else{					
+						$("#total_importe_"+id).html(((parseFloat(precio)*parseInt(cantidad))/(((100-margen)/100)*descuento)).toFixed(2));
+					}
 					
 					this.calcularGranTotal();
 				},
 // 				cambiarTotalyMargen: function(id,precio,cantidad,margen,descuento){ quitamos descuento de nuevo
 				multiplicarxCantidad: function(id,cantidad){
 					var precio = $("#precio_"+id).val();
-					$("#total_importe_"+id).html((precio*cantidad).toFixed(2));
+					if($("#iva").is(":checked")){
+						$("#total_importe_"+id).html((precio*cantidad*1.13).toFixed(2));	
+					}else{
+						$("#total_importe_"+id).html((precio*cantidad).toFixed(2));
+					}
 					
 					this.calcularGranTotal();
 				},
@@ -152,7 +162,13 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 					var lodeabajo=(100-csobrep)/100;
 
 					$("#margen_"+id).text(csobrep.toFixed(2));
-					$("#total_importe_"+id).html((((costo/lodeabajo))*cantidad).toFixed(2));
+					if($("#iva").is(":checked")){
+						var temp_total = (((costo/lodeabajo))*cantidad);
+						temp_total = temp_total*1.13;
+						$("#total_importe_"+id).html(temp_total.toFixed(2));
+					}else{
+						$("#total_importe_"+id).html((((costo/lodeabajo))*cantidad).toFixed(2));
+					}
 					this.calcularGranTotal();
 				},
 				hasProducto: function(id){

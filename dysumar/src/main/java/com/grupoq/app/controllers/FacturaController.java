@@ -375,7 +375,8 @@ public class FacturaController {
 	public String guardar(@RequestParam(name = "item_id[]", required = false) Long[] itemId,
 			@RequestParam(name = "cantidad[]", required = false) Integer[] cantidad,
 			@RequestParam(name = "precio_id[]", required = false) double[] precio,
-			@RequestParam(name = "tipoC", required = true) int tipoC, Model model, RedirectAttributes flash,
+			@RequestParam(name = "tipoC", required = true) int tipoC,
+			@RequestParam(name = "iva", required = true) int iva, Model model, RedirectAttributes flash,
 			SessionStatus status) throws ParseException {
 
 //		if (result.hasErrors()) {

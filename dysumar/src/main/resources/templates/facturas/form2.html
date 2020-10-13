@@ -34,12 +34,25 @@
 							<i class="far fa-handshake fa-3x"></i>
 						</p>
 					</div>
-					<div>
-						<h4>¿Solo cotizacion?</h4>
-						<label class="switch"> <input type="checkbox"
-							onchange="checkopc();" id="opc" /> <span class="slider round"></span>
-						</label><input type="number" name="tipoC" id="tipoC"
-							style="visibility: hidden" />
+					<div></div>
+					<div class="form-group row">
+						<label for="cotizacion" th:text="'Cotizacion'"
+							class="col-sm-2 col-form-label"></label>
+						<div class="col-sm-4">
+							<label class="switch"> <input type="checkbox"
+								onchange="checkopc();" id="opc" /> <span class="slider round"></span>
+							</label><input type="number" name="tipoC" id="tipoC"
+								style="visibility: hidden" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="IVA" th:text="'IVA'" class="col-sm-2 col-form-label"></label>
+						<div class="col-sm-4">
+							<label class="switch"> <input type="checkbox"
+								onclick="checkiva();" id="iva" /> <span class="slider round"></span>
+							</label><input type="number" name="ivaC" id="ivaC"
+								style="visibility: hidden" />
+						</div>
 					</div>
 					<div class="form-group row">
 						<label for="cargar_producto" class="col-sm-2 col-form-label"
@@ -110,6 +123,27 @@
 
 			else {
 				$('#tipoC').val(0);
+			}
+		}
+		function checkiva(){			
+			if ($('#iva').is(':checked')){				
+				var total_temp=0;
+				$('span[id^="total_importe_"]').each(function(){
+				var total_plain = $(this).html();				
+				$(this).html((total_plain*1.13).toFixed(2));
+				total_temp+=parseFloat($(this).html());
+				});
+				$("#gran_total").html(total_temp.toFixed(2));
+			}
+			else{
+				
+				var total_temp=0;
+				$('span[id^="total_importe_"]').each(function(){
+				var total_plain = $(this).html();				 
+				$(this).html((total_plain/1.13).toFixed(2));
+				total_temp+=parseFloat($(this).html());
+				});
+				$("#gran_total").html(total_temp.toFixed(2));
 			}
 		}
 	</script>
