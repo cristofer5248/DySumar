@@ -41,7 +41,7 @@
 								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')"><a
 								class="btn btn-primary btn-xs"
 								th:href="@{/inventario/ver/} + ${inventario.movimientos.id}"
-								th:text="${inventario.id}"></a></td>
+								th:text="${inventario.movimientos.id}"></a></td>
 							<td th:text="${inventario.codigoProveedor}"></td>	
 <!-- 							<td th:text="${inventario.producto.nombrep}"></td>													 -->
 							<td th:text="${inventario.producto.proveedor.nombre}"></td>							

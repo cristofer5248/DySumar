@@ -111,7 +111,7 @@ public class InventarioController {
 			RedirectAttributes flash, SessionStatus status, Authentication authentication) throws ParseException {
 		String pattern = "MM-dd-yyyy";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		Date date1 = simpleDateFormat.parse(fecha);	
+		Date date1 = simpleDateFormat.parse(fecha);
 //		if (result.hasErrors()) {
 //			model.addAttribute("titulo", "Inventariado");
 //			return "/producto/listar";
@@ -148,7 +148,7 @@ public class InventarioController {
 				}
 			}
 		}
-		
+
 		Movimientos movimiento = new Movimientos();
 		movimientosService.save(movimiento);
 		for (int i = 0; i < itemId.length; i++) {
@@ -233,10 +233,10 @@ public class InventarioController {
 //				}
 
 			}
-			nuevaNotificacion("fas fa-parachute-box", "Ingreso nuevo de " + inventario.getProducto().getNombrep(),
-					"/inventario/ver/" + inventario.getId(), "blue");
 			inventario.setZaNombrede(authentication.getName());
 			inventarioService.save(inventario);
+			nuevaNotificacion("fas fa-parachute-box", "Ingreso nuevo de " + inventario.getProducto().getNombrep(),
+					"/inventario/ver/" + inventario.getMovimientos().getId(), "blue");
 			// llenado de nuevo stock/ suma con inventario DEPRECATED PORQUE ES MEJOR SOLO
 			// SUMAR, LA FACTURA RESTARÁ
 //			List<String> total = inventarioService.sumarStock(itemId[i]);

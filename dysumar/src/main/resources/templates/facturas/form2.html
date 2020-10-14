@@ -125,8 +125,10 @@
 				$('#tipoC').val(0);
 			}
 		}
-		function checkiva(){			
-			if ($('#iva').is(':checked')){				
+		function checkiva(){	
+			
+			if ($('#iva').is(':checked')){
+				$('#ivaC').val(1);
 				var total_temp=0;
 				$('span[id^="total_importe_"]').each(function(){
 				var total_plain = $(this).html();				
@@ -136,7 +138,7 @@
 				$("#gran_total").html(total_temp.toFixed(2));
 			}
 			else{
-				
+				$('#ivaC').val(0);
 				var total_temp=0;
 				$('span[id^="total_importe_"]').each(function(){
 				var total_plain = $(this).html();				 
