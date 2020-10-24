@@ -49,4 +49,6 @@ public interface IClienteService {
 	public Page <Cliente> findAllByGiro(Long id, String user, Pageable pageable);
 	public Page <Cliente> findAllByGiroAdmin(Long id, Pageable pageable);
 	
+	public void deleteDireccionC(Long id);
+	
 }

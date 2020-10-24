@@ -150,6 +150,13 @@ public class ClienteServiceImpl implements IClienteService {
 		return clientedireccionesdao.findByIdDireccionOnly(id);
 	}
 
+	@Override
+	public void deleteDireccionC(Long id) {
+		// TODO Auto-generated method stub
+		clientedireccionesdao.deleteById(id);
+		
+	}
+
 	
 
 	

@@ -58,9 +58,6 @@ public class ClienteController {
 
 	@Autowired
 	private IClienteService clientedireccionesService;
-	
-	@Autowired
-	private IClienteDirecciones clientedirecciones1Service;
 
 	@Autowired
 	private ITipoClienteService tipocliente;
@@ -96,8 +93,9 @@ public class ClienteController {
 //		List<?> taller = facturaService.probando(id);
 
 		if (cliente == null) {
-			flash.addFlashAttribute("success", "El cliente no tiene facturas, por el momento no te podemos mostrar mas informacion.");
-			
+			flash.addFlashAttribute("success",
+					"El cliente no tiene facturas, por el momento no te podemos mostrar mas informacion.");
+
 			return "redirect:/clientes";
 		}
 
@@ -245,9 +243,23 @@ public class ClienteController {
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/cleliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
-		
+
 		clienteService.delete(id);
 		flash.addFlashAttribute("success", "Cliente eliminado con éxito!");
+
+//			if (uploadFileService.delete(cliente.getFoto())) {
+//				flash.addFlashAttribute("info", "Foto " + cliente.getFoto() + " eliminada con exito!");
+//			}
+
+		return "redirect:/clientes";
+	}
+
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
+	@RequestMapping(value = "/cdleliminar/{id}")
+	public String eliminarDireccion(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
+
+		clienteService.deleteDireccionC(id);
+		flash.addFlashAttribute("success", "Direccion eliminada con éxito!");
 
 //			if (uploadFileService.delete(cliente.getFoto())) {
 //				flash.addFlashAttribute("info", "Foto " + cliente.getFoto() + " eliminada con exito!");
