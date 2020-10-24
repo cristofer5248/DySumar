@@ -38,6 +38,7 @@ import com.grupoq.app.models.service.IClienteService;
 
 import com.grupoq.app.models.service.ITipoClienteService;
 import com.grupoq.app.models.service.IUsuarioService;
+import com.grupoq.app.models.dao.IClienteDirecciones;
 import com.grupoq.app.models.entity.Cliente;
 import com.grupoq.app.models.entity.ClienteDirecciones;
 import com.grupoq.app.models.entity.Direccion;
@@ -57,6 +58,9 @@ public class ClienteController {
 
 	@Autowired
 	private IClienteService clientedireccionesService;
+	
+	@Autowired
+	private IClienteDirecciones clientedirecciones1Service;
 
 	@Autowired
 	private ITipoClienteService tipocliente;
@@ -241,7 +245,7 @@ public class ClienteController {
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/cleliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
-
+		
 		clienteService.delete(id);
 		flash.addFlashAttribute("success", "Cliente eliminado con éxito!");
 

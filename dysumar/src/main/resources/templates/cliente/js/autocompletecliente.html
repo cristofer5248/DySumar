@@ -18,7 +18,7 @@
 					//populate dropdown list wujuu
 					$.getJSON(url,function(data){
 					    $.each(data, function(idx, elem){
-					        tb.append("<tr><td><a class='btn btn-primary btn-xs' href='"+urlAjaxvercliente+elem.id+"'>"+elem.id+"</a></td><td>"+elem.direcciones.nombre+"</td><td><a class='btn btn-primary btn-xs' href='"+urlAjaxform+elem.id+"'>EDITAR</a></td></tr>");
+					        tb.append("<tr><td><a class='btn btn-primary btn-xs' href='"+urlAjaxvercliente+elem.id+"'>"+elem.id+"</a></td><td>"+elem.direcciones.nombre+"</td><td><a class='btn btn-primary btn-xs' href='"+urlAjaxform+elem.id+"'>EDITAR</a></td><td><a class='btn btn-danger btn-xs' href='"+urlAjaxform+elem.id+"'>Elimnar</a></td></tr>");
 					    })
 					});
 	
