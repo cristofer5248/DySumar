@@ -13,4 +13,7 @@ public interface IClienteDirecciones extends CrudRepository<ClienteDirecciones, 
 	
 	@Query(value="select cd from ClienteDirecciones cd join fetch cd.cliente c join fetch cd.facturacion f join fetch f.tipoFactura tf join fetch f.formadepago fp join fetch f.condicionesDPago cp where cd.id=?1 order by f.fecha desc")
 	public ClienteDirecciones findByIdByFacturacion(Long id);
+	
+	@Query("select cd from ClienteDirecciones cd join fetch cd.cliente c join fetch cd.direcciones d where cd.id=?1")
+	public ClienteDirecciones findByIdDireccionOnly(Long id);
 }	

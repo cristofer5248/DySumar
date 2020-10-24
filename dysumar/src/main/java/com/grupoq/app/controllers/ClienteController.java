@@ -92,8 +92,9 @@ public class ClienteController {
 //		List<?> taller = facturaService.probando(id);
 
 		if (cliente == null) {
-			flash.addFlashAttribute("error", "El cliente no tiene facturas");
-			return "redirect:clientes";
+			flash.addFlashAttribute("success", "El cliente no tiene facturas, por el momento no te podemos mostrar mas informacion.");
+			
+			return "redirect:/clientes";
 		}
 
 		model.put("cliente", cliente);
@@ -173,6 +174,7 @@ public class ClienteController {
 	public String crear(Map<String, Object> model) {
 
 		Cliente cliente = new Cliente();
+		model.put("NOEDIT", false);
 		model.put("tipo", tipocliente.findAll());
 		model.put("cliente", cliente);
 		model.put("titulo", "Crear Cliente");
@@ -184,9 +186,13 @@ public class ClienteController {
 	public String editar(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 
 		Cliente cliente = null;
+//		Long direccionid = null;
 
 		if (id > 0) {
-			cliente = clienteService.findOne(id);
+			ClienteDirecciones cDireccion = null;
+			cDireccion = clientedireccionesService.findByIdDireccionOnly(id);
+			cliente = (cDireccion == null) ? clienteService.findOne(id) : cDireccion.getCliente();
+//			direccionid = cDireccion.getDirecciones().getId();
 			if (cliente == null) {
 				flash.addFlashAttribute("error", "El ID del cliente no existe en la BBDD!");
 				return "redirect:/listar";
@@ -195,6 +201,9 @@ public class ClienteController {
 			flash.addFlashAttribute("error", "El ID del cliente no puede ser cero!");
 			return "redirect:/listar";
 		}
+
+		cliente.setApellido("NO");
+		model.put("NOEDIT", true);
 		model.put("cliente", cliente);
 		model.put("tipo", tipocliente.findAll());
 		model.put("titulo", "Editar Cliente");
@@ -210,15 +219,20 @@ public class ClienteController {
 			model.addAttribute("titulo", "Formulario de Cliente");
 			model.addAttribute("tipo", tipocliente.findAll());
 			model.addAttribute(cliente);
+			model.addAttribute("NOEDIT", false);
 			return "clienteform";
 		}
 		String mensajeFlash = (cliente.getId() != null) ? "Cliente editado con éxito!" : "Cliente creado con éxito!";
 		cliente.setUsuario(userservice.findByUsername(autentication.getName()));
 		clienteService.save(cliente);
-		ClienteDirecciones cd = new ClienteDirecciones();
-		cd.setCliente(cliente);
-		cd.setDirecciones(clientedireccionesService.findByidDireccion(Long.parseLong(cliente.getApellido())));
-		clienteService.savecd(cd);
+
+		// ASIGNAMOS la direccion que tiene en el apellido
+		if (!cliente.getApellido().equals("NO")) {
+			ClienteDirecciones cd = new ClienteDirecciones();
+			cd.setCliente(cliente);
+			cd.setDirecciones(clientedireccionesService.findByidDireccion(Long.parseLong(cliente.getApellido())));
+			clienteService.savecd(cd);
+		}
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:clientes";

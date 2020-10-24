@@ -32,6 +32,7 @@ import com.grupoq.app.models.entity.Descuento;
 import com.grupoq.app.models.entity.Facturacion;
 import com.grupoq.app.models.entity.Notificaciones;
 import com.grupoq.app.models.entity.Producto;
+import com.grupoq.app.models.entity.Usuario;
 import com.grupoq.app.models.service.ICarritoItemsService;
 import com.grupoq.app.models.service.IClienteService;
 import com.grupoq.app.models.service.ICotizacionService;
@@ -109,12 +110,23 @@ public class FacturaController {
 					Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(param2);
 					if (opc.equals("vendedor")) {
 						System.out.print("Entro a 'vendedor'\n");
-						facturacion = facturaservice.findAllByFechaGroupBy(pageRequest, date1, date2);
+						facturacion = (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_JEFEADM"))
+								? facturaservice.findAllByFechaGroupBy(pageRequest, date1, date2)
+								: null;
 						model.addAttribute("activePivot", true);
 					} else {
-						facturacion = facturaservice.findAllByFecha(pageRequest, date1, date2);
+
+						Usuario user_temp = (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_JEFEADM"))
+								? null
+								: usuarioService.findByUsername(authentication.getName());
+
+						facturacion = (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_JEFEADM"))
+								? facturaservice.findAllByFecha(pageRequest, date1, date2)
+								: facturaservice.findAllByFechaRestricted(pageRequest, date1, date2, user_temp.getId());
+
+								
 						System.out.print("Entro a 'admin' tamaño:" + facturacion.getSize() + "\n");
-						System.out.print("ID:" + facturacion.getNumberOfElements() + "\n");
+//						System.out.print("ID:" + facturacion.getNumberOfElements() + "\n");	
 						model.addAttribute("activePivot", false);
 					}
 //				sPath = facturacion!=null ? "listar/fechas/"+param+"/"+param2 : "listar";  
@@ -133,6 +145,10 @@ public class FacturaController {
 				facturacion = facturaservice.findByaACuentadeNombre(authentication.getName(), pageRequest);
 			}
 			model.addAttribute("activePivot", false);
+		}
+		// si llega a estar vacio
+		if (facturacion == null) {
+			return "redirect:/factura/listar";
 		}
 		PageRender<Facturacion> pageRender = new PageRender<>("", facturacion);
 		model.addAttribute("titulo", "Listado de Facturacion");
@@ -376,7 +392,7 @@ public class FacturaController {
 			@RequestParam(name = "cantidad[]", required = false) Integer[] cantidad,
 			@RequestParam(name = "precio_id[]", required = false) double[] precio,
 			@RequestParam(name = "tipoC", required = true) int tipoC,
-			@RequestParam(name = "iva", required = true) int iva, Model model, RedirectAttributes flash,
+			@RequestParam(name = "ivaC", required = true) int iva, Model model, RedirectAttributes flash,
 			SessionStatus status) throws ParseException {
 
 //		if (result.hasErrors()) {

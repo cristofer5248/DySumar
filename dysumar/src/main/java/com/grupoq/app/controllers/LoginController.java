@@ -17,14 +17,14 @@ public class LoginController {
 			RedirectAttributes flash) {
 		model.addAttribute("titulo","inicio");
 		if (principal != null) {
-			flash.addFlashAttribute("info", "Ya ha iniciado sesion antetiormente");
+			flash.addFlashAttribute("info", "Ya has iniciado sesion antetiormente");
 			return "redirect:/";
 		}
 		if (error != null) {
 			model.addAttribute("error", "Error en el login");
 		}
 		if (logout != null) {
-			model.addAttribute("success", "Ha cerrado sesion con exito");
+			model.addAttribute("success", "Has cerrado sesion con exito");
 		}
 		return "login";
 	}

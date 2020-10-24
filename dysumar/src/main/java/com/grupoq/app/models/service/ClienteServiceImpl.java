@@ -144,6 +144,12 @@ public class ClienteServiceImpl implements IClienteService {
 		return clienteDao.findAllByGiroAdmin(id, pageable);
 	}
 
+	@Override
+	public ClienteDirecciones findByIdDireccionOnly(Long id) {
+		// TODO Auto-generated method stub
+		return clientedireccionesdao.findByIdDireccionOnly(id);
+	}
+
 	
 
 	

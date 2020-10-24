@@ -29,8 +29,7 @@
 								<th>DUI o NIT</th>
 								<!-- 							<th th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">Giro</th> -->
 								<th>POR</th>
-								<th>Fecha de registro</th>
-								<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SELLER')">editar</th>
+								<th>Fecha de registro</th>								
 								<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SELLER')">eliminar</th>
 							</tr>
 						</thead>
@@ -50,12 +49,10 @@
 								<td th:text="${cliente.usuario.nombre}"></td>
 								<td th:text="${cliente.createAt}"></td>
 								<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SELLER')"><a
-									class="btn btn-primary btn-xs"
-									th:href="@{/clienteform/} + ${cliente.id}" th:text="'editar'"></a></td>
-								<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SELLER')"><a
 									class="btn btn-danger btn-xs"
 									th:href="@{/cleliminar/} + ${cliente.id}" th:text="'eliminar'"
 									onclick="return confirm('Estas seguro que quieres eliminar?');"></a></td>
+								
 							</tr>
 						</tbody>
 
@@ -83,6 +80,7 @@
 										<tr>
 											<th width="100">ID</th>
 											<th width="100">Direccion</th>
+											<th width="100">Editar</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -111,6 +109,7 @@
 	<input type="hidden" id="urlAjaxcliente"
 		th:value="@{/cargar_direcciones/}" />
 	<input type="hidden" id="urlAjaxvercliente" th:value="@{/vercliente/}" />
+	<input type="hidden" id="urlAjaxEditarCliente" th:value="@{/clienteform/}" />
 	<script th:replace="cliente/js/autocompletecliente :: javascript"></script>
 	<script>
 		function prueba() {

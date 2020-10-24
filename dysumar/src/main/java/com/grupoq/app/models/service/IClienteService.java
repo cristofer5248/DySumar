@@ -41,6 +41,10 @@ public interface IClienteService {
 	
 	public void deleteFactura(Long id);
 	public ClienteDirecciones findByIdByFacturacion(Long id);
+	//buscar el id para jalarlo y poner al cliente
+	
+	public ClienteDirecciones findByIdDireccionOnly(Long id);
+	
 	public List<ClienteDirecciones> findByCliente(Long id);
 	public Page <Cliente> findAllByGiro(Long id, String user, Pageable pageable);
 	public Page <Cliente> findAllByGiroAdmin(Long id, Pageable pageable);

@@ -142,7 +142,7 @@
 												<select id="opcfilter" class="form-control">
 													<option value="listado" selected>Listado de
 														registros</option>
-													<option value="vendedor">Agrupado por vendedor</option>
+													<option value="vendedor" th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('JEFEADM')}">Agrupado por vendedor</option>
 												</select>
 											</div>
 										</div>
