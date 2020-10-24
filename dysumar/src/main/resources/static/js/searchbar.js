@@ -6,9 +6,11 @@
             var isOpen = false;
             
             
-            vamonos.click(function(){                       	
-            	var opc = $("#opcSearch").val();            	
-            	location.href = $("#urlenviar").val()+opc+"/"+$("#btn-search").val();
+            vamonos.click(function(){              	
+            	var opc = $("#opcSearch").val();
+            	var txtSearch = $("#btn-search").val();
+            	var txtSearchX = txtSearch.replace(/\//g, "-");            	
+            	location.href = $("#urlenviar").val()+opc+"/"+txtSearchX;
             	
             });
             submitIcon.click(function(){
@@ -49,5 +51,7 @@
                     $('.searchbox-icon').css('display','block');
                 }                                    
                 var opc = $("#opcSearch").val();
-                $('#formsearch').attr('action', $("#urlenviar").val()+opc+"/"+$("#btn-search").val());
+                var text_temp = $("#btn-search").val();
+                var txtSearchX = text_temp.replace(/\//g, "zzz");
+                $('#formsearch').attr('action', $("#urlenviar").val()+opc+"/"+txtSearchX);
             }

@@ -56,6 +56,7 @@ public class ProductoController {
 			@PathVariable(value = "op", required = false) String op) {
 		Pageable pageRequest = PageRequest.of(page, 20);
 		Page<Producto> productos = null;
+		nombrep = nombrep.replace("zzz","/");
 		if (nombrep != null) {
 			if (op.equals("nombre")) {
 				productos = productoService.findAllLike(nombrep, pageRequest);
