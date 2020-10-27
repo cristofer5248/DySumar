@@ -159,4 +159,10 @@ public class IFacturaServiceImpl implements IFacturaService {
 //		filtrar todas las factura o remisiones pero solo la de ese vendedor
 		return facturadao.findAllByFechaRestricted(page, date1, date2, id);
 	}
+
+	@Override
+	public List<Facturacion> findHistorialPreciosVendedor(Long id, Long vendedor) {
+		// TODO Auto-generated method stub
+		return facturadao.findHistorialPreciosVendedor(id,vendedor);
+	}
 }

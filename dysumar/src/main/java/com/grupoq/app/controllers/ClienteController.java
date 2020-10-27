@@ -38,7 +38,6 @@ import com.grupoq.app.models.service.IClienteService;
 
 import com.grupoq.app.models.service.ITipoClienteService;
 import com.grupoq.app.models.service.IUsuarioService;
-import com.grupoq.app.models.dao.IClienteDirecciones;
 import com.grupoq.app.models.entity.Cliente;
 import com.grupoq.app.models.entity.ClienteDirecciones;
 import com.grupoq.app.models.entity.Direccion;
@@ -244,9 +243,14 @@ public class ClienteController {
 	@RequestMapping(value = "/cleliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 
-		clienteService.delete(id);
-		flash.addFlashAttribute("success", "Cliente eliminado con éxito!");
-
+		try {
+			clienteService.delete(id);
+			flash.addFlashAttribute("success", "Cliente eliminado con éxito");
+		} catch (Exception e) {
+			// TODO: handle exception
+			flash.addFlashAttribute("error", "Es posible que este cliente esté atado a una factura o elimine una direccion atada.");
+			return "redirect:/clientes";
+		}
 //			if (uploadFileService.delete(cliente.getFoto())) {
 //				flash.addFlashAttribute("info", "Foto " + cliente.getFoto() + " eliminada con exito!");
 //			}

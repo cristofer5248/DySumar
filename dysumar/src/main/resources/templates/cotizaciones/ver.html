@@ -32,7 +32,7 @@
 					<a class="btn btn-primary btn-xs" th:href="@{/factura/listar}"
 						th:text="'Volver'"></a> <a class="btn btn-danger btn-xs"
 						th:href="@{/factura/nuevof/}+${codigoco}"
-						th:text="'Facturar ahora'"></a> <a
+						th:text="'Remisionar'"></a> <a
 						th:if="${!cotizacion.aprobado} AND ${#request.isUserInRole('ADMIN')}"
 						class="btn btn-success btn-xs"
 						th:href="@{/cotizacion/aprobar/}+${codigoco}"

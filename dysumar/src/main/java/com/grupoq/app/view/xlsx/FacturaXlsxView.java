@@ -1,6 +1,7 @@
 package com.grupoq.app.view.xlsx;
 
 import java.text.DecimalFormat;
+//import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 
@@ -25,11 +26,13 @@ import com.grupoq.app.models.entity.Facturacion;
 
 @Component("/facturas/ver.xlsx")
 public class FacturaXlsxView extends AbstractXlsxView {
-	private static DecimalFormat df = new DecimalFormat("0.00");
+	public static DecimalFormat df = new DecimalFormat("0.00");
+	
 
 	@Override
 	protected void buildExcelDocument(Map<String, Object> model, Workbook workbook, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
+//		df.setRoundingMode(RoundingMode.DOWN);
 		response.setHeader("Content-Disposition", "attachment; filename=\"factura.xlsx\"");
 		Facturacion factura = (Facturacion) model.get("facturaciones");
 		boolean agente = (factura.getCliente().getCliente().getAgente()) ? true : false;
@@ -193,11 +196,10 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		row4.getCell(0).setCellStyle(celdasStyleMerged);
 		row4.getCell(3).setCellStyle(celdasStyleMerged);
 		row4.getCell(4).setCellStyle(celdasStyleMerged);
-		row4.setHeightInPoints(37);
+		row4.setHeightInPoints(15);
 
 		row4.getCell(1).setCellValue(factura.getCliente().getCliente().getNombre());
-		row4.getCell(1).setCellStyle(normalCenter);
-		System.out.print("La fecha: " + factura.getFecha().toString());
+		row4.getCell(1).setCellStyle(normalCenter);		
 		row4.getCell(5).setCellValue(new SimpleDateFormat("dd/MM/yyyy").format(factura.getFecha()).toString());
 
 		row4.getCell(1).setCellStyle(celltext);
@@ -209,6 +211,9 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		row5.createCell(4);
 		row5.createCell(0);
 		row5.getCell(0).setCellStyle(celdasStyleMerged);
+		row5.createCell(5);
+		row5.getCell(5).setCellStyle(celltext);
+		row5.getCell(5).setCellValue(factura.getCliente().getCliente().getDui());
 
 		// para la 6
 		Row row6 = sheet.createRow(5);
@@ -225,7 +230,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		row7.getCell(1).setCellStyle(celdasStyleMerged);
 		row7.getCell(2).setCellStyle(celltextLeft);
-		row7.getCell(2).setCellValue(factura.getTipoFactura().getNombre());
+		row7.getCell(2).setCellValue(factura.getFormadepago().getNombre()+"- FORMA DE PAGO");
 
 		// para la 8 9, 10 y 11
 		Row row8 = sheet.createRow(7);
@@ -278,7 +283,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			cellItems = fila.createCell(6);
 			cellItems.setCellStyle(celltext);
 			double precioUnitarioXcantidad = precioUnitario_temp * carrito.getCantidad();
-			cellItems.setCellValue("$  " + String.format("%.2f", precioUnitarioXcantidad));
+			cellItems.setCellValue("$  " + df.format(precioUnitarioXcantidad));
 
 		}
 		System.out.print("donde estara el final es: " + itemRows);
@@ -307,12 +312,12 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		rowFinal.getCell(1).setCellStyle(ennegritacell);
 		rowFinal.createCell(6);
 		rowFinal.getCell(6).setCellStyle(celltext);
-		rowFinal.getCell(6).setCellValue(df.format(sumasPrecios));
+		rowFinal.getCell(6).setCellValue("$" +df.format(sumasPrecios));
 		// retenindo 0 para restar si no es agente
 		double retenido = 0;
 		double ivado = factura.getTotaRegistrado() + (factura.getTotaRegistrado() * 0.13);
 		if (factura.getTotaRegistrado() > 113 && agente) {
-			retenido = ivado * 0.01;
+			retenido = factura.getTotaRegistrado() * 0.01;
 		}
 		
 		
@@ -346,7 +351,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		
 		Row rowFinal_total = sheet.createRow(29);
 		rowFinal_total.createCell(6);
-		rowFinal_total.getCell(6).setCellValue("$  " + String.format("%.2f", ivado - retenido));
+		rowFinal_total.getCell(6).setCellValue("$  " + df.format(ivado - retenido));
 		rowFinal_total.getCell(6).setCellStyle(ennegritacell);
 		rowFinal_total.setHeightInPoints(23);
 

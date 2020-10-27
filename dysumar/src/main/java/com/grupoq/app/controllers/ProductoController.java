@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,9 +31,11 @@ import com.grupoq.app.models.entity.CarritoItems;
 import com.grupoq.app.models.entity.Facturacion;
 import com.grupoq.app.models.entity.Notificaciones;
 import com.grupoq.app.models.entity.Producto;
+import com.grupoq.app.models.entity.Usuario;
 import com.grupoq.app.models.service.IFacturaService;
 import com.grupoq.app.models.service.INotificacionesService;
 import com.grupoq.app.models.service.IProductoService;
+import com.grupoq.app.models.service.IUsuarioService;
 import com.grupoq.app.util.paginator.PageRender;
 
 @Controller
@@ -42,6 +46,9 @@ public class ProductoController {
 
 	@Autowired
 	private IProductoService productoService;
+
+	@Autowired
+	private IUsuarioService usersService;
 
 	@Autowired
 	INotificacionesService notificacionesService;
@@ -56,10 +63,13 @@ public class ProductoController {
 			@PathVariable(value = "op", required = false) String op) {
 		Pageable pageRequest = PageRequest.of(page, 20);
 		Page<Producto> productos = null;
-		nombrep =(nombrep==null)?nombrep:nombrep.replace("zzz","/");
+		nombrep = (nombrep == null) ? nombrep : nombrep.replace("zzz", "/");
+		String urlpage = "listar";
 		if (nombrep != null) {
+			urlpage = nombrep;
 			if (op.equals("nombre")) {
 				productos = productoService.findAllLike(nombrep, pageRequest);
+
 			}
 			if (op.equals("codigo")) {
 				productos = productoService.findByCodigo(nombrep, pageRequest);
@@ -79,7 +89,7 @@ public class ProductoController {
 		} else {
 			productos = productoService.findAllJoin(pageRequest);
 		}
-		PageRender<Producto> pageRender = new PageRender<>("listar", productos);
+		PageRender<Producto> pageRender = new PageRender<>(urlpage, productos);
 		model.addAttribute("titulo", "Listado de productos");
 		model.addAttribute("productos", productos);
 		model.addAttribute("page", pageRender);
@@ -111,6 +121,22 @@ public class ProductoController {
 				: "Error en la solicitud, ese ID de solicitud podria no existir!!";
 
 		producto.setStatus(true);
+		productoService.save(producto);
+		flash.addFlashAttribute("success", mensajeFlash);
+		return "redirect:/producto/listar";
+	}
+
+	@Secured({ "ROLE_ADMIN", "ROLE_INV" })
+	@RequestMapping(value = "/asegurar/{id}")
+	public String asegurarProducto(@PathVariable(value = "id") Long id, Map<String, Object> model,
+			RedirectAttributes flash) {
+		Producto producto = productoService.findOne(id);
+
+		String mensajeFlash = (producto != null) ? "Cambio de estado éxitoso!"
+				: "Error en la solicitud, ese ID de solicitud podria no existir!!";
+		boolean estadoB;
+		estadoB = producto.isAsegurar() ? false : true;
+		producto.setAsegurar(estadoB);
 		productoService.save(producto);
 		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:/producto/listar";
@@ -156,11 +182,13 @@ public class ProductoController {
 			model.addAttribute("titulo", "Formulario de Productos");
 			return "/productos/productoform";
 		}
+
 		String mensajeFlash = (producto.getId() != null) ? "Producto editado con éxito!"
 				: "Producto creado o solicitud enviada con éxito!";
 		if (producto.getId() == null) {
 			producto.setStock(0);
 		}
+		producto.setAsegurar(false);
 		productoService.save(producto);
 		status.setComplete();
 		nuevaNotificacion("fas fa-box-open", "Producto '" + producto.getNombrep() + "' agregado o modificado",
@@ -245,9 +273,15 @@ public class ProductoController {
 	}
 
 	@GetMapping(value = "/historialDePrecios/{id}", produces = { "application/json" })
-	public @ResponseBody List<HistorialDePrecios> historialDePrecios(@PathVariable(value = "id") String idp) {		
+	public @ResponseBody List<HistorialDePrecios> historialDePrecios(@PathVariable(value = "id") String idp,
+			HttpServletRequest request, Authentication auth) {
 		List<HistorialDePrecios> historyList = new ArrayList<HistorialDePrecios>();
-		List<Facturacion> lista = facturaService.findHistorialPrecios(Long.parseLong(idp));
+		// ver si mostramos todos o solo los del vendedor
+		Usuario user_ = usersService.findByUsername(auth.getName());
+
+		List<Facturacion> lista = (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_JEFEADM"))
+				? facturaService.findHistorialPrecios(Long.parseLong(idp))
+				: facturaService.findHistorialPreciosVendedor(Long.parseLong(idp), user_.getId());
 
 		for (int i = 0; i < lista.size(); i++) {
 			HistorialDePrecios hp = new HistorialDePrecios();
@@ -261,7 +295,7 @@ public class ProductoController {
 			}
 			historyList.add(hp);
 		}
-		
+
 		return historyList;
 	}
 

@@ -43,7 +43,7 @@ public class Producto implements Serializable {
 	
 	@NotEmpty
 	private String nombrep;
-	@Length (min = 5, max = 30)
+	@Length (min = 4, max = 30)
 	private String bodega;
 	
 	@NotNull
@@ -85,6 +85,7 @@ public class Producto implements Serializable {
 	private List<Inventario> inventarios;
 	
 	private int stock;
+	private boolean asegurar;
 	
 	public Producto() {
 		this.inventarios = new ArrayList<Inventario>();
@@ -200,6 +201,14 @@ public class Producto implements Serializable {
 
 	public void setBodega(String bodega) {
 		this.bodega = bodega;
+	}
+
+	public boolean isAsegurar() {
+		return asegurar;
+	}
+
+	public void setAsegurar(boolean asegurar) {
+		this.asegurar = asegurar;
 	}
 
 	

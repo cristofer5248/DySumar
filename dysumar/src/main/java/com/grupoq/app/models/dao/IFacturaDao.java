@@ -31,8 +31,9 @@ public interface IFacturaDao extends PagingAndSortingRepository<Facturacion, Lon
 //	para encontrar si una factura esta en estado 3 que es insuficiente y al meter en inventario cambie de estado
 	@Query(value = "select f from Facturacion f join fetch f.cotizacion c join fetch c.carrito ca join fetch ca.productos pro where f.status=3 and pro.id=?1")
 	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatus(Long id);
-	
-	//para encontrar si una factura esta en estado 3 que es insuficiente y al meter en inventario cambie de estado pero sin producto
+
+	// para encontrar si una factura esta en estado 3 que es insuficiente y al meter
+	// en inventario cambie de estado pero sin producto
 //	@Query(value = "select f from Facturacion f join fetch f.cotizacion c join fetch c.carrito ca where f.status=3 and ca.status=true")
 	@Query(value = "select f from Facturacion f join fetch f.cotizacion c join fetch c.carrito ca join fetch ca.productos p where f.status=3 and ca.status!=true and p.id=?1")
 	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatusWithoutProducto(Long id);
@@ -40,21 +41,27 @@ public interface IFacturaDao extends PagingAndSortingRepository<Facturacion, Lon
 	@Query(value = "select f from Facturacion f where f.status=3")
 	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatusByCarritoStatus(Long id);
 
-	// rindiendo cuentas por vendedor en lista segun recientes 
+	// rindiendo cuentas por vendedor en lista segun recientes
 	@Query(value = "select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join fetch f.tipoFactura tp join fetch f.condicionesDPago cp join fetch f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by f.id desc", countQuery = "select count(f) from Facturacion f join f.cliente cd join cd.cliente c join f.tipoFactura tp join f.condicionesDPago cp join f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by f.id desc")
 	public Page<Facturacion> findAllByFecha(Pageable page, Date date1, Date date2);
-	
-	//listando por fecha pero solo a un vendedor
+
+	// listando por fecha pero solo a un vendedor
 	@Query(value = "select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join fetch f.tipoFactura tp join fetch f.condicionesDPago cp join fetch f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 and usu.id=?3 order by f.id desc", countQuery = "select count(f) from Facturacion f join f.cliente cd join cd.cliente c join f.tipoFactura tp join f.condicionesDPago cp join f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 and usu.id=?3 order by f.id desc")
 	public Page<Facturacion> findAllByFechaRestricted(Pageable page, Date date1, Date date2, Long id);
 
 	// rindiendo cuentas por vendedor agrupado
-	@Query(value = "select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join fetch f.tipoFactura tp join fetch f.condicionesDPago cp join fetch f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by c.nombre asc", countQuery="select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join f.tipoFactura tp join f.condicionesDPago cp join f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by c.nombre asc")
+	@Query(value = "select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join fetch f.tipoFactura tp join fetch f.condicionesDPago cp join fetch f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by c.nombre asc", countQuery = "select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join f.tipoFactura tp join f.condicionesDPago cp join f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by c.nombre asc")
 	public Page<Facturacion> findAllByFechaGroupBy(Pageable page, Date date1, Date date2);
-	//buscar si esta la cotizacion repetida en factura
+
+	// buscar si esta la cotizacion repetida en factura
 	@Query("SELECT COUNT(f) FROM Facturacion f join f.cotizacion c where c.id=?1")
 	public Long cotizacionRepetida(Long id);
-	//el nombre lo dice, busco precios ya dados en factura de un producto
+
+	// el nombre lo dice, busco precios ya dados en factura de un producto
 	@Query("SELECT f FROM Facturacion f join fetch f.cotizacion c join fetch c.carrito ca join fetch ca.productos p where p.id=?1")
 	public List<Facturacion> findHistorialPrecios(Long id);
+
+	// el nombre lo dice, busco precios ya dados en factura de un producto PERO PARA EL VENDEDOR
+	@Query("SELECT f FROM Facturacion f join fetch f.aCuentade usu join fetch f.cotizacion c join fetch c.carrito ca join fetch ca.productos p where p.id=?1 and usu.id=?2")
+	public List<Facturacion> findHistorialPreciosVendedor(Long id, Long vendedor);
 }

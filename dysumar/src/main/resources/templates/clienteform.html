@@ -57,7 +57,8 @@
 							fiscal</label>
 						<div class="col-sm-6">
 							<input type="text" th:field="*{codigo}" class="form-control"
-								maxlength="11" pattern="(\d|-)+" min="3"
+								maxlength="11" pattern="(\d|-)+" min="3" required="required"
+								title="Este campo no es obligatorio, puede dejar el 0 para saltarlo"
 								placeholder="Este campo no es obligatorio, puede dejar el 0 para saltarlo"
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
@@ -79,8 +80,8 @@
 					<div class="form-group row">
 						<label for="dui" class="col-sm-2 col-form-label">AGENTE</label>
 						<div class="col-sm-6">
-							<input type="checkbox" th:field="*{agente}"
-								id="dui" th:errorclass="'form-control alert-danger'" /> <small
+							<input type="checkbox" th:field="*{agente}" id="dui"
+								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger duinitmask"
 								th:if="${#fields.hasErrors('agente')}" th:errors="*{agente}"></small>
 						</div>
@@ -110,9 +111,9 @@
 						<label for="cargar_giros" class="col-sm-2 col-form-label"
 							th:text="'Giro'"></label>
 						<div class="col-sm-4">
-							<input type="text" th:field="*{giro}" name="cargar_giro" required="required"
-								placeholder="Buscar un giro ya existente..." id="cargar_giro"
-								class="form-control" />
+							<input type="text" th:field="*{giro}" name="cargar_giro"
+								required="required" placeholder="Buscar un giro ya existente..."
+								id="cargar_giro" class="form-control" />
 						</div>
 						<button type="button" class="btn btn-primary" data-toggle="modal"
 							data-target="#exampleModal2">Registrar uno nuevo</button>

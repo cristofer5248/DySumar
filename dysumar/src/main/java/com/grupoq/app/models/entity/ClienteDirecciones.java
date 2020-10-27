@@ -20,24 +20,25 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "ClienteDirecciones")
 public class ClienteDirecciones implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Direccion direcciones;
-	
+
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Cliente cliente;
-	
+
 	@JsonIgnore
-	@OneToMany(mappedBy="cliente", fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	@OneToMany(mappedBy="cliente", fetch=FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+	// para borrar factura completamente
 	/* @JoinColumn(name="producto") */
 	private List<Facturacion> facturacion;
-	
+
 	public ClienteDirecciones() {
 		this.facturacion = new ArrayList<Facturacion>();
 	}
