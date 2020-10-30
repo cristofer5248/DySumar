@@ -157,6 +157,30 @@ public class ClienteServiceImpl implements IClienteService {
 		
 	}
 
+	@Override
+	public Page<Cliente> findByNombrePage(String term, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return clienteDao.findByNombrePage(term, pageable);
+	}
+
+	@Override
+	public Page<Cliente> findByIdPage(Long term, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return clienteDao.findByIdPage(term, pageable);
+	}
+
+	@Override
+	public Page<Cliente> findByNombrePageOwner(String term, String usuario, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return clienteDao.findByNombrePageOwner(term, usuario, pageable);
+	}
+
+	@Override
+	public Page<Cliente> findByIdPageOwner(Long term, String usuario, Pageable pageable) {
+		// TODO Auto-generated method stub
+		return clienteDao.findByIdPageOwner(term, usuario, pageable);
+	}
+
 	
 
 	

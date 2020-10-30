@@ -46,7 +46,7 @@ public class Cliente implements Serializable {
 	@Email
 	private String email;
 	
-	@NotEmpty
+	
 	@Column(length = 22)
 	private String dui;
 	

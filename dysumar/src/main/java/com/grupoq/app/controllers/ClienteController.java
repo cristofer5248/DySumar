@@ -103,7 +103,12 @@ public class ClienteController {
 		return "vercliente";
 	}
 
-	@RequestMapping(value = { "/clientes", "/", "/clientes/{opc}/{param}" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String redireccionador() {
+		return "redirect:/notificaciones/";
+	}
+
+	@RequestMapping(value = { "/clientes", "/clientes/{opc}/{param}" }, method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page,
 			@PathVariable(value = "opc", required = false) String opc,
 			@PathVariable(value = "param", required = false) String param, Model model, Authentication authentication,
@@ -144,7 +149,7 @@ public class ClienteController {
 			logger.info("Forma usando HttpServletRequest: Hola ".concat(auth.getName()).concat(" NO tienes acceso!"));
 		}
 
-		Pageable pageRequest = PageRequest.of(page, 4);
+		Pageable pageRequest = PageRequest.of(page, 10);
 		Page<Cliente> clientes = null;
 		if (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_JEFEADM")) {
 			if (opc == null) {
@@ -152,6 +157,8 @@ public class ClienteController {
 			} else {
 				clientes = opc.equals("giro") ? clienteService.findAllByGiroAdmin(Long.parseLong(param), pageRequest)
 						: null;
+				clientes = opc.equals("nombre") ? clienteService.findByNombrePage(param, pageRequest)
+						: clienteService.findByIdPage(Long.parseLong(param), pageRequest);
 			}
 
 		} else {
@@ -161,6 +168,9 @@ public class ClienteController {
 				clientes = opc.equals("giro")
 						? clienteService.findAllByGiro(Long.parseLong(param), auth.getName(), pageRequest)
 						: null;
+				clientes = opc.equals("nombre")
+						? clienteService.findByNombrePageOwner(param, auth.getName(), pageRequest)
+						: clienteService.findByIdPageOwner(Long.parseLong(param), auth.getName(), pageRequest);
 			}
 		}
 		PageRender<Cliente> pageRender = new PageRender<Cliente>("/clientes", clientes);
@@ -248,7 +258,8 @@ public class ClienteController {
 			flash.addFlashAttribute("success", "Cliente eliminado con éxito");
 		} catch (Exception e) {
 			// TODO: handle exception
-			flash.addFlashAttribute("error", "Es posible que este cliente esté atado a una factura o elimine una direccion atada.");
+			flash.addFlashAttribute("error",
+					"Es posible que este cliente esté atado a una factura o elimine una direccion atada.");
 			return "redirect:/clientes";
 		}
 //			if (uploadFileService.delete(cliente.getFoto())) {

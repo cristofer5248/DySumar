@@ -30,6 +30,10 @@ public interface IClienteService {
 	public Cliente findOne(Long id);
 	
 	public List<Cliente> findByNombre(String term);
+	public Page<Cliente> findByNombrePage(String term, Pageable pageable);
+	public Page<Cliente> findByNombrePageOwner(String term,String usuario, Pageable pageable);
+	public Page<Cliente> findByIdPage(Long term, Pageable pageable);
+	public Page<Cliente> findByIdPageOwner(Long term, String usuario, Pageable pageable);
 	
 	//buscar por nombre pero tambien like
 	public List<Cliente> findByUsuarioLike(String term, String nombre);

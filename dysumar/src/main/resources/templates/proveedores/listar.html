@@ -57,7 +57,7 @@
 							<td
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('INV')}"><a
 								class="btn btn-primary btn-xs"
-								th:href="@{/verproducto/} + ${proveedor.id}"
+								href="#"
 								th:text="${proveedor.id}"></a></td>
 							<td th:text="${proveedor.nombre}"></td>
 							<td th:text="${proveedor.codigoP}"></td>

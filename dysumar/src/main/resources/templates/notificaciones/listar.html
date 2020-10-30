@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="layout/layout :: head"></head>
+<link rel='stylesheet prefetch'
+	href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+<link rel='stylesheet prefetch'
+	href='https://fonts.googleapis.com/css?family=Roboto:100,300,400'>
+
+<link rel="stylesheet" href="css/deleteanimated_js.css">
+
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<div class="card-header"></div>
+			<div class="card-body">
+
+
+				<table class="table table-striped table-bordered table-sm"
+					id="example">
+					<thead class="thead-inverse">
+						<tr>
+							<th>Titulo</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="noti: ${notificaciones}">
+							<td><a th:href="${noti.url}"><i th:class="${noti.icono}"
+								th:style="'color: '+ ${noti.color}"></i><label style="font-size: 20px;"
+								th:text="${noti.nombre}"></label></a><label class='pTa'><time style="font-size:20px"
+										class='timeago tAgo' th:datetime="${noti.fecha}"></time></label></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	<script>
+		$(document).ready(function() {
+			$('#example').DataTable({
+				"paging" : false,
+
+				"searching" : true,
+				"info" : false
+			});
+		});
+		$('time.timeago').timeago();
+	</script>
+</body>
+</html>

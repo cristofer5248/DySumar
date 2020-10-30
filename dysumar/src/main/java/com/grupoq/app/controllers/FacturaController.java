@@ -124,7 +124,6 @@ public class FacturaController {
 								? facturaservice.findAllByFecha(pageRequest, date1, date2)
 								: facturaservice.findAllByFechaRestricted(pageRequest, date1, date2, user_temp.getId());
 
-								
 						System.out.print("Entro a 'admin' tamaño:" + facturacion.getSize() + "\n");
 //						System.out.print("ID:" + facturacion.getNumberOfElements() + "\n");	
 						model.addAttribute("activePivot", false);
@@ -486,19 +485,23 @@ public class FacturaController {
 //para ver el detalle de la FACTURA
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER", "ROLE_JEFEADM", "ROLE_FACT" })
 	@GetMapping(value = "/ver/{id}")
-	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash,Authentication auth) {
+	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash,
+			Authentication auth, HttpServletRequest request) {
 
 		Facturacion facturacion = facturaservice.fetchByIdWithClienteWithCarritoItemsWithProducto(id);
 		if (facturacion == null) {
 			flash.addFlashAttribute("error", "El ingreso con ese codigo no existe en la base de datos");
 			return "redirect:/facturacion/listar";
 		}
-		System.out.print("\n usuario1 "+auth.getName());
-		System.out.print("\n usuario2 "+facturacion.getaCuentade().getUsername());
-		if(!facturacion.getaCuentade().getUsername().equals(auth.getName())) {
+		System.out.print("\n usuario1 " + auth.getName());
+		System.out.print("\n usuario2 " + facturacion.getaCuentade().getUsername());
+
+		if (!facturacion.getaCuentade().getUsername().equals(auth.getName())
+				&& !(request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_JEFEADM"))) {
 			flash.addFlashAttribute("error", "La factura que intentas ver no te corresponde porque no es tuya.");
 			return "redirect:/facturacion/listar";
 		}
+
 		model.put("activePivot", true);
 		model.put("facturaciones", facturacion);
 //		model.put("proveedor", facturacion.get(0).getProducto().getProveedor().getNombre());
@@ -513,18 +516,18 @@ public class FacturaController {
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 
 		if (id > 0) {
-			try {				
+			try {
 				flash.addFlashAttribute("success", "Facturacion eliminada con éxito!");
-				//aqui le ponemos reversa de factura hasta productos/inventarios
+				// aqui le ponemos reversa de factura hasta productos/inventarios
 				Facturacion fac = facturaservice.findBy(id);
-				for(CarritoItems carrito: fac.getCotizacion().getCarrito()) {					
+				for (CarritoItems carrito : fac.getCotizacion().getCarrito()) {
 					Producto pro = productoservice.findOne(carrito.getProductos().getId());
-					System.out.print("Elemento: "+pro.getNombrep()+"\n"+"Cantidad: "+carrito.getCantidad());
-					pro.setStock(pro.getStock()+carrito.getCantidad());
-					productoservice.save(pro);					
+					System.out.print("Elemento: " + pro.getNombrep() + "\n" + "Cantidad: " + carrito.getCantidad());
+					pro.setStock(pro.getStock() + carrito.getCantidad());
+					productoservice.save(pro);
 				}
 				facturaservice.delete(id);
-				
+
 			} catch (Exception e) {
 				flash.addFlashAttribute("error",
 						"El Facturacion posiblemente tiene registros enlazados, no se puede eliminar!");

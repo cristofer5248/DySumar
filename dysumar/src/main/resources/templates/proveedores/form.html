@@ -23,18 +23,19 @@
 					<div class="form-group row">
 						<label for="proveedor" class="col-sm-2 col-form-label">Nombre</label>
 						<div class="col-sm-6">
-							<input type="text" th:field="*{nombre}" class="form-control"
-								th:errorclass="'form-control alert-danger'" /> <small
-								class="form-text text-danger"
+							<input type="text" required="required" th:field="*{nombre}"
+								class="form-control" th:errorclass="'form-control alert-danger'" />
+							<small class="form-text text-danger"
 								th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
 						</div>
 					</div>
 					<div class="form-group row">
 						<label for="codigo" class="col-sm-2 col-form-label">Codigo</label>
 						<div class="col-sm-6">
-							<input type="number" th:field="*{codigoP}" class="form-control"
-								th:errorclass="'form-control alert-danger'" /> <small
-								class="form-text text-danger"
+							<input type="number" required="required" th:field="*{codigoP}"
+								placeholder="Si no tienes el codigo aun, pon un 0 para pasar"
+								class="form-control" th:errorclass="'form-control alert-danger'" />
+							<small class="form-text text-danger"
 								th:placeholder="Codigo propocionado por el proveedor"
 								th:if="${#fields.hasErrors('codigoP')}" th:errors="*{codigoP}"></small>
 						</div>
@@ -44,7 +45,7 @@
 							th:text="'Giro'"></label>
 						<div class="col-sm-6">
 							<input type="text" th:field="*{giro}" name="cargar_giro"
-								id="cargar_giro" class="form-control" />
+								readonly="readonly" id="cargar_giro" class="form-control" />
 						</div>
 					</div>
 					<div class="form-group row">
@@ -60,15 +61,15 @@
 						<label for="email" class="col-sm-2 col-form-label">Email</label>
 						<div class="col-sm-6">
 							<input type="email" th:field="*{email}" class="form-control"
-								th:errorclass="'form-control alert-danger'" /> <small
-								class="form-text text-danger"
+								required="required" th:errorclass="'form-control alert-danger'" />
+							<small class="form-text text-danger"
 								th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
 						</div>
 					</div>
 					<div class="form-group row">
 						<label for="nit" class="col-sm-2 col-form-label">NIT</label>
 						<div class="col-sm-6">
-							<input type="number" th:field="*{nit}" class="form-control"
+							<input th:field="*{nit}" class="form-control"
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
 								th:if="${#fields.hasErrors('nit')}" th:errors="*{nit}"></small>
@@ -85,7 +86,8 @@
 						</div>
 					</div>
 					<div class="form-group row">
-						<label for="razon_social" class="col-sm-2 col-form-label">Razon Social</label>
+						<label for="razon_social" class="col-sm-2 col-form-label">Razon
+							Social</label>
 						<div class="col-sm-6">
 							<input type="text" th:field="*{razonsocial}" class="form-control"
 								th:errorclass="'form-control alert-danger'" /> <small
@@ -97,7 +99,7 @@
 
 					<div class="form-group row">
 						<div class="col-sm-6">
-							<input type="submit" th:value="${titulo}"
+							<input type="submit" th:value="'Ingresar'"
 								class="btn btn-secondary" />
 						</div>
 					</div>
@@ -107,8 +109,8 @@
 	</div>
 
 	<footer th:replace="layout/layout :: footer"></footer>
-	<input type="hidden" id="urlAjax" th:value="@{/giro/cargar_giro/}"/>
-	<script th:replace="proveedores/js/autocomplete :: javascript"></script>	
+	<input type="hidden" id="urlAjax" th:value="@{/giro/cargar_giro/}" />
+	<script th:replace="proveedores/js/autocomplete :: javascript"></script>
 
 
 </body>

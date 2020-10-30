@@ -35,7 +35,8 @@
 						th:text="'Volver'"></a> <a class="btn btn-danger btn-xs"
 						th:href="@{/factura/eliminar/}+${codigofa}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT','ROLE_JEFEADM')"
-						th:text="'Descarcar ahora'" onclick="return confirm('Estas seguro que quieres eliminar?');"></a>
+						th:text="'Descarcar ahora'"
+						onclick="return confirm('Estas seguro que quieres eliminar?');"></a>
 					<a th:if="${facturaciones.status==2}"
 						class="btn btn-success btn-xs" data-toggle="modal"
 						data-target="#exampleModal2" style="color: white;"
@@ -120,9 +121,8 @@
 						<thead class="thead-inverse">
 							<tr>
 								<th>ID</th>
-								<th style="font-size: 10px"
-									>ID carrito</th>
-								<th style="font-size: 10px">CO ID</th>
+								<th style="font-size: 10px">ID carrito</th>
+								<th style="font-size: 10px">PRO ID</th>
 								<th>Producto</th>
 								<th>Proveedor</th>
 								<th>Marca</th>
@@ -141,16 +141,17 @@
 						</thead>
 						<tbody>
 							<tr th:each="carritos: ${facturaciones.cotizacion.carrito}">
+								<td th:text="${facturaciones.id}"></td>
 								<td><a
-									th:href="@{/producto/ver/} + ${carritos.productos.id}"
-									class="btn btn-success" target="_blank" title="Aqui puedes ir directamente a ver el producto"
-									th:text="${carritos.productos.id}"></a></td>
-								<td th:text="${carritos.id}"></td>
-								<td><a 
 									th:href="@{/cotizacion/ver/} + ${carritos.cotizacionid.id}"
 									title="Aqui puedes ir directamente a la cotizacion nada mas"
-									class="btn btn-warning" target="_blank" style="font-size: 10px"
+									class="btn btn-warning" target="_blank"
 									th:text="${carritos.cotizacionid.id}"></a></td>
+								<td><a
+									th:href="@{/producto/ver/} + ${carritos.productos.id}"
+									title="Aqui puedes ir directamente a ver el producto"
+									class="btn btn-warning" target="_blank" style="font-size: 10px"
+									th:text="${carritos.productos.id}"></a></td>
 								<td th:text="${carritos.productos.nombrep}"></td>
 								<td th:text="${carritos.productos.proveedor.nombre}"></td>
 								<td th:text="${carritos.productos.marca.nombrem}"></td>
