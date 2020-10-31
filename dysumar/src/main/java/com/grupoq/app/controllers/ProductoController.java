@@ -92,8 +92,22 @@ public class ProductoController {
 		PageRender<Producto> pageRender = new PageRender<>(urlpage, productos);
 		model.addAttribute("titulo", "Listado de productos");
 		model.addAttribute("productos", productos);
+		if (page > 1) {
+			model.addAttribute("pagina", page);
+		} else {
+			model.addAttribute("pagina", page);
+		}
 		model.addAttribute("page", pageRender);
 		return "/productos/listar";
+	}
+
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_SELLER", "ROLE_INV" })
+	@RequestMapping(value = "/listartodos", method = RequestMethod.GET)
+	public void listarTodos(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+		List<Producto> productos = productoService.findAllList();
+//		model.addAttribute("titulo", "Listado de marcas");
+		model.addAttribute("productos", productos);
+//		return "/giros/listar";
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_INV", "ROLE_SELLER" })

@@ -26,7 +26,8 @@
 						th:href="@{/producto/nuevo}" class="btn btn-primary btn-xs">Crear
 						Producto</a> <a sec:authorize="hasRole('ROLE_SELLER')"
 						th:href="@{/producto/nuevoS}" class="btn btn-primary btn-xs">Crear
-						solicitud</a>
+						solicitud</a> <a class="btn btn-success btn-xs"
+						th:href="@{/producto/listar(format=xlsx)}">XLSX</a>
 
 					<form class="searchbox" id="formsearch" action="">
 						<input type="search"
@@ -185,15 +186,15 @@
 
 
 	</div>
-	<input type="hidden" id="urlenviar" th:value="@{/producto/listar/}" />	
+	<input type="hidden" id="urlenviar" th:value="@{/producto/listar/}" />
 	<footer th:replace="layout/layout :: footer"></footer>
 	<script th:replace="productos/js/historialdeprecios :: javascript"></script>
-<!-- 	aqui supuestamente son urls -->
+	<!-- 	aqui supuestamente son urls -->
 	<input type="hidden" id="urlAjaxprecios"
 		th:value="@{/producto/historialDePrecios/}" />
 	<input type="hidden" id="urlAjaxFactura" th:value="@{/factura/ver/}" />
 	<input type="hidden" id="urlAjaxCoti" th:value="@{/cotizacion/ver/}" />
-<!-- 	termina -->
+	<!-- 	termina -->
 	<script th:src="@{/js/searchbar.js}"></script>
 	<script th:inline="javascript">
 	var x = [[${error}]];
