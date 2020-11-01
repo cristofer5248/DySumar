@@ -27,7 +27,7 @@
 						Producto</a> <a sec:authorize="hasRole('ROLE_SELLER')"
 						th:href="@{/producto/nuevoS}" class="btn btn-primary btn-xs">Crear
 						solicitud</a> <a class="btn btn-success btn-xs"
-						th:href="@{/producto/listar(format=xlsx)}">XLSX</a>
+						th:href="@{'/producto/listar'+ ${xlsxpath}(format=xlsx)}">XLSX</a>
 
 					<form class="searchbox" id="formsearch" action="">
 						<input type="search"

@@ -63,9 +63,12 @@ public class ProductoController {
 			@PathVariable(value = "op", required = false) String op) {
 		Pageable pageRequest = PageRequest.of(page, 20);
 		Page<Producto> productos = null;
+		String xlsxPath = (page>0)?"?page="+page:"";
+		
 		nombrep = (nombrep == null) ? nombrep : nombrep.replace("zzz", "/");
 		String urlpage = "listar";
 		if (nombrep != null) {
+			xlsxPath="/"+op+"/"+nombrep;
 			urlpage = nombrep;
 			if (op.equals("nombre")) {
 				productos = productoService.findAllLike(nombrep, pageRequest);
@@ -86,18 +89,15 @@ public class ProductoController {
 			if (productos == null) {
 				model.addAttribute("error", "Error, Query mal formado");
 			}
+			xlsxPath+= (page>0)?"?page="+page:"";
 		} else {
 			productos = productoService.findAllJoin(pageRequest);
 		}
 		PageRender<Producto> pageRender = new PageRender<>(urlpage, productos);
 		model.addAttribute("titulo", "Listado de productos");
 		model.addAttribute("productos", productos);
-		if (page > 1) {
-			model.addAttribute("pagina", page);
-		} else {
-			model.addAttribute("pagina", page);
-		}
 		model.addAttribute("page", pageRender);
+		model.addAttribute("xlsxpath",xlsxPath);
 		return "/productos/listar";
 	}
 
