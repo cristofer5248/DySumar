@@ -57,18 +57,28 @@ public class ProductoController {
 	IFacturaService facturaService;
 
 	@Secured({ "ROLE_ADMIN", "ROLE_INV", "ROLE_JEFEADM", "ROLE_SELLER" })
-	@RequestMapping(value = { "/listar", "/listar/{op}/{nombrep}" }, method = RequestMethod.GET)
+	@RequestMapping(value = { "/listar", "/listar/{op}/{nombrep}", "/listar/{op}" }, method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
 			@PathVariable(value = "nombrep", required = false) String nombrep,
 			@PathVariable(value = "op", required = false) String op) {
-		Pageable pageRequest = PageRequest.of(page, 20);
+		Pageable pageRequest;
+		boolean enablebtnall = false;
+		// mostrar todos o no 0= a todas y >0 es por paginado
+		int npage = 20;
+		if (op != null) {
+			pageRequest = (op.equals("all")) ? Pageable.unpaged() : PageRequest.of(page, npage);
+			enablebtnall = (op.equals("all") ? true : false);
+		} else {
+			pageRequest = PageRequest.of(page, npage);
+		}
+
 		Page<Producto> productos = null;
-		String xlsxPath = (page>0)?"?page="+page:"";
-		
+		String xlsxPath = (page > 0) ? "?page=" + page : "";
 		nombrep = (nombrep == null) ? nombrep : nombrep.replace("zzz", "/");
 		String urlpage = "listar";
+
 		if (nombrep != null) {
-			xlsxPath="/"+op+"/"+nombrep;
+			xlsxPath = "/" + op + "/" + nombrep;
 			urlpage = nombrep;
 			if (op.equals("nombre")) {
 				productos = productoService.findAllLike(nombrep, pageRequest);
@@ -89,15 +99,22 @@ public class ProductoController {
 			if (productos == null) {
 				model.addAttribute("error", "Error, Query mal formado");
 			}
-			xlsxPath+= (page>0)?"?page="+page:"";
+			xlsxPath += (page > 0) ? "?page=" + page : "";
 		} else {
 			productos = productoService.findAllJoin(pageRequest);
+			xlsxPath = (op == null) ? xlsxPath : xlsxPath + "/all";
+
 		}
+
+		// que model pondremos si es lista o page
+
+		model.addAttribute("nopage", false);
 		PageRender<Producto> pageRender = new PageRender<>(urlpage, productos);
-		model.addAttribute("titulo", "Listado de productos");
-		model.addAttribute("productos", productos);
 		model.addAttribute("page", pageRender);
-		model.addAttribute("xlsxpath",xlsxPath);
+		model.addAttribute("productos", productos);
+		model.addAttribute("titulo", "Listado de productos");
+		model.addAttribute("xlsxpath", xlsxPath);
+		model.addAttribute("enablebtnall", enablebtnall);
 		return "/productos/listar";
 	}
 

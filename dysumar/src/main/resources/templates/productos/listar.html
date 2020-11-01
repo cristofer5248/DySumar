@@ -22,12 +22,22 @@
 
 
 				<div class="card-title">
+					<a class="btn btn-primary btn-xs" style="color: white"
+						th:if="${enablebtnall}" th:href="@{/producto/listar}">Volver </a>
+
 					<a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"
 						th:href="@{/producto/nuevo}" class="btn btn-primary btn-xs">Crear
 						Producto</a> <a sec:authorize="hasRole('ROLE_SELLER')"
 						th:href="@{/producto/nuevoS}" class="btn btn-primary btn-xs">Crear
 						solicitud</a> <a class="btn btn-success btn-xs"
+						th:if="${!enablebtnall}"
 						th:href="@{'/producto/listar'+ ${xlsxpath}(format=xlsx)}">XLSX</a>
+					<a class="btn btn-warning btn-xs" style="color: white"
+						onclick="return confirm('¿Esta seguro? Mostrar muchos datos podria tardar un poco y alentar el servidor');"
+						th:if="${!enablebtnall}" th:href="@{/producto/listar/all}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV', 'ROLE_JEFEADM')">⚠ Ver
+						todos ⚠</a><a class="btn btn-success btn-xs" th:if="${enablebtnall}"
+						th:href="@{/producto/listar/all(format=xlsx)}">TODOS EN XLSX</a>
 
 					<form class="searchbox" id="formsearch" action="">
 						<input type="search"
@@ -180,7 +190,7 @@
 						</div>
 					</div>
 				</div>
-				<nav th:replace="paginator-nav :: paginator"></nav>
+				<nav th:if="${!nopage}" th:replace="paginator-nav :: paginator"></nav>
 			</div>
 		</div>
 
