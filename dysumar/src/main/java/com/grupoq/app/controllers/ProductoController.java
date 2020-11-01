@@ -137,6 +137,7 @@ public class ProductoController {
 
 		PageRender<Producto> pageRender = new PageRender<>("listarS", productos);
 		model.addAttribute("titulo", "Listado de solicitud de productos");
+		model.addAttribute("enablebtnall", true);
 		model.addAttribute("productos", productos);
 		model.addAttribute("page", pageRender);
 		return "/productos/listar";
