@@ -181,6 +181,12 @@ public class ClienteServiceImpl implements IClienteService {
 		return clienteDao.findByIdPageOwner(term, usuario, pageable);
 	}
 
+	@Override
+	public Direccion findByNombreDireccion(String nombre) {
+
+		return direccionesdao.findByNombre(nombre);
+	}
+
 	
 
 	

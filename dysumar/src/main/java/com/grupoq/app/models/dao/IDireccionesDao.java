@@ -11,4 +11,6 @@ public interface IDireccionesDao extends CrudRepository<Direccion, Long> {
 
 	@Query("select d from Direccion d where d.nombre like %?1%")
 	public List<Direccion> findallBy(String term);
+	
+	public Direccion findByNombre(String nombre);
 }

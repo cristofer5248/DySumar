@@ -56,9 +56,6 @@ public class ClienteController {
 	private IClienteService clienteService;
 
 	@Autowired
-	private IClienteService clientedireccionesService;
-
-	@Autowired
 	private ITipoClienteService tipocliente;
 
 	@Autowired
@@ -201,7 +198,7 @@ public class ClienteController {
 
 		if (id > 0) {
 			ClienteDirecciones cDireccion = null;
-			cDireccion = clientedireccionesService.findByIdDireccionOnly(id);
+			cDireccion = clienteService.findByIdDireccionOnly(id);
 			cliente = (cDireccion == null) ? clienteService.findOne(id) : cDireccion.getCliente();
 //			direccionid = cDireccion.getDirecciones().getId();
 			if (cliente == null) {
@@ -241,7 +238,7 @@ public class ClienteController {
 		if (!cliente.getApellido().equals("NO")) {
 			ClienteDirecciones cd = new ClienteDirecciones();
 			cd.setCliente(cliente);
-			cd.setDirecciones(clientedireccionesService.findByidDireccion(Long.parseLong(cliente.getApellido())));
+			cd.setDirecciones(clienteService.findByidDireccion(Long.parseLong(cliente.getApellido())));
 			clienteService.savecd(cd);
 		}
 		status.setComplete();
@@ -303,12 +300,22 @@ public class ClienteController {
 		return "/direccioncliente/form";
 	}
 
+	public boolean checkRepetidoDireccion(String nombre) {
+		boolean vacio = (clienteService.findByNombreDireccion(nombre) == null) ? false : true;
+		return vacio;
+	}
+
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/direccionsave", method = RequestMethod.POST)
 	public String guardar(@Valid Direccion direccion, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
 		if (result.hasErrors()) {
 			model.addAttribute("titulo", "Formulario de Direccions");
+			return "/direcciones/form";
+		}
+		if (checkRepetidoDireccion(direccion.getNombre())) {
+			model.addAttribute("titulo", "Formulario de Direccions");
+			model.addAttribute("error", "Direccion ya repetida");
 			return "/direcciones/form";
 		}
 		String mensajeFlash = (direccion.getId() != null) ? "direccion editada con éxito!"
@@ -324,9 +331,14 @@ public class ClienteController {
 	@RequestMapping(value = "/saveDExpress/{nombre}", method = { RequestMethod.GET }, produces = { "application/json" })
 	public @ResponseBody Long saveExpress(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable(value = "nombre", required = true) String nombre) {
+
 		Direccion direccion = new Direccion();
 		direccion.setNombre(nombre);
-		clienteService.save(direccion);
+		try {
+			clienteService.save(direccion);
+		} catch (Exception e) {
+			return clienteService.findByNombreDireccion(nombre).getId();
+		}
 		return direccion.getId();
 
 	}
@@ -364,7 +376,7 @@ public class ClienteController {
 
 	@GetMapping(value = "/cargar_direcciones/{term}", produces = { "application/json" })
 	public @ResponseBody List<ClienteDirecciones> listarDireccionesJson(@PathVariable Long term) {
-		List<ClienteDirecciones> list = clientedireccionesService.findByCliente(term);
+		List<ClienteDirecciones> list = clienteService.findByCliente(term);
 		return list;
 	}
 

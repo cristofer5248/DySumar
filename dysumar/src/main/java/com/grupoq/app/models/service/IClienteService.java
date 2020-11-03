@@ -17,6 +17,7 @@ public interface IClienteService {
 	public List<Direccion> findAlld(String term);
 	public void save(Direccion direccion);
 	public Direccion findByidDireccion(Long id);
+	public Direccion findByNombreDireccion(String nombre);
 	
 	public List<Cliente> findAllByUsuario(String usuario);
 	public Page <Cliente> findAllByUsuarioPage(String usuario, Pageable pageable);

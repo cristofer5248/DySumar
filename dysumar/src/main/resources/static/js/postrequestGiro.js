@@ -32,7 +32,7 @@ $(document).ready(
 		            	 console.log(data);
 		                 $("#btnGiro").prop("disabled", true);
 		                 $('#exampleModal2').modal('toggle');
-		                 alertify.alert('Exito!', 'Nuevo giro registrado, ahora puedes buscarlo en el formulario!', function(){ alertify.success('Ok'); });
+		                 alertify.alert('Exito!', 'Nuevo giro registrado , ahora puedes buscarlo en el formulario!', function(){ alertify.success('Ok'); });
 		                 // ...
 		             },
 		             error: function () {
@@ -55,7 +55,7 @@ $(document).ready(
 		            	 console.log(data);
 		                 $("#btnDireccion").prop("disabled", true);		                 
 		                 $('#exampleModal3').modal('toggle');
-		                 alertify.alert('Exito!', 'Nueva direccion registrada y agregada al formulario', function(){ alertify.success('Ok'); });
+		                 alertify.alert('Exito!', 'Direccion registrada/ encontrada  y agregada al formulario', function(){ alertify.success('Ok'); });
 		                 $('#direccionapellido').val(data);
 		                 $("#direccionapellido").prop("readonly", true);
 		                 // ...
