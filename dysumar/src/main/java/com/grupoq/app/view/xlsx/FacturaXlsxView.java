@@ -152,7 +152,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		sheet.setColumnWidth(0, 10 * 256);
 		sheet.setColumnWidth(1, 5 * 256);
 //		recortamos el tamaño si es credito fiscal
-		int tamanoCWith = (creditoFiscal)?43:48;
+		int tamanoCWith = (creditoFiscal) ? 43 : 48;
 		sheet.setColumnWidth(2, tamanoCWith * 256);
 		sheet.setColumnWidth(3, 8 * 256);
 		sheet.setColumnWidth(4, 7 * 256);
@@ -294,8 +294,8 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			// codigo del producto y nombre unidos por alguna razon
 			cellItems = fila.createCell(1);
 			cellItems.setCellStyle(celltextLeft);
-			cellItems.setCellValue(
-					"CÓDIGO: " + carrito.getProductos().getCodigo() + " " + carrito.getProductos().getNombrep());
+			cellItems.setCellValue(carrito.getProductos().getMarca().getNombrem() + " "
+					+ carrito.getProductos().getNombrep() + " " + carrito.getProductos().getPresentacion().getUnidad());
 
 			// precio
 			cellItems = fila.createCell(3);

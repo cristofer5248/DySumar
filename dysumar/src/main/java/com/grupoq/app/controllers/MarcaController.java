@@ -73,8 +73,9 @@ public class MarcaController {
 	public String guardar(@Valid Marca marca, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
 		if (result.hasErrors()) {
+			System.out.print("errorazo");
 			model.addAttribute("titulo", "Formulario de Marcas");
-			return "/marcas/marcaform";
+			return "/marcas/form";
 		}
 		String mensajeFlash = (marca.getIdm() != null) ? "marca editada con éxito!" : "Marca creada con éxito!";
 
@@ -93,7 +94,7 @@ public class MarcaController {
 				marcaService.delete(id);
 				flash.addFlashAttribute("success", "Marca eliminado con éxito!");
 			} catch (Exception e) {
-				flash.addFlashAttribute("success",
+				flash.addFlashAttribute("error",
 						"La marca posiblemente tiene registros en productos, no se puede eliminar!");
 				return "redirect:/marca/listar";
 			}

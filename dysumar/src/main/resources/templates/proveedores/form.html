@@ -36,7 +36,7 @@
 								placeholder="Si no tienes el codigo aun, pon un 0 para pasar"
 								class="form-control" th:errorclass="'form-control alert-danger'" />
 							<small class="form-text text-danger"
-								th:placeholder="Codigo propocionado por el proveedor"
+								th:placeholder="'Codigo propocionado por el proveedor'"
 								th:if="${#fields.hasErrors('codigoP')}" th:errors="*{codigoP}"></small>
 						</div>
 					</div>
@@ -69,7 +69,9 @@
 					<div class="form-group row">
 						<label for="nit" class="col-sm-2 col-form-label">NIT</label>
 						<div class="col-sm-6">
-							<input th:field="*{nit}" class="form-control"
+							<input th:field="*{nit}" class="form-control" maxlength="22"
+								pattern="(\d|-)+" title="Solo numeros y guiones"
+								placeholder="Escribirlo correctamente, esta limitado a numero y guiones"
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
 								th:if="${#fields.hasErrors('nit')}" th:errors="*{nit}"></small>

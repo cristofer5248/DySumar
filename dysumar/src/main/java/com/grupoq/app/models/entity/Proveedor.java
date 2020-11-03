@@ -9,7 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -22,10 +24,12 @@ public class Proveedor implements Serializable {
 	private Long id;
 	@NotEmpty
 	@Column(length = 80)
+	@Size(max = 80)
 	private String nombre;
 	
 	@NotEmpty
 	@Column(length = 20)
+	@Size(max = 20)
 	private String nit;
 	
 	@JsonIgnore
@@ -34,22 +38,27 @@ public class Proveedor implements Serializable {
 	
 	@NotEmpty
 	@Column(length= 90)
+	@Size(max = 90)
 	private String direccion;
 	
 	@NotEmpty
 	@Column(length= 8)
+	@Size(max = 8)
 	private String telefono;
 	
 	
 	@Column(length= 40)
+	@Email
 	private String email;
 	
 	@NotEmpty
 	@Column(length= 20)
+	@Size(max = 20)
 	private String codigoP;
 	
 	@NotEmpty
 	@Column(length= 80)
+	@Size(max = 80)
 	private String razonsocial;
 	/**
 	 * 

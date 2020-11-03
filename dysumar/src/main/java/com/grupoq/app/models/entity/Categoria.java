@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "categorias")
@@ -19,6 +20,7 @@ public class Categoria implements Serializable {
 	private Long id;
 	@NotEmpty
 	@Column(length = 40)
+	@Size(max = 40)
 	private String nombre;/**
 	 * 
 	 */

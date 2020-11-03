@@ -23,7 +23,7 @@
 					<div class="form-group row">
 						<label for="unidad" class="col-sm-2 col-form-label">Unidad</label>
 						<div class="col-sm-6">
-							<input type="text" th:field="*{unidad}" class="form-control" maxlength="5" required="required" placeholder="Unidad en que el producto viene, espacio limitado"
+							<input type="text" th:field="*{unidad}" class="form-control" required="required" placeholder="Unidad en que el producto viene, espacio limitado" title="El limite es de 5"
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
 								th:if="${#fields.hasErrors('unidad')}" th:errors="*{unidad}"></small>

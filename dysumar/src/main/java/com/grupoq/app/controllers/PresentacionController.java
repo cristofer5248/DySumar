@@ -49,7 +49,7 @@ public class PresentacionController {
 			SessionStatus status) {
 		if (result.hasErrors()) {
 			model.addAttribute("titulo", "Ingresar unidad de medida");
-			return "/direcciones/form";
+			return "/presentacion/form";
 		}
 		String mensajeFlash = (presentacion.getId() != null) ? "Unidad editada con éxito! Ahora puedes encontrar el dato en seccion de presentacion"
 				: "Unidad creada con éxito! Ahora puedes encontrar el dato en seccion de presentacion";

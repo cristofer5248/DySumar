@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Presentacion implements Serializable {
@@ -15,8 +16,10 @@ public class Presentacion implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(length = 5)
+	@Size(max = 5)
 	private String unidad;
 	@Column(length = 20)
+	@Size(max = 20)
 	private String detalle;
 	/**
 	 * 
