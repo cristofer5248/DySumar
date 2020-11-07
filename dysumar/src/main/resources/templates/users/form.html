@@ -33,26 +33,26 @@
 						<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
 						<div class="col-sm-6">
 							<input type="text" th:field="*{nombre}" class="form-control"
-								th:errorclass="'form-control alert-danger'" required="required" />
+								th:errorclass="'form-control alert-danger'"  />
 							<small class="form-text text-danger"
 								th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
 						</div>
 					</div>
 					<div class="form-group row">
-						<label for="apellido" class="col-sm-2 col-form-label">Apellidos</label>
+						<label for="apellidos" class="col-sm-2 col-form-label">Apellidos</label>
 						<div class="col-sm-6">
 							<input type="text" th:field="*{apellidos}" class="form-control"
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
 								th:if="${#fields.hasErrors('apellidos')}"
-								th:errors="*{apellido}"></small>
+								th:errors="*{apellidos}"></small>
 						</div>
 					</div>
 					<div class="form-group row">
 						<label for="email" class="col-sm-2 col-form-label">Email</label>
 						<div class="col-sm-6">
 							<input type="email" th:field="*{correo}" class="form-control"
-								placeholder="correo@dominio.com"
+								placeholder="correo@dominio.com" required="required"
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
 								th:if="${#fields.hasErrors('correo')}" th:errors="*{email}"></small>

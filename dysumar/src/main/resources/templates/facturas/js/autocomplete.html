@@ -46,6 +46,7 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 				select : function(event, ui) {
 // 					$("#cargar_producto").val(ui.item.value)
 					if(itemsHelper.hasProducto(ui.item.value)){
+						$("#submit").removeAttr("disabled");
 						itemsHelper.incrementaCantidad(ui.item.value, ui.item.precio,ui.item.margen)
 						return false;
 					}

@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -25,9 +26,11 @@ public class ClienteDirecciones implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Direccion direcciones;
 
+	@NotNull
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Cliente cliente;

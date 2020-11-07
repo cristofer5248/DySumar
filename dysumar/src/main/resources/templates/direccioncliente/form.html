@@ -26,6 +26,8 @@
 							th:text="'Busqueda de Cliente'"></label>
 						<div class="col-sm-6">
 							<input type="text" name="cargar_cliente" id="cargar_cliente"
+								required="required"
+								placeholder="Escriba completamente un nombre para buscarlo"
 								th:field="*{cliente}" class="form-control" />
 						</div>
 					</div>
@@ -34,8 +36,9 @@
 							th:text="Direccion"></label>
 						<div class="col-sm-6">
 							<input id="cargar_direccion" name="cargar_direccion"
-								th:field="*{direcciones}" class="form-control"/>
-							
+								required="required" th:field="*{direcciones}"
+								class="form-control" />
+
 						</div>
 					</div>
 
@@ -52,7 +55,8 @@
 
 	<footer th:replace="layout/layout :: footer"></footer>
 	<input type="hidden" id="urlAjaxcliente" th:value="@{/cargar_cliente/}" />
-	<input type="hidden" id="urlAjaxdirecciones" th:value="@{/cargar_direccionesnombre/}" />
+	<input type="hidden" id="urlAjaxdirecciones"
+		th:value="@{/cargar_direccionesnombre/}" />
 	<script
 		th:replace="direccioncliente/js/autocompletecliente :: javascript"></script>
 

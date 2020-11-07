@@ -14,7 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
-
+import javax.validation.constraints.Size;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,13 +33,15 @@ public class Cliente implements Serializable {
 
 	
 	@Column(length = 12)
+	@Size(max = 12)
 	private String codigo;
 	
 	@NotEmpty
 	@Column(length = 60)
+	@Size(max = 60)
 	private String nombre;
 	
-	@NotEmpty
+	@NotEmpty	
 	private String apellido;
 	
 	@NotEmpty

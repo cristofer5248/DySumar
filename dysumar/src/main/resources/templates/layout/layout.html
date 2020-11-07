@@ -75,7 +75,7 @@
 								Productos</a><a class="dropdown-item" href="#about"
 								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
 								th:href="@{/producto/listarS}"><i
-								class="fas fa-business-time"></i> Solitudes</a> <a
+								class="fas fa-business-time"></i>Solicitudes</a> <a
 								class="dropdown-item"
 								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
 								th:href="@{/inventario/listar}"><i class="fas fa-arrow-down"></i>
@@ -194,7 +194,7 @@
 
 					<div class="modal-body">
 						<label>Ingrese el codigo de la cotizacion</label> <input
-							id="cotizacionSearch" class="form-control" />
+							type="number" id="cotizacionSearch" class="form-control" />
 					</div>
 					<div class="modal-footer">
 
@@ -270,7 +270,13 @@
 	//aqui para buscar cotizacion
 	$("#btncotizacion").click(function(){
 		var urlCotizacion = $("#urlCotizacion").val();
-		location.href = urlCotizacion+$("#cotizacionSearch").val();
+		var textSearch = $("#cotizacionSearch").val();
+		let isnum = /^\d+$/.test(textSearch);
+		if(isnum){
+			location.href = urlCotizacion+textSearch;	
+		}
+		alert('Solo digitos');
+		
 	});
 	$(document).on('keydown', function ( e ) {
 	    // You may replace `m` with whatever key you want

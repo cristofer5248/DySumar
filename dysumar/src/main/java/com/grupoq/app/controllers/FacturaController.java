@@ -394,10 +394,11 @@ public class FacturaController {
 			@RequestParam(name = "ivaC", required = true) int iva, Model model, RedirectAttributes flash,
 			SessionStatus status) throws ParseException {
 
-//		if (result.hasErrors()) {
-//			model.addAttribute("titulo", "Inventariado");
-//			return "/producto/listar";
-//		}
+		if (itemId==null) {
+			model.addAttribute("titulo", "Realizar una remision");
+			flash.addAttribute("error", "La remision no puede estar vacia");
+			return "redirect:/factura/nuevo";
+		}
 		String mensajeFlash;
 		/*
 		 * para probar que el switch funciona if(tipoC==1) {

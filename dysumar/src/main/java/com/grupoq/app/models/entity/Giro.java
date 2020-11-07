@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,6 +27,7 @@ public class Giro implements Serializable {
 	private Long id;
 	
 	@Column(length = 200)
+	@Size(max = 200, min = 10)
 	private String detalles;
 
 	@JsonIgnore

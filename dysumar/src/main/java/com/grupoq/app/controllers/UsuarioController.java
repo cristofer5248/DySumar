@@ -278,12 +278,19 @@ public class UsuarioController {
 	public String guardar(@Valid Usuario usuario, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
 
+		if(result.hasErrors()) {
+			model.addAttribute("titulo", "Formulario de Usuario");
+			model.addAttribute("edituser", true);
+			model.addAttribute("usuario", usuario);
+			flash.addFlashAttribute("error", "Revisa los errores marcados");	
+			return "users/form"; 
+		}
 		String mensajeFlash = (usuario.getId() != null) ? "usuario guardado con éxito!" : "usuario editado con éxito!";
 		usuario.setEnabled(true);
 		String pass1 = usuario.getPassword();
 		String passfinal = passwordEncoder.encode(pass1);
 		usuario.setPassword(passfinal);
-		usuarioService.save(usuario);
+//		usuarioService.save(usuario);
 
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);

@@ -168,6 +168,7 @@ public class ClienteController {
 				clientes = opc.equals("nombre")
 						? clienteService.findByNombrePageOwner(param, auth.getName(), pageRequest)
 						: clienteService.findByIdPageOwner(Long.parseLong(param), auth.getName(), pageRequest);
+				
 			}
 		}
 		PageRender<Cliente> pageRender = new PageRender<Cliente>("/clientes", clientes);
@@ -347,9 +348,10 @@ public class ClienteController {
 	@RequestMapping(value = "/direccioncdsave", method = RequestMethod.POST)
 	public String guardarcd(@Valid ClienteDirecciones clientedireccion, BindingResult result, Model model,
 			RedirectAttributes flash, SessionStatus status) {
-		if (result.hasErrors()) {
+		if (result.hasErrors()) {			
 			model.addAttribute("titulo", "Formulario de Direcciones con cliente");
-			return "/cdireccion";
+			flash.addAttribute("success","No puede dejar los datos vacios");			
+			return "redirect:/cdireccion";
 		}
 		String mensajeFlash = (clientedireccion.getId() != null) ? "Direccion en cliente editada con éxito!"
 				: "Direccion con cliente creada con éxito!";

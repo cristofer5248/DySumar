@@ -13,6 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 
 @Entity
 @Table(name = "users")
@@ -21,17 +25,25 @@ public class Usuario implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(unique = true)	
+	@Column(unique = true)
+	@NotEmpty
 	private String username;
+	@NotEmpty
 	private String nombre;
+	@NotEmpty
 	private String apellidos;
+	
+	@Email
 	private String correo;
+	@NotEmpty
 	private int telefono;
 	private String genero;
 	private String direccion;
 	private Boolean enabled;
 
 	@Column(length = 60, unique = true)
+	@NotEmpty
+	@Size(max = 60, min = 5)
 	private String password;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
