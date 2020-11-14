@@ -22,7 +22,7 @@ public class Notificaciones implements Serializable {
 	@GeneratedValue( strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(length = 80)
+	@Column(length = 120)
 	private String nombre;
 	@Column(length = 50)
 	private String url;

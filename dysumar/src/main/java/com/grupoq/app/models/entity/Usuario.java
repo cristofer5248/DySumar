@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
@@ -35,7 +36,7 @@ public class Usuario implements Serializable {
 	
 	@Email
 	private String correo;
-	@NotEmpty
+	@NotNull
 	private int telefono;
 	private String genero;
 	private String direccion;

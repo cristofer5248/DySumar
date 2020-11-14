@@ -498,7 +498,7 @@ public class FacturaController {
 		System.out.print("\n usuario2 " + facturacion.getaCuentade().getUsername());
 
 		if (!facturacion.getaCuentade().getUsername().equals(auth.getName())
-				&& !(request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_JEFEADM"))) {
+				&& !(request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_JEFEADM") || request.isUserInRole("ROLE_FACT"))) {
 			flash.addFlashAttribute("error", "La factura que intentas ver no te corresponde porque no es tuya.");
 			return "redirect:/facturacion/listar";
 		}

@@ -74,7 +74,7 @@ public class UsuarioController {
 			if (rolcheck.getAuthority().equals("ROLE_ADMIN")) {
 				usuario = usuarioService.findByIdNot(user1.getId(), pageRequest);
 			} else {
-				//si es jefe/a
+				// si es jefe/a
 				usuario = usuarioService.findByIdNotAndBoss(rolcheck.getUser_id(), pageRequest);
 			}
 		} else {
@@ -114,10 +114,8 @@ public class UsuarioController {
 	public String hacerAdmin(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		Role rolcheck = new Role();
 		rolcheck = rolesService.findByUser_idByAuthority(id, "ROLE_ADMIN");
-		List<Role> countRoles;
-		countRoles = rolesService.findByUser_idList(id);
-		String mensaje = checkRoles(countRoles, rolcheck, id, "ROLE_ADMIN");
-		mensaje += "Administrador";
+		String mensaje = (rolcheck == null) ? "Se añadio el rol de administrador"
+				: "Rol de administrador removido";		
 		String tipo = (rolcheck == null) ? "success" : "error";
 		flash.addFlashAttribute(tipo, mensaje);
 		return "redirect:/user/ver";
@@ -212,8 +210,8 @@ public class UsuarioController {
 
 		String mensaje = (usuario == null) ? "El usuario no fue encontrado" : "Edita con cuidado";
 		flash.addFlashAttribute("error", mensaje);
-		
-		int edUsrnm=(id==null)?0:1;
+
+		int edUsrnm = (id == null) ? 0 : 1;
 		model.put("edituser", edUsrnm);
 		model.put("usuario", usuario);
 		model.put("titulo", "Editar Usuario");
@@ -273,24 +271,23 @@ public class UsuarioController {
 		return usuarioService.findAllRole();
 	}
 
-	
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String guardar(@Valid Usuario usuario, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
 
-		if(result.hasErrors()) {
+		if (result.hasErrors()) {
 			model.addAttribute("titulo", "Formulario de Usuario");
 			model.addAttribute("edituser", true);
 			model.addAttribute("usuario", usuario);
-			flash.addFlashAttribute("error", "Revisa los errores marcados");	
-			return "users/form"; 
+			flash.addFlashAttribute("error", "Revisa los errores marcados");
+			return "users/form";
 		}
 		String mensajeFlash = (usuario.getId() != null) ? "usuario guardado con éxito!" : "usuario editado con éxito!";
 		usuario.setEnabled(true);
 		String pass1 = usuario.getPassword();
 		String passfinal = passwordEncoder.encode(pass1);
 		usuario.setPassword(passfinal);
-//		usuarioService.save(usuario);
+		usuarioService.save(usuario);
 
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);

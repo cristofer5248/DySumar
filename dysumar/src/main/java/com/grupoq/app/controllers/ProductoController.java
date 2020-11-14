@@ -229,7 +229,7 @@ public class ProductoController {
 		return "redirect:/producto/listar";
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_INV" })
+	@Secured({ "ROLE_ADMIN", "ROLE_INV","ROLE_JEFEADM" })
 	@RequestMapping(value = "/eliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 
@@ -248,7 +248,7 @@ public class ProductoController {
 		return "redirect:/producto/listar";
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_INV" })
+	@Secured({ "ROLE_ADMIN", "ROLE_INV","ROLE_JEFEADM" })
 	@RequestMapping(value = "/editar/{id}")
 	public String editar(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 

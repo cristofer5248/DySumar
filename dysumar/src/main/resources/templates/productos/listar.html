@@ -73,7 +73,7 @@
 								<th
 									sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')">OP</th>
 								<!--descuentos es arriba -->
-								<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')">OP</th>
+								<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')">OP</th>
 								<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')">OP</th>
 								<th>OP</th>
 							</tr>
@@ -126,7 +126,7 @@
 											</div>
 									</a></td>
 
-									<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"><a
+									<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')"><a
 										th:href="@{/producto/eliminar/} + ${producto.id}"
 										onclick="return confirm('¿Esta seguro?');">
 											<div class='icon'>

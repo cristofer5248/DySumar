@@ -274,8 +274,9 @@
 		let isnum = /^\d+$/.test(textSearch);
 		if(isnum){
 			location.href = urlCotizacion+textSearch;	
-		}
+		}else{
 		alert('Solo digitos');
+		}
 		
 	});
 	$(document).on('keydown', function ( e ) {

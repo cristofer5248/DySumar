@@ -47,7 +47,7 @@ public class CotizacionController {
 		return "cotizaciones/ver";
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER","ROLE_JEFEADM" })
 	@RequestMapping(value = "/aprobar/{term}", method = RequestMethod.GET)
 	public String aprobar(@PathVariable Long term, Map<String, Object> model, RedirectAttributes flash) {
 		Cotizacion cotizacion = cotizacionService.findby(term);
