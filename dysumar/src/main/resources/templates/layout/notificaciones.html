@@ -13,13 +13,12 @@ $.getJSON(urlStandar,function(data){
 	$.each(data,function(key,entry){
 		noti.append($('<a class="dropdown-item"></a>').attr('href',entry.url).html("<i class='"+entry.icono+"' style='color:"+entry.color+";'></i> "+entry.nombre+"<p class='pTa'><time class='timeago tAgo' datetime='"+entry.fecha+"'></time></p>"));
 // 		noti.append($('<a class="dropdown-item"></a>').attr('href',entry.url).html("<i class='"+entry.icono+"' style='color:"+entry.color+";'></i> "+entry.nombre+"<time class='timeago' datetime='17 September 2014 12:00'></time>"));
-// 		noti.append($('<a class="dropdown-item"></a>').attr('href',entry.url).html("<i class='"+entry.icono+"' style='color:"+entry.color+";'></i> "+entry.nombre+" "+entry.fecha));
-		
-		
+// 		noti.append($('<a class="dropdown-item"></a>').attr('href',entry.url).html("<i class='"+entry.icono+"' style='color:"+entry.color+";'></i> "+entry.nombre+" "+entry.fecha));				
 	})
 });
-
+noti.append($('<a class="dropdown-item"></a>').attr('href',"/").html("VER TODOS"));
 });
+		
 		function cambiarAgo(){
 		$('time.timeago').timeago();
 		}					

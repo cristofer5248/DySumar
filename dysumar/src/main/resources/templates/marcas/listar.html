@@ -16,15 +16,16 @@
 	<div class="container py-4">
 
 		<div class="card bg-light">
+			<label class="h2" th:text="${titulo}"></label>
 			<div class="card-header"></div>
 			<div class="card-body">
 
 				<div class="card-title">
-					<a
-						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"
+					<a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"
 						th:href="@{/marca/nuevo}" class="btn btn-primary btn-xs">Crear
 						marca</a>
-					<form id="formsearch" class="searchbox" th:action="@{/marca/listar/}">
+					<form id="formsearch" class="searchbox"
+						th:action="@{/marca/listar/}">
 						<input type="search"
 							placeholder="Introducir un indicio del nombre de la marca......"
 							class="searchbox-input" onkeyup="buttonUp();" id="btn-search"
@@ -33,11 +34,11 @@
 							class="searchbox-icon">Buscar</span>
 					</form>
 				</div>
-				<table id="example" class="table table-striped table-bordered table-sm">
+				<table id="example"
+					class="table table-striped table-bordered table-sm">
 					<thead class="thead-inverse">
 						<tr>
-							<th
-								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')">id</th>
+							<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')">id</th>
 							<th>Nombre</th>
 							<!-- <th
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"></th> -->
@@ -46,8 +47,7 @@
 					</thead>
 					<tbody>
 						<tr th:each="marca: ${marcas}">
-							<td
-								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"><a
+							<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"><a
 								class="btn btn-primary btn-xs"
 								th:href="@{/verproducto/} + ${marca.idm}" th:text="${marca.idm}"></a></td>
 							<td th:text="${marca.nombrem}"></td>
@@ -61,8 +61,7 @@
 									</div>
 							</a></td> -->
 
-							<td
-								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"><a
+							<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"><a
 								class="centerMe" th:href="@{/marca/eliminar/} + ${marca.idm}"
 								onclick="return confirm('Estas seguro que quieres eliminar?');">
 									<div class='icon'>
@@ -94,7 +93,6 @@
 			"searching" : false,
 			"info" : false
 		});
-		
 	</script>
 </body>
 </html>

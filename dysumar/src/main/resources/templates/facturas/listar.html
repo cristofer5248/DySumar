@@ -12,6 +12,7 @@
 	<div class="container py-4">
 
 		<div class="card bg-light">
+			<label class="h2" th:text="${titulo}"></label>
 			<div class="card-header"></div>
 			<div class="card-body">
 
@@ -19,11 +20,12 @@
 					<!-- <a
 						th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('FACT')}"
 						th:href="@{/factura/nuevof}" class="btn btn-primary btn-xs">Facturar</a> -->
-<!-- 					<a th:if="${#request.isUserInRole('SELLER')}" -->
-<!-- 						th:href="@{/factura/nuevof}" class="btn btn-primary btn-xs">REMISION</a> -->
+					<!-- 					<a th:if="${#request.isUserInRole('SELLER')}" -->
+					<!-- 						th:href="@{/factura/nuevof}" class="btn btn-primary btn-xs">REMISION</a> -->
 					<a
 						th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('SELLER')}"
-						th:href="@{/factura/nuevo}" class="btn btn-primary btn-xs">Crear remision o cotizacion</a>
+						th:href="@{/factura/nuevo}" class="btn btn-primary btn-xs">Crear
+						remision o cotizacion</a>
 					<button type="button" class="btn btn-info" data-toggle="modal"
 						data-target="#filterByDate" data-whatever="@mdo">Filtrar</button>
 					<form id="formsearch" class="searchbox"
@@ -53,7 +55,7 @@
 							<!-- <th>Stock</th> -->
 							<th>CC</th>
 							<th>FP</th>
-<!-- 							<th>FP</th> -->
+							<!-- 							<th>FP</th> -->
 							<th>TF</th>
 							<th>Fecha</th>
 							<th>Total</th>
@@ -78,11 +80,12 @@
 							<!-- <td th:text="${facturas.}"></td> -->
 							<td th:text="${factura.cotizacion.id}"></td>
 							<td th:text="${factura.condicionesDPago.nombre}"></td>
-<!-- 							<td th:text="${factura.formadepago.nombre}"></td> -->
+							<!-- 							<td th:text="${factura.formadepago.nombre}"></td> -->
 							<td th:text="${factura.tipoFactura.nombre}"></td>
 							<td th:text="${factura.fecha}"></td>
-							
-							<td th:text="'$'+${#numbers.formatDecimal(factura.totaRegistrado,0, 'COMMA', 2, 'POINT')}"></td>
+
+							<td
+								th:text="'$'+${#numbers.formatDecimal(factura.totaRegistrado,0, 'COMMA', 2, 'POINT')}"></td>
 							<!-- 							<td
 								th:if="${#request.isUserInRole('SELLER')}"><a
 								class="btn btn-success btn-xs"
@@ -142,7 +145,9 @@
 												<select id="opcfilter" class="form-control">
 													<option value="listado" selected>Listado de
 														registros</option>
-													<option value="vendedor" th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('JEFEADM')}">Agrupado por vendedor</option>
+													<option value="vendedor"
+														th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('JEFEADM')}">Agrupado
+														por vendedor</option>
 												</select>
 											</div>
 										</div>
@@ -168,7 +173,7 @@
 	<input type="hidden" id="urlenviar" th:value="@{/factura/listar/}" />
 	<script th:src="@{/js/searchbarfactura.js}"></script>
 	<script th:inline="javascript" th:if="${!activePivot}">
-	$('#example').DataTable({
+		$('#example').DataTable({
 			"paging" : false,
 
 			"searching" : false,
@@ -176,51 +181,49 @@
 		});
 	</script>
 	<script th:inline="javascript" th:if="${activePivot}">
-		$('#example').DataTable( {
-			"paging" : false,
+		$('#example').DataTable(
+				{
+					"paging" : false,
 
-			"searching" : false,
-			"info" : false,	        
-	        rowGroup: {
-	            startRender: null,
-	            endRender: function ( rows, group ) {
-	                var salaryAvg = rows
-	                    .data()
-	                    .pluck(8)
-	                    .reduce( function (a, b) {
-// 	                    	alert("a:"+a+" b: "+b);
-// 	                        return a + b.replace(/[^\d]/g,licar '')*1;
-	                        
-							return parseFloat(a)+parseFloat(b);
-// 	                    	return a + b.replace(/[^\d]/g, '')*1;
-	                        
-	                    });
-// 	                salaryAvg = $.fn.dataTable.render.number(',', '.', 0, '$').display( salaryAvg );
-	 
-	                
-	 
-	                return $('<tr/>')
-	                    .append( '<td colspan="9" class="totalclass">Total del vendedor: '+group+'</td>' )
-	                    
-	                    
-	                    .append( '<td class="totalclass">'+salaryAvg+'</td>' );
-	            },
-	            dataSrc: 2
-	        }
-	    } );
-		
+					"searching" : false,
+					"info" : false,
+					rowGroup : {
+						startRender : null,
+						endRender : function(rows, group) {
+							var salaryAvg = rows.data().pluck(8).reduce(
+									function(a, b) {
+										// 	                    	alert("a:"+a+" b: "+b);
+										// 	                        return a + b.replace(/[^\d]/g,licar '')*1;
+
+										return parseFloat(a) + parseFloat(b);
+										// 	                    	return a + b.replace(/[^\d]/g, '')*1;
+
+									});
+							// 	                salaryAvg = $.fn.dataTable.render.number(',', '.', 0, '$').display( salaryAvg );
+
+							return $('<tr/>').append(
+									'<td colspan="9" class="totalclass">Total del vendedor: '
+											+ group + '</td>')
+
+							.append(
+									'<td class="totalclass">' + salaryAvg
+											+ '</td>');
+						},
+						dataSrc : 2
+					}
+				});
 	</script>
 	<script>
-	$('.mydate').datepicker({
-		format : "yyyy-mm-dd"
-	});
+		$('.mydate').datepicker({
+			format : "yyyy-mm-dd"
+		});
 
-	var datefilter = $('#datefilter');
-	datefilter.click(function() {
-		location.href = $("#urlenviar").val() + "fechas/"
-				+ $("#filterstart").val() + "/" + $("#filterend").val()
-				+ "/" + $("#opcfilter").val();
-	});
+		var datefilter = $('#datefilter');
+		datefilter.click(function() {
+			location.href = $("#urlenviar").val() + "fechas/"
+					+ $("#filterstart").val() + "/" + $("#filterend").val()
+					+ "/" + $("#opcfilter").val();
+		});
 	</script>
 </body>
 </html>

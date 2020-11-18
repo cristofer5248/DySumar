@@ -9,6 +9,7 @@
 	<div class="container py-4">
 
 		<div class="card bg-light">
+			<label class="h2" th:text="${titulo}"></label>
 			<div class="card-header"></div>
 			<div class="card-body">
 
@@ -16,22 +17,23 @@
 					<a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"
 						th:href="@{/inventario/nuevo}" class="btn btn-primary btn-xs">Ingresar</a>
 				</h4>
-				<table id="example" class="table table-striped table-bordered table-sm">
+				<table id="example"
+					class="table table-striped table-bordered table-sm">
 					<thead class="thead-inverse">
 						<tr>
 							<th
 								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')">Id</th>
 							<th>Id compra</th>
-<!-- 							<th>Nombre</th> -->
-							<th>Proveedor</th>							
-<!-- 							<th>Stock</th> -->
-<!-- 							<th>M</th> -->
-<!-- 							<th>P</th>							 -->
-<!-- 							<th>P.V</th>		 -->
-<!-- 							<th>Inversion</th>					 -->
-<!-- 							<th>Estimacion</th>			 -->
-							<th>Por</th>						
-														
+							<!-- 							<th>Nombre</th> -->
+							<th>Proveedor</th>
+							<!-- 							<th>Stock</th> -->
+							<!-- 							<th>M</th> -->
+							<!-- 							<th>P</th>							 -->
+							<!-- 							<th>P.V</th>		 -->
+							<!-- 							<th>Inversion</th>					 -->
+							<!-- 							<th>Estimacion</th>			 -->
+							<th>Por</th>
+
 							<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')">OP</th>
 						</tr>
 					</thead>
@@ -42,32 +44,32 @@
 								class="btn btn-primary btn-xs"
 								th:href="@{/inventario/ver/} + ${inventario.movimientos.id}"
 								th:text="${inventario.movimientos.id}"></a></td>
-							<td th:text="${inventario.codigoProveedor}"></td>	
-<!-- 							<td th:text="${inventario.producto.nombrep}"></td>													 -->
-							<td th:text="${inventario.producto.proveedor.nombre}"></td>							
-<!-- 							<td th:text="${inventario.stock}"></td>							 -->
-<!-- 							<td th:text="${inventario.producto.margen}+'%'"></td> -->
-<!-- 							<td th:text="'$'+${inventario.producto.precio}"></td>							 -->
-<!-- 							<td class="mm" th:text="'$'+${#numbers.formatDecimal((inventario.producto.precio * (inventario.producto.margen/100)+inventario.producto.precio), 0, 'COMMA', 2, 'POINT')}"></td> -->
-<!-- 							<td th:text="'$'+${#numbers.formatDecimal((inventario.producto.precio*inventario.stock), 0, 'COMMA', 2, 'POINT')}"></td> -->
-<!-- 							<td class="mm" th:text="'$'+${#numbers.formatDecimal(((inventario.producto.precio * (inventario.producto.margen/100)+inventario.producto.precio)*inventario.stock), 0, 'COMMA', 2, 'POINT')}"></td> -->
+							<td th:text="${inventario.codigoProveedor}"></td>
+							<!-- 							<td th:text="${inventario.producto.nombrep}"></td>													 -->
+							<td th:text="${inventario.producto.proveedor.nombre}"></td>
+							<!-- 							<td th:text="${inventario.stock}"></td>							 -->
+							<!-- 							<td th:text="${inventario.producto.margen}+'%'"></td> -->
+							<!-- 							<td th:text="'$'+${inventario.producto.precio}"></td>							 -->
+							<!-- 							<td class="mm" th:text="'$'+${#numbers.formatDecimal((inventario.producto.precio * (inventario.producto.margen/100)+inventario.producto.precio), 0, 'COMMA', 2, 'POINT')}"></td> -->
+							<!-- 							<td th:text="'$'+${#numbers.formatDecimal((inventario.producto.precio*inventario.stock), 0, 'COMMA', 2, 'POINT')}"></td> -->
+							<!-- 							<td class="mm" th:text="'$'+${#numbers.formatDecimal(((inventario.producto.precio * (inventario.producto.margen/100)+inventario.producto.precio)*inventario.stock), 0, 'COMMA', 2, 'POINT')}"></td> -->
 							<td th:text="${inventario.zaNombrede}"></td>
-<!-- 							<td
+							<!-- 							<td
 								th:if="${#request.isUserInRole('SELLER')}"><a
 								class="btn btn-success btn-xs"
 								th:href="@{'/factura/form/' + ${inventario.id}}"
-								th:text="'crear factura'"></a></td> -->							
+								th:text="'crear factura'"></a></td> -->
 							<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"><a
-									class="centerMe"
-									th:href="@{/inventario/eliminar/} + ${inventario.id}"
-									onclick="return confirm('¿Esta seguro?');">
-										<div class='icon'>
-											<i class='fa fa-trash' onmouseover="quitarcolumns();"></i>
-										</div>
-										<div class="text delete">
-											<span>Eliminar</span>
-										</div>
-								</a></td>
+								class="centerMe"
+								th:href="@{/inventario/eliminar/} + ${inventario.id}"
+								onclick="return confirm('¿Esta seguro?');">
+									<div class='icon'>
+										<i class='fa fa-trash' onmouseover="quitarcolumns();"></i>
+									</div>
+									<div class="text delete">
+										<span>Eliminar</span>
+									</div>
+							</a></td>
 						</tr>
 					</tbody>
 
@@ -82,12 +84,12 @@
 
 	<footer th:replace="layout/layout :: footer"></footer>
 	<script>
-// 	$('#example').DataTable( {
-//         "paging":   false,
-        
-//         "searching": false,
-//         "info":     false
-//     } );
+		// 	$('#example').DataTable( {
+		//         "paging":   false,
+
+		//         "searching": false,
+		//         "info":     false
+		//     } );
 	</script>
 </body>
 </html>

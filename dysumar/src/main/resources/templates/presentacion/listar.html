@@ -15,6 +15,7 @@
 	<div class="container py-4">
 
 		<div class="card bg-light">
+			<label class="h2" th:text="${titulo}"></label>
 			<div class="card-header"></div>
 			<div class="card-body">
 
@@ -36,7 +37,7 @@
 
 							<!-- <th
 								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"></th> -->
-<!-- 							<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')">Editar</th> -->
+							<!-- 							<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')">Editar</th> -->
 							<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')">Eliminar</th>
 						</tr>
 					</thead>
@@ -50,16 +51,16 @@
 							<td th:text="${descuento.producto.nombrep}"></td>
 							<td th:text="${descuento.cantidad}"></td>
 							<td th:text="${descuento.porcentaje}"></td>
-<!-- 							<td class="centerMe" -->
-<!-- 								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"><a -->
-<!-- 								th:href="@{'/descuento/editar/' + ${descuento.id}}"> -->
-<!-- 									<div class='icon'> -->
-<!-- 										<i class='fa fa-pencil'></i> -->
-<!-- 									</div> -->
-<!-- 									<div class='text update'> -->
-<!-- 										<span>Editar</span> -->
-<!-- 									</div> -->
-<!-- 							</a></td> -->
+							<!-- 							<td class="centerMe" -->
+							<!-- 								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"><a -->
+							<!-- 								th:href="@{'/descuento/editar/' + ${descuento.id}}"> -->
+							<!-- 									<div class='icon'> -->
+							<!-- 										<i class='fa fa-pencil'></i> -->
+							<!-- 									</div> -->
+							<!-- 									<div class='text update'> -->
+							<!-- 										<span>Editar</span> -->
+							<!-- 									</div> -->
+							<!-- 							</a></td> -->
 
 							<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"><a
 								class="centerMe"

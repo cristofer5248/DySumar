@@ -44,7 +44,7 @@ public class GiroController {
 	@RequestMapping(value = "/listar", method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
 		List<Giro> giro = giroService.listAll();
-		model.addAttribute("titulo", "Listado de marcas");
+		model.addAttribute("titulo", "Listado de Giros");
 		model.addAttribute("giros", giro);
 		return "/giros/listar";
 	}

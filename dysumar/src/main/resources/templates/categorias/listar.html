@@ -16,12 +16,12 @@
 	<div class="container py-4">
 
 		<div class="card bg-light">
+			<label class="h2" th:text="${titulo}"></label>
 			<div class="card-header"></div>
 			<div class="card-body">
 
 				<div class="card-title">
-					<a
-						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"
+					<a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"
 						th:href="@{/categoria/nuevo}" class="btn btn-primary btn-xs">Crear
 						Categoria</a>
 					<form id="formsearch" class="searchbox"

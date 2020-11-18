@@ -9,6 +9,7 @@
 	<div class="container py-4">
 
 		<div class="card bg-light">
+			<label class="h2" th:text="${titulo}"></label>
 			<div class="card-header"></div>
 			<div class="card-body ">
 
@@ -26,9 +27,9 @@
 								<th>email</th>
 
 								<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')">
-									</th>
+								</th>
 								<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')">
-									</th>
+								</th>
 								<th sec:authorize="hasRole('ROLE_ADMIN')">ADM</th>
 								<th style="background-color: #17a2b8;"
 									sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')">Gerencia</th>

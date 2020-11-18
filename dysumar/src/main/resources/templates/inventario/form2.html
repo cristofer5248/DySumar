@@ -30,7 +30,8 @@
 						</div>
 					</div>
 					<div class="form-group row">
-						<label for="codigo" class="col-sm-2 col-form-label">ID de compra</label>
+						<label for="codigo" class="col-sm-2 col-form-label">ID de
+							compra</label>
 						<div class="col-sm-6">
 							<input type="text" name="codigo" class="form-control" />
 						</div>
@@ -40,7 +41,13 @@
 						<div class="col-sm-6">
 							<input type="text" id="mydate" name="fecha" class="form-control">
 						</div>
-					</div>					
+					</div>
+					<div class="form-group row">
+						<label for="fecha" class="col-sm-2 col-form-label">Concepto</label>
+						<div class="col-sm-6">
+							<input type="text" id="mydate" name="comentario" class="form-control">
+						</div>
+					</div>
 					<div class="form-group row">
 						<label for="cargar_producto" class="col-sm-2 col-form-label"
 							th:text="'Busqueda de Productos'"></label>
@@ -80,12 +87,14 @@
 	</div>
 
 	<footer th:replace="layout/layout :: footer"></footer>
-	<input type="hidden" id="urlAjaxproveedor" th:value="@{/descuento/cargar_producto/}"/>
-	<input type="hidden" id="urlAjaxproveedorselect" th:value="@{/proveedor/cargar_proveedor}"/>
+	<input type="hidden" id="urlAjaxproveedor"
+		th:value="@{/descuento/cargar_producto/}" />
+	<input type="hidden" id="urlAjaxproveedorselect"
+		th:value="@{/proveedor/cargar_proveedor}" />
 	<script>
-	 $('#mydate').datepicker({
-	        format: "dd-mm-yyyy"
-	    });
+		$('#mydate').datepicker({
+			format : "dd-mm-yyyy"
+		});
 	</script>
 	<script th:replace="inventario/js/autocomplete :: javascript"></script>
 

@@ -45,10 +45,20 @@ public class Inventario implements Serializable{
 	@Column(unique=false, length=25, name = "zanombrede")
 	private String zaNombrede;
 	
+	private String comentario;
+	
 	private static final long serialVersionUID = 1L;
 
 	public Inventario() {
 		
+	}
+
+	public String getComentario() {
+		return comentario;
+	}
+
+	public void setComentario(String comentario) {
+		this.comentario = comentario;
 	}
 
 	public Long getId() {

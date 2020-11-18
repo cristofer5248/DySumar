@@ -150,7 +150,7 @@ public class FacturaController {
 			return "redirect:/factura/listar";
 		}
 		PageRender<Facturacion> pageRender = new PageRender<>("", facturacion);
-		model.addAttribute("titulo", "Listado de Facturacion");
+		model.addAttribute("titulo", "Listado de facturas y remisiones");
 		model.addAttribute("facturas", facturacion);
 		model.addAttribute("page", pageRender);
 		return "/facturas/listar";

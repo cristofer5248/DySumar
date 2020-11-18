@@ -1,11 +1,17 @@
 package com.grupoq.app.controllers;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 //import java.util.Vector;
+
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -69,6 +75,13 @@ public class InventarioController {
 		PageRender<Inventario> pageRender = new PageRender<>("listar", inventario);
 		model.addAttribute("inventarios", inventario);
 		model.addAttribute("page", pageRender);
+		
+//		try {
+//			System.out.print(getClientIPAddress());
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		return "/inventario/listar";
 	}
 
@@ -235,8 +248,14 @@ public class InventarioController {
 			}
 			inventario.setZaNombrede(authentication.getName());
 			inventarioService.save(inventario);
-			nuevaNotificacion("fas fa-parachute-box", "Ingreso nuevo de " + inventario.getProducto().getNombrep(),
-					"/inventario/ver/" + inventario.getMovimientos().getId(), "blue");
+			if (inventario.getStock() < 0) {
+				nuevaNotificacion("fas fa-parachute-box", "Devolucion de " + inventario.getProducto().getNombrep(),
+						"/inventario/ver/" + inventario.getMovimientos().getId(), "red");
+			} else {
+				nuevaNotificacion("fas fa-parachute-box", "Ingreso nuevo de " + inventario.getProducto().getNombrep(),
+						"/inventario/ver/" + inventario.getMovimientos().getId(), "blue");
+			}
+
 			// llenado de nuevo stock/ suma con inventario DEPRECATED PORQUE ES MEJOR SOLO
 			// SUMAR, LA FACTURA RESTARÁ
 //			List<String> total = inventarioService.sumarStock(itemId[i]);
@@ -287,6 +306,7 @@ public class InventarioController {
 
 		model.put("inventarios", movimientos);
 		model.put("proveedor", movimientos.getInventario().get(0).getCodigoProveedor());
+		model.put("comentario", movimientos.getInventario().get(0).getComentario());
 		model.put("fecha", movimientos.getInventario().get(0).getFecha());
 		model.put("codigopro", id);
 		model.put("titulo", "Detalle del ingreso : " + id);
@@ -307,5 +327,16 @@ public class InventarioController {
 		noti.setUrl(url);
 		noti.setColor(color);
 		notificacionesService.save(noti);
+	}
+	public String getClientIPAddress() throws IOException { 
+		InetAddress localHost = InetAddress.getLocalHost();
+		NetworkInterface ni = NetworkInterface.getByInetAddress(localHost);
+		byte[] hardwareAddress = ni.getHardwareAddress();
+		String[] hexadecimal = new String[hardwareAddress.length];
+		for (int i = 0; i < hardwareAddress.length; i++) {
+		    hexadecimal[i] = String.format("%02X", hardwareAddress[i]);
+		}
+		String macAddress = String.join("-", hexadecimal);
+		return macAddress;
 	}
 }

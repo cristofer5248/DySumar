@@ -17,6 +17,7 @@
 	<div class="container py-4">
 
 		<div class="card bg-light">
+			<label class="h2" th:text="${titulo}"></label>
 			<div class="card-header"></div>
 			<div class="card-body">
 
@@ -35,8 +36,9 @@
 					<a class="btn btn-warning btn-xs" style="color: white"
 						onclick="return confirm('¿Esta seguro? Mostrar muchos datos podria tardar un poco y alentar el servidor');"
 						th:if="${!enablebtnall}" th:href="@{/producto/listar/all}"
-						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV', 'ROLE_JEFEADM')">⚠ Ver
-						todos ⚠</a><a class="btn btn-success btn-xs" th:if="${enablebtnall}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV', 'ROLE_JEFEADM')">⚠
+						Ver todos ⚠</a><a class="btn btn-success btn-xs"
+						th:if="${enablebtnall}"
 						th:href="@{/producto/listar/all(format=xlsx)}">TODOS EN XLSX</a>
 
 					<form class="searchbox" id="formsearch" action="">
@@ -73,7 +75,8 @@
 								<th
 									sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')">OP</th>
 								<!--descuentos es arriba -->
-								<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')">OP</th>
+								<th
+									sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')">OP</th>
 								<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')">OP</th>
 								<th>OP</th>
 							</tr>
@@ -126,7 +129,8 @@
 											</div>
 									</a></td>
 
-									<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')"><a
+									<td
+										sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')"><a
 										th:href="@{/producto/eliminar/} + ${producto.id}"
 										onclick="return confirm('¿Esta seguro?');">
 											<div class='icon'>

@@ -291,7 +291,7 @@ public class UsuarioController {
 
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
-		return "redirect:/user/ver";
+		return "redirect:/notificaciones/";
 	}
 
 	@Secured("ROLE_ADMIN")
