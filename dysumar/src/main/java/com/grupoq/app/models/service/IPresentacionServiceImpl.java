@@ -32,6 +32,12 @@ public class IPresentacionServiceImpl implements IPresentacionService {
 		presentacionDao.save(presentacion);
 		
 	}
+
+	@Override
+	public Presentacion findByDetalle(String detalle) {
+		// TODO Auto-generated method stub
+		return presentacionDao.findByDetalle(detalle);
+	}
 	
 
 }

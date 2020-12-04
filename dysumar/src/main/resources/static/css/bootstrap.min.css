@@ -10221,4 +10221,21 @@ a.text-dark:hover, a.text-dark:focus {
     border-color: #dee2e6;
   }
 }
+.cell {
+  max-width: 100px; /* tweak me please */
+  white-space : nowrap;
+  overflow : hidden;
+}
+
+.expand-small-on-hover:hover {
+  max-width : 100px;
+  max-height : 100px; 
+  text-overflow: ellipsis;
+}
+
+.expand-maximum-on-hover:hover {
+  max-width : initial;
+  max-height : 100px; 
+  white-space : pre-wrap;
+}
 /*# sourceMappingURL=bootstrap.css.map */

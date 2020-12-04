@@ -9,4 +9,5 @@ public interface IPresentacionService {
 	public List<Presentacion> findAll();
 	public List<Presentacion> findByOrderByUnidadDesc();
 	public void save(Presentacion presentacion);
+	public Presentacion findByDetalle(String detalle);
 }

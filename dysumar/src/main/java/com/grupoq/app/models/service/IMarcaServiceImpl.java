@@ -45,4 +45,10 @@ public class IMarcaServiceImpl implements IMarcaService {
 		return marcaDao.findByNombremStartsWith(nombre, page);
 	}
 
+	@Override
+	public Marca findByNombre(String nombre) {
+		// TODO Auto-generated method stub
+		return marcaDao.findByNombrem(nombre);
+	}
+
 }

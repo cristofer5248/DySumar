@@ -35,7 +35,7 @@ public class IGiroServiceImpl implements IGiroService {
 
 	@Override
 	public List<Giro> findByNombre(String term) {
-		return giroDao.findByNombre(term);
+		return giroDao.findByNombre_list(term);
 	}
 
 
@@ -44,6 +44,14 @@ public class IGiroServiceImpl implements IGiroService {
 	public void save(Giro giro) {
 		giroDao.save(giro);
 		
+	}
+
+
+
+	@Override
+	public Giro findByNombre_(String nombre) {
+		// TODO Auto-generated method stub
+		return giroDao.findByDetalles(nombre);
 	}
 
 

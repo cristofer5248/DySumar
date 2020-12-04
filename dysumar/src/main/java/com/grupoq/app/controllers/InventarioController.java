@@ -252,7 +252,7 @@ public class InventarioController {
 			inventario.setZaNombrede(authentication.getName());
 			inventarioService.save(inventario);
 			if (inventario.getStock() < 0) {
-				nuevaNotificacion("fas fa-parachute-box", "Devolucion de " + inventario.getProducto().getNombrep(),
+				nuevaNotificacion("fas fa-parachute-box", "Se ha hecho devolucion o se ha descontinuado " + inventario.getProducto().getNombrep(),
 						"/inventario/ver/" + inventario.getMovimientos().getId(), "red");
 			} else {
 				nuevaNotificacion("fas fa-parachute-box", "Ingreso nuevo de " + inventario.getProducto().getNombrep(),

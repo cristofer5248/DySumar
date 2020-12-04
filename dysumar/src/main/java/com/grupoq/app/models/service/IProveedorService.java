@@ -14,6 +14,7 @@ public interface IProveedorService {
 	public void save (Proveedor proveedor);
 	public void deleteById (Long id);
 	public Proveedor findOne(Long id);
+	public Proveedor findByNombre(String nombre);
 	
 	public Page<Proveedor> findByNombreStartsWith(String nombre, Pageable page);
 }

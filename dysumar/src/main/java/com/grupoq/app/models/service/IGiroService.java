@@ -11,4 +11,5 @@ public interface IGiroService {
 	public void delete(Long id);
 	public Giro findBy(Long id);
 	public void save (Giro giro);
+	public Giro findByNombre_(String nombre);
 }

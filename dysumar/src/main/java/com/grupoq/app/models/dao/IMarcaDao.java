@@ -8,5 +8,6 @@ import com.grupoq.app.models.entity.Marca;
 
 public interface IMarcaDao extends PagingAndSortingRepository<Marca, Long> {
 	public Page<Marca> findByNombremStartsWith(String marca,Pageable page);
+	public Marca findByNombrem(String nombre);
 
 }

@@ -44,6 +44,7 @@
 							<th>Telefono</th>
 							<th>Email</th>
 							<th>NIT</th>
+							<th>GIRO</th>
 							<th>Direccion</th>
 							<th th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('INV')}">Borrar</th>
 							<th th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('INV')}">Editar</th>
@@ -64,8 +65,9 @@
 							<td th:text="${proveedor.codigoP}"></td>
 							<!-- 							<td style="font-size: 10px;" th:text="${proveedor.giro.categoriagiro.nombre}"></td> -->
 							<td th:text="${proveedor.telefono}"></td>
-							<td th:text="${proveedor.email}"></td>
+							<td class="cell expand-maximum-on-hover" th:text="${proveedor.email}"></td>
 							<td th:text="${proveedor.nit}"></td>
+							<td style="font-size:12px" th:text="${proveedor.giro.detalles}" class="cell expand-maximum-on-hover"></td>
 							<td style="font-size: 10px;" th:text="${proveedor.direccion}"></td>
 							<!-- <td	th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"><a
 								th:href="@{'/proveedor/nuevo/' + ${proveedor.id}}">
