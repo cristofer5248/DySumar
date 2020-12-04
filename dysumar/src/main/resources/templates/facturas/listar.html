@@ -177,14 +177,16 @@
 			"paging" : false,
 
 			"searching" : false,
+			"order": [ 0, "desc" ],
 			"info" : false
+			
 		});
 	</script>
 	<script th:inline="javascript" th:if="${activePivot}">
 		$('#example').DataTable(
 				{
 					"paging" : false,
-
+					"order": [ 0, "desc" ],
 					"searching" : false,
 					"info" : false,
 					rowGroup : {

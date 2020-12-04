@@ -76,6 +76,18 @@ var urlAjaxproveedor = $("#urlAjaxproveedor").val();
 				calcularImporte: function(id, precio, cantidad){
 					$("#total_importe_"+id).html((parseFloat(precio)* parseInt(cantidad)).toFixed(2));
 					this.calcularGranTotal();
+					
+					var cantidadenINT = parseInt(cantidad);
+					
+					if(cantidadenINT<1){
+						if(cantidadenINT<0){
+							$("#concepto").css("visibility","visible");
+							$("#conceptotxt").val("Esto es una devolucion o solo un retiro del inventario");
+						}else{
+							$("#concepto").css("visibility","hidden");
+							$("#conceptotxt").val("Ingreso de articulo al inventario");
+						}
+					}
 				},
 				hasProducto: function(id){
 					var resultado = false;
@@ -89,7 +101,7 @@ var urlAjaxproveedor = $("#urlAjaxproveedor").val();
 				return resultado;
 		},
 		incrementaCantidad: function(id,precio){
-			var cantidad = $("#cantidad_" +id).val() ? parseInt($("#cantidad_"+id).val()) : 0;
+			var cantidad = $("#cantidad_" +id).val() ? parseInt($("#cantidad_"+id).val()) : 0;			
 			$("#cantidad_"+id).val(++cantidad);
 			this.calcularImporte(id,precio,cantidad);
 		},

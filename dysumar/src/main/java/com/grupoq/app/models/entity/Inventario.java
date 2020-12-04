@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -33,6 +35,7 @@ public class Inventario implements Serializable{
 	@Column(name = "create_at")
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@NotNull
 	private Date fecha;
 	
 	
@@ -44,6 +47,8 @@ public class Inventario implements Serializable{
 	
 	@Column(unique=false, length=25, name = "zanombrede")
 	private String zaNombrede;
+	
+	@Column(length=120)
 	
 	private String comentario;
 	

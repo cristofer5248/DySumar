@@ -105,6 +105,9 @@
 					<!-- 						th:text="'Pago: ' +${facturaciones.formadepago.nombre}"></li> -->
 					<li class="list-group-item"
 						th:text="'Fecha: ' +${facturaciones.cotizacion.fecha}"></li>
+						
+					<li class="list-group-item" style="font-weight: bold"
+						th:text="'COMENTARIO: ' +${facturaciones.detalles}"></li>
 					<li class="list-group-item"
 						sec:authorize="hasAnyRole('ROLE_ADMIN')"
 						th:text="'Status en tabla cotizacion: ' +${facturaciones.cotizacion.aprobado}"></li>

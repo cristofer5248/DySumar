@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 //import java.util.Vector;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -75,7 +73,7 @@ public class InventarioController {
 		PageRender<Inventario> pageRender = new PageRender<>("listar", inventario);
 		model.addAttribute("inventarios", inventario);
 		model.addAttribute("page", pageRender);
-		
+
 //		try {
 //			System.out.print(getClientIPAddress());
 //		} catch (IOException e) {
@@ -118,6 +116,7 @@ public class InventarioController {
 
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String guardar(@RequestParam(name = "fecha", required = true) String fecha,
+			@RequestParam(name = "comentario") String comentario,
 			@RequestParam(name = "codigo", required = true) String codigo,
 			@RequestParam(name = "item_id[]", required = false) Long[] itemId,
 			@RequestParam(name = "cantidad[]", required = false) Integer[] cantidad, Model model,
@@ -137,6 +136,9 @@ public class InventarioController {
 //			model.addAttribute("titulo","Nuevo");
 //			return "/inventario/form2";
 //		}
+		if (comentario == null) {
+			comentario = "Este comentario fue generado automaticamente, se ingresaron productos negativos para devolucion o retiro al inventario";
+		}
 
 		if (itemId == null || itemId.length == 0) {
 			model.addAttribute("titulo", "Nuevo ingreso");
@@ -166,6 +168,7 @@ public class InventarioController {
 		movimientosService.save(movimiento);
 		for (int i = 0; i < itemId.length; i++) {
 			Inventario inventario = new Inventario();
+			inventario.setComentario(comentario);
 			Producto producto = productoService.findOne(itemId[i]);
 			inventario.setProducto(producto);
 			inventario.setStock(cantidad[i]);
@@ -328,13 +331,14 @@ public class InventarioController {
 		noti.setColor(color);
 		notificacionesService.save(noti);
 	}
-	public String getClientIPAddress() throws IOException { 
+
+	public String getClientIPAddress() throws IOException {
 		InetAddress localHost = InetAddress.getLocalHost();
 		NetworkInterface ni = NetworkInterface.getByInetAddress(localHost);
 		byte[] hardwareAddress = ni.getHardwareAddress();
 		String[] hexadecimal = new String[hardwareAddress.length];
 		for (int i = 0; i < hardwareAddress.length; i++) {
-		    hexadecimal[i] = String.format("%02X", hardwareAddress[i]);
+			hexadecimal[i] = String.format("%02X", hardwareAddress[i]);
 		}
 		String macAddress = String.join("-", hexadecimal);
 		return macAddress;

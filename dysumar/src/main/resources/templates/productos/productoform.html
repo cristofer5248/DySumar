@@ -5,13 +5,13 @@
 
 	<header th:replace="layout/layout :: header"></header>
 
-	<div class="container py-4">
+	<div class="container-sm py-4">
 
 		<div class="card bg-dark text-white">
 			<div class="card-header" th:text="${titulo}"></div>
-			<a sec:authorize="hasRole('ROLE_INV')" data-toggle="modal"
-				data-target="#uploadexcelproductos" class="btn btn-success btn-xs">Importar
-				desde excel</a>
+			<a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"
+				data-toggle="modal" data-target="#uploadexcelproductos"
+				class="btn btn-success btn-xs">Importar desde excel</a>
 			<div class="card-body">
 
 				<div th:object="${producto}" th:remove="tag">
@@ -148,9 +148,10 @@
 					</button>
 				</div>
 				<div class="modal-body">
+					<a class="btn btn-success" th:href="@{/excel/plantilla.xlsx}">Descargar plantilla</a>
 					<form id="excelform" th:action="@{/excel/excelimport}"
-						method="post" enctype="multipart/form-data">
-						<input class="form-control" type="file" th:name="file" />
+						class="form-control" method="post" enctype="multipart/form-data">
+						<input class="btn btn-success" type="file" th:name="file" />
 					</form>
 				</div>
 				<div class="modal-footer">
