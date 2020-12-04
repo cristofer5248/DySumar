@@ -44,4 +44,10 @@ public class ICategoriaServiceImpl implements ICategoriaService {
 		return categoriaDao.findByNombreStartsWith(nombre);
 	}
 
+	@Override
+	public Categoria findByNombre(String nombre) {
+		// TODO Auto-generated method stub
+		return categoriaDao.findByNombre(nombre);
+	}
+
 }

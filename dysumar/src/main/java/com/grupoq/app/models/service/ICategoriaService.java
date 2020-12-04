@@ -11,5 +11,6 @@ public interface ICategoriaService {
 	public Categoria findBy(Long id);
 	public void save(Categoria categoria);
 	public List<Categoria> findByNombreStartsWith(String nombre);
+	public Categoria findByNombre(String nombre);
 
 }

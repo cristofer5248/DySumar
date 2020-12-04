@@ -116,4 +116,10 @@ public class IProductoServiceImpl implements IProductoService {
 		return productosDao.findByCategoria(codigo, page);
 	}
 
+	@Override
+	public Producto findByCodigo(String codigo) {
+		// TODO Auto-generated method stub
+		return productosDao.findByCodigo(codigo);
+	}
+
 }

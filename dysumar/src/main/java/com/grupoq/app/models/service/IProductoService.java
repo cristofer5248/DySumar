@@ -37,5 +37,6 @@ public interface IProductoService {
 	public Page<Producto> findByProveedor(String codigo, Pageable page);
 	public Page<Producto> findByMarca(String codigo, Pageable page);
 	public Page<Producto> findByCategoria(String codigo, Pageable page);
+	public Producto findByCodigo(String codigo);
 	
 }

@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -229,7 +229,7 @@ public class ProductoController {
 		return "redirect:/producto/listar";
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_INV","ROLE_JEFEADM" })
+	@Secured({ "ROLE_ADMIN", "ROLE_INV", "ROLE_JEFEADM" })
 	@RequestMapping(value = "/eliminar/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 
@@ -248,7 +248,7 @@ public class ProductoController {
 		return "redirect:/producto/listar";
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_INV","ROLE_JEFEADM" })
+	@Secured({ "ROLE_ADMIN", "ROLE_INV", "ROLE_JEFEADM" })
 	@RequestMapping(value = "/editar/{id}")
 	public String editar(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 
@@ -330,6 +330,8 @@ public class ProductoController {
 
 		return historyList;
 	}
+
+
 
 	public void nuevaNotificacion(String icono, String nombre, String url, String color) {
 		Notificaciones noti = new Notificaciones();

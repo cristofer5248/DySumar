@@ -48,4 +48,6 @@ public interface ProductosDao extends PagingAndSortingRepository<Producto, Long>
 	
 	@Query(value = "select p from Producto p join fetch p.marca m join fetch p.categoria c join fetch p.proveedor pro join fetch p.presentacion pre where c.nombre like %?1%", countQuery = "select count(p) from Producto p join p.marca m join p.categoria c join p.proveedor pro join p.presentacion pre where c.nombre like %?1%")
 	public Page<Producto> findByCategoria(String codigo, Pageable page);
+	
+	public Producto findByCodigo(String codigo);
 }

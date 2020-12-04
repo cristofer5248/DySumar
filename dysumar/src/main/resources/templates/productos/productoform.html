@@ -9,6 +9,9 @@
 
 		<div class="card bg-dark text-white">
 			<div class="card-header" th:text="${titulo}"></div>
+			<a sec:authorize="hasRole('ROLE_INV')" data-toggle="modal"
+				data-target="#uploadexcelproductos" class="btn btn-success btn-xs">Importar
+				desde excel</a>
 			<div class="card-body">
 
 				<div th:object="${producto}" th:remove="tag">
@@ -42,14 +45,16 @@
 					<div class="form-group row">
 						<label for="precio" class="col-sm-2 col-form-label">Costo</label>
 						<div class="col-sm-6">
-							<input type="number" th:field="*{precio}" class="form-control" min="0.000001" step="0.000001"
+							<input type="number" th:field="*{precio}" class="form-control"
+								min="0.000001" step="0.000001"
 								th:errorclass="'form-control alert-danger'" /> <small
 								class="form-text text-danger"
 								th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}"></small>
 						</div>
 					</div>
 					<div class="form-group row">
-						<label for="bodega" class="col-sm-2 col-form-label">Ubicacion en bodega</label>
+						<label for="bodega" class="col-sm-2 col-form-label">Ubicacion
+							en bodega</label>
 						<div class="col-sm-6">
 							<input type="text" th:field="*{bodega}" class="form-control"
 								th:errorclass="'form-control alert-danger'" /> <small
@@ -101,7 +106,7 @@
 						<label for="presentacion" class="col-sm-2 col-form-label"
 							th:text="Presentacion"></label>
 						<div class="col-sm-6">
-							<select th:field="*{presentacion}" id="cargar_presentacion" 
+							<select th:field="*{presentacion}" id="cargar_presentacion"
 								name="cargar_presentacion" class="custom-select mr-sm-2">
 							</select>
 						</div>
@@ -127,6 +132,36 @@
 		</div>
 	</div>
 
+
+	<!-- Modal -->
+	<div class="modal fade" id="uploadexcelproductos" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalCenterTitle"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Importacion
+						de datos en excel</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="excelform" th:action="@{/excel/excelimport}"
+						method="post" enctype="multipart/form-data">
+						<input class="form-control" type="file" th:name="file" />
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cerrar</button>
+					<button type="button" class="btn btn-success" onclick="sendexcel()">Enviar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<footer th:replace="layout/layout :: footer"></footer>
 	<input type="hidden" id="urlAjaxcategoria"
 		th:value="@{/categoria/cargar_categoria}" />
@@ -144,6 +179,10 @@
 		$('#mydate').datepicker({
 			format : "yyyy-mm-dd"
 		});
+
+		function sendexcel() {
+			document.getElementById("excelform").submit();
+		}
 	</script>
 
 </body>
