@@ -164,7 +164,7 @@ public class ExcelController {
 				} else {
 					// datos del proveedor para insertar
 					String codigoproveedor = row.getCell(11).getStringCellValue();
-					String telefono = row.getCell(13).getStringCellValue();
+					String telefono = row.getCell(13).getRawValue();
 					String email = row.getCell(14).getStringCellValue();
 					String nit = row.getCell(15).getStringCellValue();
 					String direccion = row.getCell(16).getStringCellValue();
@@ -177,7 +177,7 @@ public class ExcelController {
 
 					producto.setProveedor(insertProveedor(proveedorstring, codigoproveedor, giroproveedor_xls, telefono,
 							email, nit, direccion, razonsocial));
-					System.out.print("\nIngresada nueva proveedor: " + proveedorstring);
+					System.out.print("\nIngresado nuevo proveedor: " + proveedorstring);
 				}
 
 			} catch (Exception e) {
@@ -186,8 +186,9 @@ public class ExcelController {
 
 			}
 
-			workbook.close();
+			
 			productoservice.save(producto);
+			workbook.close();
 			flash.addFlashAttribute("sucess", "Insercion con exito!, numero de productos: " + celdanumero++);
 
 		}
