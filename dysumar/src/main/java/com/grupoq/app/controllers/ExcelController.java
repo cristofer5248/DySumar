@@ -202,6 +202,7 @@ public class ExcelController {
 			inventario.setCodigoProveedor("EXCEL");
 			inventario.setZaNombrede(authentication.getName());
 			inventario.setStock(stock);
+			inventarioservice.save(inventario);
 			workbook.close();
 			flash.addFlashAttribute("sucess", "Insercion con exito!, numero de productos: " + celdanumero++);
 

@@ -9,8 +9,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 //import java.util.Vector;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
+import org.hibernate.criterion.Distinct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -69,6 +75,10 @@ public class InventarioController {
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
 		Pageable pageRequest = PageRequest.of(page, 20);
 		Page<Inventario> inventario = inventarioService.findAll(pageRequest);
+
+		List<Inventario> inventariolamba = inventario.stream().filter(distinctByKey(p -> p.getMovimientos()))
+				.collect(Collectors.toList());
+		inventariolamba.forEach(il -> System.out.print(il.getComentario()));
 		model.addAttribute("titulo", "Listado de inventario");
 		PageRender<Inventario> pageRender = new PageRender<>("listar", inventario);
 		model.addAttribute("inventarios", inventario);
@@ -81,6 +91,12 @@ public class InventarioController {
 //			e.printStackTrace();
 //		}
 		return "/inventario/listar";
+	}
+
+	public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+
+		Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+		return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
 	}
 
 	@RequestMapping(value = "/nuevo/{id}", method = RequestMethod.GET)
@@ -252,7 +268,8 @@ public class InventarioController {
 			inventario.setZaNombrede(authentication.getName());
 			inventarioService.save(inventario);
 			if (inventario.getStock() < 0) {
-				nuevaNotificacion("fas fa-parachute-box", "Se ha hecho devolucion o se ha descontinuado " + inventario.getProducto().getNombrep(),
+				nuevaNotificacion("fas fa-parachute-box",
+						"Se ha hecho devolucion o se ha descontinuado " + inventario.getProducto().getNombrep(),
 						"/inventario/ver/" + inventario.getMovimientos().getId(), "red");
 			} else {
 				nuevaNotificacion("fas fa-parachute-box", "Ingreso nuevo de " + inventario.getProducto().getNombrep(),
