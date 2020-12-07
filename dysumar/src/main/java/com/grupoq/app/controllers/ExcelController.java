@@ -1,7 +1,6 @@
 package com.grupoq.app.controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +8,7 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,18 +56,17 @@ public class ExcelController {
 
 	@Autowired
 	private IGiroService giroservice;
-	
+
 	@Autowired
 	private IInventarioService inventarioservice;
-	
+
 	@Autowired
 	private IMovimientosService movimientoservice;
-	
-	
 
 	@PostMapping("/excelimport")
-	public String mapReapExcelDatatoDB(@RequestParam("file") MultipartFile reapExcelDataFile, RedirectAttributes flash)
-			throws IOException {
+	public String mapReapExcelDatatoDB(@RequestParam("file") MultipartFile reapExcelDataFile,
+			@RequestParam(name = "replace_", required = false) int replace_, RedirectAttributes flash,
+			Authentication authentication) throws IOException {
 
 //		List<Producto> productos_xls = new ArrayList<Producto>();
 		XSSFWorkbook workbook = new XSSFWorkbook(reapExcelDataFile.getInputStream());
@@ -78,13 +77,17 @@ public class ExcelController {
 				: giroDefault();
 
 		int celdanumero = 0;
-		//preparando movimientos e inventario
+		// preparando movimientos e inventario
 		Movimientos movimiento = new Movimientos();
 		movimientoservice.save(movimiento);
-		Inventario inventario = new Inventario();
+
 		for (int i = 1; i < worksheet.getPhysicalNumberOfRows(); i++) {
+			Inventario inventario = new Inventario();
+			inventario.setMovimientos(movimiento);// desde aqui vamos a preparar un solo carrito para un solo
+													// movimiento.
+
 			celdanumero = i;
-			//libro 1 - recorredor i
+			// libro 1 - recorredor i
 			XSSFRow row = worksheet.getRow(i);
 			// creando un producto vacio desde 0
 			Producto producto = new Producto();
@@ -92,39 +95,45 @@ public class ExcelController {
 			// metiendo datos no foraneos
 			String bodega = row.getCell(3).getStringCellValue();
 			producto.setBodega(bodega);
-			
+
 			double costo = row.getCell(2).getNumericCellValue();
 			producto.setPrecio(costo);
-			
+
 			Date fecha = row.getCell(4).getDateCellValue();
 			producto.setFecha(fecha);
-			
+
 			double margen = row.getCell(7).getNumericCellValue();
 			producto.setMargen(margen);
-			
+
 			int stock = (int) row.getCell(18).getNumericCellValue();
 			producto.setStock(stock);
-			
+
 			String nombreproducto = row.getCell(1).getStringCellValue();
 			producto.setNombrep(nombreproducto);
-			
+
 			try {
 				// proceso de verificacion de foraneas
-				String codigopro = row.getCell(0).getStringCellValue();
+				String codigopro = row.getCell(0).getRawValue().toString();
 				String categoriString = row.getCell(5).getStringCellValue();
 				String marcastring = row.getCell(6).getStringCellValue();
 				String presentacionstring = row.getCell(8).getStringCellValue();
-				
+
 				String proveedorstring = row.getCell(10).getStringCellValue();
 				Long giroproveedor = Long.parseLong(row.getCell(12).getRawValue().toString());
 
 				// si es el codigo ya existe
 				codigopro = (productoservice.findByCodigo(codigopro) == null) ? codigopro : null;
-				if(codigopro==null) {
-					flash.addFlashAttribute("error", "El codigo de producto de la fila "+celdanumero+" ya existe");
+
+				if (codigopro == null && replace_ == 0) {
+					flash.addFlashAttribute("error", "El codigo de producto de la fila " + celdanumero + " ya existe");
 					return "redirect:/producto/nuevo";
 				}
-				producto.setCodigo(codigopro);
+				if (codigopro == null && replace_ == 1) {
+					productoReplace(row.getCell(0).getRawValue().toString(), authentication, stock, movimiento);
+
+				} else {
+					producto.setCodigo(row.getCell(0).getRawValue().toString());
+				}
 
 				// vemos si esta o no la categoria agregada antes.
 				Categoria categoria_xls = categoryservice.findByNombre(categoriString);
@@ -147,7 +156,7 @@ public class ExcelController {
 
 				// presentacion
 				Presentacion presentacion_xls = presentacionservice.findByDetalle(presentacionstring);
-				System.out.print("\nEL NOMBRE DE LA PRESENTACION ES: "+presentacionstring);
+				System.out.print("\nEL NOMBRE DE LA PRESENTACION ES: " + presentacionstring);
 				if (presentacion_xls != null) {
 					producto.setPresentacion(presentacion_xls);
 					System.out.print("\n" + presentacionstring + " encontrada!");
@@ -186,8 +195,13 @@ public class ExcelController {
 
 			}
 
-			
 			productoservice.save(producto);
+			inventario.setFecha(new Date());
+			inventario.setComentario("Ingresado desde un archivo excel");
+			inventario.setProducto(producto);
+			inventario.setCodigoProveedor("EXCEL");
+			inventario.setZaNombrede(authentication.getName());
+			inventario.setStock(stock);
 			workbook.close();
 			flash.addFlashAttribute("sucess", "Insercion con exito!, numero de productos: " + celdanumero++);
 
@@ -238,6 +252,29 @@ public class ExcelController {
 		giro_temp.setDetalles("No disponible");
 		giroservice.save(giro_temp);
 		return giro_temp;
+	}
+
+	public void productoReplace(String codigo_replace, Authentication authentication, int stock,
+			Movimientos movimiento_replace) {
+		Producto producto_replace = productoservice.findByCodigo(codigo_replace);
+		Inventario inventario_replace = new Inventario();
+		inventario_replace.setMovimientos(movimiento_replace);
+		inventario_replace.setCodigoProveedor("DESDE EXCEL...");
+		inventario_replace.setComentario("Este ingreso fue desde un archivo de excel por " + authentication.getName());
+		inventario_replace.setZaNombrede(authentication.getName());
+		inventario_replace.setFecha(new Date());
+		inventario_replace.setProducto(producto_replace);
+		inventario_replace.setStock(stock);
+		inventarioservice.save(inventario_replace);
+
+		producto_replace.setStock(sumarStocks(producto_replace.getId()));
+		productoservice.save(producto_replace);
+		//
+	}
+
+	public int sumarStocks(Long codigo_sumstock) {
+		List<String> totalstock = inventarioservice.sumarStock(codigo_sumstock);
+		return Integer.parseInt(totalstock.get(0).toString());
 	}
 
 }

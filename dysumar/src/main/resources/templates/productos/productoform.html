@@ -146,12 +146,32 @@
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
+					
 				</div>
 				<div class="modal-body">
-					<a class="btn btn-success" th:href="@{/excel/plantilla.xlsx}">Descargar plantilla</a>
+					<a class="btn btn-success" th:href="@{/excel/plantilla.xlsx}">Descargar
+						plantilla</a>
+						<br></br>
 					<form id="excelform" th:action="@{/excel/excelimport}"
 						class="form-control" method="post" enctype="multipart/form-data">
-						<input class="btn btn-success" type="file" th:name="file" />
+						<div class="form-group row">
+							<label for="subir" th:text="'ARCHIVO: '"
+								class="col-sm-4 col-form-label"></label>
+							<div class="col-sm-4">
+								<input class="btn btn-success" type="file" th:name="file" />
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="IVA" th:text="'NO DETENERSE AL DETECTAR PRODUCTOS REPETIDOS :'"
+								class="col-sm-4 col-form-label"></label>
+							<div class="col-sm-4">
+								<label class="switch"> <input type="checkbox" id="iva" onclick="checkiva()" />
+									<span class="slider round"></span>
+								</label><input type="number"  name="replace_" id="replace_" th:value="0"
+									style="visibility: hidden">
+							</div>
+						</div>
 					</form>
 				</div>
 				<div class="modal-footer">
@@ -183,6 +203,18 @@
 
 		function sendexcel() {
 			document.getElementById("excelform").submit();
+		}
+		
+		function checkiva() {
+
+			if ($('#iva').is(':checked')) {
+				$('#replace_').val(1);	
+				
+				
+			} else {
+				$('#replace_').val(0);
+				
+			}
 		}
 	</script>
 
