@@ -93,23 +93,37 @@ public class ExcelController {
 			Producto producto = new Producto();
 
 			// metiendo datos no foraneos
-			String bodega = row.getCell(3).getStringCellValue();
-			producto.setBodega(bodega);
+			String bodega,nombreproducto;
+			Date fecha;
+			double costo,margen;			
+			int stock;
+			
+			try {
 
-			double costo = row.getCell(2).getNumericCellValue();
-			producto.setPrecio(costo);
+				bodega = row.getCell(3).getStringCellValue();
+				producto.setBodega(bodega);
 
-			Date fecha = row.getCell(4).getDateCellValue();
-			producto.setFecha(fecha);
+				costo = row.getCell(2).getNumericCellValue();
+				producto.setPrecio(costo);
 
-			double margen = row.getCell(7).getNumericCellValue();
-			producto.setMargen(margen);
+				fecha = row.getCell(4).getDateCellValue();
+				producto.setFecha(fecha);
 
-			int stock = (int) row.getCell(18).getNumericCellValue();
-			producto.setStock(stock);
+				margen = row.getCell(7).getNumericCellValue();
+				producto.setMargen(margen);
 
-			String nombreproducto = row.getCell(1).getStringCellValue();
-			producto.setNombrep(nombreproducto);
+				stock = (int) row.getCell(18).getNumericCellValue();
+				producto.setStock(stock);
+
+				nombreproducto = row.getCell(1).getStringCellValue();
+				producto.setNombrep(nombreproducto);
+
+			} catch (NullPointerException e) {
+				flash.addFlashAttribute("error",
+						"Un dato esta vacio o tiene un formato incorrecto, revisar la celda de la fila " + celdanumero);
+				System.out.print("null weon");
+				return "redirect:/producto/nuevo";
+			}
 
 			try {
 				// proceso de verificacion de foraneas
@@ -130,83 +144,82 @@ public class ExcelController {
 				}
 				if (codigopro == null && replace_ == 1) {
 					productoReplace(row.getCell(0).getRawValue().toString(), authentication, stock, movimiento);
+					flash.addFlashAttribute("success", "Ingreso de productos con exitosa, numero de productos: " + celdanumero++);
 
 				} else {
 					producto.setCodigo(row.getCell(0).getRawValue().toString());
+					// vemos si esta o no la categoria agregada antes.
+					Categoria categoria_xls = categoryservice.findByNombre(categoriString);
+					if (categoria_xls != null) {
+						producto.setCategoria(categoria_xls);
+						System.out.print("\n" + categoriString + " encontrada!");
+					} else {
+						producto.setCategoria(insertCategory(categoriString));
+						System.out.print("\nIngresada nueva categoria: " + categoriString);
+					}
+
+					Marca marca_xls = marcaservice.findByNombre(marcastring);
+					if (marca_xls != null) {
+						producto.setMarca(marca_xls);
+						System.out.print("\n" + marcastring + " encontrada!");
+					} else {
+						producto.setMarca(insertMarca(marcastring));
+						System.out.print("\nIngresada nueva marca: " + marcastring);
+					}
+
+					// presentacion
+					Presentacion presentacion_xls = presentacionservice.findByDetalle(presentacionstring);
+					System.out.print("\nEL NOMBRE DE LA PRESENTACION ES: " + presentacionstring);
+					if (presentacion_xls != null) {
+						producto.setPresentacion(presentacion_xls);
+						System.out.print("\n" + presentacionstring + " encontrada!");
+					} else {
+						producto.setPresentacion(
+								insertPresentacion(presentacionstring, row.getCell(9).getStringCellValue()));
+						System.out.print("\nIngresada nueva presentacion: " + presentacionstring);
+					}
+					// proveedor
+					Proveedor proveedor_xls = proveedorservice.findByNombre(proveedorstring);
+					if (proveedor_xls != null) {
+						producto.setProveedor(proveedor_xls);
+						System.out.print("\n" + proveedorstring + " encontrada!");
+					} else {
+						// datos del proveedor para insertar
+						String codigoproveedor = row.getCell(11).getStringCellValue();
+						String telefono = row.getCell(13).getRawValue();
+						String email = row.getCell(14).getStringCellValue();
+						String nit = row.getCell(15).getStringCellValue();
+						String direccion = row.getCell(16).getStringCellValue();
+						String razonsocial = row.getCell(17).getStringCellValue();
+
+						// asunto de giro ya registrado
+						Giro giroproveedor_xls = (giroservice.findBy(giroproveedor)) == null ? giro
+								: giroservice.findBy(giroproveedor);
+						// listo
+
+						producto.setProveedor(insertProveedor(proveedorstring, codigoproveedor, giroproveedor_xls,
+								telefono, email, nit, direccion, razonsocial));
+						System.out.print("\nIngresado nuevo proveedor: " + proveedorstring);
+					}
+					// guardando aqui el producto e inventario
+					productoservice.save(producto);
+					inventario.setFecha(new Date());
+					inventario.setComentario("Ingresado desde un archivo excel");
+					inventario.setProducto(producto);
+					inventario.setCodigoProveedor("EXCEL");
+					inventario.setZaNombrede(authentication.getName());
+					inventario.setStock(stock);
+					inventarioservice.save(inventario);
+					workbook.close();
+					flash.addFlashAttribute("success", "Insercion con exito!, numero de productos: " + celdanumero++);
 				}
-
-				// vemos si esta o no la categoria agregada antes.
-				Categoria categoria_xls = categoryservice.findByNombre(categoriString);
-				if (categoria_xls != null) {
-					producto.setCategoria(categoria_xls);
-					System.out.print("\n" + categoriString + " encontrada!");
-				} else {
-					producto.setCategoria(insertCategory(categoriString));
-					System.out.print("\nIngresada nueva categoria: " + categoriString);
-				}
-
-				Marca marca_xls = marcaservice.findByNombre(marcastring);
-				if (marca_xls != null) {
-					producto.setMarca(marca_xls);
-					System.out.print("\n" + marcastring + " encontrada!");
-				} else {
-					producto.setMarca(insertMarca(marcastring));
-					System.out.print("\nIngresada nueva marca: " + marcastring);
-				}
-
-				// presentacion
-				Presentacion presentacion_xls = presentacionservice.findByDetalle(presentacionstring);
-				System.out.print("\nEL NOMBRE DE LA PRESENTACION ES: " + presentacionstring);
-				if (presentacion_xls != null) {
-					producto.setPresentacion(presentacion_xls);
-					System.out.print("\n" + presentacionstring + " encontrada!");
-				} else {
-					producto.setPresentacion(
-							insertPresentacion(presentacionstring, row.getCell(9).getStringCellValue()));
-					System.out.print("\nIngresada nueva presentacion: " + presentacionstring);
-				}
-				// proveedor
-				Proveedor proveedor_xls = proveedorservice.findByNombre(proveedorstring);
-				if (proveedor_xls != null) {
-					producto.setProveedor(proveedor_xls);
-					System.out.print("\n" + proveedorstring + " encontrada!");
-				} else {
-					// datos del proveedor para insertar
-					String codigoproveedor = row.getCell(11).getStringCellValue();
-					String telefono = row.getCell(13).getRawValue();
-					String email = row.getCell(14).getStringCellValue();
-					String nit = row.getCell(15).getStringCellValue();
-					String direccion = row.getCell(16).getStringCellValue();
-					String razonsocial = row.getCell(17).getStringCellValue();
-
-					// asunto de giro ya registrado
-					Giro giroproveedor_xls = (giroservice.findBy(giroproveedor)) == null ? giro
-							: giroservice.findBy(giroproveedor);
-					// listo
-
-					producto.setProveedor(insertProveedor(proveedorstring, codigoproveedor, giroproveedor_xls, telefono,
-							email, nit, direccion, razonsocial));
-					System.out.print("\nIngresado nuevo proveedor: " + proveedorstring);
-				}
-
 			} catch (Exception e) {
 				e.printStackTrace();
 				flash.addFlashAttribute("error", "Hay un error en su archivo, ultima celda revisa: " + celdanumero++);
 
 			}
-
-			productoservice.save(producto);
-			inventario.setFecha(new Date());
-			inventario.setComentario("Ingresado desde un archivo excel");
-			inventario.setProducto(producto);
-			inventario.setCodigoProveedor("EXCEL");
-			inventario.setZaNombrede(authentication.getName());
-			inventario.setStock(stock);
-			inventarioservice.save(inventario);
-			workbook.close();
-			flash.addFlashAttribute("sucess", "Insercion con exito!, numero de productos: " + celdanumero++);
-
 		}
+
 		return "redirect:/producto/nuevo";
 	}
 
@@ -270,6 +283,7 @@ public class ExcelController {
 
 		producto_replace.setStock(sumarStocks(producto_replace.getId()));
 		productoservice.save(producto_replace);
+		
 		//
 	}
 
