@@ -40,10 +40,22 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		System.out.print("\n Agente" + agente + "\n");
 		Numeros_Letras numeroALetras = new Numeros_Letras();
 		Sheet sheet = workbook.createSheet();
+		//zoom and view
+		sheet.setZoom(110);
+		sheet.setAutobreaks(true);
+		sheet.setFitToPage(true);
+
+		sheet.setMargin(Sheet.TopMargin, 0.900);
+		sheet.setMargin(Sheet.BottomMargin, 1.500);
+		sheet.setMargin(Sheet.HeaderMargin, 0.00);
+		sheet.setMargin(Sheet.FooterMargin, 0.00);
 		sheet.setMargin(Sheet.RightMargin, 0.2);
-		sheet.setMargin(Sheet.LeftMargin, 0.629921);
-		sheet.setMargin(Sheet.BottomMargin, 0.590551);
-		sheet.setMargin(Sheet.TopMargin, 0.354331);
+		sheet.setMargin(Sheet.LeftMargin, 1.6000);
+		
+		
+		
+		
+		
 
 		CellStyle theaderstyle = workbook.createCellStyle();
 		theaderstyle.setBorderBottom(BorderStyle.MEDIUM);
