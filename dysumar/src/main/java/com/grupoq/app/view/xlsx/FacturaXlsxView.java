@@ -41,16 +41,16 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		Numeros_Letras numeroALetras = new Numeros_Letras();
 		Sheet sheet = workbook.createSheet();
 		//zoom and view
+		
+		sheet.setAutobreaks(false);
 		sheet.setZoom(110);
-		sheet.setAutobreaks(true);
-		sheet.setFitToPage(true);
 
-		sheet.setMargin(Sheet.TopMargin, 0.900);
-		sheet.setMargin(Sheet.BottomMargin, 1.500);
+		sheet.setMargin(Sheet.TopMargin, 0.354331);
+		sheet.setMargin(Sheet.BottomMargin, 0.590551);
 		sheet.setMargin(Sheet.HeaderMargin, 0.00);
 		sheet.setMargin(Sheet.FooterMargin, 0.00);
-		sheet.setMargin(Sheet.RightMargin, 0.2);
-		sheet.setMargin(Sheet.LeftMargin, 1.6000);
+		sheet.setMargin(Sheet.RightMargin, 0.0787402);
+		sheet.setMargin(Sheet.LeftMargin, 0.629921);
 		
 		
 		
@@ -168,7 +168,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		sheet.setColumnWidth(0, 10 * 256);
 		sheet.setColumnWidth(1, 5 * 256);
 //		recortamos el tamaño si es credito fiscal
-		int tamanoCWith = (creditoFiscal) ? 43 : 48;
+		int tamanoCWith = (creditoFiscal) ? 43 : 47;
 		sheet.setColumnWidth(2, tamanoCWith * 256);
 		sheet.setColumnWidth(3, 8 * 256);
 		sheet.setColumnWidth(4, 7 * 256);
@@ -183,7 +183,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		Font font1left = workbook.createFont();
 		font1left.setFontHeightInPoints((short) 8);
-		font1left.setFontName("Roman 17cpi");
+		font1left.setFontName("Roman 15cpi");
 		celltextLeft.setFont(font1left);
 
 		Font ennegrita = workbook.createFont();
@@ -265,7 +265,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		row7.getCell(1).setCellStyle(celdasStyleMerged);
 		row7.getCell(2).setCellStyle(celltextLeft);
-		row7.getCell(2).setCellValue(factura.getFormadepago().getNombre() + "- FORMA DE PAGO");
+		row7.getCell(2).setCellValue(factura.getCondicionesDPago().getNombre());
 
 		// para la 8 9, 10 y 11
 		Row row8 = sheet.createRow(7);
