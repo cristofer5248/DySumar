@@ -7,15 +7,19 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.stereotype.Component;
@@ -44,12 +48,14 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		
 		sheet.setAutobreaks(false);
 		sheet.setZoom(110);
+		sheet.setFitToPage(true);
 
 		sheet.setMargin(Sheet.TopMargin, 0.354331);
 		sheet.setMargin(Sheet.BottomMargin, 0.590551);
 		sheet.setMargin(Sheet.HeaderMargin, 0.00);
 		sheet.setMargin(Sheet.FooterMargin, 0.00);
-		sheet.setMargin(Sheet.RightMargin, 0.0787402);
+//		sheet.setMargin(Sheet.RightMargin, 0.0787402);
+		sheet.setMargin(Sheet.RightMargin, 0.0000);
 		sheet.setMargin(Sheet.LeftMargin, 0.629921);
 		
 		
@@ -74,9 +80,18 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		// LAS QUET IENEN TEXTO IMPORTANTE
 		CellStyle celltext = workbook.createCellStyle();
 		celltext.setAlignment(HorizontalAlignment.CENTER);
+		
+		CellStyle celltextMoney = workbook.createCellStyle();
+		celltextMoney.setAlignment(HorizontalAlignment.CENTER);
+//		DataFormat dataFormat = workbook.createDataFormat();
+		celltextMoney.setDataFormat((short)8);
 
 		CellStyle ennegritacell = workbook.createCellStyle();
 		ennegritacell.setAlignment(HorizontalAlignment.CENTER);
+		
+		CellStyle ennegritacelltotal = workbook.createCellStyle();
+		ennegritacelltotal.setAlignment(HorizontalAlignment.LEFT);
+		ennegritacelltotal.setVerticalAlignment(VerticalAlignment.TOP);
 
 		CellStyle normalCenter = workbook.createCellStyle();
 		normalCenter.setAlignment(HorizontalAlignment.CENTER);
@@ -168,10 +183,10 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		sheet.setColumnWidth(0, 10 * 256);
 		sheet.setColumnWidth(1, 5 * 256);
 //		recortamos el tamaño si es credito fiscal
-		int tamanoCWith = (creditoFiscal) ? 43 : 47;
+		int tamanoCWith = (creditoFiscal) ? 43 : 46;
 		sheet.setColumnWidth(2, tamanoCWith * 256);
-		sheet.setColumnWidth(3, 8 * 256);
-		sheet.setColumnWidth(4, 7 * 256);
+		sheet.setColumnWidth(3, 15 * 256);
+		sheet.setColumnWidth(4, 7 * 256);		
 		sheet.setColumnWidth(5, 5 * 256);
 		sheet.setColumnWidth(6, 10 * 256);
 
@@ -179,6 +194,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		font1.setFontHeightInPoints((short) 8);
 		font1.setFontName("Roman 17cpi");
 		celltext.setFont(font1);
+		celltextMoney.setFont(font1);
 		normalCenter.setFont(font1);
 
 		Font font1left = workbook.createFont();
@@ -191,6 +207,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		ennegrita.setFontName("Roman 17cpi");
 		ennegrita.setBold(true);
 		ennegritacell.setFont(ennegrita);
+		ennegritacelltotal.setFont(ennegrita);
 
 		Font celltextRightF = workbook.createFont();
 		celltextRightF.setFontHeightInPoints((short) 8);
@@ -206,7 +223,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		// para la primera row A1
 		Row row = sheet.createRow(0);
-		row.setHeightInPoints(60);
+		row.setHeightInPoints(82);
 		row.createCell(0);
 		row.createCell(6).setCellValue(factura.getCodigofactura());
 		row.getCell(6).setCellStyle(celltextRight);
@@ -231,7 +248,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		row4.getCell(0).setCellStyle(celdasStyleMerged);
 		row4.getCell(3).setCellStyle(celdasStyleMerged);
 		row4.getCell(4).setCellStyle(celdasStyleMerged);
-		row4.setHeightInPoints(15);
+		row4.setHeightInPoints(37);
 
 		row4.getCell(1).setCellValue(factura.getCliente().getCliente().getNombre());
 		row4.getCell(1).setCellStyle(normalCenter);
@@ -259,7 +276,8 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		// para la 7
 		Row row7 = sheet.createRow(6);
-		row7.setHeightInPoints(19);
+//		row7.setHeightInPoints(19);
+		row7.setHeightInPoints(28);
 		row7.createCell(1);
 		row7.createCell(2);
 
@@ -318,7 +336,11 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			cellItems.setCellStyle(celltext);
 //			"$  " + String.format("%.2f", (carrito.getPrecio() / ((100 - carrito.getMargen()) / 100)))
 			double precioUnitario_temp = (creditoFiscal) ? carrito.getPrecio() : carrito.getPrecio() * 1.13;
-			cellItems.setCellValue("$  " + String.format("%.2f", precioUnitario_temp));
+			cellItems.setCellStyle(celltextMoney);
+//			cellItems.setCellValue(String.format("%.2f", precioUnitario_temp));
+			cellItems.setCellValue(precioUnitario_temp);
+//			cellItems.setCellValue("$  " + String.format("%.2f", precioUnitario_temp));
+			
 
 			// espaciado en color son adelante
 			cellItems = fila.createCell(4);
@@ -328,9 +350,9 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 			// total precio x cantidad
 			cellItems = fila.createCell(6);
-			cellItems.setCellStyle(celltext);
+			cellItems.setCellStyle(celltextMoney);
 			double precioUnitarioXcantidad = precioUnitario_temp * carrito.getCantidad();
-			cellItems.setCellValue("$  " + df.format(precioUnitarioXcantidad));
+			cellItems.setCellValue(precioUnitarioXcantidad);
 
 		}
 		System.out.print("donde estara el final es: " + itemRows);
@@ -338,7 +360,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		for (int i_filler = itemRows; itemRows < 24; itemRows++) {
 			Row fila = sheet.createRow(i_filler++);
-			int altoprecios = (creditoFiscal) ? 25 : 27;
+			int altoprecios = (creditoFiscal) ? 25 : 28;
 			fila.setHeightInPoints(altoprecios);
 			fila.createCell(4);
 			fila.createCell(5);
@@ -349,7 +371,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		}
 
 		Row rowFinal = sheet.createRow(24);
-		rowFinal.setHeightInPoints(33);
+		rowFinal.setHeightInPoints(50);
 		rowFinal.createCell(0);
 		rowFinal.createCell(3);
 		rowFinal.getCell(0).setCellStyle(celdasStyleMerged);
@@ -398,8 +420,9 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		Row rowFinal_total = sheet.createRow(29);
 		rowFinal_total.createCell(6);
 		rowFinal_total.getCell(6).setCellValue("$  " + df.format(ivado - retenido));
-		rowFinal_total.getCell(6).setCellStyle(ennegritacell);
+		rowFinal_total.getCell(6).setCellStyle(ennegritacelltotal);
 		rowFinal_total.setHeightInPoints(23);
+		
 		rowFinal.getCell(1).setCellValue("$ " + numeroALetras.Convertir(df.format(ivado - retenido), true));
 		// hacer el cambio en esto porque lo tomamos del final
 
