@@ -36,6 +36,9 @@ public class FacturaXlsxView extends AbstractXlsxView {
 	protected void buildExcelDocument(Map<String, Object> model, Workbook workbook, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 //		df.setRoundingMode(RoundingMode.DOWN);
+		// accounting format
+		String accountingformat = "_-$* #,##0.00_-;-$* #,##0.00_-;_-$* \"-\"??_-;_-@_-";
+
 		response.setHeader("Content-Disposition", "attachment; filename=\"factura.xlsx\"");
 		Facturacion factura = (Facturacion) model.get("facturaciones");
 		boolean agente = (factura.getCliente().getCliente().getAgente()) ? true : false;
@@ -44,8 +47,8 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		System.out.print("\n Agente" + agente + "\n");
 		Numeros_Letras numeroALetras = new Numeros_Letras();
 		Sheet sheet = workbook.createSheet();
-		//zoom and view
-		
+		// zoom and view
+
 		sheet.setAutobreaks(false);
 		sheet.setZoom(110);
 		sheet.setFitToPage(true);
@@ -57,11 +60,6 @@ public class FacturaXlsxView extends AbstractXlsxView {
 //		sheet.setMargin(Sheet.RightMargin, 0.0787402);
 		sheet.setMargin(Sheet.RightMargin, 0.0000);
 		sheet.setMargin(Sheet.LeftMargin, 0.629921);
-		
-		
-		
-		
-		
 
 		CellStyle theaderstyle = workbook.createCellStyle();
 		theaderstyle.setBorderBottom(BorderStyle.MEDIUM);
@@ -76,22 +74,24 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		celdasStyleMerged.setFillForegroundColor(IndexedColors.WHITE.index);
 		celdasStyleMerged.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		celdasStyleMerged.setAlignment(HorizontalAlignment.CENTER);
+		DataFormat dataFormat = workbook.createDataFormat();
 
 		// LAS QUET IENEN TEXTO IMPORTANTE
 		CellStyle celltext = workbook.createCellStyle();
 		celltext.setAlignment(HorizontalAlignment.CENTER);
-		
+
 		CellStyle celltextMoney = workbook.createCellStyle();
 		celltextMoney.setAlignment(HorizontalAlignment.CENTER);
-//		DataFormat dataFormat = workbook.createDataFormat();
-		celltextMoney.setDataFormat((short)8);
+
+		celltextMoney.setDataFormat(dataFormat.getFormat(accountingformat));
 
 		CellStyle ennegritacell = workbook.createCellStyle();
 		ennegritacell.setAlignment(HorizontalAlignment.CENTER);
-		
+
 		CellStyle ennegritacelltotal = workbook.createCellStyle();
 		ennegritacelltotal.setAlignment(HorizontalAlignment.LEFT);
 		ennegritacelltotal.setVerticalAlignment(VerticalAlignment.TOP);
+		ennegritacelltotal.setDataFormat(dataFormat.getFormat(accountingformat));
 
 		CellStyle normalCenter = workbook.createCellStyle();
 		normalCenter.setAlignment(HorizontalAlignment.CENTER);
@@ -180,15 +180,15 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		rowvacios_abajo30.setHeightInPoints(20);
 		rowvacios_abajo30.setHeightInPoints(22);
 
-		sheet.setColumnWidth(0, 10 * 256);
-		sheet.setColumnWidth(1, 5 * 256);
+		sheet.setColumnWidth(0, 9 * 255);
+		sheet.setColumnWidth(1, 7 * 255);
 //		recortamos el tamaño si es credito fiscal
-		int tamanoCWith = (creditoFiscal) ? 43 : 46;
+		int tamanoCWith = (creditoFiscal) ? 43 : 50;
 		sheet.setColumnWidth(2, tamanoCWith * 256);
-		sheet.setColumnWidth(3, 15 * 256);
-		sheet.setColumnWidth(4, 7 * 256);		
-		sheet.setColumnWidth(5, 5 * 256);
-		sheet.setColumnWidth(6, 10 * 256);
+		sheet.setColumnWidth(3, 9 * 256);
+		sheet.setColumnWidth(4, 8 * 256);
+		sheet.setColumnWidth(5, 6 * 256);
+		sheet.setColumnWidth(6, 11 * 256);
 
 		Font font1 = workbook.createFont();
 		font1.setFontHeightInPoints((short) 8);
@@ -340,7 +340,6 @@ public class FacturaXlsxView extends AbstractXlsxView {
 //			cellItems.setCellValue(String.format("%.2f", precioUnitario_temp));
 			cellItems.setCellValue(precioUnitario_temp);
 //			cellItems.setCellValue("$  " + String.format("%.2f", precioUnitario_temp));
-			
 
 			// espaciado en color son adelante
 			cellItems = fila.createCell(4);
@@ -371,7 +370,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		}
 
 		Row rowFinal = sheet.createRow(24);
-		rowFinal.setHeightInPoints(50);
+		rowFinal.setHeightInPoints(40);
 		rowFinal.createCell(0);
 		rowFinal.createCell(3);
 		rowFinal.getCell(0).setCellStyle(celdasStyleMerged);
@@ -381,8 +380,8 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		rowFinal.getCell(1).setCellValue("$ " + numeroALetras.Convertir(df.format(sumasPrecios), true));
 		rowFinal.getCell(1).setCellStyle(ennegritacell);
 		rowFinal.createCell(6);
-		rowFinal.getCell(6).setCellStyle(celltext);
-		rowFinal.getCell(6).setCellValue("$" + df.format(sumasPrecios));
+		rowFinal.getCell(6).setCellStyle(celltextMoney);
+		rowFinal.getCell(6).setCellValue(sumasPrecios);
 		// retenindo 0 para restar si no es agente
 		double retenido = 0;
 		double ivado = factura.getTotaRegistrado() + (factura.getTotaRegistrado() * 0.13);
@@ -393,36 +392,41 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		// mostrar iva ahi
 		if (creditoFiscal) {
 			rowvacios_abajo26.createCell(6);
-			rowvacios_abajo26.getCell(6).setCellValue("$ " + df.format(factura.getTotaRegistrado() * 0.13));
-			rowvacios_abajo26.getCell(6).setCellStyle(celltext);
+			rowvacios_abajo26.getCell(6).setCellValue(factura.getTotaRegistrado() * 0.13);
+			rowvacios_abajo26.getCell(6).setCellStyle(celltextMoney);
 			rowvacios_abajo27.createCell(6);
-			rowvacios_abajo27.getCell(6).setCellStyle(celltext);
+			rowvacios_abajo27.getCell(6).setCellStyle(celltextMoney);
 			// espacio para poner credito fiscal solo datos que solo el vera
 
 			// fin
 
 		} else {
 			rowvacios_abajo27.createCell(6);
-			rowvacios_abajo27.getCell(6).setCellStyle(celltext);
-			rowvacios_abajo27.getCell(6).setCellValue("$ " + df.format(ivado));
+			rowvacios_abajo27.getCell(6).setCellStyle(celltextMoney);
+			rowvacios_abajo27.getCell(6).setCellValue(df.format(ivado));
 		}
 
 		// retencion datos set
-		String retenido_string = (retenido == 0) ? "" : "$ " + df.format(retenido);
-		rowvacios_abajo28.createCell(6);
-		rowvacios_abajo28.getCell(6).setCellStyle(celltext);
-		rowvacios_abajo28.getCell(6).setCellValue(retenido_string);
-		rowvacios_abajo27.getCell(6).setCellValue("$ " + df.format(ivado));
+		rowvacios_abajo29.createCell(6);
+		if (retenido == 0) {
+			rowvacios_abajo29.getCell(6).setCellValue("");
+		} else {
+			rowvacios_abajo29.getCell(6).setCellValue(retenido);
+		}
+		
+		rowvacios_abajo29.getCell(6).setCellStyle(celltextMoney);
+//		
+		rowvacios_abajo27.getCell(6).setCellValue(ivado);
 		// termina la retencion
 
 		// ponemos el credito fiscal o vacio
 
 		Row rowFinal_total = sheet.createRow(29);
 		rowFinal_total.createCell(6);
-		rowFinal_total.getCell(6).setCellValue("$  " + df.format(ivado - retenido));
+		rowFinal_total.getCell(6).setCellValue(ivado - retenido);
 		rowFinal_total.getCell(6).setCellStyle(ennegritacelltotal);
 		rowFinal_total.setHeightInPoints(23);
-		
+
 		rowFinal.getCell(1).setCellValue("$ " + numeroALetras.Convertir(df.format(ivado - retenido), true));
 		// hacer el cambio en esto porque lo tomamos del final
 
