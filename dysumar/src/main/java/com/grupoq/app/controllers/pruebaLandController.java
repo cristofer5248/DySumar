@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.*;
 //import com.grupoq.app.models.entity.CarritoItems;
 import com.grupoq.app.models.entity.Facturacion;
 import com.grupoq.app.models.entity.Giro;
+import com.grupoq.app.models.entity.Inventario;
 import com.grupoq.app.models.entity.Producto;
 import com.grupoq.app.models.service.IFacturaService;
 import com.grupoq.app.models.service.IGiroService;
+import com.grupoq.app.models.service.IInventarioService;
 import com.grupoq.app.models.service.IProductoService;
 
 @RequestMapping("/adminzone")
@@ -31,6 +33,9 @@ public class pruebaLandController {
 
 	@Autowired
 	private IProductoService productoService;
+
+	@Autowired
+	private IInventarioService inventarioservice;
 
 	@RequestMapping(value = "/saveExpress/{nombre}", method = { RequestMethod.GET }, produces = { "application/json" })
 	@ResponseBody
@@ -65,6 +70,29 @@ public class pruebaLandController {
 		return result;
 	}
 
+	@RequestMapping(value = "/stockearbien", method = RequestMethod.GET)
+	public String actualizatebro() {
+		String result = "";
+
+		List<Producto> todosay = productoService.findAllList();
+		for (Producto pro : todosay) {
+			System.out.print("El id es el del error: " + pro.getId());
+			List<Inventario> stocks = inventarioservice.findByProductoById(pro.getId());
+			int totalizador = 0;
+			for (Inventario stocks1by1 : stocks) {
+				totalizador += stocks1by1.getStock();
+			}
+			if (totalizador == 0) {
+
+			} else {
+				pro.setStock(totalizador);
+				productoService.save(pro);
+			}
+		}
+		result = "Operacion exitosa";
+		return result;
+	}
+
 	@RequestMapping(value = "/lambdainventario/{idproducto}/{cantidad}", method = RequestMethod.GET)
 	public String lambdaInventario(@PathVariable(value = "idproducto") Long id,
 			@PathVariable(value = "cantidad") int cantidad) {
@@ -77,9 +105,9 @@ public class pruebaLandController {
 			mensaje += fa.getCotizacion().getCarrito().get(0).getProductos().getNombrep() + "<br>";
 
 		}
-		
+
 		List<Facturacion> factLambda = fact.stream()
-				.filter(p -> p.getCotizacion().getCarrito_objeto().getProductos().getStock()>0)
+				.filter(p -> p.getCotizacion().getCarrito_objeto().getProductos().getStock() > 0)
 				.collect(Collectors.toList());
 		for (Facturacion fal : factLambda) {
 			mensaje2 += fal.getId() + "<br>";

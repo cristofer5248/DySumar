@@ -72,6 +72,12 @@ public class IInventarioServiceImpl implements IInventarioService {
 		return inventarioDao.findByIdCustom(id);
 	}
 
+	@Override
+	public List<Inventario> findByProductoById(Long id) {
+		// TODO Auto-generated method stub
+		return inventarioDao.findByProductoId(id);
+	}
+
 
 	
 	

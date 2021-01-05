@@ -128,7 +128,7 @@ public class ExcelController {
 
 			try {
 				// proceso de verificacion de foraneas
-				DataFormatter formatter = new DataFormatter();				
+				DataFormatter formatter = new DataFormatter();
 				String codigopro = formatter.formatCellValue(row.getCell(0));
 				System.out.print("\ncodigo es antes solo agarrado: " + codigopro + "\n");
 				String categoriString = row.getCell(5).getStringCellValue();
@@ -146,12 +146,13 @@ public class ExcelController {
 					return "redirect:/producto/nuevo";
 				}
 				if (codigopro == null && replace_ == 1) {
-					productoReplace(row.getCell(0).getRawValue().toString(), authentication, stock, movimiento);
+
+					productoReplace(formatter.formatCellValue(row.getCell(0)), authentication, stock, movimiento);
 					flash.addFlashAttribute("success",
 							"Ingreso de productos con exitosa, numero de productos: " + celdanumero++);
 
 				} else {
-					producto.setCodigo(row.getCell(0).getRawValue().toString());
+					producto.setCodigo(formatter.formatCellValue(row.getCell(0)));
 					// vemos si esta o no la categoria agregada antes.
 					Categoria categoria_xls = categoryservice.findByNombre(categoriString);
 					if (categoria_xls != null) {
@@ -274,7 +275,24 @@ public class ExcelController {
 
 	public void productoReplace(String codigo_replace, Authentication authentication, int stock,
 			Movimientos movimiento_replace) {
+
 		Producto producto_replace = productoservice.findByCodigo(codigo_replace);
+		if (inventarioservice.findByProductoById(producto_replace.getId()).size() <1) {
+			System.out.print("HE ENTRADO A IF DE NO INGRESO FANTASMA");
+			Inventario inventario_replace__ = new Inventario();
+			Movimientos extramove = new Movimientos();
+			movimientoservice.save(extramove);
+			inventario_replace__.setMovimientos(extramove);
+			inventario_replace__.setCodigoProveedor("EXCEL...");
+			inventario_replace__
+					.setComentario("Este es un ingreso que no habia sido mostrado, ingreso por : " + authentication.getName());
+			inventario_replace__.setZaNombrede(authentication.getName());
+			inventario_replace__.setFecha(new Date());
+			inventario_replace__.setProducto(producto_replace);
+			inventario_replace__.setStock(producto_replace.getStock());
+			inventarioservice.save(inventario_replace__);
+		}
+
 		Inventario inventario_replace = new Inventario();
 		inventario_replace.setMovimientos(movimiento_replace);
 		inventario_replace.setCodigoProveedor("DESDE EXCEL...");

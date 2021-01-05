@@ -32,4 +32,6 @@ public interface IInventarioDao extends PagingAndSortingRepository<Inventario, L
 	public Inventario findByIdCustom(Long id);
 	
 	public Inventario findFirstByCodigoProveedor(String id);
+	
+	public List<Inventario> findByProductoId(Long id);
 }

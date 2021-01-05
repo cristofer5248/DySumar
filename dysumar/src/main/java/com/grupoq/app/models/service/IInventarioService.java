@@ -17,6 +17,8 @@ public interface IInventarioService {
 	
 	public void save (Inventario inventario);
 	
+	public List<Inventario> findByProductoById(Long id);
+	
 	
 	public List<String> sumarStock(Long id);
 
