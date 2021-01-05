@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -90,7 +89,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		CellStyle ennegritacelltotal = workbook.createCellStyle();
 		ennegritacelltotal.setAlignment(HorizontalAlignment.LEFT);
-		ennegritacelltotal.setVerticalAlignment(VerticalAlignment.TOP);
+		ennegritacelltotal.setVerticalAlignment(VerticalAlignment.CENTER);
 		ennegritacelltotal.setDataFormat(dataFormat.getFormat(accountingformat));
 
 		CellStyle normalCenter = workbook.createCellStyle();

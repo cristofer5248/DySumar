@@ -1,6 +1,11 @@
 package com.grupoq.app.controllers;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.access.annotation.Secured;
@@ -10,8 +15,10 @@ import org.springframework.web.bind.annotation.*;
 //import com.grupoq.app.models.entity.CarritoItems;
 import com.grupoq.app.models.entity.Facturacion;
 import com.grupoq.app.models.entity.Giro;
+import com.grupoq.app.models.entity.Producto;
 import com.grupoq.app.models.service.IFacturaService;
 import com.grupoq.app.models.service.IGiroService;
+import com.grupoq.app.models.service.IProductoService;
 
 @RequestMapping("/adminzone")
 @RestController
@@ -21,6 +28,9 @@ public class pruebaLandController {
 
 	@Autowired
 	private IFacturaService facturaService;
+
+	@Autowired
+	private IProductoService productoService;
 
 	@RequestMapping(value = "/saveExpress/{nombre}", method = { RequestMethod.GET }, produces = { "application/json" })
 	@ResponseBody
@@ -53,6 +63,34 @@ public class pruebaLandController {
 		}
 
 		return result;
+	}
+
+	@RequestMapping(value = "/lambdainventario/{idproducto}/{cantidad}", method = RequestMethod.GET)
+	public String lambdaInventario(@PathVariable(value = "idproducto") Long id,
+			@PathVariable(value = "cantidad") int cantidad) {
+		Producto producto = productoService.findOne(id);
+		String mensaje = "RAW <br>";
+		String mensaje2 = "<br> LAMBDA <br>";
+		List<Facturacion> fact = facturaService.findByCotizacionByCarritoItemsByIdByStatusWithoutProducto(id);
+		mensaje += ((producto.getStock() + cantidad) > 0) ? "Cubierto<br>" : "No dan las cuentas<br>";
+		for (Facturacion fa : fact) {
+			mensaje += fa.getCotizacion().getCarrito().get(0).getProductos().getNombrep() + "<br>";
+
+		}
+		
+		List<Facturacion> factLambda = fact.stream()
+				.filter(p -> p.getCotizacion().getCarrito_objeto().getProductos().getStock()>0)
+				.collect(Collectors.toList());
+		for (Facturacion fal : factLambda) {
+			mensaje2 += fal.getId() + "<br>";
+		}
+		return mensaje + mensaje2;
+	}
+
+	public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+
+		Map<Object, Boolean> seen = new ConcurrentHashMap<>();
+		return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
 	}
 
 //	@RequestMapping(value = "/probador/{opc}/{valor}", method = RequestMethod.GET)

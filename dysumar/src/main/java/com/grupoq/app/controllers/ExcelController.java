@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -93,11 +94,11 @@ public class ExcelController {
 			Producto producto = new Producto();
 
 			// metiendo datos no foraneos
-			String bodega,nombreproducto;
+			String bodega, nombreproducto;
 			Date fecha;
-			double costo,margen;			
+			double costo, margen;
 			int stock;
-			
+
 			try {
 
 				bodega = row.getCell(3).getStringCellValue();
@@ -127,7 +128,9 @@ public class ExcelController {
 
 			try {
 				// proceso de verificacion de foraneas
-				String codigopro = row.getCell(0).getRawValue().toString();
+				DataFormatter formatter = new DataFormatter();				
+				String codigopro = formatter.formatCellValue(row.getCell(0));
+				System.out.print("\ncodigo es antes solo agarrado: " + codigopro + "\n");
 				String categoriString = row.getCell(5).getStringCellValue();
 				String marcastring = row.getCell(6).getStringCellValue();
 				String presentacionstring = row.getCell(8).getStringCellValue();
@@ -137,14 +140,15 @@ public class ExcelController {
 
 				// si es el codigo ya existe
 				codigopro = (productoservice.findByCodigo(codigopro) == null) ? codigopro : null;
-
+				System.out.print("\ncodigo es: " + codigopro + "\n");
 				if (codigopro == null && replace_ == 0) {
 					flash.addFlashAttribute("error", "El codigo de producto de la fila " + celdanumero + " ya existe");
 					return "redirect:/producto/nuevo";
 				}
 				if (codigopro == null && replace_ == 1) {
 					productoReplace(row.getCell(0).getRawValue().toString(), authentication, stock, movimiento);
-					flash.addFlashAttribute("success", "Ingreso de productos con exitosa, numero de productos: " + celdanumero++);
+					flash.addFlashAttribute("success",
+							"Ingreso de productos con exitosa, numero de productos: " + celdanumero++);
 
 				} else {
 					producto.setCodigo(row.getCell(0).getRawValue().toString());
@@ -283,7 +287,7 @@ public class ExcelController {
 
 		producto_replace.setStock(sumarStocks(producto_replace.getId()));
 		productoservice.save(producto_replace);
-		
+
 		//
 	}
 
