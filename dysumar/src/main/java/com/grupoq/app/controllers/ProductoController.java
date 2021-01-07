@@ -323,6 +323,7 @@ public class ProductoController {
 				if (carrito.getProductos().getId() == Long.parseLong(idp)) {
 					hp.setIdCotizacion(carrito.getCotizacionid().getId());
 					hp.setPrecio(carrito.getPrecio());
+					hp.setCantidad(carrito.getCantidad());
 				}
 			}
 			historyList.add(hp);

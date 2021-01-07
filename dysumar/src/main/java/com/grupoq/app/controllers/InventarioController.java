@@ -225,8 +225,8 @@ public class InventarioController {
 						factura = facturaService.findByCotizacionByCarritoItemsByIdByStatus(producto.getId());
 						for (Facturacion facturaCambioStatus : factura) {
 							System.out.print("Index final de factura: " + factura.size());
-							facturaCambioStatus.setStatus(2);
-							facturaService.save(facturaCambioStatus);
+//							facturaCambioStatus.setStatus(2);
+//							facturaService.save(facturaCambioStatus);
 						}
 					}
 				} catch (Exception e) {

@@ -156,6 +156,34 @@ public class FacturaController {
 		return "/facturas/listar";
 	}
 
+	// PARA CARRITO
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_FACT" })
+	@RequestMapping(value = "/checkstock/{term}", method = RequestMethod.GET)
+	public String evaluarstock(Map<String, Object> model, RedirectAttributes flash, @PathVariable Long term) {
+		try {
+			Facturacion facturacion = facturaservice.findBy(term);
+			List<CarritoItems> carrito = facturacion.getCotizacion().getCarrito();
+			System.out.print("\nRecorriendo: \n");
+			boolean cambiarStatus = true;
+			for (CarritoItems caObj : carrito) {
+				if (caObj.getProductos().getStock() < 0)
+					cambiarStatus = false;
+
+			}
+			if (cambiarStatus) {
+				facturacion.setStatus(2);
+				facturaservice.save(facturacion);
+				flash.addFlashAttribute("success", "Se ha actualizado el estado de la remision");
+			} else {
+				flash.addFlashAttribute("error", "Sin cambios");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		return "redirect:/factura/ver/" + term;
+	}
+
 //PARA CARRITO
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
@@ -394,7 +422,7 @@ public class FacturaController {
 			@RequestParam(name = "ivaC", required = true) int iva, Model model, RedirectAttributes flash,
 			SessionStatus status) throws ParseException {
 
-		if (itemId==null) {
+		if (itemId == null) {
 			model.addAttribute("titulo", "Realizar una remision");
 			flash.addAttribute("error", "La remision no puede estar vacia");
 			return "redirect:/factura/nuevo";
@@ -497,8 +525,8 @@ public class FacturaController {
 		System.out.print("\n usuario1 " + auth.getName());
 		System.out.print("\n usuario2 " + facturacion.getaCuentade().getUsername());
 
-		if (!facturacion.getaCuentade().getUsername().equals(auth.getName())
-				&& !(request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_JEFEADM") || request.isUserInRole("ROLE_FACT"))) {
+		if (!facturacion.getaCuentade().getUsername().equals(auth.getName()) && !(request.isUserInRole("ROLE_ADMIN")
+				|| request.isUserInRole("ROLE_JEFEADM") || request.isUserInRole("ROLE_FACT"))) {
 			flash.addFlashAttribute("error", "La factura que intentas ver no te corresponde porque no es tuya.");
 			return "redirect:/facturacion/listar";
 		}

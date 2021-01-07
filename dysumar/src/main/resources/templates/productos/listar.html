@@ -105,7 +105,7 @@
 											<div class='icon' style="background-color: green">
 												<i class='fas fa-check' onmouseover="quitarcolumns();"></i>
 											</div>
-											<div class='text check'>
+											<div class='text check' style="position: absolute;  z-index: 5;">
 												<span>ACEPTAR</span>
 											</div>
 									</a></td>
@@ -113,7 +113,7 @@
 										sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"><a
 										th:href="@{'/producto/asegurar/' + ${producto.id}}">
 											<div class='icon check'>
-												<i class='fas fa-tasks' onmouseover="quitarcolumns();"></i>
+												<i class='fas fa-tasks' onmouseover="quitarcolumns();" style="position: absolute;  z-index: 6;"></i>
 												<span></span>
 											</div>
 
@@ -124,7 +124,7 @@
 											<div class='icon'>
 												<i class='fa fa-pencil' onmouseover="quitarcolumns();"></i>
 											</div>
-											<div class='text update'>
+											<div class='text update' style="position: absolute;  z-index: 5;">
 												<span>Actualizar</span>
 											</div>
 									</a></td>

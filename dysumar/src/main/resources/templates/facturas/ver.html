@@ -37,9 +37,14 @@
 						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT','ROLE_JEFEADM')"
 						th:text="'Descarcar ahora'"
 						onclick="return confirm('Estas seguro que quieres eliminar?');"></a>
-					<a th:if="${facturaciones.status==2}"
-						class="btn btn-success btn-xs" data-toggle="modal"
-						data-target="#exampleModal2" style="color: white;"
+					<a class="btn btn-success btn-xs"
+						th:if="${facturaciones.status==3}"
+						th:href="@{/factura/checkstock/}+${codigofa}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT','ROLE_JEFEADM')"
+						th:text="'Evaluar existencias'"></a> <a
+						th:if="${facturaciones.status==2}" class="btn btn-success btn-xs"
+						data-toggle="modal" data-target="#exampleModal2"
+						style="color: white;"
 						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT')"
 						onclick="meterid();" th:text="'Procesar'"></a>
 
@@ -105,7 +110,7 @@
 					<!-- 						th:text="'Pago: ' +${facturaciones.formadepago.nombre}"></li> -->
 					<li class="list-group-item"
 						th:text="'Fecha: ' +${facturaciones.cotizacion.fecha}"></li>
-						
+
 					<li class="list-group-item" style="font-weight: bold"
 						th:text="'COMENTARIO: ' +${facturaciones.detalles}"></li>
 					<li class="list-group-item"

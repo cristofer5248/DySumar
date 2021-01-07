@@ -137,7 +137,9 @@ public class ExcelController {
 
 				String proveedorstring = row.getCell(10).getStringCellValue();
 				Long giroproveedor = Long.parseLong(row.getCell(12).getRawValue().toString());
-
+				if ((row.getCell(12).getRawValue().toString()) == null) {
+					giroproveedor = Long.parseLong("13");
+				}
 				// si es el codigo ya existe
 				codigopro = (productoservice.findByCodigo(codigopro) == null) ? codigopro : null;
 				System.out.print("\ncodigo es: " + codigopro + "\n");
@@ -243,9 +245,12 @@ public class ExcelController {
 	}
 
 	public Presentacion insertPresentacion(String nombre, String unidad) {
+		String unidadlenght = (unidad.length() > 5) ? unidad.substring(0, 4) : unidad;
+
 		Presentacion presentacion = new Presentacion();
 		presentacion.setDetalle(nombre);
-		presentacion.setUnidad(unidad);
+		presentacion.setUnidad(unidadlenght);// solo de 5
+
 		presentacionservice.save(presentacion);
 		return presentacion;
 	}
@@ -277,15 +282,15 @@ public class ExcelController {
 			Movimientos movimiento_replace) {
 
 		Producto producto_replace = productoservice.findByCodigo(codigo_replace);
-		if (inventarioservice.findByProductoById(producto_replace.getId()).size() <1) {
+		if (inventarioservice.findByProductoById(producto_replace.getId()).size() < 1) {
 			System.out.print("HE ENTRADO A IF DE NO INGRESO FANTASMA");
 			Inventario inventario_replace__ = new Inventario();
 			Movimientos extramove = new Movimientos();
 			movimientoservice.save(extramove);
 			inventario_replace__.setMovimientos(extramove);
 			inventario_replace__.setCodigoProveedor("EXCEL...");
-			inventario_replace__
-					.setComentario("Este es un ingreso que no habia sido mostrado, ingreso por : " + authentication.getName());
+			inventario_replace__.setComentario(
+					"Este es un ingreso que no habia sido mostrado, ingreso por : " + authentication.getName());
 			inventario_replace__.setZaNombrede(authentication.getName());
 			inventario_replace__.setFecha(new Date());
 			inventario_replace__.setProducto(producto_replace);

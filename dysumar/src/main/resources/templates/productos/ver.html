@@ -32,8 +32,9 @@
 					<a class="btn btn-primary btn-xs" th:href="@{/producto/listar}"
 						th:text="'Volver'"></a> <a class="btn btn-warning btn-xs"
 						th:text="'Historial de precio'" data-target="#historialmodal"
-						data-toggle="modal" onclick="modalHistorialdePrecios(document.getElementById('idp').textContent);"></a>
-						<label th:text='${idp}' id="idp" style="visibility:hidden"></label>
+						data-toggle="modal"
+						onclick="modalHistorialdePrecios(document.getElementById('idp').textContent);"></a>
+					<label th:text='${idp}' id="idp" style="visibility: hidden"></label>
 
 
 				</h4>
@@ -43,7 +44,11 @@
 					th:src="@{'/uploads/' + ${producto.foto}}" th:alt="${producto.foto}" /> -->
 
 				<ul class="list-group">
-					<li class="list-group-item active" th:text="${producto.nombrep}"></li>					
+					<li class="list-group-item active" th:text="${producto.nombrep}"></li>
+					<li class="list-group-item"
+						th:text="'Codigo:    '+${producto.codigo}"></li>
+					<li class="list-group-item"
+						th:text="'Ubicacion:    '+${producto.bodega}"></li>
 					<li class="list-group-item"
 						th:text="'Categoria:    '+${producto.categoria.nombre}"></li>
 					<li class="list-group-item"
@@ -102,10 +107,10 @@
 			</div>
 		</div>
 		<!-- Modal -->
-		<div class="modal fade" id="historialmodal" tabindex="-1"
+		<div class="modal fade bd-example-modal-lg" id="historialmodal" tabindex="-1"
 			role="dialog" aria-labelledby="exampleModalCenterTitle"
 			aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLongTitle">Este es un
@@ -121,8 +126,9 @@
 								<tr>
 									<th width="100">ID DE FACTURA</th>
 									<th width="100">ID DE COTIZACION</th>
-									<th width="100">PRECIO</th>
+									<th width="100">PRECIO</th>									
 									<th width="100">FECHA</th>
+									<th width="100">CANTIDAD</th>
 								</tr>
 							</thead>
 							<tbody>
