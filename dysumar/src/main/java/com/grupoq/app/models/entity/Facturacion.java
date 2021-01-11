@@ -30,7 +30,7 @@ public class Facturacion implements Serializable {
 	private Long id;
 	
 	@NotNull
-	private int codigofactura;
+	private String codigofactura;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Cotizacion cotizacion;
@@ -134,11 +134,11 @@ public class Facturacion implements Serializable {
 		this.formadepago = formadepago;
 	}
 
-	public int getCodigofactura() {
+	public String getCodigofactura() {
 		return codigofactura;
 	}
 
-	public void setCodigofactura(int codigofactura) {
+	public void setCodigofactura(String codigofactura) {
 		this.codigofactura = codigofactura;
 	}
 

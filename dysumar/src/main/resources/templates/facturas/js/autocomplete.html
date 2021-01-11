@@ -35,7 +35,8 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 									value : item.id,
 									label : item.nombrep +" "+item.presentacionnombre+ " - " +item.marcanombre,
 									precio: item.precio,
-									margen: item.margen
+									margen: item.margen,
+									stock : item.stock
 									
 								};
 									
@@ -59,6 +60,7 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 					linea = linea.replace(/{ID}/g,ui.item.value);
 					linea = linea.replace(/{NOMBRE}/g,ui.item.label);
 					linea = linea.replace(/{COSTO}/g,ui.item.precio);
+					linea = linea.replace(/{STOCK}/g,ui.item.stock);
 // 					linea = linea.replace(/{DESCUENTO}/g,1);
 					
 					$("#cargarItemProductos tbody").append(linea);

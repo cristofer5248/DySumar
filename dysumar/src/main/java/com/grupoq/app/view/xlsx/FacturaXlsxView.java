@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -316,6 +317,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			row9.getCell(5).setCellValue(factura.getCondicionesDPago().getNombre());
 
 		}
+		int contadorProducts = 12;
 		for (CarritoItems carrito : factura.getCotizacion().getCarrito()) {
 			Row fila = sheet.createRow(itemRows++);
 			fila.setHeightInPoints(28);
@@ -349,8 +351,11 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			// total precio x cantidad
 			cellItems = fila.createCell(6);
 			cellItems.setCellStyle(celltextMoney);
-			double precioUnitarioXcantidad = precioUnitario_temp * carrito.getCantidad();
-			cellItems.setCellValue(precioUnitarioXcantidad);
+//			double precioUnitarioXcantidad = precioUnitario_temp * carrito.getCantidad(); DESCOMENTAR PARA SIN FORMULA
+			String precioUnitarioXcantidad = ("(D"+contadorProducts+"*A"+contadorProducts+")");
+			cellItems.setCellFormula(precioUnitarioXcantidad);
+			
+			contadorProducts++;
 
 		}
 		System.out.print("donde estara el final es: " + itemRows);
@@ -376,11 +381,12 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		rowFinal.getCell(3).setCellStyle(celdasStyleMerged);
 		rowFinal.createCell(1);
 		double sumasPrecios = (creditoFiscal) ? factura.getTotaRegistrado() : factura.getTotaRegistrado() * 1.13;
-		rowFinal.getCell(1).setCellValue("$ " + numeroALetras.Convertir(df.format(sumasPrecios), true));
+		rowFinal.getCell(1).setCellValue(" " + numeroALetras.Convertir(df.format(sumasPrecios), true));
 		rowFinal.getCell(1).setCellStyle(ennegritacell);
 		rowFinal.createCell(6);
 		rowFinal.getCell(6).setCellStyle(celltextMoney);
-		rowFinal.getCell(6).setCellValue(sumasPrecios);
+//		rowFinal.getCell(6).setCellValue(sumasPrecios); //sin formula a lo hombre
+		rowFinal.getCell(6).setCellFormula("SUMA(G12:G24)");
 		// retenindo 0 para restar si no es agente
 		double retenido = 0;
 		double ivado = factura.getTotaRegistrado() + (factura.getTotaRegistrado() * 0.13);
@@ -402,7 +408,8 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		} else {
 			rowvacios_abajo27.createCell(6);
 			rowvacios_abajo27.getCell(6).setCellStyle(celltextMoney);
-			rowvacios_abajo27.getCell(6).setCellValue(df.format(ivado));
+//			rowvacios_abajo27.getCell(6).setCellValue(df.format(ivado)); a lo hombre sin formula voy
+//			rowvacios_abajo27.getCell(6).setCellFormula();
 		}
 
 		// retencion datos set

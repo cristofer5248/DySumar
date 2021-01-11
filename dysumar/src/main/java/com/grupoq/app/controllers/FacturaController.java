@@ -240,10 +240,13 @@ public class FacturaController {
 
 //ESTOS SI SON PARA FACTURA
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
-	@RequestMapping(value = "/nuevof", method = RequestMethod.GET)
+	@RequestMapping(value = { "/nuevof", "/editar/{id}" })
 	public String nuevoSin(Map<String, Object> model, RedirectAttributes flash, Authentication authentication,
-			HttpServletRequest request) {
+			HttpServletRequest request, @RequestParam(name = "id", required = false) String id) {
 		Facturacion facturacion = new Facturacion();
+//		facturacion = (id != null) ? facturaservice.findBy(id) : facturacion;
+		System.out.print("\n EL ID DE EDITAR ES: "+id);
+		facturacion = facturaservice.findBy(Long.parseLong(id));
 		SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request,
 				"");
 		if (securityContext.isUserInRole("ROLE_SELLER")) {
@@ -251,6 +254,7 @@ public class FacturaController {
 		} else {
 			facturacion.setStatus(1);
 		}
+
 		model.put("facturacion", facturacion);
 
 		// llenando select a lo dundo
@@ -407,6 +411,7 @@ public class FacturaController {
 			productos.setMarcanombre(veamos.getMarca().getNombrem());
 			productos.setPresentacionnombre(veamos.getPresentacion().getUnidad());
 			productos.setCodigo(veamos.getCodigo());
+			productos.setStock(veamos.getStock());
 			list2.add(productos);
 
 		}
@@ -569,9 +574,10 @@ public class FacturaController {
 
 	@Secured({ "ROLE_ADMIN", "ROLE_FACT" })
 	@RequestMapping(value = "/statusChange", method = RequestMethod.POST)
-	public String finalizandoFactura(@RequestParam(name = "id") Long id, @RequestParam(name = "codigo") int codigo,
+	public String finalizandoFactura(@RequestParam(name = "id") Long id, @RequestParam(name = "codigo") String codigo,
 			RedirectAttributes flash) {
-		if (id > 0 && codigo > 0) {
+		System.out.print("\n VEAMOS EL ID :"+codigo);
+		if (id > 0 && codigo !=null) {
 			try {
 				Facturacion factura = facturaservice.findBy(id);
 				factura.setStatus(1);

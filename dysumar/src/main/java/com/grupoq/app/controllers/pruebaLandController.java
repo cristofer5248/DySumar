@@ -12,11 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import com.grupoq.app.models.entity.CarritoItems;
 //import com.grupoq.app.models.entity.CarritoItems;
 import com.grupoq.app.models.entity.Facturacion;
 import com.grupoq.app.models.entity.Giro;
 import com.grupoq.app.models.entity.Inventario;
 import com.grupoq.app.models.entity.Producto;
+import com.grupoq.app.models.service.ICarritoItemsService;
 import com.grupoq.app.models.service.IFacturaService;
 import com.grupoq.app.models.service.IGiroService;
 import com.grupoq.app.models.service.IInventarioService;
@@ -36,6 +38,9 @@ public class pruebaLandController {
 
 	@Autowired
 	private IInventarioService inventarioservice;
+	
+	@Autowired
+	private ICarritoItemsService carritoitems;
 
 	@RequestMapping(value = "/saveExpress/{nombre}", method = { RequestMethod.GET }, produces = { "application/json" })
 	@ResponseBody
@@ -81,6 +86,9 @@ public class pruebaLandController {
 			int totalizador = 0;
 			for (Inventario stocks1by1 : stocks) {
 				totalizador += stocks1by1.getStock();
+			}
+			for(CarritoItems carro : carritoitems.findByProductosId(pro.getId())) {
+				totalizador+= -1*carro.getCantidad();
 			}
 			if (totalizador == 0) {
 

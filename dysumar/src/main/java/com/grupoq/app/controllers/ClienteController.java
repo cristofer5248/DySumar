@@ -332,7 +332,7 @@ public class ClienteController {
 	@RequestMapping(value = "/saveDExpress/{nombre}", method = { RequestMethod.GET }, produces = { "application/json" })
 	public @ResponseBody Long saveExpress(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable(value = "nombre", required = true) String nombre) {
-
+		nombre = (nombre == null) ? nombre : nombre.replace("jj", "/");
 		Direccion direccion = new Direccion();
 		direccion.setNombre(nombre);
 		try {

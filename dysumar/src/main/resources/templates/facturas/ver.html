@@ -35,14 +35,17 @@
 						th:text="'Volver'"></a> <a class="btn btn-danger btn-xs"
 						th:href="@{/factura/eliminar/}+${codigofa}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT','ROLE_JEFEADM')"
-						th:text="'Descarcar ahora'"
+						th:text="'Descartar ahora ⚠🗑'"
 						onclick="return confirm('Estas seguro que quieres eliminar?');"></a>
-					<a class="btn btn-success btn-xs"
+					<a class="btn btn-primary btn-xs"
+						th:href="@{/factura/editar/}+${codigofa}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT','ROLE_JEFEADM')"
+						th:text="'Editar'"></a> <a class="btn btn-success btn-xs"
 						th:if="${facturaciones.status==3}"
 						th:href="@{/factura/checkstock/}+${codigofa}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT','ROLE_JEFEADM')"
 						th:text="'Evaluar existencias'"></a> <a
-						th:if="${facturaciones.status==2}" class="btn btn-success btn-xs"
+						th:if="${facturaciones.status==2 || facturaciones.status==1}" class="btn btn-success btn-xs"
 						data-toggle="modal" data-target="#exampleModal2"
 						style="color: white;"
 						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT')"
@@ -66,7 +69,7 @@
 									th:action="@{/factura/statusChange/}" class="form-control"
 									method="post">
 									<input id="idinput" type="hidden" name="id" /> <label>Codigo
-										unico de remisión:</label> <input id="codigoinput" type="number"
+										unico de remisión:</label> <input id="codigoinput" type="text"
 										name="codigo" class="form-control" />
 								</form>
 							</div>
@@ -204,10 +207,12 @@
 		th:value="@{/factura/statusChange/}" />
 	<script>
 		function enviarcodigo() {
+			
 			location.href = $("#urlenviar").val() + $("#codigoinput").val();
+			
 		}
 		function cambiarAction() {
-
+			
 			$('#statuschangeform').attr('action',
 					$("#urlenviar").val() + $("#codigoinput").val());
 		}

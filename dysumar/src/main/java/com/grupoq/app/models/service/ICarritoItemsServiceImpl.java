@@ -37,4 +37,10 @@ public class ICarritoItemsServiceImpl implements ICarritoItemsService {
 		return carritoitemdao.findById(id).orElse(null);
 	}
 
+	@Override
+	public List<CarritoItems> findByProductosId(Long id) {
+		// TODO Auto-generated method stub
+		return carritoitemdao.findByProductosId(id);
+	}
+
 }

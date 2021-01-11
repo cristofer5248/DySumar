@@ -10,4 +10,5 @@ public interface ICarritoItemsService {
 	public void delete(Long id);
 	public List<CarritoItems> findAll();
 	public CarritoItems findById(Long id);
+	public List<CarritoItems> findByProductosId(Long id);
 }
