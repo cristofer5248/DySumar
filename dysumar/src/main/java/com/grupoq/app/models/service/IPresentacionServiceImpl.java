@@ -38,6 +38,12 @@ public class IPresentacionServiceImpl implements IPresentacionService {
 		// TODO Auto-generated method stub
 		return presentacionDao.findByDetalle(detalle);
 	}
+
+	@Override
+	public List<Presentacion> findByDetalleList(String nombre) {
+		// TODO Auto-generated method stub
+		return presentacionDao.findByDetalleList(nombre);
+	}
 	
 
 }

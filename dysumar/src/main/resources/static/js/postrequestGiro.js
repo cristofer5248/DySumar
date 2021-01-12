@@ -33,6 +33,8 @@ $(document).ready(
 		                 $("#btnGiro").prop("disabled", true);
 		                 $('#exampleModal2').modal('toggle');
 		                 alertify.alert('Exito!', 'Nuevo giro registrado , ahora puedes buscarlo en el formulario!', function(){ alertify.success('Ok'); });
+		                 $('#cargar_giro').val(response);
+		                 $("#cargar_giro").prop("readonly", true);
 		                 // ...
 		             },
 		             error: function () {

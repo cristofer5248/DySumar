@@ -88,11 +88,11 @@ public class GiroController {
 	/* @Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_SELLER" }) */
 	
 	@RequestMapping(value = "/saveExpress/{nombre}", method = {RequestMethod.GET}, produces = { "application/json" })
-	public @ResponseBody Giro saveExpress(HttpServletRequest request, HttpServletResponse response, @PathVariable(value = "nombre", required = true) String nombre) {
+	public @ResponseBody Long saveExpress(HttpServletRequest request, HttpServletResponse response, @PathVariable(value = "nombre", required = true) String nombre) {
 		Giro giro = new Giro();
 		giro.setDetalles(nombre);
 		giroService.save(giro);		
-		return giro; 
+		return giro.getId(); 
 		
 	}
 

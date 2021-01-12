@@ -55,3 +55,7 @@
                 var txtSearchX = text_temp.replace(/\//g, "zzz");
                 $('#formsearch').attr('action', $("#urlenviar").val()+opc+"/"+txtSearchX);
             }
+$("#opcSearch" ).change(function() {
+
+  $("#btn-search").focus();
+});

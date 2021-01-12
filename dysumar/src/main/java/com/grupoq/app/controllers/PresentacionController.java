@@ -11,12 +11,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.grupoq.app.models.entity.Presentacion;
 import com.grupoq.app.models.service.IPresentacionService;
 
@@ -26,15 +26,14 @@ public class PresentacionController {
 
 	@Autowired
 	private IPresentacionService presentacionService;
-	
 
 	@GetMapping(value = "/cargar_presentacion", produces = { "application/json" })
 	public @ResponseBody List<Presentacion> celulasTodosJson() {
 		List<Presentacion> list = presentacionService.findByOrderByUnidadDesc();
 		return list;
 	}
-	
-	@Secured({ "ROLE_ADMIN", "ROLE_INV"})
+
+	@Secured({ "ROLE_ADMIN", "ROLE_INV" })
 	@GetMapping(value = "/form")
 	public String nuevo(Map<String, Object> model) {
 		Presentacion presentacion = new Presentacion();
@@ -43,7 +42,7 @@ public class PresentacionController {
 		return "/presentacion/form";
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_INV"})
+	@Secured({ "ROLE_ADMIN", "ROLE_INV" })
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String guardar(@Valid Presentacion presentacion, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
@@ -51,7 +50,8 @@ public class PresentacionController {
 			model.addAttribute("titulo", "Ingresar unidad de medida");
 			return "/presentacion/form";
 		}
-		String mensajeFlash = (presentacion.getId() != null) ? "Unidad editada con éxito! Ahora puedes encontrar el dato en seccion de presentacion"
+		String mensajeFlash = (presentacion.getId() != null)
+				? "Unidad editada con éxito! Ahora puedes encontrar el dato en seccion de presentacion"
 				: "Unidad creada con éxito! Ahora puedes encontrar el dato en seccion de presentacion";
 
 		// aqui
@@ -59,6 +59,14 @@ public class PresentacionController {
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
 		return "redirect:/producto/nuevo";
+	}
+
+	
+	@RequestMapping(value = "/cargar_presentaciones/{term}", method = { RequestMethod.GET }, produces = { "application/json" })
+	public @ResponseBody List<Presentacion> giroTodosJson(@PathVariable String term) {
+		System.out.print("\nEL CODIGO ES: "+term);
+		List<Presentacion> list = presentacionService.findByDetalleList(term);
+		return list;
 	}
 
 }

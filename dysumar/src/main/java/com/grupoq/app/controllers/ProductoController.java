@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,10 +30,12 @@ import com.grupoq.app.webservice.HistorialDePrecios;
 import com.grupoq.app.models.entity.CarritoItems;
 import com.grupoq.app.models.entity.Facturacion;
 import com.grupoq.app.models.entity.Notificaciones;
+import com.grupoq.app.models.entity.Presentacion;
 import com.grupoq.app.models.entity.Producto;
 import com.grupoq.app.models.entity.Usuario;
 import com.grupoq.app.models.service.IFacturaService;
 import com.grupoq.app.models.service.INotificacionesService;
+import com.grupoq.app.models.service.IPresentacionService;
 import com.grupoq.app.models.service.IProductoService;
 import com.grupoq.app.models.service.IUsuarioService;
 import com.grupoq.app.util.paginator.PageRender;
@@ -52,6 +54,9 @@ public class ProductoController {
 
 	@Autowired
 	INotificacionesService notificacionesService;
+	
+	@Autowired
+	IPresentacionService presentacionservice;
 
 	@Autowired
 	IFacturaService facturaService;
@@ -332,7 +337,16 @@ public class ProductoController {
 		return historyList;
 	}
 
+	@RequestMapping(value = "/saveExpress/{nombre}", method = { RequestMethod.GET }, produces = { "application/json" })
+	public @ResponseBody Long saveExpress(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable(value = "nombre", required = true) String nombre) {
+		Presentacion presentacion = new Presentacion();
+		presentacion.setDetalle(nombre);
+		presentacion.setUnidad(nombre.substring(0,4));
+		presentacionservice.save(presentacion);
+		return presentacion.getId();
 
+	}
 
 	public void nuevaNotificacion(String icono, String nombre, String url, String color) {
 		Notificaciones noti = new Notificaciones();

@@ -105,11 +105,15 @@
 					<div class="form-group row">
 						<label for="presentacion" class="col-sm-2 col-form-label"
 							th:text="Presentacion"></label>
-						<div class="col-sm-6">
-							<select th:field="*{presentacion}" id="cargar_presentacion"
-								name="cargar_presentacion" class="custom-select mr-sm-2">
-							</select>
+						
+						<div class="col-sm-4">
+							<input type="text" th:field="*{presentacion}" name="cargar_presentacion"
+								required="required" placeholder="Buscar una presentacion ya existente..."
+								id="cargar_presentacion" class="form-control" />
 						</div>
+							<button type="button" class="btn btn-primary" data-toggle="modal"
+							data-target="#modalpresentacion">Registrar uno nuevo</button>
+						
 					</div>
 					<div class="form-group row">
 						<label for="proveedor" class="col-sm-2 col-form-label"
@@ -146,12 +150,11 @@
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
-					
+
 				</div>
 				<div class="modal-body">
 					<a class="btn btn-success" th:href="@{/excel/plantilla.xlsx}">Descargar
-						plantilla</a>
-						<br></br>
+						plantilla</a> <br></br>
 					<form id="excelform" th:action="@{/excel/excelimport}"
 						class="form-control" method="post" enctype="multipart/form-data">
 						<div class="form-group row">
@@ -163,12 +166,13 @@
 						</div>
 
 						<div class="form-group row">
-							<label for="IVA" th:text="'NO DETENERSE AL DETECTAR PRODUCTOS REPETIDOS :'"
+							<label for="IVA"
+								th:text="'NO DETENERSE AL DETECTAR PRODUCTOS REPETIDOS :'"
 								class="col-sm-4 col-form-label"></label>
 							<div class="col-sm-4">
-								<label class="switch"> <input type="checkbox" id="iva" onclick="checkiva()" />
-									<span class="slider round"></span>
-								</label><input type="number"  name="replace_" id="replace_" th:value="0"
+								<label class="switch"> <input type="checkbox" id="iva"
+									onclick="checkiva()" /> <span class="slider round"></span>
+								</label><input type="number" name="replace_" id="replace_" th:value="0"
 									style="visibility: hidden">
 							</div>
 						</div>
@@ -182,7 +186,39 @@
 			</div>
 		</div>
 	</div>
+	<!-- Modal para presentacion-->
+	<div class="modal fade" id="modalpresentacion" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Ingreso rapido
+						de nueva presentacion</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
 
+					<form id="formPresentacion" method="POST"
+						enctype="multipart/form-data">
+						<div class="form-group row">
+							<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
+							<div class="col-sm-8">
+								<textarea name="nombrePresentacion" id="nombrePresentacion"
+									class="form-control"></textarea>
+							</div>
+
+						</div>
+						<button type="submit" id="btnPresentacion" class="btn btn-primary">Guardar</button>
+					</form>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
 	<footer th:replace="layout/layout :: footer"></footer>
 	<input type="hidden" id="urlAjaxcategoria"
 		th:value="@{/categoria/cargar_categoria}" />
@@ -194,6 +230,9 @@
 		th:value="@{/presentacion/cargar_presentacion}" />
 	<input type="hidden" id="urlAjaxproveedor"
 		th:value="@{/proveedor/cargar_proveedor}" />
+	<input type="hidden" id="urlPresentacion"
+		th:value="@{/producto/saveExpress/}" />
+	<input type="hidden" id="urlAjaxpresentaciones" th:value="@{/presentacion/cargar_presentaciones/}" />
 	<script th:replace="productos/js/setselected :: javascript"></script>
 	<script th:replace="productos/js/autocomplete :: javascript"></script>
 	<script>
@@ -204,16 +243,15 @@
 		function sendexcel() {
 			document.getElementById("excelform").submit();
 		}
-		
+
 		function checkiva() {
 
 			if ($('#iva').is(':checked')) {
-				$('#replace_').val(1);	
-				
-				
+				$('#replace_').val(1);
+
 			} else {
 				$('#replace_').val(0);
-				
+
 			}
 		}
 	</script>

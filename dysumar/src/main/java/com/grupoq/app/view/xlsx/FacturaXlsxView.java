@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -199,7 +198,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		Font font1left = workbook.createFont();
 		font1left.setFontHeightInPoints((short) 8);
-		font1left.setFontName("Roman 15cpi");
+		font1left.setFontName("Roman 17cpi");
 		celltextLeft.setFont(font1left);
 
 		Font ennegrita = workbook.createFont();
@@ -352,11 +351,24 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			cellItems = fila.createCell(6);
 			cellItems.setCellStyle(celltextMoney);
 //			double precioUnitarioXcantidad = precioUnitario_temp * carrito.getCantidad(); DESCOMENTAR PARA SIN FORMULA
-			String precioUnitarioXcantidad = ("(D"+contadorProducts+"*A"+contadorProducts+")");
+			String precioUnitarioXcantidad = ("(D" + contadorProducts + "*A" + contadorProducts + ")");
 			cellItems.setCellFormula(precioUnitarioXcantidad);
-			
+
 			contadorProducts++;
 
+		}
+		//para ir llenando en vacio las demas con formato
+		while(contadorProducts>24) {
+			Row fila = sheet.createRow(contadorProducts);
+			fila.setHeightInPoints(28);
+			cellItems = fila.createCell(0);
+			cellItems.setCellStyle(celltext);
+			cellItems = fila.createCell(1);
+			cellItems.setCellStyle(celltextLeft);
+			cellItems = fila.createCell(6);
+			cellItems.setCellStyle(celltextMoney);
+			contadorProducts++;
+			
 		}
 		System.out.print("donde estara el final es: " + itemRows);
 		// rellenamos con vacio lo que resta mas altura
@@ -386,7 +398,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		rowFinal.createCell(6);
 		rowFinal.getCell(6).setCellStyle(celltextMoney);
 //		rowFinal.getCell(6).setCellValue(sumasPrecios); //sin formula a lo hombre
-		rowFinal.getCell(6).setCellFormula("SUMA(G12:G24)");
+		rowFinal.getCell(6).setCellFormula("SUM(G12:G24)");
 		// retenindo 0 para restar si no es agente
 		double retenido = 0;
 		double ivado = factura.getTotaRegistrado() + (factura.getTotaRegistrado() * 0.13);
@@ -397,7 +409,8 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		// mostrar iva ahi
 		if (creditoFiscal) {
 			rowvacios_abajo26.createCell(6);
-			rowvacios_abajo26.getCell(6).setCellValue(factura.getTotaRegistrado() * 0.13);
+//			rowvacios_abajo26.getCell(6).setCellValue(factura.getTotaRegistrado() * 0.13); sin formula a lo hombre
+			rowvacios_abajo26.getCell(6).setCellFormula("G25*0.13");
 			rowvacios_abajo26.getCell(6).setCellStyle(celltextMoney);
 			rowvacios_abajo27.createCell(6);
 			rowvacios_abajo27.getCell(6).setCellStyle(celltextMoney);
@@ -409,27 +422,29 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			rowvacios_abajo27.createCell(6);
 			rowvacios_abajo27.getCell(6).setCellStyle(celltextMoney);
 //			rowvacios_abajo27.getCell(6).setCellValue(df.format(ivado)); a lo hombre sin formula voy
-//			rowvacios_abajo27.getCell(6).setCellFormula();
+			rowvacios_abajo27.getCell(6).setCellFormula("G25");
 		}
 
 		// retencion datos set
 		rowvacios_abajo29.createCell(6);
 		if (retenido == 0) {
-			rowvacios_abajo29.getCell(6).setCellValue("");
+			rowvacios_abajo29.getCell(6).setCellValue("0");
 		} else {
 			rowvacios_abajo29.getCell(6).setCellValue(retenido);
 		}
-		
+
 		rowvacios_abajo29.getCell(6).setCellStyle(celltextMoney);
 //		
-		rowvacios_abajo27.getCell(6).setCellValue(ivado);
+//		rowvacios_abajo27.getCell(6).setCellValue(ivado); // sin formula a lo hombre
+		rowvacios_abajo27.getCell(6).setCellFormula("SUM(G25:G26)");
 		// termina la retencion
 
 		// ponemos el credito fiscal o vacio
 
 		Row rowFinal_total = sheet.createRow(29);
 		rowFinal_total.createCell(6);
-		rowFinal_total.getCell(6).setCellValue(ivado - retenido);
+//		rowFinal_total.getCell(6).setCellValue(ivado - retenido); a lo hombre sin formula
+		rowFinal_total.getCell(6).setCellFormula("G25-G29");
 		rowFinal_total.getCell(6).setCellStyle(ennegritacelltotal);
 		rowFinal_total.setHeightInPoints(23);
 
