@@ -13,6 +13,15 @@ public interface ProductosDao extends PagingAndSortingRepository<Producto, Long>
 	@Query("select p from Producto p join fetch p.proveedor prv join fetch p.marca m join fetch p.presentacion pre where p.nombrep like %?1%")
 	public List<Producto> findByNombrep(String term);
 	
+	@Query("select p from Producto p join fetch p.proveedor prv join fetch p.marca m join fetch p.presentacion pre where p.nombrep like %?1% and m.nombrem like %?2%")
+	public List<Producto> findByNombrepYMarca(String term, String term2);
+	
+	@Query(value = "select p from Producto p join fetch p.proveedor prv join fetch p.marca m join fetch p.presentacion pre where p.nombrep like %?1% and m.nombrem like %?2%", countQuery = "select count(p) from Producto p join p.proveedor prv join p.marca m join p.presentacion pre where p.nombrep like %?1% and m.nombrem like %?2%")
+	public Page<Producto> findByNombrepYMarcaPage(String term, String term2, Pageable page);
+	
+	@Query(value = "select p from Producto p join fetch p.proveedor prv join fetch p.marca m join fetch p.presentacion pre where p.bodega like %?1%", countQuery = "select count(p) from Producto p join p.proveedor prv join p.marca m join p.presentacion pre where p.bodega like %?1%")
+	public Page<Producto> findByBodega(String term, Pageable page);
+	
 	
 	//este es el eque lista todo en el get listar
 	@Query(value = "select p from Producto p join fetch p.marca m join fetch p.categoria c join fetch p.proveedor pro join fetch p.presentacion pre where p.status=true", countQuery = "select count(p) from Producto p join p.marca m join p.categoria c join p.proveedor pro join p.presentacion pre where p.status=true")

@@ -42,7 +42,7 @@ public class PresentacionController {
 		return "/presentacion/form";
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_INV" })
+	@Secured({ "ROLE_ADMIN", "ROLE_INV","ROLE_SELLER" })
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String guardar(@Valid Presentacion presentacion, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {

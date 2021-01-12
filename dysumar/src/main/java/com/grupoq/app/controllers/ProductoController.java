@@ -87,6 +87,13 @@ public class ProductoController {
 			urlpage = nombrep;
 			if (op.equals("nombre")) {
 				productos = productoService.findAllLike(nombrep, pageRequest);
+				if(productos.isEmpty()) {
+					int lastSpaceIndex = nombrep.lastIndexOf(" ");
+					String term2 = nombrep.substring(lastSpaceIndex+1, nombrep.length());
+					nombrep = nombrep.substring(0,lastSpaceIndex);			
+					
+					productos = productoService.findByNombrepYMarcaPage(nombrep, term2, pageRequest);
+				}
 
 			}
 			if (op.equals("codigo")) {
@@ -100,6 +107,9 @@ public class ProductoController {
 			}
 			if (op.equals("categoria")) {
 				productos = productoService.findByCategoria(nombrep, pageRequest);
+			}
+			if (op.equals("bodega")) {
+				productos = productoService.findByBodega(nombrep, pageRequest);
 			}
 			if (productos == null) {
 				model.addAttribute("error", "Error, Query mal formado");

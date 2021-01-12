@@ -75,6 +75,7 @@ public class ProveedorController {
 			SessionStatus status) {
 		if (result.hasErrors()) {
 			model.addAttribute("titulo", "Formulario de Proveedors");
+			model.addAttribute(proveedor);
 			return "/proveedores/form";
 		}
 		String mensajeFlash = (proveedor.getId() != null) ? "proveedor editado con éxito!"

@@ -38,8 +38,11 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		// accounting format
 		String accountingformat = "_-$* #,##0.00_-;-$* #,##0.00_-;_-$* \"-\"??_-;_-@_-";
 
-		response.setHeader("Content-Disposition", "attachment; filename=\"factura.xlsx\"");
+		
 		Facturacion factura = (Facturacion) model.get("facturaciones");
+		
+		String formatonname= (factura.getStatus()!=1)?"attachment; filename=\"factura.xlsx\"":"attachment; filename=\""+factura.getCodigofactura()+".xlsx\""; 
+		response.setHeader("Content-Disposition", formatonname);
 		boolean agente = (factura.getCliente().getCliente().getAgente()) ? true : false;
 		boolean creditoFiscal = (factura.getTipoFactura().getId() == Long.parseLong("1")) ? true : false;
 		System.out.print("\n Credito fiscal" + creditoFiscal + "\n");
@@ -140,6 +143,19 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		sheet.addMergedRegion(new CellRangeAddress(3, 3, 5, 6));
 		// b12 a c12
 		sheet.addMergedRegion(new CellRangeAddress(11, 11, 1, 2));
+		sheet.addMergedRegion(new CellRangeAddress(12, 12, 1, 2));
+		sheet.addMergedRegion(new CellRangeAddress(13, 13, 1, 2));
+		sheet.addMergedRegion(new CellRangeAddress(14, 14, 1, 2));
+		sheet.addMergedRegion(new CellRangeAddress(15, 15, 1, 2));
+		sheet.addMergedRegion(new CellRangeAddress(16, 16, 1, 2));
+		sheet.addMergedRegion(new CellRangeAddress(17, 17, 1, 2));
+		sheet.addMergedRegion(new CellRangeAddress(18, 18, 1, 2));
+		sheet.addMergedRegion(new CellRangeAddress(19, 19, 1, 2));
+		sheet.addMergedRegion(new CellRangeAddress(20, 20, 1, 2));
+		sheet.addMergedRegion(new CellRangeAddress(21, 21, 1, 2));
+		sheet.addMergedRegion(new CellRangeAddress(22, 22, 1, 2));
+		sheet.addMergedRegion(new CellRangeAddress(23, 23, 1, 2));
+		
 		// b25 a c25
 		sheet.addMergedRegion(new CellRangeAddress(24, 24, 1, 2));
 		// d25 a f25
@@ -448,7 +464,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		rowFinal_total.getCell(6).setCellStyle(ennegritacelltotal);
 		rowFinal_total.setHeightInPoints(23);
 
-		rowFinal.getCell(1).setCellValue("$ " + numeroALetras.Convertir(df.format(ivado - retenido), true));
+		rowFinal.getCell(1).setCellValue(" " + numeroALetras.Convertir(df.format(ivado - retenido), true));
 		// hacer el cambio en esto porque lo tomamos del final
 
 //		Row row12aleft = sheet.createRow(11);

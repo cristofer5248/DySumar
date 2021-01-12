@@ -122,4 +122,22 @@ public class IProductoServiceImpl implements IProductoService {
 		return productosDao.findByCodigo(codigo);
 	}
 
+	@Override
+	public List<Producto> findByNombrepYMarca(String term, String term2) {
+		// TODO Auto-generated method stub
+		return productosDao.findByNombrepYMarca(term, term2);
+	}
+
+	@Override
+	public Page<Producto> findByNombrepYMarcaPage(String term, String term2, Pageable page) {
+		// TODO Auto-generated method stub
+		return productosDao.findByNombrepYMarcaPage(term, term2, page);
+	}
+
+	@Override
+	public Page<Producto> findByBodega(String term, Pageable page) {
+		// TODO Auto-generated method stub
+		return productosDao.findByBodega(term, page);
+	}
+
 }

@@ -238,8 +238,6 @@ public class FacturaController {
 		return "/facturas/form";
 	}
 
-
-
 //ESTOS SI SON PARA FACTURA
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = { "/nuevof" })
@@ -271,7 +269,7 @@ public class FacturaController {
 	}
 
 //guardar final de factura
-	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER", "ROLE_FACT" })
 	@RequestMapping(value = "/savefactura", method = RequestMethod.POST)
 	public String guardarfactura(@Valid Facturacion facturacion, BindingResult result, Model model,
 			RedirectAttributes flash, SessionStatus status, Authentication authentication, HttpServletRequest request) {
@@ -289,6 +287,14 @@ public class FacturaController {
 
 			return "/facturas/form";
 		}
+
+		// solo para editar solo guardamos
+		if (facturacion.getId() != null) {
+			facturaservice.save(facturacion);
+			flash.addFlashAttribute("success", "Edicion correcta");
+			return "redirect:/factura/ver/" + facturacion.getId();
+		}
+
 		Cotizacion cotizaciontemporal = cotizacionService.findby(facturacion.getCotizacion().getId());
 		if (!cotizaciontemporal.aprobado) {
 			return "redirect:/factura/listar";
@@ -301,7 +307,7 @@ public class FacturaController {
 		} else {
 			facturacion.setStatus(1);
 		}
-		String mensajeFlash = (facturacion.getId() != null) ? "facturacion editado con éxito!"
+		String mensajeFlash = (facturacion.getId() != null) ? "factura editada con éxito!"
 				: "Facturacion creada con éxito!";
 		double totalParaFactura = 0;
 		for (CarritoItems pro : cotizaciontemporal.getCarrito()) {
@@ -402,6 +408,13 @@ public class FacturaController {
 		List<ProductosWB> list2 = new ArrayList<ProductosWB>();
 //		List<Producto> list1 = productoService.findByNombrep(term);
 		List<Producto> list1 = productoservice.findByNombrep(term);
+		if (list1.isEmpty()) {
+			int lastSpaceIndex = term.lastIndexOf(" ");
+			String term2 = term.substring(lastSpaceIndex+1, term.length());
+			term = term.substring(0,lastSpaceIndex);			
+			System.out.print("\n PRODUCTO: "+term+" MARCA: "+term2+" indexlast "+lastSpaceIndex);
+			list1 = productoservice.findByNombrepYMarca(term, term2);
+		}
 		for (Producto veamos : list1) {
 			ProductosWB productos = new ProductosWB();
 			productos.setId(veamos.getId());
@@ -595,5 +608,23 @@ public class FacturaController {
 
 		}
 		return "redirect:/factura/listar";
+	}
+
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
+	@RequestMapping(value = "/editar/{id}", method = RequestMethod.GET)
+	public String prueba(Map<String, Object> model, RedirectAttributes flash, Authentication authentication,
+			HttpServletRequest request, @PathVariable(name = "id", required = true) Long id) {
+		Facturacion facturacion = new Facturacion();
+		facturacion = facturaservice.findBy(id);
+		model.put("facturacion", facturacion);
+		// llenando select a lo dundo
+		model.put("fdePago", facturaservice.listFdp());
+		model.put("cdePago", facturaservice.listCdp());
+		model.put("tfactura", facturaservice.listTf());
+		model.put("carteraclientes", clienteService.findAllByUsuario(authentication.getName()));
+		// llenando selects a lo dundo
+
+		model.put("titulo", "Facturacion #" + id);
+		return "/facturas/form";
 	}
 }
