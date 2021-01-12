@@ -7,10 +7,15 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 //import org.springframework.security.access.annotation.Secured;
 //import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.grupoq.app.models.entity.CarritoItems;
 //import com.grupoq.app.models.entity.CarritoItems;
@@ -19,6 +24,7 @@ import com.grupoq.app.models.entity.Giro;
 import com.grupoq.app.models.entity.Inventario;
 import com.grupoq.app.models.entity.Producto;
 import com.grupoq.app.models.service.ICarritoItemsService;
+import com.grupoq.app.models.service.IClienteService;
 import com.grupoq.app.models.service.IFacturaService;
 import com.grupoq.app.models.service.IGiroService;
 import com.grupoq.app.models.service.IInventarioService;
@@ -27,6 +33,8 @@ import com.grupoq.app.models.service.IProductoService;
 @RequestMapping("/adminzone")
 @RestController
 public class pruebaLandController {
+	
+	
 	@Autowired
 	private IGiroService giroService;
 
@@ -38,9 +46,12 @@ public class pruebaLandController {
 
 	@Autowired
 	private IInventarioService inventarioservice;
-	
+
 	@Autowired
 	private ICarritoItemsService carritoitems;
+	
+	@Autowired
+	private IClienteService clienteService;
 
 	@RequestMapping(value = "/saveExpress/{nombre}", method = { RequestMethod.GET }, produces = { "application/json" })
 	@ResponseBody
@@ -50,6 +61,23 @@ public class pruebaLandController {
 		giroService.save(giro);
 		return "exito";
 
+	}
+
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
+	@RequestMapping(value = "/editar/{term}")
+	public String prueba(Map<String, Object> model, RedirectAttributes flash, Authentication authentication,
+			HttpServletRequest request, @RequestParam(name = "term", required = false) String id) {
+		Facturacion facturacion = new Facturacion();
+		model.put("facturacion", facturacion);
+		// llenando select a lo dundo
+		model.put("fdePago", facturaService.listFdp());
+		model.put("cdePago", facturaService.listCdp());
+		model.put("tfactura", facturaService.listTf());
+		model.put("carteraclientes", clienteService.findAllByUsuario(authentication.getName()));
+		// llenando selects a lo dundo
+
+		model.put("titulo", "Facturacion " + id);
+		return "/facturas/form";
 	}
 
 	@RequestMapping(value = "/facturasAllstatus/{opc}/{valor}", method = RequestMethod.GET)
@@ -87,8 +115,8 @@ public class pruebaLandController {
 			for (Inventario stocks1by1 : stocks) {
 				totalizador += stocks1by1.getStock();
 			}
-			for(CarritoItems carro : carritoitems.findByProductosId(pro.getId())) {
-				totalizador+= -1*carro.getCantidad();
+			for (CarritoItems carro : carritoitems.findByProductosId(pro.getId())) {
+				totalizador += -1 * carro.getCantidad();
 			}
 			if (totalizador == 0) {
 

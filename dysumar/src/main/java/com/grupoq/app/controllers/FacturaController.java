@@ -238,14 +238,16 @@ public class FacturaController {
 		return "/facturas/form";
 	}
 
+
+
 //ESTOS SI SON PARA FACTURA
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
-	@RequestMapping(value = { "/nuevof", "/editar/{id}" })
+	@RequestMapping(value = { "/nuevof" })
 	public String nuevoSin(Map<String, Object> model, RedirectAttributes flash, Authentication authentication,
 			HttpServletRequest request, @RequestParam(name = "id", required = false) String id) {
 		Facturacion facturacion = new Facturacion();
 //		facturacion = (id != null) ? facturaservice.findBy(id) : facturacion;
-		System.out.print("\n EL ID DE EDITAR ES: "+id);
+		System.out.print("\n EL ID DE EDITAR ES: " + id);
 		facturacion = facturaservice.findBy(Long.parseLong(id));
 		SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request,
 				"");
@@ -576,8 +578,8 @@ public class FacturaController {
 	@RequestMapping(value = "/statusChange", method = RequestMethod.POST)
 	public String finalizandoFactura(@RequestParam(name = "id") Long id, @RequestParam(name = "codigo") String codigo,
 			RedirectAttributes flash) {
-		System.out.print("\n VEAMOS EL ID :"+codigo);
-		if (id > 0 && codigo !=null) {
+		System.out.print("\n VEAMOS EL ID :" + codigo);
+		if (id > 0 && codigo != null) {
 			try {
 				Facturacion factura = facturaservice.findBy(id);
 				factura.setStatus(1);
