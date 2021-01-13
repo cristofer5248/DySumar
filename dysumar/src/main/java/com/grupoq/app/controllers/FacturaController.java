@@ -293,6 +293,8 @@ public class FacturaController {
 			facturaservice.save(facturacion);
 			flash.addFlashAttribute("success", "Edicion correcta");
 			return "redirect:/factura/ver/" + facturacion.getId();
+		}else {
+			
 		}
 
 		Cotizacion cotizaciontemporal = cotizacionService.findby(facturacion.getCotizacion().getId());

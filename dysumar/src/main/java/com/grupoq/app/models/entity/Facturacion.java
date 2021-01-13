@@ -29,7 +29,7 @@ public class Facturacion implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull
+	
 	private String codigofactura;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

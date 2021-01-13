@@ -54,7 +54,7 @@ public class ProductoController {
 
 	@Autowired
 	INotificacionesService notificacionesService;
-	
+
 	@Autowired
 	IPresentacionService presentacionservice;
 
@@ -87,11 +87,15 @@ public class ProductoController {
 			urlpage = nombrep;
 			if (op.equals("nombre")) {
 				productos = productoService.findAllLike(nombrep, pageRequest);
-				if(productos.isEmpty()) {
+				if (productos.isEmpty()) {
 					int lastSpaceIndex = nombrep.lastIndexOf(" ");
-					String term2 = nombrep.substring(lastSpaceIndex+1, nombrep.length());
-					nombrep = nombrep.substring(0,lastSpaceIndex);			
-					
+					String term2 = nombrep.substring(lastSpaceIndex + 1, nombrep.length());
+					try {
+						nombrep = nombrep.substring(0, lastSpaceIndex);
+					} catch (Exception e) {
+						productos = null;
+					}
+
 					productos = productoService.findByNombrepYMarcaPage(nombrep, term2, pageRequest);
 				}
 
@@ -352,7 +356,7 @@ public class ProductoController {
 			@PathVariable(value = "nombre", required = true) String nombre) {
 		Presentacion presentacion = new Presentacion();
 		presentacion.setDetalle(nombre);
-		presentacion.setUnidad(nombre.substring(0,4));
+		presentacion.setUnidad(nombre.substring(0, 4));
 		presentacionservice.save(presentacion);
 		return presentacion.getId();
 
