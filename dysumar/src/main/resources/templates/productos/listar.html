@@ -32,14 +32,16 @@
 						th:href="@{/producto/nuevoS}" class="btn btn-primary btn-xs">Crear
 						solicitud</a> <a class="btn btn-success btn-xs"
 						th:if="${!enablebtnall}"
-						th:href="@{'/producto/listar'+ ${xlsxpath}(format=xlsx)}">XLSX</a>
-					<a class="btn btn-warning btn-xs" style="color: white"
+						th:href="@{'/producto/listar'+ ${xlsxpath}(format=xlsx)}">Una
+						hoja <i class="fas fa-file-excel"></i>
+					</a> <a class="btn btn-success btn-xs" th:if="${enableallsearch}"
+						th:href="@{'/'+${pathall}(format=xlsx)}">TODOS EN <i
+						class="fas fa-file-excel"></i></a> <a class="btn btn-warning btn-xs"
+						style="color: white"
 						onclick="return confirm('¿Esta seguro? Mostrar muchos datos podria tardar un poco y alentar el servidor');"
 						th:if="${!enablebtnall}" th:href="@{/producto/listar/all}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV', 'ROLE_JEFEADM')">⚠
-						Ver todos ⚠</a><a class="btn btn-success btn-xs"
-						th:if="${enablebtnall}"
-						th:href="@{/producto/listar/all(format=xlsx)}">TODOS EN XLSX</a>
+						Ver todos ⚠</a>
 
 					<form class="searchbox" id="formsearch" action="">
 						<input type="search"
@@ -106,7 +108,8 @@
 											<div class='icon' style="background-color: green">
 												<i class='fas fa-check' onmouseover="quitarcolumns();"></i>
 											</div>
-											<div class='text check' style="position: absolute;  z-index: 5;">
+											<div class='text check'
+												style="position: absolute; z-index: 5;">
 												<span>ACEPTAR</span>
 											</div>
 									</a></td>
@@ -114,8 +117,8 @@
 										sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"><a
 										th:href="@{'/producto/asegurar/' + ${producto.id}}">
 											<div class='icon check'>
-												<i class='fas fa-tasks' onmouseover="quitarcolumns();" style="position: absolute;  z-index: 6;"></i>
-												<span></span>
+												<i class='fas fa-tasks' onmouseover="quitarcolumns();"
+													style="position: absolute; z-index: 6;"></i> <span></span>
 											</div>
 
 									</a></td>
@@ -125,7 +128,8 @@
 											<div class='icon'>
 												<i class='fa fa-pencil' onmouseover="quitarcolumns();"></i>
 											</div>
-											<div class='text update' style="position: absolute;  z-index: 5;">
+											<div class='text update'
+												style="position: absolute; z-index: 5;">
 												<span>Actualizar</span>
 											</div>
 									</a></td>

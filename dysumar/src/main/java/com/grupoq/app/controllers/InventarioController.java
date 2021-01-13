@@ -15,7 +15,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -70,9 +69,12 @@ public class InventarioController {
 	@Autowired
 	private INotificacionesService notificacionesService;
 
-	@RequestMapping(value = "/listar", method = RequestMethod.GET)
-	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+	@RequestMapping(value = {"/listar", "/listar/{date1}/{date2}"}, method = RequestMethod.GET)
+	public String listar(@PathVariable(value = "date1", required = false) String date1, @PathVariable(value = "date2", required = false) String date2, @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+		boolean enableallsearch = false;
+		
 		Pageable pageRequest = PageRequest.of(page, 20);
+		
 		Page<Inventario> inventario = inventarioService.findAll(pageRequest);
 
 		List<Inventario> inventariolamba = inventario.stream().filter(distinctByKey(p -> p.getMovimientos()))
@@ -82,6 +84,7 @@ public class InventarioController {
 		PageRender<Inventario> pageRender = new PageRender<>("listar", inventario);
 		model.addAttribute("inventarios", inventario);
 		model.addAttribute("page", pageRender);
+		model.addAttribute("enableallsearch", enableallsearch);
 
 //		try {
 //			System.out.print(getClientIPAddress());

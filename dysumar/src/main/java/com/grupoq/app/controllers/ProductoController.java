@@ -65,9 +65,11 @@ public class ProductoController {
 	@RequestMapping(value = { "/listar", "/listar/{op}/{nombrep}", "/listar/{op}" }, method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
 			@PathVariable(value = "nombrep", required = false) String nombrep,
-			@PathVariable(value = "op", required = false) String op) {
+			@PathVariable(value = "op", required = false) String op,
+			@RequestParam(name = "op2", required = false, defaultValue = "0") int op2) {
 		Pageable pageRequest;
 		boolean enablebtnall = false;
+		boolean enableallsearch = false;
 		// mostrar todos o no 0= a todas y >0 es por paginado
 		int npage = 20;
 		if (op != null) {
@@ -77,8 +79,17 @@ public class ProductoController {
 			pageRequest = PageRequest.of(page, npage);
 		}
 
+		pageRequest = (op2 != 0) ? Pageable.unpaged() : PageRequest.of(page, npage);
+		enableallsearch = (op != null) ? true : false;
+
 		Page<Producto> productos = null;
-		String xlsxPath = (page > 0) ? "?page=" + page : "";
+//		String xlsxPath = (page > 0) ? "?page=" + page : "";
+		String xlsxPath = "?page=" + page;
+		xlsxPath = (op2 != 0) ? xlsxPath + "&op2=" + op2 : xlsxPath;
+		
+
+		String pathall = (op != null) ? xlsxPath + "&op2=1" : "all";
+
 		nombrep = (nombrep == null) ? nombrep : nombrep.replace("zzz", "/");
 		String urlpage = "listar";
 
@@ -86,6 +97,7 @@ public class ProductoController {
 			xlsxPath = "/" + op + "/" + nombrep;
 			urlpage = nombrep;
 			if (op.equals("nombre")) {
+				pathall = "producto/listar/nombre/"+nombrep+"/"+pathall;
 				productos = productoService.findAllLike(nombrep, pageRequest);
 				if (productos.isEmpty()) {
 					int lastSpaceIndex = nombrep.lastIndexOf(" ");
@@ -101,18 +113,23 @@ public class ProductoController {
 
 			}
 			if (op.equals("codigo")) {
+				pathall = "producto/listar/codigo/"+nombrep+pathall;
 				productos = productoService.findByCodigo(nombrep, pageRequest);
 			}
 			if (op.equals("proveedor")) {
+				pathall = "producto/listar/proveedor/"+nombrep+pathall;
 				productos = productoService.findByProveedor(nombrep, pageRequest);
 			}
 			if (op.equals("marca")) {
+				pathall = "producto/listar/marca/"+nombrep+pathall;
 				productos = productoService.findByMarca(nombrep, pageRequest);
 			}
 			if (op.equals("categoria")) {
+				pathall = "producto/listar/categoria/"+nombrep+pathall;
 				productos = productoService.findByCategoria(nombrep, pageRequest);
 			}
 			if (op.equals("bodega")) {
+				pathall = "producto/listar/bodega/"+nombrep+pathall;
 				productos = productoService.findByBodega(nombrep, pageRequest);
 			}
 			if (productos == null) {
@@ -122,6 +139,7 @@ public class ProductoController {
 		} else {
 			productos = productoService.findAllJoin(pageRequest);
 			xlsxPath = (op == null) ? xlsxPath : xlsxPath + "/all";
+			System.out.print("\nEL PATH: " + xlsxPath);
 
 		}
 
@@ -133,7 +151,10 @@ public class ProductoController {
 		model.addAttribute("productos", productos);
 		model.addAttribute("titulo", "Listado de productos");
 		model.addAttribute("xlsxpath", xlsxPath);
+		model.addAttribute("pathall", pathall);
+		model.addAttribute("enableallsearch", enableallsearch);
 		model.addAttribute("enablebtnall", enablebtnall);
+		
 		return "/productos/listar";
 	}
 
