@@ -69,13 +69,35 @@ public class InventarioController {
 	@Autowired
 	private INotificacionesService notificacionesService;
 
-	@RequestMapping(value = {"/listar", "/listar/{date1}/{date2}"}, method = RequestMethod.GET)
-	public String listar(@PathVariable(value = "date1", required = false) String date1, @PathVariable(value = "date2", required = false) String date2, @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-		boolean enableallsearch = false;
+	@RequestMapping(value = { "/listar", "/listar/{date1}/{date2}" }, method = RequestMethod.GET)
+	public String listar(@PathVariable(value = "date1", required = false) String date1,
+			@PathVariable(value = "date2", required = false) String date2,
+			@RequestParam(value = "all", required = false, defaultValue = "1") int all,
+			@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+		String xlsxPath = "?page=" + page;
+		xlsxPath = (date1 != null) ? xlsxPath + "&all=" + all : xlsxPath;
 		
-		Pageable pageRequest = PageRequest.of(page, 20);
+		boolean enableallsearch = (date1 != null) ? true : false;
 		
-		Page<Inventario> inventario = inventarioService.findAll(pageRequest);
+		 String pathexcel= (enableallsearch) ? "inventario/listar/" + date1 + "/" + date2 + xlsxPath:xlsxPath;
+		 
+
+		Date date1_ = null;
+		Date date2_ = null;
+		if (date1 != null) {
+			try {
+				date1_ = new SimpleDateFormat("yyyy-MM-dd").parse(date1);
+				date2_ = new SimpleDateFormat("yyyy-MM-dd").parse(date2);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+
+		Pageable pageRequest = (all > 0) ? Pageable.unpaged() : PageRequest.of(page, 20);
+		Page<Inventario> inventario = (date1 != null) ? inventarioService.findAllFechas(pageRequest, date1_, date2_)
+				: inventarioService.findAll(pageRequest);
 
 		List<Inventario> inventariolamba = inventario.stream().filter(distinctByKey(p -> p.getMovimientos()))
 				.collect(Collectors.toList());
@@ -85,6 +107,7 @@ public class InventarioController {
 		model.addAttribute("inventarios", inventario);
 		model.addAttribute("page", pageRender);
 		model.addAttribute("enableallsearch", enableallsearch);
+		model.addAttribute("pathall", pathexcel);
 
 //		try {
 //			System.out.print(getClientIPAddress());

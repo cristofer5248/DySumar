@@ -2,6 +2,7 @@ package com.grupoq.app.models.service;
 
 
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -14,6 +15,7 @@ import com.grupoq.app.models.entity.Inventario;
 public interface IInventarioService {
 
 	public Page<Inventario> findAll(Pageable pageable);
+	public Page<Inventario> findAllFechas(Pageable pageable,Date date1, Date date2);
 	
 	public void save (Inventario inventario);
 	

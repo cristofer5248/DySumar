@@ -21,7 +21,7 @@ import org.springframework.web.servlet.view.document.AbstractXlsxView;
 import com.grupoq.app.models.entity.Inventario;
 import com.grupoq.app.models.entity.Producto;
 
-@Component("/productos/ver")
+@Component("/inventario/ver")
 public class InventarioXlsxView extends AbstractXlsxView {
 
 	@Override

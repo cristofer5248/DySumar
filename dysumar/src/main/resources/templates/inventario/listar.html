@@ -102,7 +102,7 @@
 					</button>
 				</div>
 				<div class="modal-body">
-					<form th:action="@{/factura/listarfecha}" method="post">
+					<form th:action="@{/factura}" method="post">
 						<div class="container">
 							<div class="row">
 								<div class="col-1">
@@ -133,6 +133,7 @@
 			</div>
 		</div>
 	</div>
+	<input type="hidden" id="urlenviar" th:value="@{/inventario/listar}" />
 	<footer th:replace="layout/layout :: footer"></footer>
 	<script>
 		// 	$('#example').DataTable( {
@@ -141,6 +142,19 @@
 		//         "searching": false,
 		//         "info":     false
 		//     } );
+		$('.mydate').datepicker({
+			format : "yyyy-mm-dd"
+		});
+
+		var datefilter = $('#datefilter');
+		datefilter.click(function() {
+			location.href = $("#urlenviar").val() + "/"
+					+ $("#filterstart").val() + "/" + $("#filterend").val()
+					+ "/";
+			console.log($("#urlenviar").val() + "/"
+					+ $("#filterstart").val() + "/" + $("#filterend").val()
+					+ "/"); 
+		});
 	</script>
 </body>
 </html>

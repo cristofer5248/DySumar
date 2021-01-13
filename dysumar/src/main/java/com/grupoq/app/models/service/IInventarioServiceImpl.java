@@ -2,6 +2,7 @@ package com.grupoq.app.models.service;
 
 import org.springframework.data.domain.Pageable;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,12 @@ public class IInventarioServiceImpl implements IInventarioService {
 	public List<Inventario> findByProductoById(Long id) {
 		// TODO Auto-generated method stub
 		return inventarioDao.findByProductoId(id);
+	}
+
+	@Override
+	public Page<Inventario> findAllFechas(Pageable pageable, Date date1, Date date2) {
+		// TODO Auto-generated method stub
+		return inventarioDao.findAllByDates(pageable, date1, date2);
 	}
 
 

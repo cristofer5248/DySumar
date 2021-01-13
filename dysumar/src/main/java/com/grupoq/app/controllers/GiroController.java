@@ -49,17 +49,17 @@ public class GiroController {
 		return "/giros/listar";
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_SELLER" })
-	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
-	public String nuevo(Map<String, Object> model) {
-		Giro giro = new Giro();
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_SELLER", "ROLE_INV" })
+	@RequestMapping(value = { "/nuevo", "/nuevo/{id}" }, method = RequestMethod.GET)
+	public String nuevo(Map<String, Object> model, @PathVariable(value = "id", required = false) Long id) {
+		Giro giro = (id != null) ? giroService.findBy(id) : new Giro();
 		model.put("giro", giro);
 		model.put("titulo", "Registrar nuevo Giro");
 		model.put("nullchecker", 1);
 		return "/giros/form";
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_SELLER" })
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_SELLER", "ROLE_INV" })
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String guardar(@Valid Giro giro, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
@@ -86,14 +86,15 @@ public class GiroController {
 //		flash.addFlashAttribute("success", mensajeFlash);		
 //	}
 	/* @Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_SELLER" }) */
-	
-	@RequestMapping(value = "/saveExpress/{nombre}", method = {RequestMethod.GET}, produces = { "application/json" })
-	public @ResponseBody Long saveExpress(HttpServletRequest request, HttpServletResponse response, @PathVariable(value = "nombre", required = true) String nombre) {
+
+	@RequestMapping(value = "/saveExpress/{nombre}", method = { RequestMethod.GET }, produces = { "application/json" })
+	public @ResponseBody Long saveExpress(HttpServletRequest request, HttpServletResponse response,
+			@PathVariable(value = "nombre", required = true) String nombre) {
 		Giro giro = new Giro();
 		giro.setDetalles(nombre);
-		giroService.save(giro);		
-		return giro.getId(); 
-		
+		giroService.save(giro);
+		return giro.getId();
+
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })
