@@ -621,7 +621,8 @@ public class FacturaController {
 		model.put("fdePago", facturaservice.listFdp());
 		model.put("cdePago", facturaservice.listCdp());
 		model.put("tfactura", facturaservice.listTf());
-		model.put("carteraclientes", clienteService.findAllByUsuario(authentication.getName()));
+		
+		model.put("carteraclientes", request.isUserInRole("ROLE_SELLER")?clienteService.findAllByUsuario(authentication.getName()):clienteService.findAll());		
 		// llenando selects a lo dundo
 
 		model.put("titulo", "Facturacion #" + id);

@@ -16,7 +16,7 @@ public interface IInventarioDao extends PagingAndSortingRepository<Inventario, L
 	@Query(value= "select sum(stock) from inventario where producto_idp=:id", nativeQuery = true)
 	public List<String> sumarStock(@Param("id") Long id);
 	
-	@Query(value="select DISTINCT i from Inventario i join fetch i.producto p join fetch p.proveedor prov order by i.id desc", countQuery = "select DISTINCT count(i) from Inventario i join i.producto p join p.proveedor prov order by i.id desc")
+	@Query(value="select i from Inventario i join fetch i.producto p join fetch p.proveedor prov join fetch i.movimientos m group by m  order by i.id desc", countQuery = "select count(i) from Inventario i join i.producto p join p.proveedor prov join i.movimientos m  group by m order by i.id desc ")
 	public Page<Inventario> findAllCustom(Pageable page);
 	
 	@Query("select i from Inventario i join fetch i.producto p join fetch p.proveedor pro join fetch p.marca ma join fetch p.categoria c join fetch p.presentacion pre where i.codigoProveedor=?1")
