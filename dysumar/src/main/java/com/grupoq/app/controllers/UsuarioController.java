@@ -282,6 +282,15 @@ public class UsuarioController {
 			flash.addFlashAttribute("error", "Revisa los errores marcados");
 			return "users/form";
 		}
+		
+		if(usuarioService.findByTelefono(usuario.getTelefono())!=null) {
+			model.addAttribute("titulo", "Formulario de Usuario");
+			model.addAttribute("edituser", true);
+			model.addAttribute("usuario", usuario);
+			model.addAttribute("error", "Telefono ya registrado");
+			return "users/form";
+			
+		}
 		String mensajeFlash = (usuario.getId() != null) ? "usuario guardado con éxito!" : "usuario editado con éxito!";
 		usuario.setEnabled(true);
 		String pass1 = usuario.getPassword();

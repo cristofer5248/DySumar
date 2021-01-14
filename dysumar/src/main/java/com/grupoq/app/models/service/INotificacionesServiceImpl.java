@@ -3,6 +3,8 @@ package com.grupoq.app.models.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.grupoq.app.models.dao.INotificacionesDao;
@@ -24,6 +26,12 @@ public class INotificacionesServiceImpl implements INotificacionesService {
 	public void save(Notificaciones notificaciones) {
 		notificacionesDao.save(notificaciones);
 		
+	}
+
+	@Override
+	public Page<Notificaciones> findAll(Pageable page) {
+		// TODO Auto-generated method stub
+		return notificacionesDao.findByOrderByIdDesc(page);
 	}
 	
 }

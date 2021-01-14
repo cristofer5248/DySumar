@@ -34,5 +34,7 @@ public interface IUsuarioDao extends PagingAndSortingRepository<Usuario, Long> {
 	@Query(value="insert into roles values(null,:param2,:param);", nativeQuery=true)
 	public void saveRolNative(@Param("param")Long id, @Param("param2")String rol);
 	
+	public Usuario findByTelefono(int telefono);
+	
 	
 }

@@ -51,7 +51,7 @@
 							<label class="switch"> <input type="checkbox"
 								onclick="checkiva();" id="iva" /> <span class="slider round"></span>
 							</label><input type="number" name="ivaC" id="ivaC" th:value="0"
-								style="visibility: hidden">
+								style="visibility: hidden"><label id="mnsiva" style="visibility:hidden" >Esta es tan solo una visualizacion de la aplicacion del iva a los productos</label>
 						</div>
 					</div>
 					<div class="form-group row">
@@ -137,6 +137,8 @@
 					total_temp += parseFloat($(this).html());
 				});
 				$("#gran_total").html(total_temp.toFixed(2));
+				$("#mnsiva").css("visibility","visible");
+				$("#mnsiva").css("color","white");
 			} else {
 				$('#ivaC').val(0);
 				var total_temp = 0;
@@ -146,6 +148,8 @@
 					total_temp += parseFloat($(this).html());
 				});
 				$("#gran_total").html(total_temp.toFixed(2));
+				$("#mnsiva").css("visibility","hidden");
+				$("#mnsiva").css("color","white");
 			}
 		}
 	</script>

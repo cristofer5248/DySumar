@@ -232,10 +232,13 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 		}
 	}
 
-	function quitariva1(id){
+	function quitariva1(id,costo){
 		var preciocon = $("#precio_"+id).val();
 		$("#precio_"+id).val((preciocon/1.13).toFixed(6));
+		var preciosin = (preciocon/1.13).toFixed(6);
 		document.getElementById("precio_"+id).focus();
+		console.log(id,costo,preciosin);
+		itemsHelper.calcularImporte2(id,preciosin,1,costo);
 	
 	}
 		

@@ -33,12 +33,12 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="noti: ${notificaciones}">
-							<td><label th:class="${noti.icono}" th:style="'color:'+${noti.color}"></label><a
-								th:href="@{''+${noti.url}}" th:text="${noti.nombre}"></a></td>
-							<td th:text="${noti.fecha}"></td>
+						<tr th:each="carrito: ${carritos}">
+							<td><label th:class="${carrito.icono}" th:style="'color:'+${carrito.color}"></label><a
+								th:href="@{''+${carrito.url}}" th:text="${carrito.nombre}"></a></td>
+							<td th:text="${carrito.fecha}"></td>
 							<!-- <td	th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"><a
-								th:href="@{'/noti/nuevo/' + ${noti.idm}}">
+								th:href="@{'/carrito/nuevo/' + ${carrito.idm}}">
 									<div class='icon'>
 										<i class='fa fa-check'></i>
 									</div>

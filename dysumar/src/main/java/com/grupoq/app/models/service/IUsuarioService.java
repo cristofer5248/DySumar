@@ -14,6 +14,7 @@ public interface IUsuarioService {
 	public Page<Usuario> findAll(Pageable pageable);
 	
 	public Usuario findByUsername(String user);
+	public Usuario findByTelefono(int telefono);
 	public Page<Usuario> findByIdNot(Long id,Pageable pageable);
 	public Page<Usuario> findByRoles_Authority(String param,Pageable pageable);
 	

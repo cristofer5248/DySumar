@@ -86,4 +86,10 @@ public class UsuarioServiceImpl implements IUsuarioService {
 		return usuarioDao.findByIdNotAndBoss(id, pageable);
 	}
 
+	@Override
+	public Usuario findByTelefono(int telefono) {
+		// TODO Auto-generated method stub
+		return usuarioDao.findByTelefono(telefono);
+	}
+
 }
