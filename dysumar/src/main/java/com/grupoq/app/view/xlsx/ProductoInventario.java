@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.IndexedColors;
@@ -29,10 +29,11 @@ public class ProductoInventario extends AbstractXlsxView {
 	@Override
 	protected void buildExcelDocument(Map<String, Object> model, Workbook workbook, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
-
+		
 		response.setHeader("Content-Disposition", "attachment; filename=\"Inventario_de_productos.xlsx\"");
 		@SuppressWarnings("unchecked")
 		Page<Inventario> inventario = (Page<Inventario>) model.get("inventarios");
+		String rangodeFechas = (String) model.get("rangofechas");
 //		List<Producto> producto = extracted(model);
 		Sheet sheet = workbook.createSheet("Productos");
 
@@ -44,6 +45,15 @@ public class ProductoInventario extends AbstractXlsxView {
 		theaderstyle.setBorderTop(BorderStyle.MEDIUM);
 		theaderstyle.setFillForegroundColor(IndexedColors.DARK_BLUE.index);
 		theaderstyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		
+		CreationHelper createHelper = workbook.getCreationHelper();
+		CellStyle cellStyledate = workbook.createCellStyle();  
+		cellStyledate.setDataFormat(  
+            createHelper.createDataFormat().getFormat("d/mm/yy h:mm"));
+		cellStyledate.setBorderBottom(BorderStyle.MEDIUM);
+		cellStyledate.setBorderRight(BorderStyle.MEDIUM);
+		cellStyledate.setBorderLeft(BorderStyle.MEDIUM);
+		cellStyledate.setBorderTop(BorderStyle.MEDIUM);
 
 		Font font1 = workbook.createFont();
 		font1.setFontHeightInPoints((short) 12);
@@ -56,6 +66,8 @@ public class ProductoInventario extends AbstractXlsxView {
 		tbodystyle.setBorderRight(BorderStyle.MEDIUM);
 		tbodystyle.setBorderLeft(BorderStyle.MEDIUM);
 		tbodystyle.setBorderTop(BorderStyle.MEDIUM);
+		
+		
 		// FIN DE LOS ESTILOS
 
 		Row row = sheet.createRow(0);
@@ -95,7 +107,24 @@ public class ProductoInventario extends AbstractXlsxView {
 //		cell.setCellValue("Stock : "+producto.getStock());
 //		cell.setCellStyle(tbodystyle);
 
-		Row header = sheet.createRow(0);
+		Row header_ = sheet.createRow(0);
+//		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 9)); // basura me pinta todo
+		header_.createCell(5).setCellValue("Inventario entre las de fechas de "+rangodeFechas);
+		header_.getCell(5).setCellStyle(theaderstyle);
+		header_.createCell(0).setCellStyle(theaderstyle);
+		header_.createCell(1).setCellStyle(theaderstyle);
+		header_.createCell(2).setCellStyle(theaderstyle);
+		header_.createCell(3).setCellStyle(theaderstyle);
+		header_.createCell(4).setCellStyle(theaderstyle);
+		
+		header_.createCell(6).setCellStyle(theaderstyle);
+		header_.createCell(7).setCellStyle(theaderstyle);
+		header_.createCell(8).setCellStyle(theaderstyle);
+		header_.createCell(9).setCellStyle(theaderstyle);
+		header_.createCell(10).setCellStyle(theaderstyle);
+				
+				
+		Row header = sheet.createRow(1);
 		header.createCell(0).setCellValue("ID");
 		header.createCell(1).setCellValue("Codigo");
 		sheet.autoSizeColumn(0);
@@ -124,9 +153,10 @@ public class ProductoInventario extends AbstractXlsxView {
 		header.getCell(9).setCellStyle(theaderstyle);
 		header.getCell(10).setCellStyle(theaderstyle);
 
-		int rownum = 1;
+		int rownum = 2;
 		double total = 0;
 		for (Inventario pro_ : inventario) {
+			
 			Producto pro = pro_.getProducto();
 			Row fila = sheet.createRow(rownum++);
 			cell = fila.createCell(0);
@@ -169,9 +199,10 @@ public class ProductoInventario extends AbstractXlsxView {
 			cell.setCellValue(pro.getStock());
 			cell.setCellStyle(tbodystyle);
 
-			cell = fila.createCell(10);
+			cell = fila.createCell(10);			
 			cell.setCellValue(pro_.getFecha());
-			cell.setCellStyle(tbodystyle);
+			
+			cell.setCellStyle(cellStyledate);
 
 			total += pro.getStock();
 
@@ -192,7 +223,7 @@ public class ProductoInventario extends AbstractXlsxView {
 		filatotal.createCell(6).setCellStyle(tbodystyle);
 
 		filatotal.getCell(2).setCellStyle(tbodystyle);
-		filatotal.getCell(9).setCellStyle(tbodystyle);
+		filatotal.getCell(10).setCellStyle(tbodystyle);
 		filatotal.createCell(8).setCellValue("Total:  ");
 		filatotal.getCell(8).setCellStyle(tbodystyle);
 
@@ -210,6 +241,7 @@ public class ProductoInventario extends AbstractXlsxView {
 		sheet.setColumnWidth(6, 256 * 30);
 		sheet.setColumnWidth(7, 256 * 30);
 		sheet.setColumnWidth(7, 256 * 20);
+		sheet.setColumnWidth(10, 256 * 20);
 	}
 
 }

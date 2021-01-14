@@ -345,7 +345,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			cellItems = fila.createCell(1);
 			cellItems.setCellStyle(celltextLeft);
 			cellItems.setCellValue(carrito.getProductos().getMarca().getNombrem() + " "
-					+ carrito.getProductos().getNombrep() + " " + carrito.getProductos().getPresentacion().getUnidad());
+					+ carrito.getProductos().getNombrep() + " " + carrito.getProductos().getPresentacion().getDetalle());
 
 			// precio
 			cellItems = fila.createCell(3);

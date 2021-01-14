@@ -89,3 +89,8 @@ input:checked + .slider:before {
   white-space : pre-wrap;
 }
 /*# sourceMappingURL=bootstrap.css.map */
+.ivabtn {
+	color: white;
+	background-color: red; 
+	
+}

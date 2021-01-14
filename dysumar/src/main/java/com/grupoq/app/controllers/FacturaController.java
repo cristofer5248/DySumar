@@ -153,6 +153,7 @@ public class FacturaController {
 		model.addAttribute("titulo", "Listado de facturas y remisiones");
 		model.addAttribute("facturas", facturacion);
 		model.addAttribute("page", pageRender);
+		
 		return "/facturas/listar";
 	}
 
@@ -160,22 +161,27 @@ public class FacturaController {
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_FACT" })
 	@RequestMapping(value = "/checkstock/{term}", method = RequestMethod.GET)
 	public String evaluarstock(Map<String, Object> model, RedirectAttributes flash, @PathVariable Long term) {
+		String productosmalos = "";
 		try {
 			Facturacion facturacion = facturaservice.findBy(term);
 			List<CarritoItems> carrito = facturacion.getCotizacion().getCarrito();
+
 			System.out.print("\nRecorriendo: \n");
 			boolean cambiarStatus = true;
-			for (CarritoItems caObj : carrito) {
-				if (caObj.getProductos().getStock() < 0)
-					cambiarStatus = false;
 
+			for (CarritoItems caObj : carrito) {
+				if (caObj.getProductos().getStock() < 0) {
+					cambiarStatus = false;
+					productosmalos += "("+caObj.getProductos().getNombrep() + " )- ";
+				}
 			}
 			if (cambiarStatus) {
 				facturacion.setStatus(2);
 				facturaservice.save(facturacion);
 				flash.addFlashAttribute("success", "Se ha actualizado el estado de la remision");
 			} else {
-				flash.addFlashAttribute("error", "Sin cambios");
+
+				flash.addFlashAttribute("error", productosmalos + " Se encuentran en stock negativo");
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -293,8 +299,8 @@ public class FacturaController {
 			facturaservice.save(facturacion);
 			flash.addFlashAttribute("success", "Edicion correcta");
 			return "redirect:/factura/ver/" + facturacion.getId();
-		}else {
-			
+		} else {
+
 		}
 
 		Cotizacion cotizaciontemporal = cotizacionService.findby(facturacion.getCotizacion().getId());
@@ -392,6 +398,7 @@ public class FacturaController {
 				"Nueva remision a nombre de " + facturacion.getaCuentade().getNombre(), url, "green");
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
+		
 		return "redirect:/factura/ver/" + facturacion.getId();
 	}
 
@@ -412,9 +419,9 @@ public class FacturaController {
 		List<Producto> list1 = productoservice.findByNombrep(term);
 		if (list1.isEmpty()) {
 			int lastSpaceIndex = term.lastIndexOf(" ");
-			String term2 = term.substring(lastSpaceIndex+1, term.length());
-			term = term.substring(0,lastSpaceIndex);			
-			System.out.print("\n PRODUCTO: "+term+" MARCA: "+term2+" indexlast "+lastSpaceIndex);
+			String term2 = term.substring(lastSpaceIndex + 1, term.length());
+			term = term.substring(0, lastSpaceIndex);
+			System.out.print("\n PRODUCTO: " + term + " MARCA: " + term2 + " indexlast " + lastSpaceIndex);
 			list1 = productoservice.findByNombrepYMarca(term, term2);
 		}
 		for (Producto veamos : list1) {
@@ -426,7 +433,7 @@ public class FacturaController {
 			productos.setNombrep(veamos.getNombrep());
 			productos.setMargen(veamos.getMargen());
 			productos.setMarcanombre(veamos.getMarca().getNombrem());
-			productos.setPresentacionnombre(veamos.getPresentacion().getUnidad());
+			productos.setPresentacionnombre(veamos.getPresentacion().getDetalle());
 			productos.setCodigo(veamos.getCodigo());
 			productos.setStock(veamos.getStock());
 			list2.add(productos);
@@ -553,12 +560,14 @@ public class FacturaController {
 			return "redirect:/facturacion/listar";
 		}
 
+		String carritoid = facturacion.getCotizacion().getId().toString();
 		model.put("activePivot", true);
 		model.put("facturaciones", facturacion);
 //		model.put("proveedor", facturacion.get(0).getProducto().getProveedor().getNombre());
 //		model.put("fecha", facturacion.get(0).getFecha().toString());
 		model.put("codigofa", id);
 		model.put("titulo", "Detalle de factura # : " + id);
+		model.put("carritoid", carritoid);
 		return "/facturas/ver";
 	}
 
@@ -623,8 +632,10 @@ public class FacturaController {
 		model.put("fdePago", facturaservice.listFdp());
 		model.put("cdePago", facturaservice.listCdp());
 		model.put("tfactura", facturaservice.listTf());
-		
-		model.put("carteraclientes", request.isUserInRole("ROLE_SELLER")?clienteService.findAllByUsuario(authentication.getName()):clienteService.findAll());		
+
+		model.put("carteraclientes",
+				request.isUserInRole("ROLE_SELLER") ? clienteService.findAllByUsuario(authentication.getName())
+						: clienteService.findAll());
 		// llenando selects a lo dundo
 
 		model.put("titulo", "Facturacion #" + id);

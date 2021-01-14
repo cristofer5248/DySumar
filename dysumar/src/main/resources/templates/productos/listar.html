@@ -100,7 +100,7 @@
 									<td class="tddata" th:text="${producto.bodega}"></td>
 									<td class="tddata" th:text="${producto.categoria.nombre}"></td>
 									<td class="tdproveedor" th:text="${producto.proveedor.nombre}"></td>
-									<td th:text="${producto.presentacion.unidad}"></td>
+									<td th:text="${producto.presentacion.detalle}"></td>
 									<td class="tddata" th:text="${producto.stock}"></td>
 									<td th:if="!${producto.status}"><a
 										sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"

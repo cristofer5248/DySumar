@@ -45,9 +45,9 @@
 						th:href="@{/factura/checkstock/}+${codigofa}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT','ROLE_JEFEADM')"
 						th:text="'Evaluar existencias'"></a> <a
-						th:if="${facturaciones.status==2 || facturaciones.status==1}" class="btn btn-success btn-xs"
-						data-toggle="modal" data-target="#exampleModal2"
-						style="color: white;"
+						th:if="${facturaciones.status==2 || facturaciones.status==1}"
+						class="btn btn-success btn-xs" data-toggle="modal"
+						data-target="#exampleModal2" style="color: white;"
 						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT')"
 						onclick="meterid();" th:text="'Procesar'"></a>
 
@@ -69,8 +69,8 @@
 									th:action="@{/factura/statusChange/}" class="form-control"
 									method="post">
 									<input id="idinput" type="hidden" name="id" /> <label>Codigo
-										unico de remisión:</label> <input id="codigoinput" type="text" maxlength="11"
-										name="codigo" class="form-control" />
+										unico de remisión:</label> <input id="codigoinput" type="text"
+										maxlength="11" name="codigo" class="form-control" />
 								</form>
 							</div>
 							<div class="modal-footer">
@@ -122,6 +122,9 @@
 					<li class="list-group-item"
 						sec:authorize="hasAnyRole('ROLE_ADMIN')"
 						th:text="'Status en tabla cotizacion: ' +${facturaciones.status}"></li>
+					<li class="btn-warning"><a class="list-group-item btn btn-warning"	
+						th:text="'VER CARRITO DE ITEMS'" style="background-color: orange"
+						th:href="@{'/cotizacion/ver/'+${carritoid}}"></a></li>
 				</ul>
 
 				<!-- <div th:if="${#lists.isEmpty(factura)}"
@@ -132,7 +135,7 @@
 						<thead class="thead-inverse">
 							<tr>
 								<th>ID</th>
-								<th style="font-size: 10px">ID carrito</th>
+								<th style="font-size: 10px;"></th>
 								<th style="font-size: 10px">PRO ID</th>
 								<th>Producto</th>
 								<th>Proveedor</th>
@@ -143,8 +146,8 @@
 								<th>Descuento</th>
 								<th>Cantidad</th>
 								<th>Total</th>
-								<th sec:authorize="hasAnyRole('ROLE_ADMIN')">Status</th>
-								<th sec:authorize="hasAnyRole('ROLE_ADMIN')">Stock actual</th>
+								<!-- 								<th sec:authorize="hasAnyRole('ROLE_ADMIN')">Status</th> -->
+								<th>Stock actual</th>
 
 								<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">ver</th> -->
 								<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th> -->
@@ -157,6 +160,7 @@
 									th:href="@{/cotizacion/ver/} + ${carritos.cotizacionid.id}"
 									title="Aqui puedes ir directamente a la cotizacion nada mas"
 									class="btn btn-warning" target="_blank"
+									style="visibility: hidden"
 									th:text="${carritos.cotizacionid.id}"></a></td>
 								<td><a
 									th:href="@{/producto/ver/} + ${carritos.productos.id}"
@@ -176,10 +180,9 @@
 								<td th:text="${carritos.cantidad}"></td>
 								<td
 									th:text="${#numbers.formatDecimal(((carritos.productos.precio)/((100-carritos.margen)/100))*carritos.cantidad,0, 'COMMA', 3, 'POINT')}"></td>
-								<td sec:authorize="hasAnyRole('ROLE_ADMIN')"
-									th:text="${carritos.status}"></td>
-								<td sec:authorize="hasAnyRole('ROLE_ADMIN')"
-									th:text="${carritos.productos.stock}"></td>
+								<!-- 								<td sec:authorize="hasAnyRole('ROLE_ADMIN')" -->
+								<!-- 									th:text="${carritos.status}"></td> -->
+								<td th:text="${carritos.productos.stock}"></td>
 								<!-- 							<td th:text="${factura.cantidad}"></td> -->
 
 								<!-- 							<td th:text="${factura.cantidad * factura.servicios.precio}"></td> -->
@@ -207,12 +210,12 @@
 		th:value="@{/factura/statusChange/}" />
 	<script>
 		function enviarcodigo() {
-			
+
 			location.href = $("#urlenviar").val() + $("#codigoinput").val();
-			
+
 		}
 		function cambiarAction() {
-			
+
 			$('#statuschangeform').attr('action',
 					$("#urlenviar").val() + $("#codigoinput").val());
 		}
@@ -264,7 +267,7 @@
 									'<td class="totalclass">' + salaryAvg
 											+ '</td>');
 						},
-						dataSrc : 2
+						dataSrc : 1
 					}
 				});
 	</script>

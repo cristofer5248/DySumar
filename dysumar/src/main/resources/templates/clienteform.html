@@ -165,7 +165,7 @@
 	<div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
-			<div class="modal-content">	
+			<div class="modal-content">
 				<div class="modal-header">
 					<h5 class="modal-title" id="exampleModalLabel">Ingreso rapido
 						de nueva direccion</h5>
@@ -204,6 +204,17 @@
 		$('#mydate').datepicker({
 			format : "yyyy-mm-dd"
 		});
+		window.onbeforeunload = function(e) {
+			e = e || window.event;
+
+			// For IE and Firefox prior to version 4
+			if (e) {
+				e.returnValue = 'Sure?';
+			}
+
+			// For Safari
+			return 'Sure?';
+		};
 	</script>
 	<script th:src="@{/js/postrequestGiro.js}"></script>
 

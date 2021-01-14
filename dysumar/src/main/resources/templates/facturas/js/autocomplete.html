@@ -232,8 +232,12 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 		}
 	}
 
-
-			
+	function quitariva1(id){
+		var preciocon = $("#precio_"+id).val();
+		$("#precio_"+id).val((preciocon/1.13).toFixed(6));
+		document.getElementById("precio_"+id).focus();
+	
+	}
 		
 		
 	</script>

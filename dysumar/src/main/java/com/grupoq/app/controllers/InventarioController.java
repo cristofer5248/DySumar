@@ -76,11 +76,10 @@ public class InventarioController {
 			@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
 		String xlsxPath = "?page=" + page;
 		xlsxPath = (date1 != null) ? xlsxPath + "&all=" + all : xlsxPath;
-		
+
 		boolean enableallsearch = (date1 != null) ? true : false;
-		
-		 String pathexcel= (enableallsearch) ? "inventario/listar/" + date1 + "/" + date2 + xlsxPath:xlsxPath;
-		 
+
+		String pathexcel = (enableallsearch) ? "inventario/listar/" + date1 + "/" + date2 + xlsxPath : xlsxPath;
 
 		Date date1_ = null;
 		Date date2_ = null;
@@ -88,6 +87,7 @@ public class InventarioController {
 			try {
 				date1_ = new SimpleDateFormat("yyyy-MM-dd").parse(date1);
 				date2_ = new SimpleDateFormat("yyyy-MM-dd").parse(date2);
+				model.addAttribute("rangofechas", date1 + " y " + date2);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

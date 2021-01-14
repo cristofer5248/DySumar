@@ -206,7 +206,7 @@
 						<div class="form-group row">
 							<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
 							<div class="col-sm-8">
-								<textarea name="nombrePresentacion" id="nombrePresentacion"
+								<textarea name="nombrePresentacion" id="nombrePresentacion" minlength="5"
 									class="form-control"></textarea>
 							</div>
 
@@ -254,6 +254,17 @@
 
 			}
 		}
+		window.onbeforeunload = function (e) {
+		    e = e || window.event;
+
+		    // For IE and Firefox prior to version 4
+		    if (e) {
+		        e.returnValue = 'Sure?';
+		    }
+
+		    // For Safari
+		    return 'Sure?';
+		};
 	</script>
 
 </body>

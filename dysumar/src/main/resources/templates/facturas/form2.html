@@ -64,7 +64,7 @@
 					</div>
 					<table th:replace="facturas/plantilla-items.html ::itemsFactura"></table>
 					<table id="cargarItemProductos"
-						class="table table-responsive-md-striped table-hover">
+						class="table" style="width: 100%">
 						<thead>
 							<tr>
 								<th>Nombre</th>
@@ -91,7 +91,7 @@
 						<div class="col-sm-6">
 							<input type="submit" th:value="${titulo}" id="submit" disabled="disabled"
 								class="btn btn-secondary"
-								onclick="return confirm('¿Esta seguro?')" />
+								onclick="return confirm('¿Esta seguro? Recuerde que todos los precios deben estar sin IVA, internamente seran operados')" />
 						</div>
 					</div>
 				</form>
