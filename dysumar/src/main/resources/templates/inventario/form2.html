@@ -18,7 +18,7 @@
 					</ul>
 				</div>
 
-				<form th:action="@{/inventario/save}" method="post"
+				<form th:action="@{/inventario/save}" method="post" id="carritoform"
 					enctype="multipart/form-data">
 					<div class="form-group row">
 						<label for="proveedor" class="col-sm-2 col-form-label"
@@ -101,17 +101,18 @@
 	</script>
 	<script th:replace="inventario/js/autocomplete :: javascript"></script>
 	<script>
-		window.onbeforeunload = function(e) {
-			e = e || window.event;
+	$(document).ready(function () {
+	    // Warning
+	    $(window).on('beforeunload', function(){
+	        return "Any changes will be lost";
+	    });
 
-			// For IE and Firefox prior to version 4
-			if (e) {
-				e.returnValue = 'Sure?';
-			}
-
-			// For Safari
-			return 'Sure?';
-		};
+	    // Form Submit
+	    $(document).on("submit", "#carritoform", function(event){
+	        // disable warning
+	        $(window).off('beforeunload');
+	    });
+	});
 	</script>
 
 </body>

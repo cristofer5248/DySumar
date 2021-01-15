@@ -2,10 +2,6 @@ package com.grupoq.app.models.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

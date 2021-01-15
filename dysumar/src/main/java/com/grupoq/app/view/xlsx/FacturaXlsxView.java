@@ -38,10 +38,10 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		// accounting format
 		String accountingformat = "_-$* #,##0.00_-;-$* #,##0.00_-;_-$* \"-\"??_-;_-@_-";
 
-		
 		Facturacion factura = (Facturacion) model.get("facturaciones");
-		
-		String formatonname= (factura.getStatus()!=1)?"attachment; filename=\"factura.xlsx\"":"attachment; filename=\""+factura.getCodigofactura()+".xlsx\""; 
+		String nombrecliente = factura.getCliente().getCliente().getNombre().replaceAll("\\.", "-");
+		String formatonname = (factura.getStatus() != 1) ? "attachment; filename=\"factura.xlsx\""
+				: "attachment; filename=\"" + factura.getCodigofactura() + "-" + nombrecliente + ".xlsx\"";
 		response.setHeader("Content-Disposition", formatonname);
 		boolean agente = (factura.getCliente().getCliente().getAgente()) ? true : false;
 		boolean creditoFiscal = (factura.getTipoFactura().getId() == Long.parseLong("1")) ? true : false;
@@ -55,14 +55,22 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		sheet.setZoom(110);
 		sheet.setFitToPage(true);
 
-		sheet.setMargin(Sheet.TopMargin, 0.354331);
-		sheet.setMargin(Sheet.BottomMargin, 0.590551);
-		sheet.setMargin(Sheet.HeaderMargin, 0.00);
-		sheet.setMargin(Sheet.FooterMargin, 0.00);
+		if (creditoFiscal) {
+			sheet.setMargin(Sheet.TopMargin, 0.866142);
+			sheet.setMargin(Sheet.BottomMargin, 0.590551);
+			sheet.setMargin(Sheet.HeaderMargin, 0.00);
+			sheet.setMargin(Sheet.FooterMargin, 0.00);	
+			sheet.setMargin(Sheet.RightMargin, 0.19685);
+			sheet.setMargin(Sheet.LeftMargin, 0.314961);
+		} else {
+			sheet.setMargin(Sheet.TopMargin, 0.354331);
+			sheet.setMargin(Sheet.BottomMargin, 0.590551);
+			sheet.setMargin(Sheet.HeaderMargin, 0.00);
+			sheet.setMargin(Sheet.FooterMargin, 0.00);
 //		sheet.setMargin(Sheet.RightMargin, 0.0787402);
-		sheet.setMargin(Sheet.RightMargin, 0.0000);
-		sheet.setMargin(Sheet.LeftMargin, 0.629921);
-
+			sheet.setMargin(Sheet.RightMargin, 0.0000);
+			sheet.setMargin(Sheet.LeftMargin, 0.629921);
+		}
 		CellStyle theaderstyle = workbook.createCellStyle();
 		theaderstyle.setBorderBottom(BorderStyle.MEDIUM);
 		theaderstyle.setBorderRight(BorderStyle.MEDIUM);
@@ -155,7 +163,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		sheet.addMergedRegion(new CellRangeAddress(21, 21, 1, 2));
 		sheet.addMergedRegion(new CellRangeAddress(22, 22, 1, 2));
 		sheet.addMergedRegion(new CellRangeAddress(23, 23, 1, 2));
-		
+
 		// b25 a c25
 		sheet.addMergedRegion(new CellRangeAddress(24, 24, 1, 2));
 		// d25 a f25
@@ -195,6 +203,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		rowvacios_abajo30.setHeightInPoints(20);
 		rowvacios_abajo30.setHeightInPoints(22);
 
+		
 		sheet.setColumnWidth(0, 9 * 255);
 		sheet.setColumnWidth(1, 7 * 255);
 //		recortamos el tamaño si es credito fiscal
@@ -344,8 +353,9 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			// codigo del producto y nombre unidos por alguna razon
 			cellItems = fila.createCell(1);
 			cellItems.setCellStyle(celltextLeft);
-			cellItems.setCellValue(carrito.getProductos().getMarca().getNombrem() + " "
-					+ carrito.getProductos().getNombrep() + " " + carrito.getProductos().getPresentacion().getDetalle());
+			cellItems.setCellValue(
+					carrito.getProductos().getMarca().getNombrem() + " " + carrito.getProductos().getNombrep() + " "
+							+ carrito.getProductos().getPresentacion().getDetalle());
 
 			// precio
 			cellItems = fila.createCell(3);
@@ -373,8 +383,8 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			contadorProducts++;
 
 		}
-		//para ir llenando en vacio las demas con formato
-		while(contadorProducts>24) {
+		// para ir llenando en vacio las demas con formato
+		while (contadorProducts > 24) {
 			Row fila = sheet.createRow(contadorProducts);
 			fila.setHeightInPoints(28);
 			cellItems = fila.createCell(0);
@@ -384,7 +394,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			cellItems = fila.createCell(6);
 			cellItems.setCellStyle(celltextMoney);
 			contadorProducts++;
-			
+
 		}
 		System.out.print("donde estara el final es: " + itemRows);
 		// rellenamos con vacio lo que resta mas altura

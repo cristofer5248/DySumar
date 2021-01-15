@@ -153,7 +153,7 @@ public class FacturaController {
 		model.addAttribute("titulo", "Listado de facturas y remisiones");
 		model.addAttribute("facturas", facturacion);
 		model.addAttribute("page", pageRender);
-		
+
 		return "/facturas/listar";
 	}
 
@@ -172,7 +172,7 @@ public class FacturaController {
 			for (CarritoItems caObj : carrito) {
 				if (caObj.getProductos().getStock() < 0) {
 					cambiarStatus = false;
-					productosmalos += "("+caObj.getProductos().getNombrep() + " )- ";
+					productosmalos += "(" + caObj.getProductos().getNombrep() + " )- ";
 				}
 			}
 			if (cambiarStatus) {
@@ -398,7 +398,7 @@ public class FacturaController {
 				"Nueva remision a nombre de " + facturacion.getaCuentade().getNombre(), url, "green");
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
-		
+
 		return "redirect:/factura/ver/" + facturacion.getId();
 	}
 
@@ -569,6 +569,35 @@ public class FacturaController {
 		model.put("titulo", "Detalle de factura # : " + id);
 		model.put("carritoid", carritoid);
 		return "/facturas/ver";
+	}
+
+	// para ver el detalle de la FACTURA
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER", "ROLE_JEFEADM", "ROLE_FACT" })
+	@GetMapping(value = "/editarcarrito/{id}")
+	public String editarcarrito(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash,
+			Authentication auth, HttpServletRequest request) {
+
+		Facturacion facturacion = facturaservice.fetchByIdWithClienteWithCarritoItemsWithProducto(id);
+		if (facturacion == null) {
+			flash.addFlashAttribute("error", "El ingreso con ese codigo no existe en la base de datos");
+			return "redirect:/facturacion/listar";
+		}
+		System.out.print("\n usuario1 " + auth.getName());
+		System.out.print("\n usuario2 " + facturacion.getaCuentade().getUsername());
+
+		if (!facturacion.getaCuentade().getUsername().equals(auth.getName()) && !(request.isUserInRole("ROLE_ADMIN")
+				|| request.isUserInRole("ROLE_JEFEADM") || request.isUserInRole("ROLE_FACT"))) {
+			flash.addFlashAttribute("error", "La factura que intentas ver no te corresponde porque no es tuya.");
+			return "redirect:/facturacion/listar";
+		}
+
+		String carritoid = facturacion.getCotizacion().getId().toString();		
+		model.put("facturaciones", facturacion.getCotizacion().getCarrito());
+//			model.put("proveedor", facturacion.get(0).getProducto().getProveedor().getNombre());
+//			model.put("fecha", facturacion.get(0).getFecha().toString());		
+		model.put("titulo", "Carrito de factura # : " + id);
+		model.put("carritoid", carritoid);
+		return "/facturas/carritos";
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })

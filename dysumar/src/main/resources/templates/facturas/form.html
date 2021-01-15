@@ -22,7 +22,7 @@
 
 				<form th:action="@{/factura/savefactura}" th:object="${facturacion}"
 					method="post" enctype="multipart/form-data">
-<!-- 					<div class="form-group row">
+					<!-- 					<div class="form-group row">
 						<label for="cliente" class="col-sm-2 col-form-label"
 							th:text="'¿Solo cotizacion?'"></label>
 						<div class="col-sm-6">
@@ -159,15 +159,27 @@
 		$('#mydate').datepicker({
 			format : "yyyy-mm-dd"
 		});
-/* 		function checkopc() {
-			if ($('#opc').is(':checked')) {
-				$('#tipoC').val(1);
-			}
+		$(document).ready(function() {
+			// Warning
+			$(window).on('beforeunload', function() {
+				return "Any changes will be lost";
+			});
 
-			else {
-				$('#tipoC').val(0);
-			}
-		} */
+			// Form Submit
+			$(document).on("submit", "form", function(event) {
+				// disable warning
+				$(window).off('beforeunload');
+			});
+		});
+		/* 		function checkopc() {
+		 if ($('#opc').is(':checked')) {
+		 $('#tipoC').val(1);
+		 }
+
+		 else {
+		 $('#tipoC').val(0);
+		 }
+		 } */
 	</script>
 
 
