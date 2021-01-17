@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<script type="text/javascript" th:fragment="javascript">
+		$(document).ready(function() {
+var urlAjaxcliente = $("#urlAjaxcliente").val();
+var urlAjaxcliented = $("#urlAjaxdirecciones").val();
+
+			$("#cargar_cliente").autocomplete({
+
+				source : function(request, response) {
+// 					var provid = $("#cargar_proveedor").val();
+					$.ajax({
+						url : urlAjaxcliente + request.term,
+						dataType : "json",
+						data : {
+							term : request.term
+							
+						},
+						success : function(data) {
+							
+							response($.map(data, function(item) {
+								return {
+									value : item.id,
+									label : item.codigo+"-" +item.nombre +" - "+item.apellido
+									
+									
+								};
+									
+							}));
+						},
+					});
+				}
+		});				
+				
+//more
+			$("#cargar_direccion").autocomplete({
+
+				source : function(request, response) {
+// 					var provid = $("#cargar_proveedor").val();
+					$.ajax({
+						url : urlAjaxcliented + request.term,
+						dataType : "json",
+						data : {
+							term : request.term
+							
+						},
+						success : function(data) {
+							
+							response($.map(data, function(item) {
+								return {
+									value : item.id,
+									label : item.id+"-" +item.nombre
+									
+									
+								};
+									
+							}));
+						},
+					});
+				}
+		});
+			
+			
+			
+	});
+		
+	</script>
+</body>
+</html>

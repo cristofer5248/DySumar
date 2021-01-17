@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<script th:inline="javascript" type="text/javascript" th:fragment="javascript">
+var nullchecker = [[${nullchecker}]];
+var id1=null;
+
+if(nullchecker===0){
+	llenar();
+}
+
+
+function llenar(){
+	id1 = [[${categoriaid}]]; 
+	
+}
+
+
+			
+		
+		
+	</script>
+</body>
+</html>

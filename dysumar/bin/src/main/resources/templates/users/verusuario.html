@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head"></head>
+
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}"></div>
+
+			<div class="card-body">
+				<a th:href="@{/user/ver}" class="btn btn-primary"> Volver</a><br></br>
+
+				<ul class="list-group">
+					<li class="list-group-item active" th:text="'ID: ' +${usuario.id}"></li>
+					<li class="list-group-item"
+						th:text="'Usuario: '+${usuario.username}"></li>
+					<li class="list-group-item"
+						th:text="'Nombre completo: '+${usuario.nombre} +' '+ ${usuario.apellidos}"></li>
+					<li class="list-group-item" th:text="'Correo: '+${usuario.correo}"></li>
+					<li class="list-group-item"
+						th:text="'Direccion: '+${usuario.direccion}"></li>
+					<li th:if="${usuario.enabled}" class="list-group-item"
+						style="color: green" th:text="'Activo '"></li>
+					<li th:if="${!usuario.enabled}" class="list-group-item"
+						style="color: red" th:text="'Desactivado: '"></li>
+					<li class="list-group-item" th:text="'Genero: '+${usuario.genero}"></li>
+					<li class="list-group-item" id="phone"
+						th:text="'Telefono: '+${usuario.telefono}"></li>
+					<li class="list-group-item" style="color: blue;">Roles:</li>
+					<li th:each="rolesuser: ${rolesUsuario}" class="list-group-item">
+						<p class="roletext" th:text="${rolesuser.authority}"></p>
+					</li>
+
+
+
+				</ul>
+
+				<!-- 				<div th:if="${#lists.isEmpty(taller)}" class="alert alert-info my-4" -->
+				<!-- 					th:text="'No hay facturas activas para el usuario ' + ${usuario.nombre} + ' ' + ${usuario.apellido}"></div> -->
+
+				<!-- 				<table th:if="${not #lists.isEmpty(usuario.facturacion)}"
+					class="table table-bordered table-striped my-4">
+					<thead class="thead-inverse">
+						<tr>
+							<th>Id de factura</th>
+							<th>codigo de facturacion</th>
+							<th>Forma de pago</th>
+
+							<th>Fecha</th>
+														<th sec:authorize="hasRole('ROLE_ADMIN')">ver</th>
+							<th sec:authorize="hasRole('ROLE_ADMIN')">eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="factura: ${usuario.facturacion}">
+							<td><a title="Click para ver detalle de la factura"
+								class="btn btn-primary btn-xs"
+								th:href="@{/factura/ver/}+${factura.id}"
+								th:text="${factura.id}"></a></td>
+							<td th:text="${factura.codigofactura}"></td>
+							<td th:text="${factura.tipoFactura.nombre}"></td>
+							<td th:text="${factura.fecha}"></td>
+														<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+															class="btn btn-primary btn-xs"
+															th:href="@{'/factura/ver/' + ${factura.id}}" th:text="'detalle'"></a></td>
+							<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+								class="btn btn-danger btn-xs"
+								th:href="@{'/factura/eliminar/' + ${factura.id}}"
+								th:text="'eliminar'"
+								onclick="return confirm('¿Estas seguro que desea eliminar la factura?');"></a></td>
+						</tr>
+					</tbody>
+
+				</table>
+ -->
+			</div>
+		</div>
+
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	<script>
+		$(this).tooltip();
+		$(document).ready(function() {
+			var roletext = $(".roletext");
+			for (var i = 0; i < roletext.length; i++) {
+				if (roletext[i].textContent === "ROLE_INV") {
+					roletext[i].innerHTML = "INVENTARIO";
+				}
+				if (roletext[i].textContent === "ROLE_SELLER") {
+					roletext[i].innerHTML = "VENDEDOR";
+				}
+				if (roletext[i].textContent === "ROLE_JEFEADM") {
+					roletext[i].innerHTML = "JEFE/A";
+				}
+				if (roletext[i].textContent === "ROLE_FACT") {
+					roletext[i].innerHTML = "FACTURACION";
+				}
+				if (roletext[i].textContent === "ROLE_ADMIN") {
+					roletext[i].innerHTML = "ADMINISTRADOR";
+				}
+
+			}
+
+		})
+	</script>
+
+</body>
+</html>

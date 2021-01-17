@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="layout/layout :: head"></head>
+<link rel='stylesheet prefetch'
+	href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+<link rel='stylesheet prefetch'
+	href='https://fonts.googleapis.com/css?family=Roboto:100,300,400'>
+
+<link rel="stylesheet" href="css/deleteanimated_js.css">
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<div class="card-header"></div>
+			<div class="card-body">
+
+				<h4 class="card-title">
+					<a th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"
+						th:href="@{/direccion/nuevo}" class="btn btn-primary btn-xs">Crear
+						direccion</a>
+
+				</h4>
+				<table class="table table-striped table-bordered table-sm">
+					<thead class="thead-inverse">
+						<tr>
+							<th
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}">id</th>							
+							<th>Nombre</th>
+							<!-- <th
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"></th> -->							
+							<th th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="direccion: ${direccions}">
+							<td
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"><a
+								class="btn btn-primary btn-xs"
+								th:href="@{/verproducto/} + ${direccion.id}"
+								th:text="${direccion.id}"></a></td>							
+							<td th:text="${direccion.nombrem}"></td>
+							<!-- <td	th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"><a
+								th:href="@{'/direccion/nuevo/' + ${direccion.id}}">
+									<div class='icon'>
+										<i class='fa fa-check'></i>
+									</div>
+									<div class='text check'>
+										<span>Inventariar</span>
+									</div>
+							</a></td> -->
+
+							<td th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"><a class="centerMe"
+								th:href="@{/direccion/eliminar/} + ${direccion.id}"
+								onclick="return confirm('Estas seguro que quieres eliminar?');">
+									<div class='icon'>
+										<i class='fa fa-trash'></i>
+									</div>
+									<div class='text delete'>
+										<span>Eliminar</span>
+									</div>
+							</a></td>
+						</tr>
+					</tbody>
+
+				</table>
+
+				<nav th:replace="paginator-nav :: paginator"></nav>
+			</div>
+		</div>
+
+
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	
+</body>
+</html>

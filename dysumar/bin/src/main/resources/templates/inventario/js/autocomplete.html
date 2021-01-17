@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<script type="text/javascript" th:fragment="javascript">
+		$(document).ready(function() {
+var urlAjaxproveedor = $("#urlAjaxproveedor").val();
+
+			$("#cargar_producto").autocomplete({
+
+				source : function(request, response) {
+					var provid = $("#cargar_proveedor").val();
+					$.ajax({
+						url : urlAjaxproveedor + request.term+"/"+provid,
+						dataType : "json",
+						data : {
+							term : request.term
+							
+						},
+						success : function(data) {
+							
+							response($.map(data, function(item) {
+								return {
+									value : item.id,
+									label : item.codigo+"-" +item.nombrep +" - "+item.proveedornombre,
+									precio: item.precio
+									
+								};
+									
+							}));
+						},
+					});
+				},
+				select : function(event, ui) {
+// 					$("#cargar_producto").val(ui.item.value)
+					if(itemsHelper.hasProducto(ui.item.value)){
+						itemsHelper.incrementaCantidad(ui.item.value, ui.item.precio)
+						return false;
+					}
+					var linea = $("#plantillaItemsFactura").html();
+					linea = linea.replace(/{ID}/g,ui.item.value);
+					linea = linea.replace(/{NOMBRE}/g,ui.item.label);
+					linea = linea.replace(/{PRECIO}/g,ui.item.precio);
+					
+					$("#cargarItemProductos tbody").append(linea);
+					itemsHelper.calcularImporte(ui.item.value, ui.item.precio,1);
+					
+
+					return false;
+				}
+			});
+			$("#cargar_proveedor").change(function(){
+	 			$("#cargar_producto").removeAttr('disabled');
+	 			
+  			
+			var total = 0;
+			var uncero= 0;
+			$("#gran_total").html(total);
+			var itemsclass = document.getElementsByClassName("itemsclass");
+			if(itemsclass.length>1){
+			for(var i=0; i<itemsclass.length;i++){
+				$('.itemsclass').slice(1).remove();
+			}
+			}
+			return;
+	 		});	
+	 		$("form").submit(function(){
+	 			$("#plantillaItemsFactura").remove();
+	 			return;
+	 		});
+	 		
+	 		
+		});
+		
+		var itemsHelper = {
+				calcularImporte: function(id, precio, cantidad){
+					$("#total_importe_"+id).html((parseFloat(precio)* parseInt(cantidad)).toFixed(2));
+					this.calcularGranTotal();
+					
+					var cantidadenINT = parseInt(cantidad);
+					
+					if(cantidadenINT<1){
+						if(cantidadenINT<0){
+							$("#concepto").css("visibility","visible");
+							$("#conceptotxt").val("Esto es una devolucion o solo un retiro del inventario");
+						}else{
+							$("#concepto").css("visibility","hidden");
+							$("#conceptotxt").val("Ingreso de articulo al inventario");
+						}
+					}
+				},
+				hasProducto: function(id){
+					var resultado = false;
+					
+				
+				$('input[name="item_id[]"]').each(function(){
+					if(parseInt(id) == parseInt($(this).val()) ){
+						resultado = true;
+					}
+				});
+				return resultado;
+		},
+		incrementaCantidad: function(id,precio){
+			var cantidad = $("#cantidad_" +id).val() ? parseInt($("#cantidad_"+id).val()) : 0;			
+			$("#cantidad_"+id).val(++cantidad);
+			this.calcularImporte(id,precio,cantidad);
+		},
+		eliminarLineaFactura: function(id){
+			$("#row_"+id).remove();
+			this.calcularGranTotal();
+		},
+		calcularGranTotal: function(){
+			var total = 0;
+			$('span[id^="total_importe_"]').each(function(){
+// 				alert(parseFloat($(this).html()).toFixed(2));
+				total+=parseFloat($(this).html());
+// 				total+=parseFloat($(this).html()).toFixed(2);
+// 				total+=Math.round(parseFloat($(this).html()*100)/100);
+			});
+			$("#gran_total").html(total);
+			$("#submit").removeAttr('disabled');
+		}
+		
+	}
+
+
+			
+		let proveedor = $('#cargar_proveedor')
+		proveedor.empty();
+		proveedor.append('<option selected="true" disabled>Selecciona</option>');
+		proveedor.prop('selectedIndex',0);
+		const url5 = $("#urlAjaxproveedorselect").val();
+		//populate dropdown list wujuu
+		$.getJSON(url5,function(data){
+			$.each(data,function(key,entry){
+				
+				proveedor.append($('<option></option>').attr('value',entry.id).text(entry.nombre));	
+				
+			})
+		});
+		
+	</script>
+</body>
+</html>

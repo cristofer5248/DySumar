@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-dark text-white">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+
+				<div th:object="${clientedirecciones}" th:remove="tag">
+					<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger"
+						role="alert">
+						<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+					</ul>
+				</div>
+
+				<form th:action="@{/direccioncdsave}"
+					th:object="${clientedirecciones}" method="post"
+					enctype="multipart/form-data">
+					<div class="form-group row">
+						<label for="cargar_cliente" class="col-sm-2 col-form-label"
+							th:text="'Busqueda de Cliente'"></label>
+						<div class="col-sm-6">
+							<input type="text" name="cargar_cliente" id="cargar_cliente"
+								required="required"
+								placeholder="Escriba completamente un nombre para buscarlo"
+								th:field="*{cliente}" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="direccion" class="col-sm-2 col-form-label"
+							th:text="Direccion"></label>
+						<div class="col-sm-6">
+							<input id="cargar_direccion" name="cargar_direccion"
+								required="required" th:field="*{direcciones}"
+								class="form-control" />
+
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<div class="col-sm-6">
+							<input type="submit" th:value="${titulo}"
+								class="btn btn-secondary" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	<input type="hidden" id="urlAjaxcliente" th:value="@{/cargar_cliente/}" />
+	<input type="hidden" id="urlAjaxdirecciones"
+		th:value="@{/cargar_direccionesnombre/}" />
+	<script
+		th:replace="direccioncliente/js/autocompletecliente :: javascript"></script>
+
+
+</body>
+</html>

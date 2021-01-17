@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head">
+<meta charset="UTF-8" />
+<title th:text="'DySumar- ' + ${titulo}"></title>
+
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}" />
+<link rel="stylesheet" th:href="@{/css/alertify.min.css}" />
+<link rel="stylesheet" th:href="@{/themes/default.min.css}" />
+<link rel="stylesheet" th:href="@{/css/bootstrap-datepicker.css}" />
+<link rel="stylesheet" th:href="@{/css/bootstrap-select.min.css}" />
+<link rel="stylesheet" th:href="@{/css/crudanimation.css}" />
+<link rel="stylesheet" th:href="@{/css/datatables.min.css}" />
+<link rel="stylesheet" th:href="@{/css/all.css}" />
+<link rel="stylesheet" th:href="@{/css/timeago.css}" />
+
+
+<link rel="shortcut icon" type="image/png"
+	th:href="@{/images/icono.png}" />
+<link rel="shortcut icon" type="image/png"
+	th:href="@{/images/icono.png}" />
+</head>
+<body>
+
+	<header th:fragment="header">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark"
+			role="navigation">
+			<a class="navbar-brand" href="/" style="overflow: visible">DySumar</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				aria-label="Toggle navigation" data-target="#collapseElements">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="collapseElements">
+				<ul class="navbar-nav mr-auto">
+					<!-- 					<li class="nav-item active"><a class="nav-link" th:href="@{/}">Home</a></li> -->
+
+					<li class="nav-item dropdown"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_SELLER')"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"><i class="fas fa-users"></i> Personas </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_SELLER')"
+								class="dropdown-item" href="#about" th:href="@{/clientes}"><i
+								class="fas fa-address-book"></i> Clientes</a> <a
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SELLER')"
+								class="dropdown-item" th:href="@{/direcciones}"><i
+								class="fas fa-map-marked"></i> Direcciones</a> <a
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SELLER')"
+								class="dropdown-item" th:href="@{/cdireccion}"><i
+								class="fas fa-map-pin"></i> Asignar direccion</a>
+							<div class="dropdown-divider"></div>
+							<a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SELLER')"
+								class="dropdown-item" th:href="@{/giro/listar}"><i
+								class="fas fa-building"></i> Giros</a>
+							<div class="dropdown-divider"></div>
+							<a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"
+								class="dropdown-item" th:href="@{/user/ver}"><i
+								class="fas fa-user-friends"></i> Usuarios</a>
+
+						</div></li>
+
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
+						aria-expanded="false"><i class="fas fa-store"></i> Entradas </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="#about"
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
+								th:href="@{/producto/listar}"><i class="fas fa-box-open"></i>
+								Productos</a><a class="dropdown-item" href="#about"
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
+								th:href="@{/producto/listarS}"><i
+								class="fas fa-business-time"></i>Solicitudes</a> <a
+								class="dropdown-item"
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
+								th:href="@{/inventario/listar}"><i class="fas fa-arrow-down"></i>
+								Ingresos</a>
+							<!-- 							<div class="dropdown-divider"></div> -->
+							<!-- 							<a class="dropdown-item" href="#">Movimientos</a> -->
+						</div></li>
+
+					<li sec:authorize="hasRole('ROLE_SELLER')"
+						class="nav-item dropdown"><a class="nav-link"
+						th:href="@{/producto/listar}" id="navbarDropdown"
+						aria-haspopup="true"><i class="fas fa-money-check-alt"></i>
+							PRODUCTOS</a></li>
+					<li sec:authorize="hasRole('ROLE_INV')" class="nav-item dropdown"><a
+						class="nav-link" th:href="@{/giro/listar}" id="navbarDropdown"
+						aria-haspopup="true"><i class="fas fa-money-check-alt"></i>
+							GIROS</a></li>
+
+					<li class="nav-item dropdown"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_SELLER','ROLE_FACT')"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false"><i class="fas fa-money-check-alt"></i>
+							Salidas </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="#about"
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_FACT','ROLE_SELLER')"
+								th:href="@{/factura/listar}"><i
+								class="fas fa-file-invoice-dollar"></i> Remision</a>
+							<!-- 								<a -->
+							<!-- 								class="dropdown-item" th:href="@{/ventas/listar}">Historial -->
+							<!-- 								de Salidas</a> -->
+							<!-- 							<div class="dropdown-divider"></div> -->
+							<!-- 							<a class="dropdown-item" href="#">Movimientos</a> -->
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" data-toggle="modal"
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_FACT','ROLE_SELLER')"
+								data-target="#exampleModal"><i class="fas fa-search"></i>
+								Buscar una cotizacion</a>
+						</div></li>
+
+					<li class="nav-item dropdown"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"><a
+						class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+							class="fas fa-store"></i> Productos </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" th:href="@{/producto/listar}"
+								id="navbarDropdown" aria-haspopup="true"><i
+								class="fas fa-box-open"></i> PRODUCTOS</a> <a
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
+								class="dropdown-item" href="#about" th:href="@{/marca/listar}"><i
+								class="far fa-copyright"></i> Marcas</a> <a class="dropdown-item"
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
+								th:href="@{/proveedor/listar}"><i class="fas fa-shuttle-van"></i>
+								Proveedores</a> <a class="dropdown-item"
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_INV')"
+								th:href="@{/categoria/listar}"><i class="fas fa-server"></i>
+								Categorias</a> <a
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"
+								class="dropdown-item" th:href="@{/presentacion/form}"><i
+								class="fas fa-pencil-ruler"></i> Presentaciones</a>
+							<!-- 								<a	class="dropdown-item" href="#">Margenes</a> -->
+
+						</div></li>
+
+				</ul>
+
+				<ul class="navbar-nav navbar-right">
+					<li class="nav-item dropdown" sec:authorize="isAuthenticated()"
+						onclick="cambiarAgo();"><a class="nav-link dropdown-toggle"
+						href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false"><i
+							class="fas fa-globe-americas"></i></a>
+						<div class="dropdown-menu dropdown-menu-right"
+							aria-labelledby="navbarDropdown" id="notiContent">
+							<!-- 							contenido de las notificaciones							 -->
+
+
+						</div></li>
+					<li sec:authorize="!isAuthenticated()"><a
+						class="btn btn-outline-primary" th:href="@{/login}">Iniciar
+							Session</a></li>
+
+					<li sec:authorize="isAuthenticated()" class="dropdown show"><a
+						class="btn btn-outline-primary dropdown-toggle" href="#"
+						role="button" id="dropdownMenuLink" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false"><span
+							sec:authentication="name"></span> <i
+							sec:authorize="hasRole('ROLE_JEFEADM')" class="fab fa-evernote"></i></a>
+
+						<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+							<form id="logoutForm" th:action="@{/logout}" method="post">
+								<a class="dropdown-item" th:href="@{/user/form}">Perfil</a>
+								<button class="dropdown-item"
+									onclick="document.getElementById('logoutForm').submit();"
+									type="submit">Salir</button>
+								<input type="hidden" th:name="${_csrf.parameterName}"
+									th:value="${_csrf.token}" />
+							</form>
+
+						</div></li>
+				</ul>
+			</div>
+		</nav>
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+			aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Busqueda de
+							cotizacion</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+
+					<div class="modal-body">
+						<label>Ingrese el codigo de la cotizacion</label> <input
+							type="number" id="cotizacionSearch" class="form-control" />
+					</div>
+					<div class="modal-footer">
+
+
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Cerrar</button>
+						<button type="button" id="btncotizacion" class="btn btn-primary">Buscar</button>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div class="alert alert-success" th:if="${success != null}"
+			th:text="${success}"></div>
+		<div class="alert alert-danger" th:if="${error != null}"
+			th:text="${error}"></div>
+		<div class="alert alert-warning" th:if="${warning != null}"
+			th:text="${warning}"></div>
+		<div class="alert alert-info" th:if="${info != null}"
+			th:text="${info}"></div>
+	</header>
+
+	<!-- 	<div class="container"></div> -->
+
+
+	<footer th:fragment="footer" class="container"
+		style="background-color: #0B243B; color: white;">
+		<hr />
+		<img th:src="@{/images/logo.jpeg}" alt="Spring logo" />
+		<p sec:authorize="isAuthenticated()">
+			Usuario logeado: <span sec:authentication="name"></span> | Roles: <span
+				sec:authentication="principal.authorities"></span>
+		</p>
+		<p>
+			Powered by <a href="https://projects.spring.io/spring-boot/">Spring
+				Boot</a> y <a href="http://www.thymeleaf.org">Thymeleaf</a>.
+		</p>
+		<p>
+			Soporte: christopher.emm01@gmail.com<br /> &copy; <br />
+		</p>
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Bootstrap JS -->
+		<script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+		<script th:src="@{/js/popper.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<script th:src="@{/js/jquery-ui.min.js}"></script>
+		<script th:src="@{/js/animeddelete.js}"></script>
+		<script th:src="@{/js/alertify.min.js}"></script>
+		<script th:src="@{/js/bootstrap-datepicker.min.js}"></script>
+		<script th:src="@{/js/bootstrap-select.min.js}"></script>
+		<script th:src="@{/js/datatables.min.js}"></script>
+		<script th:src="@{/js/jquery.timeago.js}"></script>
+		<script th:src="@{/js/jquery.rowspanizer.min.js}"></script>
+		<script th:src="@{/js/dataTables.rowGroup.min.js}"></script>
+		<script th:src="@{/js/imask.js}"></script>
+		<!-- 		he movido esto -->
+
+
+		<input type="hidden" id="urlCotizacion" th:value="@{/cotizacion/ver/}" />
+		<input type="hidden" id="urldeServer" th:value="@{/}" />
+		<script th:replace="layout/notificaciones :: javascript"></script>
+		<script th:inline="javascript">
+		//todo esto es para las alertas de alertify
+	var x = [[${error}]];
+	var y = [[${success}]];
+	
+	if(x!=null){
+	alertify.error(x);
+	}
+	if(y!=null){ alertify.alert('Exito!', y, function(){ alertify.success('Ok'); });}
+	//aqui termina
+	//aqui para buscar cotizacion
+	$("#btncotizacion").click(function(){
+		var urlCotizacion = $("#urlCotizacion").val();
+		var textSearch = $("#cotizacionSearch").val();
+		let isnum = /^\d+$/.test(textSearch);
+		if(isnum){
+			location.href = urlCotizacion+textSearch;	
+		}else{
+		alert('Solo digitos');
+		}
+		
+	});
+	$(document).on('keydown', function ( e ) {
+	    // You may replace `m` with whatever key you want
+	    if ((e.metaKey || e.shiftKey) && ( String.fromCharCode(e.which).toLowerCase() === 'c') ) {
+			$("#exampleModal").modal('show');
+	    }
+	    if ((e.metaKey || e.shiftKey) && ( String.fromCharCode(e.which).toLowerCase() === 'b') ) {
+	    	$( ".searchbox-icon" ).click();
+	    	
+	    }
+	});		
+// 	console.log(Notification.permission);
+	
+	function showNotification(){
+		const notification = new Notification("New message from Dysumar",{
+		body: "hey! we need money, how are you?"
+		});
+	}
+	
+// 	if(Notification.permission==="granted"){
+// 		showNotification();
+// 	}else if(Notification.permission!=="denied"){
+// 		Notification.requestPermission().then(permission=>{
+// 		if(permission==="granted"){
+// 			showNotification();
+// 		}
+		
+		
+// 		});
+// 	}
+	
+	</script>
+
+
+	</footer>
+</body>
+</html>

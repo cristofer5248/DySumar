@@ -34,8 +34,9 @@ public class CotizacionController {
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_SELLER", "ROLE_FACT" })
-	@RequestMapping(value = "/ver/{term}", method = RequestMethod.GET)
-	public String ver(@PathVariable Long term, Map<String, Object> model, RedirectAttributes flash) {
+	@RequestMapping(value = {"/ver/{term}/{idfa}" , "/ver/{term}"}, method = RequestMethod.GET)
+	public String ver(@PathVariable Long term, Map<String, Object> model,
+			@PathVariable(value = "idfa", required = false) Long idfa, RedirectAttributes flash) {
 		Cotizacion cotizacion = cotizacionService.listAllById(term);
 		if (cotizacion == null) {
 			flash.addFlashAttribute("error", "El codigo no existe en la base de datos");
@@ -44,17 +45,23 @@ public class CotizacionController {
 		model.put("cotizacion", cotizacion);
 		model.put("codigoco", cotizacion.getId());
 		model.put("titulo", "Detalle de cotizacion");
+		if (idfa != null) {
+			model.put("idfactura", idfa);
+		} else {
+			model.put("idfactura", 0);
+		}
 		return "cotizaciones/ver";
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_SELLER","ROLE_JEFEADM" })
+	@Secured({ "ROLE_ADMIN", "ROLE_SELLER", "ROLE_JEFEADM" })
 	@RequestMapping(value = "/aprobar/{term}", method = RequestMethod.GET)
 	public String aprobar(@PathVariable Long term, Map<String, Object> model, RedirectAttributes flash) {
 		Cotizacion cotizacion = cotizacionService.findby(term);
 		cotizacion.setAprobado(true);
 		cotizacionService.save(cotizacion);
 		model.put("success", "Cotizacion aprobada");
-		nuevaNotificacion("fas fa-file-alt", "Cotizacion con id "+cotizacion.getId()+" aprobada", "/cotizacion/ver/"+cotizacion.getId(), "green");
+		nuevaNotificacion("fas fa-file-alt", "Cotizacion con id " + cotizacion.getId() + " aprobada",
+				"/cotizacion/ver/" + cotizacion.getId(), "green");
 		return "redirect:/cotizacion/ver/" + term;
 	}
 

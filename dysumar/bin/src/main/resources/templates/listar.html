@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="layout/layout :: head"></head>
+<link rel="stylesheet" th:href="@{/css/searchbar.css}" />
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<label class="h2" th:text="${titulo}"></label>
+			<div class="card-header" style="padding: .10rem 1.25rem">
+
+
+				<form class="searchbox" id="formsearch" action="">
+					<input type="search"
+						placeholder="Introducir parametro de busqueda......"
+						class="searchbox-input" onkeyup="buttonUp();" id="btn-search"
+						required> <select class="custom-select mr-sm-2"
+						id="opcSearch" style="margin-left: 10px; height: 3.3em;">
+						<option value="nombre">Nombre</option>
+						<option value="codigo">ID</option>
+					</select> <input type="button" id="vamonos" class="searchbox-submit"
+						value="GO" /> <span class="searchbox-icon">Buscar</span>
+				</form>
+			</div>
+			<div class="card-body">
+
+				<div class="card-title">
+					<a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SELLER')"
+						th:href="@{/clienteform}" class="btn btn-primary btn-xs">crear
+						cliente</a>
+				</div>
+				<div style="overflow-x: auto;">
+					<table class="table table-striped table-bordered" id="example">
+						<thead class="thead-inverse">
+							<tr>
+								<th
+									sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SELLER','ROLE_JEFEADM')">id</th>
+								<th>Registro fiscal</th>
+								<th>Nombre</th>
+								<th>Email</th>
+								<th>DUI o NIT</th>
+								<!-- 							<th th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">Giro</th> -->
+								<th>POR</th>
+								<th>Fecha de registro</th>
+								<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SELLER')">eliminar</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="cliente: ${clientes}">
+								<td
+									sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SELLER','ROLE_JEFEADM')"><a
+									class="btn btn-primary btn-xs" data-toggle="modal"
+									data-target="#exampleModalCenter3"
+									onclick="modalDirecciones(this.text);"
+									th:href="@{/vercliente/} + ${cliente.id}"
+									th:text="${cliente.id}"></a></td>
+								<td th:text="${cliente.codigo}"></td>
+								<td th:text="${cliente.nombre}"></td>
+								<td th:text="${cliente.email}"></td>
+								<td th:text="${cliente.dui}"></td>
+								<td th:text="${cliente.usuario.nombre}"></td>
+								<td th:text="${cliente.createAt}"></td>
+								<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_SELLER')"><a
+									class="btn btn-danger btn-xs"
+									th:href="@{/cleliminar/} + ${cliente.id}" th:text="'eliminar'"
+									onclick="return confirm('Estas seguro que quieres eliminar?');"></a></td>
+
+							</tr>
+						</tbody>
+
+					</table>
+				</div>
+
+
+				<!-- Modal -->
+				<div class="modal fade" id="exampleModalCenter3" tabindex="-1"
+					role="dialog" aria-labelledby="exampleModalCenterTitle"
+					aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLongTitle">Selecione
+									Direccion</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body resposive">
+								<table class="table table-striped table-bordered" id="tbdc">
+									<thead>
+										<tr>
+											<th width="100">ID</th>
+											<th width="100">Direccion</th>
+											<th width="100">Editar</th>
+											<th width="100">Eliminar</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr id="test">
+											<td></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									data-dismiss="modal">Cerrar</button>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<nav th:replace="paginator-nav :: paginator"></nav>
+			</div>
+		</div>
+
+
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	<input type="hidden" id="urlAjaxcliente"
+		th:value="@{/cargar_direcciones/}" />
+	<input type="hidden" id="urlAjaxvercliente" th:value="@{/vercliente/}" />
+	<input type="hidden" id="urlAjaxEditarCliente"
+		th:value="@{/clienteform/}" />
+	<input type="hidden" id="urlenviar" th:value="@{/clientes/}" />
+	<input type="hidden" id="urlAjaxEditarClienteD"
+		th:value="@{/cdleliminar/}" />
+	<script th:replace="cliente/js/autocompletecliente :: javascript"></script>
+	<script th:src="@{/js/searchbar.js}"></script>
+	<script>
+		function prueba() {
+			alert('f');
+		}
+	</script>
+</body>
+</html>

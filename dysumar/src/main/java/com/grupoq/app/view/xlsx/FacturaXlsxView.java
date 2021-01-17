@@ -59,7 +59,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			sheet.setMargin(Sheet.TopMargin, 0.866142);
 			sheet.setMargin(Sheet.BottomMargin, 0.590551);
 			sheet.setMargin(Sheet.HeaderMargin, 0.00);
-			sheet.setMargin(Sheet.FooterMargin, 0.00);	
+			sheet.setMargin(Sheet.FooterMargin, 0.00);
 			sheet.setMargin(Sheet.RightMargin, 0.19685);
 			sheet.setMargin(Sheet.LeftMargin, 0.314961);
 		} else {
@@ -203,7 +203,6 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		rowvacios_abajo30.setHeightInPoints(20);
 		rowvacios_abajo30.setHeightInPoints(22);
 
-		
 		sheet.setColumnWidth(0, 9 * 255);
 		sheet.setColumnWidth(1, 7 * 255);
 //		recortamos el tamaño si es credito fiscal
@@ -342,6 +341,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		}
 		int contadorProducts = 12;
+		double totalsiniva =0;
 		for (CarritoItems carrito : factura.getCotizacion().getCarrito()) {
 			Row fila = sheet.createRow(itemRows++);
 			fila.setHeightInPoints(28);
@@ -379,7 +379,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 //			double precioUnitarioXcantidad = precioUnitario_temp * carrito.getCantidad(); DESCOMENTAR PARA SIN FORMULA
 			String precioUnitarioXcantidad = ("(D" + contadorProducts + "*A" + contadorProducts + ")");
 			cellItems.setCellFormula(precioUnitarioXcantidad);
-
+			totalsiniva +=carrito.getCantidad()*carrito.getPrecio();
 			contadorProducts++;
 
 		}
@@ -428,8 +428,8 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		// retenindo 0 para restar si no es agente
 		double retenido = 0;
 		double ivado = factura.getTotaRegistrado() + (factura.getTotaRegistrado() * 0.13);
-		if (factura.getTotaRegistrado() > 113 && agente) {
-			retenido = factura.getTotaRegistrado() * 0.01;
+		if (totalsiniva > 113 && agente) {
+			retenido = (totalsiniva * 0.01);
 		}
 
 		// mostrar iva ahi
@@ -456,7 +456,9 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		if (retenido == 0) {
 			rowvacios_abajo29.getCell(6).setCellValue("0");
 		} else {
-			rowvacios_abajo29.getCell(6).setCellValue(retenido);
+			rowvacios_abajo29.getCell(6).setCellValue(df.format(retenido));
+			rowvacios_abajo29.getCell(6).setCellStyle(celltextMoney);
+			System.out.print("\nretenido"+retenido);
 		}
 
 		rowvacios_abajo29.getCell(6).setCellStyle(celltextMoney);
@@ -470,7 +472,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		Row rowFinal_total = sheet.createRow(29);
 		rowFinal_total.createCell(6);
 //		rowFinal_total.getCell(6).setCellValue(ivado - retenido); a lo hombre sin formula
-		rowFinal_total.getCell(6).setCellFormula("G25-G29");
+		rowFinal_total.getCell(6).setCellFormula("G27-G29");
 		rowFinal_total.getCell(6).setCellStyle(ennegritacelltotal);
 		rowFinal_total.setHeightInPoints(23);
 

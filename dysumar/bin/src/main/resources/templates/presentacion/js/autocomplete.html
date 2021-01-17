@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<script type="text/javascript" th:fragment="javascript">
+	
+		$(document).ready(function() {
+		var urlAjax = $("#urlAjax").val();
+			$("#cargar_producto").autocomplete({
+
+				source : function(request, response) {					
+					$.ajax({
+						url : urlAjax + request.term,
+						dataType : "json",
+						data : {
+							term : request.term
+							
+						},
+						success : function(data) {
+							
+							response($.map(data, function(item) {
+								return {
+									value : item.id,
+									label : item.nombrep,
+								};
+									
+							}));
+						},
+					});
+				},
+				select : function(event, ui) {
+					$("#cargar_producto").val(ui.item.value)
+					
+
+					return false;
+				}
+			});
+		
+		});
+	</script>
+</body>
+</html>

@@ -114,8 +114,7 @@ public class UsuarioController {
 	public String hacerAdmin(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		Role rolcheck = new Role();
 		rolcheck = rolesService.findByUser_idByAuthority(id, "ROLE_ADMIN");
-		String mensaje = (rolcheck == null) ? "Se añadio el rol de administrador"
-				: "Rol de administrador removido";		
+		String mensaje = (rolcheck == null) ? "Se añadio el rol de administrador" : "Rol de administrador removido";
 		String tipo = (rolcheck == null) ? "success" : "error";
 		flash.addFlashAttribute(tipo, mensaje);
 		return "redirect:/user/ver";
@@ -282,14 +281,14 @@ public class UsuarioController {
 			flash.addFlashAttribute("error", "Revisa los errores marcados");
 			return "users/form";
 		}
-		
-		if(usuarioService.findByTelefono(usuario.getTelefono())!=null) {
+
+		if (usuarioService.findByTelefono(usuario.getTelefono()) != null && usuario.getId() == null) {
 			model.addAttribute("titulo", "Formulario de Usuario");
 			model.addAttribute("edituser", true);
 			model.addAttribute("usuario", usuario);
 			model.addAttribute("error", "Telefono ya registrado");
 			return "users/form";
-			
+
 		}
 		String mensajeFlash = (usuario.getId() != null) ? "usuario guardado con éxito!" : "usuario editado con éxito!";
 		usuario.setEnabled(true);

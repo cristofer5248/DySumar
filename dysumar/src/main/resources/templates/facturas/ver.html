@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <head th:replace="layout/layout :: head"></head>
 <link rel="stylesheet" th:href="@{/css/tbwoborder.css}" />
-
+<meta charset="UTF-8">
 <body>
 
 	<header th:replace="layout/layout :: header"></header>
 
-	<div class="container py-4">
+	<div class="container py-4" style="max-width: 1450px">
 
 		<div class="card bg-light">
 			<div class="card-header" th:text="${titulo}"></div>
@@ -122,9 +122,10 @@
 					<li class="list-group-item"
 						sec:authorize="hasAnyRole('ROLE_ADMIN')"
 						th:text="'Status en tabla cotizacion: ' +${facturaciones.status}"></li>
-					<li class="btn-warning"><a class="list-group-item btn btn-warning"	
+					<li class="btn-warning"><a
+						class="list-group-item btn btn-warning"
 						th:text="'VER CARRITO DE ITEMS'" style="background-color: orange"
-						th:href="@{'/cotizacion/ver/'+${carritoid}}"></a></li>
+						th:href="@{'/cotizacion/ver/'+${carritoid}+'/'+${codigofa}}"></a></li>
 				</ul>
 
 				<!-- <div th:if="${#lists.isEmpty(factura)}"
@@ -142,10 +143,10 @@
 								<th>Marca</th>
 								<th>Costo</th>
 								<th>Margen</th>
-								<th>Precio</th>
+								<th>Precio sin iva</th>
 								<th>Descuento</th>
 								<th>Cantidad</th>
-								<th>Total</th>
+								<th>Total con iva</th>
 								<!-- 								<th sec:authorize="hasAnyRole('ROLE_ADMIN')">Status</th> -->
 								<th>Stock actual</th>
 
@@ -172,14 +173,15 @@
 								<td th:text="${carritos.productos.marca.nombrem}"></td>
 								<td th:text="'$'+${carritos.productos.precio}"></td>
 								<td th:text="${carritos.margen}+'%'"></td>
+								<!-- 								<td	th:text="'$'+${#numbers.formatDecimal(((carritos.productos.precio)/((100-carritos.margen)/100)),0,'COMMA',3,'POINT')}"></td> -->
 								<td
-									th:text="'$'+${#numbers.formatDecimal(((carritos.productos.precio)/((100-carritos.margen)/100)),0,'COMMA',3,'POINT')}"></td>
+									th:text="'$'+${#numbers.formatDecimal((carritos.precio),0,'COMMA',3,'POINT')}"></td>
 								<td th:if="${carritos.descuento<1}"
 									th:text="${carritos.descuento*100}+'%'"></td>
 								<td th:if="${carritos.descuento==1}" th:text="'NO'"></td>
 								<td th:text="${carritos.cantidad}"></td>
 								<td
-									th:text="${#numbers.formatDecimal(((carritos.productos.precio)/((100-carritos.margen)/100))*carritos.cantidad,0, 'COMMA', 3, 'POINT')}"></td>
+									th:text="${#numbers.formatDecimal((carritos.precio*1.13*carritos.cantidad),0, 'COMMA', 3, 'POINT')}"></td>
 								<!-- 								<td sec:authorize="hasAnyRole('ROLE_ADMIN')" -->
 								<!-- 									th:text="${carritos.status}"></td> -->
 								<td th:text="${carritos.productos.stock}"></td>

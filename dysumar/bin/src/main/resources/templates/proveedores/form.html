@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-dark text-white">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+
+				<div th:object="${proveedor}" th:remove="tag">
+					<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger"
+						role="alert">
+						<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+					</ul>
+				</div>
+
+				<form th:action="@{/proveedor/save}" th:object="${proveedor}" id="form1"
+					method="post" enctype="multipart/form-data">
+					<div class="form-group row">
+						<label for="proveedor" class="col-sm-2 col-form-label">Nombre</label>
+						<div class="col-sm-6">
+							<input type="text" required="required" th:field="*{nombre}"
+								class="form-control" th:errorclass="'form-control alert-danger'" />
+							<small class="form-text text-danger"
+								th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="codigo" class="col-sm-2 col-form-label">Codigo</label>
+						<div class="col-sm-6">
+							<input type="number" required="required" th:field="*{codigoP}"
+								placeholder="Si no tienes el codigo aun, pon un 0 para pasar"
+								class="form-control" th:errorclass="'form-control alert-danger'" />
+							<small class="form-text text-danger"
+								th:placeholder="'Codigo propocionado por el proveedor'"
+								th:if="${#fields.hasErrors('codigoP')}" th:errors="*{codigoP}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="cargar_giros" class="col-sm-2 col-form-label"
+							th:text="'Giro'"></label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{giro}" name="cargar_giro"
+								required="required" id="cargar_giro" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="phone" class="col-sm-2 col-form-label">Telefono</label>
+						<div class="col-sm-6">
+							<input type="number" th:field="*{telefono}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="email" class="col-sm-2 col-form-label">Email</label>
+						<div class="col-sm-6">
+							<input type="email" th:field="*{email}" class="form-control"
+								required="required" th:errorclass="'form-control alert-danger'" />
+							<small class="form-text text-danger"
+								th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="nit" class="col-sm-2 col-form-label">NIT</label>
+						<div class="col-sm-6">
+							<input th:field="*{nit}" class="form-control" maxlength="22"
+								pattern="(\d|-)+" title="Solo numeros y guiones"
+								placeholder="Escribirlo correctamente, esta limitado a numero y guiones"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('nit')}" th:errors="*{nit}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="direccion" class="col-sm-2 col-form-label">Direccion</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{direccion}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('direccion')}"
+								th:errors="*{direccion}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="razon_social" class="col-sm-2 col-form-label">Razon
+							Social</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{razonsocial}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('razonsocial')}"
+								th:errors="*{razonsocial}"></small>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<div class="col-sm-6">
+							<input type="submit" th:value="'Ingresar'"
+								onclick="return confirm('¿Esta seguro?')"
+								class="btn btn-secondary" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	<input type="hidden" id="urlAjax" th:value="@{/giro/cargar_giro/}" />
+	<script th:replace="proveedores/js/autocomplete :: javascript"></script>
+	<script type="text/javascript">
+	$(document).ready(function () {
+	    // Warning
+	    $(window).on('beforeunload', function(){
+	        return "Any changes will be lost";
+	    });
+
+	    // Form Submit
+	    $(document).on("submit", "form", function(event){
+	        // disable warning
+	        $(window).off('beforeunload');
+	    });
+	});
+	</script>
+
+</body>
+</html>

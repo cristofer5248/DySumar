@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-dark text-white">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+
+				<div th:object="${cliente}" th:remove="tag">
+					<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger"
+						role="alert">
+						<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+					</ul>
+				</div>
+
+				<form th:action="@{/clientesave}" th:object="${cliente}"
+					method="post" enctype="multipart/form-data">
+					<div class="form-group row">
+						<label for="nombre" class="col-sm-2 col-form-label">Nombre:</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{nombre}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="email" class="col-sm-2 col-form-label">Email</label>
+						<div class="col-sm-6">
+							<input type="email" th:field="*{email}" class="form-control"
+								placeholder="En caso que no hay, dejar vacio o uno temporal"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="codigo" class="col-sm-2 col-form-label">Registro
+							fiscal</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{codigo}" class="form-control"
+								maxlength="11" pattern="(\d|-)+" min="3" required="required"
+								title="Este campo no es obligatorio, puede dejar el 0 para saltarlo"
+								placeholder="Este campo no es obligatorio, puede dejar el 0 para saltarlo"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="dui" class="col-sm-2 col-form-label">NIT/DUI</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{dui}" class="form-control"
+								id="dui" maxlength="22" pattern="(\d|-)+"
+								title="Solo numeros y guiones"
+								placeholder="Escribirlo correctamente, esta limitado a numero y guiones"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger duinitmask"
+								th:if="${#fields.hasErrors('dui')}" th:errors="*{dui}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="dui" class="col-sm-2 col-form-label">AGENTE</label>
+						<div class="col-sm-6">
+							<input type="checkbox" th:field="*{agente}" id="dui"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger duinitmask"
+								th:if="${#fields.hasErrors('agente')}" th:errors="*{agente}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="createAt" class="col-sm-2 col-form-label">Fecha
+							de registro</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" th:field="*{createAt}"
+								id="mydate" th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('createAt')}" th:errors="*{createAt}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="tipoCliente" class="col-sm-2 col-form-label"
+							th:text="'Empresa:'"></label>
+						<div class="col-sm-6">
+							<select th:field="*{tipoCliente}" class="custom-select mr-sm-2">
+								<option value="0" disabled selected>Selecciona una</option>
+								<option th:each="tp : ${tipo}" th:value="${tp.id}"
+									th:text="${tp.nombre}"></option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row" th:if="${!NOEDIT}">
+						<label for="apellido" class="col-sm-2 col-form-label">Direccion</label>
+						<div class="col-sm-4">
+							<input type="text" th:field="*{apellido}" class="form-control"
+								id="direccionapellido" readonly="readonly" required="required"
+								placeholder='Para ingresar su direccion de en "Registrar uno nuevo"'
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></small>
+						</div>
+						<button type="button" class="btn btn-primary" data-toggle="modal"
+							data-target="#exampleModal3">Registrar una nueva</button>
+					</div>
+					<div class="form-group row">
+						<label for="cargar_giros" class="col-sm-2 col-form-label"
+							th:text="'Giro'"></label>
+						<div class="col-sm-4">
+							<input type="text" th:field="*{giro}" name="cargar_giro"
+								required="required" placeholder="Buscar un giro ya existente..."
+								id="cargar_giro" class="form-control" />
+						</div>
+						<button type="button" class="btn btn-primary" data-toggle="modal"
+							data-target="#exampleModal2">Registrar uno nuevo</button>
+					</div>
+
+					<div class="form-group row">
+						<div class="col-sm-6">
+							<input type="submit" th:value="${titulo}"
+								class="btn btn-secondary" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Ingreso rapido
+						de nuevo giro</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+
+					<form id="formGiro" method="POST" enctype="multipart/form-data">
+						<div class="form-group row">
+							<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
+							<div class="col-sm-8">
+								<textarea name="nombreGiro" id="nombreGiro" class="form-control"></textarea>
+							</div>
+
+						</div>
+						<button type="submit" id="btnGiro" class="btn btn-primary">Guardar</button>
+					</form>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal para direcciones-->
+	<div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Ingreso rapido
+						de nueva direccion</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+
+					<form id="formDireccion" method="POST"
+						enctype="multipart/form-data">
+						<div class="form-group row">
+							<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
+							<div class="col-sm-8">
+								<textarea name="nombreDireccion" id="nombreDireccion"
+									class="form-control"></textarea>
+							</div>
+
+						</div>
+						<button type="submit" id="btnDireccion" class="btn btn-primary">Guardar</button>
+					</form>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	<input type="hidden" id="urlAjax" th:value="@{/giro/cargar_giro/}" />
+	<script th:replace="proveedores/js/autocomplete :: javascript"></script>
+
+	<script>
+		$('#mydate').datepicker({
+			format : "yyyy-mm-dd"
+		});
+		$(document).ready(function () {
+		    // Warning
+		    $(window).on('beforeunload', function(){
+		        return "Any changes will be lost";
+		    });
+
+		    // Form Submit
+		    $(document).on("submit", "form", function(event){
+		        // disable warning
+		        $(window).off('beforeunload');
+		    });
+		});
+	</script>
+	<script th:src="@{/js/postrequestGiro.js}"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<script type="text/javascript" th:fragment="javascript">
+				function modalHistorialdePrecios(idc){
+					var urlAjaxprecios = $("#urlAjaxprecios").val();
+					var urlAjaxFactura = $("#urlAjaxFactura").val();
+					var urlAjaxCoti = $("#urlAjaxCoti").val();
+					
+					let tb = $('#tbdc tbody')
+					tb.empty();
+					const url = urlAjaxprecios+idc;
+
+					//populate dropdown list wujuu
+					$.getJSON(url,function(data){
+					    $.each(data, function(idx, elem){
+					        tb.append("<tr><td><a class='btn btn-primary btn-xs' href='"+urlAjaxFactura+elem.id+"'>"+elem.id+"</a></td><td><a class='btn btn-warning btn-xs' href='"+urlAjaxCoti+elem.idCotizacion+"'>"+elem.idCotizacion+"</a></td><td>"+elem.precio+"</td><td>"+elem.fecha+"</td><td>"+elem.cantidad+"</td></tr>");
+					    })
+					});
+	
+	}
+					
+					
+				
+			
+
+
+
+			
+		
+		
+	</script>
+</body>
+</html>

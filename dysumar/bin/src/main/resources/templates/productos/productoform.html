@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-dark text-white">
+			<div class="card-header" th:text="${titulo}"></div>
+			<a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"
+				data-toggle="modal" data-target="#uploadexcelproductos"
+				class="btn btn-success btn-xs">Importar desde excel</a>
+			<div class="card-body">
+
+				<div th:object="${producto}" th:remove="tag">
+					<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger"
+						role="alert">
+						<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+					</ul>
+				</div>
+
+				<form th:action="@{/producto/productosave}" th:object="${producto}"
+					method="post" enctype="multipart/form-data">
+					<div class="form-group row">
+						<label for="codigo" class="col-sm-2 col-form-label">Codigo</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{codigo}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="nombrep" class="col-sm-2 col-form-label">Nombre</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{nombrep}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('nombrep')}" th:errors="*{nombrep}"></small>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="precio" class="col-sm-2 col-form-label">Costo</label>
+						<div class="col-sm-6">
+							<input type="number" th:field="*{precio}" class="form-control" placeholder="ESE PRECIO ES SIN IVA"
+								min="0.000001" step="0.000001"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="bodega" class="col-sm-2 col-form-label">Ubicacion
+							en bodega</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{bodega}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('bodega')}" th:errors="*{bodega}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="createAt" class="col-sm-2 col-form-label">Fecha</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control" id="mydate"
+								th:field="*{fecha}" th:errorclass="'form-control alert-danger'" />
+							<small class="form-text text-danger"
+								th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}"></small>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="categoria" class="col-sm-2 col-form-label"
+							th:text="Categoria"></label>
+						<div class="col-sm-6">
+							<select th:field="*{categoria}" id="cargar_categoria"
+								name="cargar_categoria" class="custom-select mr-sm-2">
+
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="marca" class="col-sm-2 col-form-label" th:text="Marca"></label>
+						<div class="col-sm-6">
+							<select th:field="*{marca}" id="cargar_marca" name="cargar_marca"
+								class="custom-select mr-sm-2">
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="margen" class="col-sm-2 col-form-label"
+							th:text="Margen"></label>
+						<div class="col-sm-6">
+							<input class="form-control" th:field="*{margen}" type="number"
+								step="0.1" min="10" max="90" />
+
+							<!-- 							<select th:field="*{margen}" id="cargar_margen" -->
+							<!-- 								name="cargar_margen" class="custom-select mr-sm-2"> -->
+							<!-- 							</select> -->
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="presentacion" class="col-sm-2 col-form-label"
+							th:text="Presentacion"></label>
+						
+						<div class="col-sm-4">
+							<input type="text" th:field="*{presentacion}" name="cargar_presentacion"
+								required="required" placeholder="Buscar una presentacion ya existente..."
+								id="cargar_presentacion" class="form-control" />
+						</div>
+							<button type="button" class="btn btn-primary" data-toggle="modal"
+							data-target="#modalpresentacion">Registrar uno nuevo</button>
+						
+					</div>
+					<div class="form-group row">
+						<label for="proveedor" class="col-sm-2 col-form-label"
+							th:text="Proveedor"></label>
+						<div class="col-sm-6">
+							<select th:field="*{proveedor}" id="cargar_proveedor"
+								name="cargar_proveedor" class="custom-select mr-sm-2">
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<div class="col-sm-6">
+							<input type="submit" th:value="${titulo}" onclick="return confirm('¿Esta seguro? El precio debe ser un precio SIN IVA.')"
+								class="btn btn-secondary" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- Modal -->
+	<div class="modal fade" id="uploadexcelproductos" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalCenterTitle"
+		aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLongTitle">Importacion
+						de datos en excel</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+
+				</div>
+				<div class="modal-body">
+					<a class="btn btn-success" th:href="@{/excel/plantilla.xlsx}">Descargar
+						plantilla</a> <br></br>
+					<form id="excelform" th:action="@{/excel/excelimport}"
+						class="form-control" method="post" enctype="multipart/form-data">
+						<div class="form-group row">
+							<label for="subir" th:text="'ARCHIVO: '"
+								class="col-sm-4 col-form-label"></label>
+							<div class="col-sm-4">
+								<input class="btn btn-success" type="file" th:name="file" />
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="IVA"
+								th:text="'NO DETENERSE AL DETECTAR PRODUCTOS REPETIDOS :'"
+								class="col-sm-4 col-form-label"></label>
+							<div class="col-sm-4">
+								<label class="switch"> <input type="checkbox" id="iva"
+									onclick="checkiva()" /> <span class="slider round"></span>
+								</label><input type="number" name="replace_" id="replace_" th:value="0"
+									style="visibility: hidden">
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Cerrar</button>
+					<button type="button" class="btn btn-success" onclick="sendexcel()">Enviar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Modal para presentacion-->
+	<div class="modal fade" id="modalpresentacion" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Ingreso rapido
+						de nueva presentacion</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+
+					<form id="formPresentacion" method="POST"
+						enctype="multipart/form-data">
+						<div class="form-group row">
+							<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
+							<div class="col-sm-8">
+								<textarea name="nombrePresentacion" id="nombrePresentacion" minlength="5"
+									class="form-control"></textarea>
+							</div>
+
+						</div>
+						<button type="submit" id="btnPresentacion" class="btn btn-primary">Guardar</button>
+					</form>
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<footer th:replace="layout/layout :: footer"></footer>
+	<input type="hidden" id="urlAjaxcategoria"
+		th:value="@{/categoria/cargar_categoria}" />
+	<input type="hidden" id="urlAjaxmarca"
+		th:value="@{/marca/cargar_marca}" />
+	<input type="hidden" id="urlAjaxmargen"
+		th:value="@{/margen/cargar_margen}" />
+	<input type="hidden" id="urlAjaxpresentacion"
+		th:value="@{/presentacion/cargar_presentacion}" />
+	<input type="hidden" id="urlAjaxproveedor"
+		th:value="@{/proveedor/cargar_proveedor}" />
+	<input type="hidden" id="urlPresentacion"
+		th:value="@{/producto/saveExpress/}" />
+	<input type="hidden" id="urlAjaxpresentaciones" th:value="@{/presentacion/cargar_presentaciones/}" />
+	<script th:replace="productos/js/setselected :: javascript"></script>
+	<script th:replace="productos/js/autocomplete :: javascript"></script>
+	<script>
+		$('#mydate').datepicker({
+			format : "yyyy-mm-dd"
+		});
+
+		function sendexcel() {
+			document.getElementById("excelform").submit();
+		}
+
+		function checkiva() {
+
+			if ($('#iva').is(':checked')) {
+				$('#replace_').val(1);
+
+			} else {
+				$('#replace_').val(0);
+
+			}
+		}
+		$(document).ready(function () {
+		    // Warning
+		    $(window).on('beforeunload', function(){
+		        return "Any changes will be lost";
+		    });
+
+		    // Form Submit
+		    $(document).on("submit", "form", function(event){
+		        // disable warning
+		        $(window).off('beforeunload');
+		    });
+		});
+	</script>
+
+</body>
+</html>

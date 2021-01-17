@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="layout/layout :: head"></head>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<label class="h2" th:text="${titulo}"></label>
+			<div class="card-header"></div>
+			<div class="card-body ">
+
+				<h4 class="card-title">
+					<a sec:authorize="isAuthenticated()" th:href="@{/user/crear}"
+						class="btn btn-primary btn-xs">crear usuario</a>
+				</h4>
+				<div style="overflow-x: auto;">
+					<table class="table table-bordered">
+						<thead class="thead-inverse">
+							<tr>
+								<th sec:authorize="hasRole('ROLE_ADMIN')">id</th>
+								<th>nombre</th>
+								<th>apellido</th>
+								<th>email</th>
+
+								<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')">
+								</th>
+								<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')">
+								</th>
+								<th sec:authorize="hasRole('ROLE_ADMIN')">ADM</th>
+								<th style="background-color: #17a2b8;"
+									sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')">Gerencia</th>
+								<th style="background-color: #6c757d; color: black;"
+									sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')">Inventarios</th>
+								<th style="background-color: #ffc107; color: black;"
+									sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')">Ventas</th>
+								<th style="background-color: #28a745;"
+									sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')">Facturacion</th>
+								<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"></th>
+								<th sec:authorize="hasRole('ROLE_ADMIN')"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="usuario: ${usuario}">
+								<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+									class="btn btn-primary btn-xs"
+									th:href="@{/user/verusuario/} + ${usuario.id}"
+									th:text="${usuario.id}"></a></td>
+								<td th:text="${usuario.nombre}"></td>
+								<td th:text="${usuario.apellidos}"></td>
+								<td th:text="${usuario.correo}"></td>
+
+
+								<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"><a
+									class="btn btn-danger btn-xs"
+									th:href="@{/user/desact/} + ${usuario.id}"><i
+										class="fas fa-ban"></i></a></td>
+								<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"><a
+									class="btn btn-primary btn-xs"
+									th:href="@{/user/activar/} + ${usuario.id}"><i
+										class="fas fa-user-check"></i></a></td>
+								<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+									class="btn btn-dark btn-xs centerbtn"
+									th:href="@{/user/admin/} + ${usuario.id}"><i
+										class="fab fa-dev"></i></a></td>
+								<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"><a
+									class="btn btn-info btn-xs centerbtn"
+									th:href="@{/user/adminJ/} + ${usuario.id}"><i
+										class="fas fa-crown"></i></a></td>
+								<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"><a
+									class="btn btn-secondary btn-xs centerbtn"
+									th:href="@{/user/adminINV/} + ${usuario.id}"><i
+										class="fas fa-people-carry"></i></a></td>
+								<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"><a
+									class="btn btn-warning btn-xs centerbtn"
+									th:href="@{/user/adminS/} + ${usuario.id}"><i
+										class="far fa-handshake"></i></a></td>
+								<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"><a
+									class="btn btn-success btn-xs centerbtn"
+									th:href="@{/user/adminF/} + ${usuario.id}"><i
+										class="fas fa-receipt"></i></a></td>
+								<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"><a
+									class="btn btn-primary btn-xs"
+									th:href="@{/user/form/} + ${usuario.id}"><i
+										class="fas fa-edit"></i></a></td>
+								<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+									class="btn btn-danger btn-xs"
+									th:href="@{/user/eliminar/} + ${usuario.id}"
+									onclick="return confirm('Estas seguro que quieres eliminar?');"><i
+										class="fas fa-trash-alt"></i></a></td>
+							</tr>
+						</tbody>
+
+					</table>
+				</div>
+				<nav th:replace="paginator-nav :: paginator"></nav>
+			</div>
+		</div>
+
+
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

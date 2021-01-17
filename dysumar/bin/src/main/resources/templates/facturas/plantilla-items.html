@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<table th:fragment="itemsFactura" class="d-none">
+
+		<tbody id="plantillaItemsFactura">
+			<tr id="row_{ID}">
+				<td class="d-none"><input value="{ID}" name="item_id[]" /></td>
+				<td>{NOMBRE}</td>
+				<td
+					th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">{COSTO}</td>
+				<!-- 				<td style="display:none;"><span id="descuento_{ID}">0</span></td> -->
+				<td style="visibility: hidden"><span id="descuento_{ID}">1.0</span></td>
+				<td><input type="number" min="0.000001" step="0.000001"
+					name="precio_id[]" id="precio_{ID}" class="form-control col-sm-10"
+					onkeyup="itemsHelper.calcularImporte2({ID},this.value,1,{COSTO});"
+					onchange="itemsHelper.calcularImporte2({ID},this.value,1,{COSTO});" /><a type="button" class="btn ivabtn" onclick="quitariva1({ID},{COSTO})" >- IVA</a></td>
+				<td class="columnmargen" style="display: none"><span
+					id="margen_{ID}"></span></td>
+				<!--Esto es con descuento igual no funciona aun no agarro el id bien el valor onchange="itemsHelper.calcularImporte2({ID},{PRECIO}, this.value,document.getElementById('descuento_{ID}').value);" -->
+
+				<td><input type="number" value="1" name="cantidad[]"
+					style="width: auto;" id="cantidad_{ID}"
+					class="form-control col-sm-4"
+					onchange="itemsHelper.multiplicarxCantidad({ID},this.value);" /></td>
+				<!-- 					esto es para llamar a buscar descuentos pero ya no se ocupara -->
+				<!-- 					onchange="itemsHelper.calcularImporte({ID}, {PRECIO}, this.value,1,2);" /></td> -->
+				<td><span id="total_importe_{ID}">0</span></td>
+				<td>{STOCK}</td>
+				<td><a href="#" class="btn btn-danger btn-xs"
+					onclick="itemsHelper.eliminarLineaFactura({ID});">x</a></td>
+			</tr>
+
+		</tbody>
+
+	</table>
+
+</body>
+</html>

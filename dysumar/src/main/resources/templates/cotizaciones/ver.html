@@ -2,6 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="layout/layout :: head"></head>
+<meta charset="UTF-8">
+
+
 
 <body>
 
@@ -44,6 +47,8 @@
 					th:src="@{'/uploads/' + ${producto.foto}}" th:alt="${producto.foto}" /> -->
 
 				<ul class="list-group">
+					<li id="idli" class="list-group-item active" th:text="${idfactura}"
+						style="visibility: hidden; font-size: 0.5px;"></li>
 					<li class="list-group-item active"
 						th:text="'Cotizacion con id :    '+${codigoco}"></li>
 					<li class="list-group-item"
@@ -68,10 +73,10 @@
 							<th>Proveedor</th>
 							<th>Costo</th>
 							<th>Margen</th>
-							<th>Precio</th>
+							<th>Precio(sin iva)</th>
 							<th>Descuento</th>
 							<th>Cantidad</th>
-							<th>Total</th>
+							<th>Total (sin iva)</th>
 
 							<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">ver</th> -->
 							<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th> -->
@@ -91,7 +96,13 @@
 							<td th:text="${carritos.productos.proveedor.nombre}"></td>
 							<td th:text="'$'+${carritos.productos.precio}"></td>
 							<td th:text="${carritos.margen}+'%'"></td>
-							<td th:text="'$'+${carritos.precio}"></td>
+							<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM')"><button
+									data-toggle="modal" th:value="${carritos.id}"
+									data-target="#exampleModal2" onclick="meteridIpro(this.value)"
+									th:text="'$'+${carritos.precio}"></button> <i
+								style="color: blue" class="fas fa-pen-alt"></i></td>
+							<td th:text="'$'+${carritos.precio}"
+								sec:authorize="!(hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM'))"></td>
 							<td th:if="${carritos.descuento<1}"
 								th:text="${carritos.descuento*100}+'%'"></td>
 							<td th:if="${carritos.descuento==1}" th:text="'NO'"></td>
@@ -108,7 +119,7 @@
 							<!-- 								class="btn btn-danger btn-xs" -->
 							<!-- 								th:href="@{'/factura/eliminar/' + ${codigofa}}" -->
 							<!-- 								th:text="'eliminar'" -->
-							<!-- 								onclick="return confirm('¿Estas seguro que desea eliminar la factura?');"></a></td> -->
+							<!-- 								onclick="return confirm('Â¿Estas seguro que desea eliminar la factura?');"></a></td> -->
 						</tr>
 					</tbody>
 
@@ -117,8 +128,62 @@
 			</div>
 		</div>
 
-	</div>
+		<div class="modal" tabindex="-1" role="dialog" id="exampleModal2">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">CAMBIAR COSTO DE LA VENTA</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form id="statuschangeform" th:action="@{/factura/statusChange/}"
+							class="form-control" method="post">
+							<input id="idinput" type="hidden" name="id" /> <input
+								id="codigoItemCarrito" type="hidden" name="codigoItemCarrito" />
+							<label>Ingresar el nuevo costo:</label> <input id="costoN"
+								type="text" maxlength="11" name="costoN" class="form-control" />
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primarm yhgy"
+							onclick="enviarform()">Enviar</button>
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Cerrar</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-	<footer th:replace="layout/layout :: footer"></footer>
+		<footer th:replace="layout/layout :: footer"></footer>
 </body>
+<input type="hidden" id="urlenviar" th:value="@{/factura/cambiarcosto/}" />
+<script type="text/javascript">
+		function cambiarAction(idf) {
+
+			$('#statuschangeform').attr('action',
+			$("#urlenviar").val());
+			
+			
+		}
+		
+		function enviarcodigo() {
+
+			location.href = $("#urlenviar").val() + $("#codigoinput").val();
+
+		}
+		function meteridIpro(idIpro){
+		console.log(idIpro);
+		$('#codigoItemCarrito').val(idIpro);
+		var elID = $("#idli").text();		
+		cambiarAction(elID);
+		$("#idinput").val(elID);
+		}
+		
+		function enviarform() {
+			$('#statuschangeform').submit();
+		}
+</script>
 </html>

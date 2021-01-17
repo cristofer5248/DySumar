@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<link rel="stylesheet" th:href="@{/css/login.css}" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<!-- <script src="https://kit.fontawesome.com/c0078485ae.js" -->
+<!-- 	crossorigin="anonymous"></script> -->
+<!-- <link rel="stylesheet" type"text/css" href="mian.css"> -->
+<meta charset=utf8></meta>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<img th:src="@{/images/wave-01.png}" alt="" class="wave">
+	<div class="container">
+		<div class="img">
+			<img th:src="@{/images/phone2.png}" alt="">
+		</div>
+		<div class="login-container">
+			<form class="form-login" th:action="@{/login}" method="post">
+				<img class="avatar" th:src="@{/images/profile.png}" alt="">
+				<h2>BIENVENIDO</h2>
+				<div class="input-div one">
+					<div class="i">
+						<i class="fas fa-user"> </i>
+					</div>
+					<div>
+						<h5>Usuario</h5>
+						<input class="input" type="text" name="username"
+							onclick="cleanh51();">
+					</div>
+				</div>
+				<div class="input-div pass">
+					<div class="i">
+						<i class="fas fa-lock"></i>
+					</div>
+					<div class="div">
+						<h5>Contraseña</h5>
+						<input class="input" type="password" name="password"
+							onclick="cleanh5();" onkeypress="cleanh5();">
+					</div>
+				</div>
+				<input type="submit" class="btnL" value="Iniciar"> <a
+					onclick="alert('Puede pedir cambio de contraseña al administrador o Jefe/a')">¿Olvidaste
+					tu contraseña?</a><a th:href="@{/notificaciones/}"
+					style="color: blue; font-size: 20px;">Ver movimientos</a> <input
+					type="hidden" th:name="${_csrf.parameterName}"
+					th:value="${_csrf.token}" />
+			</form>
+		</div>
+	</div>
+
+
+</body>
+<!-- partial -->
+<script th:src="@{/js/login.js}"></script>
+
+
+
+</html>

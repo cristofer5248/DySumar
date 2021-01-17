@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<script type="text/javascript" th:fragment="javascript">
+		$(document).ready(function() {
+var urlAjaxcliente = $("#urlAjaxcliente").val();
+
+// 			$("#cargar_cliente").autocomplete({
+
+// 				source : function(request, response) {
+// // 					var provid = $("#cargar_proveedor").val();
+// 					$.ajax({
+// 						url : urlAjaxcliente + request.term,
+// 						dataType : "json",
+// 						data : {
+// 							term : request.term
+							
+// 						},
+// 						success : function(data) {
+							
+// 							response($.map(data, function(item) {
+// 								return {
+// 									value : item.id,
+// 									label : item.codigo+"-" +item.nombre +" - "+item.apellido
+									
+									
+// 								};
+									
+// 							}));
+// 						},
+// 					});
+// 				},
+				$("#misclientes").change(function () { 
+// 				select : function(event, ui) {
+// 					$("#cargar_cliente").val(ui.item.value);
+					$("#cargar_direccion").removeAttr('disabled');
+					var urlAjaxdirecciones = $("#urlAjaxdirecciones").val();
+					var idcliente = document.getElementById("misclientes").value
+					let dropdown = $('#cargar_direccion')
+					dropdown.empty();
+					dropdown.append('<option>Selecciona</option>');
+					dropdown.prop('selectedIndex',1);
+					const url = urlAjaxdirecciones+idcliente;
+
+					//populate dropdown list wujuu
+					$.getJSON(url,function(data){
+						$.each(data,function(key,entry){
+							dropdown.append($('<option selected></option>').attr('value',entry.id).text(entry.direcciones.nombre));															
+						})
+					});
+});
+					
+					
+// 				}
+// 		});			//aqui	
+			$("#cargar_cliente").change(function(){
+	 			$("#cargar_direccion").removeAttr('disabled');
+	 			return;
+	 		});	
+			
+	});
+
+
+			
+		
+		
+	</script>
+</body>
+</html>

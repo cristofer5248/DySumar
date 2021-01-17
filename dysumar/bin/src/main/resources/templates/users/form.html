@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-dark text-white">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+
+				<div th:object="${usuario}" th:remove="tag">
+					<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger"
+						role="alert">
+						<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+					</ul>
+				</div>
+
+				<form th:action="@{/user/save}" th:object="${usuario}" method="post"
+					enctype="multipart/form-data">
+					<div class="form-group row">
+						<label for="username" class="col-sm-2 col-form-label">username</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{username}" class="form-control"
+								id="username"
+								placeholder="Se creativo, con este usuario se podra entrar al sistema"
+								required="required" th:errorclass="'form-control alert-danger'" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{nombre}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="apellidos" class="col-sm-2 col-form-label">Apellidos</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{apellidos}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('apellidos')}"
+								th:errors="*{apellidos}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="email" class="col-sm-2 col-form-label">Email</label>
+						<div class="col-sm-6">
+							<input type="email" th:field="*{correo}" class="form-control"
+								placeholder="correo@dominio.com" required="required"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('correo')}" th:errors="*{email}"></small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="email" class="col-sm-2 col-form-label">Password</label>
+						<div class="col-sm-6">
+							<input type="password" th:field="*{password}"
+								placeholder="Ejemplo: YOAMODYSUMAR" class="form-control"
+								required="required" th:errorclass="'form-control alert-danger'" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="telefono" class="col-sm-2 col-form-label">Telefono</label>
+						<div class="col-sm-6">
+							<input type="number" th:field="*{telefono}" class="form-control"
+								id="phone" placeholder="8 digitos sin guion"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></small>
+						</div>
+					</div>
+					<!-- 					<div class="form-group row"> -->
+					<!-- 						<label for="roles" class="col-sm-2 col-form-label">Role</label> -->
+					<!-- 						<div class="col-sm-6"> -->
+					<!-- 							<input type="text" th:field="*{roles}" class="form-control" -->
+					<!-- 								th:errorclass="'form-control alert-danger'" /> -->
+					<!-- 						</div> -->
+					<!-- 					</div> -->
+
+
+					<div class="form-group row">
+						<div class="col-sm-6">
+							<input type="submit" th:value="${titulo}"
+								class="btn btn-secondary" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	<script>
+		var element = document.getElementById('phone');
+		var maskOptions = {
+			mask : '00000000'
+		};
+		var mask = IMask(element, maskOptions);
+	</script>
+	<script th:inline="javascript">
+	var edituser = [[${edituser}]];
+	
+	/*<![CDATA[*/
+	if(edituser==0){
+		$('#username').attr('readonly', true);
+	}else{
+		$('#username').attr('readonly', false);
+	}
+	/*]]>*/
+	</script>
+</body>
+</html>

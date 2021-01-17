@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="layout/layout :: head"></head>
+<link rel='stylesheet prefetch'
+	href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+<link rel='stylesheet prefetch'
+	href='https://fonts.googleapis.com/css?family=Roboto:100,300,400'>
+
+<!-- <link rel="stylesheet" th:href="@{/css/deleteanimated_js.css}"> -->
+<link rel="stylesheet" th:href="@{/css/searchbar.css}" />
+<meta charset="UTF-8" />
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<label class="h2" th:text="${titulo}"></label>
+			<div class="card-header"></div>
+			<div class="card-body">
+
+
+				<div class="card-title">
+					<a class="btn btn-primary btn-xs" style="color: white"
+						th:if="${enablebtnall}" th:href="@{/producto/listar}">Volver </a>
+
+					<a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"
+						th:href="@{/producto/nuevo}" class="btn btn-primary btn-xs">Crear
+						Producto</a> <a sec:authorize="hasRole('ROLE_SELLER')"
+						th:href="@{/producto/nuevoS}" class="btn btn-primary btn-xs">Crear
+						solicitud</a> <a class="btn btn-success btn-xs"
+						th:if="${!enablebtnall}"
+						th:href="@{'/producto/listar'+ ${xlsxpath}(format=xlsx)}">Una
+						hoja <i class="fas fa-file-excel"></i>
+					</a> <a class="btn btn-success btn-xs" th:if="${enableallsearch}"
+						th:href="@{'/'+${pathall}(format=xlsx)}">TODOS EN <i
+						class="fas fa-file-excel"></i></a> <a class="btn btn-warning btn-xs"
+						style="color: white"
+						onclick="return confirm('¿Esta seguro? Mostrar muchos datos podria tardar un poco y alentar el servidor');"
+						th:if="${!enablebtnall}" th:href="@{/producto/listar/all}"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV', 'ROLE_JEFEADM')">⚠
+						Ver todos ⚠</a>
+
+					<form class="searchbox" id="formsearch" action="">
+						<input type="search"
+							placeholder="Introducir parametro de busqueda......"
+							class="searchbox-input" onkeyup="buttonUp();" id="btn-search"
+							required> <select class="custom-select mr-sm-2"
+							id="opcSearch" style="margin-left: 10px; height: 3.3em;">
+							<option value="nombre">Nombre/Marca</option>
+							<option value="codigo">Codigo</option>
+							<option value="proveedor">Proveedor</option>
+							<option value="marca">Marca</option>
+							<option value="categoria">Categoria</option>
+							<option value="bodega">Bodega</option>
+						</select> <input type="button" id="vamonos" class="searchbox-submit"
+							value="GO"> <span class="searchbox-icon">Buscar</span>
+					</form>
+				</div>
+				<div class="table-responsive">
+					<table class="table table-striped table-bordered table-sm"
+						id="example">
+						<thead class="thead-inverse">
+							<tr>
+								<th
+									sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')">id</th>
+								<th>Codigo</th>
+								<th>Nombre</th>
+								<th>Costo</th>
+								<th>Marca</th>
+								<th>Ubicacion</th>
+								<th>Categoria</th>
+								<th id="thproveedor">Proveedor</th>
+								<th>Unidad</th>
+								<th>Stock</th>
+								<th
+									sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')">OP</th>
+								<!--descuentos es arriba -->
+								<th
+									sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')">OP</th>
+								<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')">OP</th>
+								<th>OP</th>
+							</tr>
+						</thead>
+						<tbody id="trtable">
+							<div>
+								<tr th:each="producto: ${productos}"
+									th:style="${producto.asegurar}==true? 'color: green' : 'color: black'">
+									<td
+										sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')"><a
+										class="btn btn-primary btn-xs"
+										th:href="@{/producto/ver/} + ${producto.id}"
+										th:text="${producto.id}"></a></td>
+									<td class="tddata" th:text="${producto.codigo}"></td>
+									<td class="tddata" th:text="${producto.nombrep}"></td>
+									<td class="tddata" th:text="'$'+${producto.precio}"></td>
+									<td class="tddata" th:text="${producto.marca.nombrem}"></td>
+									<td class="tddata" th:text="${producto.bodega}"></td>
+									<td class="tddata" th:text="${producto.categoria.nombre}"></td>
+									<td class="tdproveedor" th:text="${producto.proveedor.nombre}"></td>
+									<td th:text="${producto.presentacion.detalle}"></td>
+									<td class="tddata" th:text="${producto.stock}"></td>
+									<td th:if="!${producto.status}"><a
+										sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"
+										th:href="@{/producto/status/} + ${producto.id}">
+											<div class='icon' style="background-color: green">
+												<i class='fas fa-check' onmouseover="quitarcolumns();"></i>
+											</div>
+											<div class='text check'
+												style="position: absolute; z-index: 5;">
+												<span>ACEPTAR</span>
+											</div>
+									</a></td>
+									<td th:if="${producto.status}"
+										sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"><a
+										th:href="@{'/producto/asegurar/' + ${producto.id}}">
+											<div class='icon check'>
+												<i class='fas fa-tasks' onmouseover="quitarcolumns();"
+													style="position: absolute; z-index: 6;"></i> <span></span>
+											</div>
+
+									</a></td>
+									<td
+										sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')"><a
+										th:href="@{/producto/editar/} + ${producto.id}">
+											<div class='icon'>
+												<i class='fa fa-pencil' onmouseover="quitarcolumns();"></i>
+											</div>
+											<div class='text update'
+												style="position: absolute; z-index: 5;">
+												<span>Actualizar</span>
+											</div>
+									</a></td>
+
+									<td
+										sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')"><a
+										th:href="@{/producto/eliminar/} + ${producto.id}"
+										onclick="return confirm('¿Esta seguro?');">
+											<div class='icon'>
+												<i class='fa fa-trash' onmouseover="quitarcolumns();"></i>
+											</div>
+											<div class="text delete" style="position: absolute;">
+												<span>Eliminar</span>
+											</div>
+									</a></td>
+									<td><div class='icon'>
+											<button onmouseover="quitarcolumns();"
+												th:value="${producto.id}" class="btn btn-warning"
+												data-target="#historialmodal" data-toggle="modal"
+												onclick="modalHistorialdePrecios(this.value);">
+												<i class="fas fa-search-dollar"></i>
+											</button>
+										</div></td>
+
+
+								</tr>
+						</tbody>
+
+					</table>
+				</div>
+				<!-- Modal -->
+				<div class="modal fade" id="historialmodal" tabindex="-1"
+					role="dialog" aria-labelledby="exampleModalCenterTitle"
+					aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLongTitle">Este es
+									un listado de los precios hechos en facturas recientemente</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body resposive">
+								<table class="table table-striped table-bordered" id="tbdc">
+									<thead>
+										<tr>
+											<th width="100">ID DE FACTURA</th>
+											<th width="100">ID DE COTIZACION</th>
+											<th width="100">PRECIO</th>
+											<th width="100">FECHA</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr id="test">
+											<td></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									data-dismiss="modal">Cerrar</button>
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<nav th:if="${!nopage}" th:replace="paginator-nav :: paginator"></nav>
+			</div>
+		</div>
+
+
+	</div>
+	<input type="hidden" id="urlenviar" th:value="@{/producto/listar/}" />
+	<footer th:replace="layout/layout :: footer"></footer>
+	<script th:replace="productos/js/historialdeprecios :: javascript"></script>
+	<!-- 	aqui supuestamente son urls -->
+	<input type="hidden" id="urlAjaxprecios"
+		th:value="@{/producto/historialDePrecios/}" />
+	<input type="hidden" id="urlAjaxFactura" th:value="@{/factura/ver/}" />
+	<input type="hidden" id="urlAjaxCoti" th:value="@{/cotizacion/ver/}" />
+	<!-- 	termina -->
+	<script th:src="@{/js/searchbar.js}"></script>
+	<script th:inline="javascript">
+	var x = [[${error}]];
+	var y = [[${success}]];
+	var contador=0;
+	
+	if(x!=null){
+	alertify.error(x);
+	}
+	if(y!=null){ alertify.alert('Exito!', y, function(){ alertify.success('Ok'); });}
+	
+	function quitarcolumns(){
+		
+		if(contador==0){
+		$('table tr').find('td:eq(6),th:eq(6)').remove();
+		$('table tr').find('td:eq(5),th:eq(5)').remove();
+		contador++;
+		}
+		
+	}
+	$(document).ready(function() {
+	    $('#example').DataTable( {
+	        "paging":   false,
+	        
+	        "searching": false,
+	        "info":     false
+	    } );
+	} );
+	</script>
+
+</body>
+</html>

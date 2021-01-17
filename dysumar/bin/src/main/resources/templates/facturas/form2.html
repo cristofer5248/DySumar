@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<meta charset="utf-8">
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-dark text-white">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+
+				<div th:object="${carritoitems}" th:remove="tag">
+					<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger"
+						role="alert">
+						<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+					</ul>
+				</div>
+
+				<form th:action="@{/factura/save}" method="post"
+					enctype="multipart/form-data">
+
+					<!-- 					<div class="form-group row"> -->
+					<!-- 						<label for="fecha" class="col-sm-2 col-form-label">Fecha</label> -->
+					<!-- 						<div class="col-sm-6"> -->
+					<!-- 							<input type="text" id="mydate" name="fecha" class="form-control"> -->
+					<!-- 						</div> -->
+					<!-- 					</div>					 -->
+					<div id="trato">
+						<h4 id="tratoh4">Estado: Con normalidad</h4>
+						<p style="visibility: hidden;" id="tratop">
+							<i class="far fa-handshake fa-3x"></i>
+						</p>
+					</div>
+					<div></div>
+					<div class="form-group row">
+						<label for="cotizacion" th:text="'Cotizacion'"
+							class="col-sm-2 col-form-label"></label>
+						<div class="col-sm-4">
+							<label class="switch"> <input type="checkbox"
+								onchange="checkopc();" id="opc" /> <span class="slider round"></span>
+							</label><input type="number" name="tipoC" id="tipoC"
+								style="visibility: hidden" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="IVA" th:text="'IVA'" class="col-sm-2 col-form-label"></label>
+						<div class="col-sm-4">
+							<label class="switch"> <input type="checkbox"
+								onclick="checkiva();" id="iva" /> <span class="slider round"></span>
+							</label><input type="number" name="ivaC" id="ivaC" th:value="0"
+								style="visibility: hidden"><label id="mnsiva" style="visibility:hidden" >Esta es tan solo una visualizacion de la aplicacion del iva a los productos</label>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="cargar_producto" class="col-sm-2 col-form-label"
+							th:text="'Busqueda de Productos'"></label>
+						<div class="col-sm-6">
+							<input type="text" name="cargar_producto" id="cargar_producto"
+								class="form-control" />
+						</div>
+					</div>
+					<table th:replace="facturas/plantilla-items.html ::itemsFactura"></table>
+					<table id="cargarItemProductos"
+						class="table" style="width: 100%">
+						<thead>
+							<tr>
+								<th>Nombre</th>
+								<th
+									th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}">COSTO</th>
+								<th style="visibility: hidden">Descuento</th>
+								<th>PRECIO</th>
+								<th id="columnmargen12" style="display: none;">%MARGEN</th>
+								<!-- 								<th style="display: none;">Descuento</th> -->
+								<th>Cantidad</th>
+								<th>Total</th>
+								<th>Stock</th>		
+								<th>Eliminar</th>
+							</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+					<h5>
+						$<span class="badge badge-secondary" id="gran_total"></span>
+					</h5>
+					<div class="form-group row">
+						<div class="col-sm-6">
+							<input type="submit" th:value="${titulo}" id="submit" disabled="disabled"
+								class="btn btn-secondary"
+								onclick="return confirm('¿Esta seguro? Recuerde que todos los precios deben estar sin IVA, internamente seran operados')" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	<script>
+		$('#mydate').datepicker({
+			format : "dd-mm-yyyy"
+		});
+	</script>
+	<input type="hidden" id="urlAjaxpro"
+		th:value="@{/factura/cargar_producto/}" />
+	<input type="hidden" id="urlAjaxdes"
+		th:value="@{/descuento/cargar_descuento/}" />
+	<script th:replace="facturas/js/autocomplete :: javascript"></script>
+
+	<script>
+		$('input[name="margen_id[]"]').prop("disabled", false);
+		$('.columnmargen').css("display", "block");
+		$('#columnmargen12').css("display", "block");
+
+		$('#tipoC').val(0);
+		function checkopc() {
+			if ($('#opc').is(':checked')) {
+				$('#tipoC').val(1);
+			}
+
+			else {
+				$('#tipoC').val(0);
+			}
+		}
+		function checkiva() {
+
+			if ($('#iva').is(':checked')) {
+				$('#ivaC').val(1);
+				var total_temp = 0;
+				$('span[id^="total_importe_"]').each(function() {
+					var total_plain = $(this).html();
+					$(this).html((total_plain * 1.13).toFixed(2));
+					total_temp += parseFloat($(this).html());
+				});
+				$("#gran_total").html(total_temp.toFixed(2));
+				$("#mnsiva").css("visibility","visible");
+				$("#mnsiva").css("color","white");
+			} else {
+				$('#ivaC').val(0);
+				var total_temp = 0;
+				$('span[id^="total_importe_"]').each(function() {
+					var total_plain = $(this).html();
+					$(this).html((total_plain / 1.13).toFixed(2));
+					total_temp += parseFloat($(this).html());
+				});
+				$("#gran_total").html(total_temp.toFixed(2));
+				$("#mnsiva").css("visibility","hidden");
+				$("#mnsiva").css("color","white");
+			}
+		}
+	</script>
+</body>
+</html>

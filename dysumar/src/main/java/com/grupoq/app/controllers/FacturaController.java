@@ -318,6 +318,7 @@ public class FacturaController {
 		String mensajeFlash = (facturacion.getId() != null) ? "factura editada con éxito!"
 				: "Facturacion creada con éxito!";
 		double totalParaFactura = 0;
+		double totalsiniva = 0;
 		for (CarritoItems pro : cotizaciontemporal.getCarrito()) {
 			Producto productogetStock = productoservice.findOne(pro.getProductos().getId());
 			System.out.print("COMPARANDO LA CANTIDA PEDIDA: " + pro.getCantidad() + "\n LA CANTIDAD QUE HAY: "
@@ -363,9 +364,14 @@ public class FacturaController {
 			// poniendo total en factura entity
 
 			totalParaFactura += (pro.getPrecio() * pro.getCantidad() * pro.getDescuento());
+			totalsiniva += pro.getPrecio() * pro.getCantidad();
+
 			System.out.print("\n" + totalParaFactura + "\n");
 		}
-		facturacion.setTotaRegistrado(totalParaFactura);
+
+		facturacion.setTotaRegistrado(totalParaFactura > 113 && facturacion.getCliente().getCliente().getAgente()
+				? (totalParaFactura - (totalsiniva * 0.01))
+				: totalParaFactura);
 		// duplicaremos la cotizacin para despues no haber errores
 		boolean cotiRepeated = facturaservice.cotizacionRepetida(facturacion.getCotizacion().getId()) > 0 ? true
 				: false;
@@ -499,7 +505,7 @@ public class FacturaController {
 			// margen default
 			// evaluar si era un cotizacin evaluada
 			// aqui pondremos si es menor a 15 entoncs sera avaluada
-			double cSobrep = (producto.getPrecio() / precio[i]) * -1;
+			double cSobrep = (producto.getPrecio() / (precio[i]) * 1.13) * -1;
 			double margenGenerado = (cSobrep * 100) + 100;
 
 			if (margenGenerado <= 15) {
@@ -568,36 +574,69 @@ public class FacturaController {
 		model.put("codigofa", id);
 		model.put("titulo", "Detalle de factura # : " + id);
 		model.put("carritoid", carritoid);
+
 		return "/facturas/ver";
 	}
 
 	// para ver el detalle de la FACTURA
-	@Secured({ "ROLE_ADMIN", "ROLE_SELLER", "ROLE_JEFEADM", "ROLE_FACT" })
-	@GetMapping(value = "/editarcarrito/{id}")
-	public String editarcarrito(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash,
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_FACT" })
+	@RequestMapping(value = "/cambiarcosto/", method = RequestMethod.POST)
+	public String editarcarrito(@RequestParam(name = "id") Long id,
+			@RequestParam(name = "codigoItemCarrito") Long codigoItemCarrito,
+			@RequestParam(name = "costoN") double costoN, Map<String, Object> model, RedirectAttributes flash,
 			Authentication auth, HttpServletRequest request) {
 
-		Facturacion facturacion = facturaservice.fetchByIdWithClienteWithCarritoItemsWithProducto(id);
-		if (facturacion == null) {
-			flash.addFlashAttribute("error", "El ingreso con ese codigo no existe en la base de datos");
-			return "redirect:/facturacion/listar";
-		}
-		System.out.print("\n usuario1 " + auth.getName());
-		System.out.print("\n usuario2 " + facturacion.getaCuentade().getUsername());
+		System.out.print("\n VEAMOS EL codigoItemCarrito :" + codigoItemCarrito + " costo " + costoN + " el id: " + id);
+		String pathredirect = "/factura/listar/";
+		boolean cambiarcosto = false;
+		double totalnuevo = 0.0;
+		if (id > 0 && costoN > 0) {
+			try {
 
-		if (!facturacion.getaCuentade().getUsername().equals(auth.getName()) && !(request.isUserInRole("ROLE_ADMIN")
-				|| request.isUserInRole("ROLE_JEFEADM") || request.isUserInRole("ROLE_FACT"))) {
-			flash.addFlashAttribute("error", "La factura que intentas ver no te corresponde porque no es tuya.");
-			return "redirect:/facturacion/listar";
-		}
+				Facturacion factura = facturaservice.findBy(id);
 
-		String carritoid = facturacion.getCotizacion().getId().toString();		
-		model.put("facturaciones", facturacion.getCotizacion().getCarrito());
-//			model.put("proveedor", facturacion.get(0).getProducto().getProveedor().getNombre());
-//			model.put("fecha", facturacion.get(0).getFecha().toString());		
-		model.put("titulo", "Carrito de factura # : " + id);
-		model.put("carritoid", carritoid);
-		return "/facturas/carritos";
+				for (CarritoItems carrito : factura.getCotizacion().getCarrito()) {
+					if (carrito.getId().equals(codigoItemCarrito)) {
+
+						flash.addFlashAttribute("success", "Operacion exitosa!");
+						nuevaNotificacion("fas fa-file-alt", "El costo de un producto en una factura ha sido cambiado!",
+								"/factura/ver/" + factura.getId(), "gray");
+						pathredirect = "/cotizacion/ver/" + factura.getCotizacion().getId().toString();
+						cambiarcosto = true;
+						double preciosin = (costoN * carrito.getCantidad());
+						double descuento = carrito.getDescuento() / 100;
+						// el descuento es sin iva?
+//						descuento = carrito.getPrecio()*descuento;
+						totalnuevo += (preciosin * 1.13);
+						double margennuevo = ((carrito.getProductos().getPrecio() / (costoN * 1.13)) * -1 * 100) + 100;
+						carrito.setMargen(margennuevo);
+						carrito.setPrecio(costoN);
+						carritoitemsservice.save(carrito);
+					} else {
+						totalnuevo += carrito.getTotal();
+						flash.addFlashAttribute("error", "Error cambiando el costo!");
+					}
+
+				}
+				if (cambiarcosto) {
+					double totalnuevosin = totalnuevo/1.13; 
+					totalnuevo = (totalnuevosin > 113.00 & factura.getCliente().getCliente().getAgente())
+							? totalnuevo - (totalnuevosin * 0.01)
+							: totalnuevo;
+					factura.setTotaRegistrado(totalnuevo);
+					facturaservice.save(factura);
+				}
+
+			} catch (Exception e) {
+				flash.addFlashAttribute("error", "Error cambiando el costo!");
+				return "redirect:" + pathredirect;
+			}
+
+		} else {
+			flash.addFlashAttribute("error", "Error cambiando el costo!");
+			return "redirect:" + pathredirect;
+		}
+		return "redirect:" + pathredirect;
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })

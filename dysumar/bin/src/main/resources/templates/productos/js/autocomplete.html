@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<script type="text/javascript" th:fragment="javascript">
+		$(document).ready(function() {
+
+// 			$("#cargar_categoria").autocomplete({
+
+// 				source : function(request, response) {
+// 					$.ajax({
+// 						url : "/categoria/cargar_categoria/" + request.term,
+// 						dataType : "json",
+// 						data : {
+// 							term : request.term
+// 						},
+// 						success : function(data) {
+// 							response($.map(data, function(item) {
+// 								return {
+// 									value : item.id,
+// 									label : item.modelo,
+// 									precio : item.placas,
+// 								};
+// 							}));
+// 						},
+// 					});
+// 				},
+// 				select : function(event, ui) {
+// 					$("#cargar_vehiculos").val(ui.item.value)
+					
+
+// 					return false;
+// 				}
+// 			});
+// 			$("#cargar_delegado").autocomplete({
+
+// 				source : function(request, response) {
+// 					$.ajax({
+// 						url : "/taller/cargar_delegado/" + request.term,
+// 						dataType : "json",
+// 						data : {
+// 							term : request.term
+// 						},
+// 						success : function(data) {
+// 							response($.map(data, function(item) {
+// 								return {
+// 									value : item.id,
+// 									label : item.nombre,
+// 									precio : item.username,
+// 								};
+// 							}));
+// 						},
+// 					});
+// 				},
+// 				select : function(event, ui) {
+// 					$("#cargar_delegado").val(ui.item.value)
+
+// 					return false;
+// 				}
+// 			});
+
+			
+let dropdown = $('#cargar_categoria')
+dropdown.empty();
+dropdown.append('<option>Selecciona</option>');
+dropdown.prop('selectedIndex',1);
+const url = $("#urlAjaxcategoria").val();
+
+//populate dropdown list wujuu
+$.getJSON(url,function(data){
+	$.each(data,function(key,entry){
+		
+		if(id1==entry.id){
+		dropdown.append($('<option selected></option>').attr('value',entry.id).text(entry.nombre));		
+	}else{
+			dropdown.append($('<option></option>').attr('value',entry.id).text(entry.nombre));
+		}
+		
+	})
+});
+// 	document.getElementById("cargar_categoria").value=2;
+
+let marca = $('#cargar_marca')
+marca.empty();
+marca.append('<option selected="true" disabled>Selecciona</option>');
+marca.prop('selectedIndex',0);
+const url2 = $("#urlAjaxmarca").val();
+//populate dropdown list wujuu
+$.getJSON(url2,function(data){
+	$.each(data,function(key,entry){
+		if(id2==entry.idm){
+		marca.append($('<option selected></option>').attr('value',entry.idm).text(entry.nombrem));
+		}
+		else{
+			marca.append($('<option></option>').attr('value',entry.idm).text(entry.nombrem));	
+		}
+	})
+});
+
+let margen = $('#cargar_margen')
+margen.empty();
+margen.append('<option selected="true" disabled>Selecciona</option>');
+margen.prop('selectedIndex',0);
+const url3 = $("#urlAjaxmargen").val();
+//populate dropdown list wujuu
+$.getJSON(url3,function(data){
+	$.each(data,function(key,entry){
+		if(id3==entry.id){
+		margen.append($('<option selected></option>').attr('value',entry.id).text(entry.porcentaje+"%"));
+		}else{
+			margen.append($('<option></option>').attr('value',entry.id).text(entry.porcentaje+"%"));	
+		}
+	})
+});
+
+let presentacion = $('#cargar_presentacion')
+presentacion.empty();
+presentacion.append('<option selected="true" disabled>Selecciona</option>');
+presentacion.prop('selectedIndex',0);
+const url4 = $("#urlAjaxpresentacion").val();
+//populate dropdown list wujuu
+$.getJSON(url4,function(data){
+	$.each(data,function(key,entry){		
+		if(id4==entry.id){
+		presentacion.append($('<option selected></option>').attr('value',entry.id).text(entry.unidad+" "+entry.detalle));
+		}else{
+		presentacion.append($('<option></option>').attr('value',entry.id).text(entry.unidad+" "+entry.detalle));
+		}
+	})
+});
+
+let proveedor = $('#cargar_proveedor')
+proveedor.empty();
+proveedor.append('<option selected="true" disabled>Selecciona</option>');
+proveedor.prop('selectedIndex',0);
+const url5 = $("#urlAjaxproveedor").val();
+//populate dropdown list wujuu
+$.getJSON(url5,function(data){
+	$.each(data,function(key,entry){
+		
+		if(id5==entry.id){
+		proveedor.append($('<option selected></option>').attr('value',entry.id).text(entry.nombre));
+		}else{
+		proveedor.append($('<option></option>').attr('value',entry.id).text(entry.nombre));	
+		}
+	})
+});
+
+// SUBMIT FORM
+$("#formPresentacion").submit(function(event) {
+	
+	// Prevent the form from submitting via the browser.
+	event.preventDefault();
+	ajaxPost();
+});
+
+function ajaxPost() {
+	var data = $("#nombrePresentacion").val();
+	$.ajax({
+         type: "get",
+         dataType : "json",
+         url: $("#urlPresentacion").val()+$("#nombrePresentacion").val(),
+         timeout: 600000,
+         
+         success: function (response) {
+        	 console.log(data);
+             $("#btnPresentacion").prop("disabled", true);
+             $('#modalpresentacion').modal('toggle');
+             alertify.alert('Exito!', 'Nuevo presentacion registrada , ahora puedes buscarlo en el formulario!', function(){ alertify.success('Ok'); });
+             $('#cargar_presentacion').val(response);
+             $("#cargar_presentacion").prop("readonly", true);
+             // ...
+         },
+         error: function () {
+        	 alertify.alert('Error!', 'No se pudo guardar, contactar a soporte tecnico.', function(){ alertify.success('Ok'); });
+             $("#btnPresentacion").prop("disabled", false);
+             // ...
+         }
+});
+
+}
+//busqueda
+var urlAjaxpresentacion = $("#urlAjaxpresentaciones").val();
+
+	$("#cargar_presentacion").autocomplete({
+
+		source : function(request, response) {					
+			$.ajax({
+				url : urlAjaxpresentacion + request.term,
+				dataType : "json",
+				data : {
+					term : request.term
+					
+				},
+				success : function(data) {
+					
+					response($.map(data, function(item) {
+						return {
+							value : item.id,
+							label : item.detalle,
+						};
+							
+					}));
+				},
+			});
+		},
+		select : function(event, ui) {
+			$("#cargar_presentacion").val(ui.item.value)
+			
+
+			return false;
+		}
+	});
+
+
+
+					
+				
+
+
+		});
+		
+	</script>
+	<script type="text/javascript">
+	
+	</script>
+</body>
+</html>

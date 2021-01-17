@@ -1,0 +1,16 @@
+@charset "ISO-8859-1";
+
+.tAgo{
+	font-size:10px
+}
+
+.pTa{
+	margin:2px;
+	float:right;
+}
+#notiContent .dropdown-item{
+	padding: .00rem 1.4rem
+}
+.totalclass{
+	font-weight: bold;
+}

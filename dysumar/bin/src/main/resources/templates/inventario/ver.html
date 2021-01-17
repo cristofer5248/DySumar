@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head"></head>
+
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+
+				<h4 class="card-title">
+					<!-- 				<a th:ref="@{'/listar}" class="btn btn-light btn-xs" th:utext="#{text.global.volver}">&laquo; Volver></a> -->
+					<a class="btn btn-danger btn-xs float-right"
+						th:href="@{'/inventario/ver/' + ${codigopro}(format=pdf)}">PDF</a>
+					<a class="btn btn-success btn-xs float-right"
+						th:href="@{'/inventario/ver/' + ${codigopro}(format=xlsx)}">XLSX</a>
+
+					<!-- 					<a th:if="${#request.isUserInRole('SELLER')}" -->
+					<!-- 						class="btn btn-primary btn-xs" -->
+					<!-- 						th:href="@{'/factura/form/' + ${producto.id}}" -->
+					<!-- 						th:text="'Crear factura'"></a> -->
+					<!-- 						<a -->
+					<!-- 						sec:authorize="hasRole('ROLE_ADMIN')" -->
+					<!-- 						class="btn btn-primary btn-xs" -->
+					<!-- 						th:href="@{'/taller/form/' + ${producto.id}}" -->
+					<!-- 						th:text="'Nuevo requerimiento'"></a> -->
+					<a class="btn btn-primary btn-xs" th:href="@{/inventario/listar}"
+						th:text="'Volver'"></a>
+
+				</h4>
+
+				<!-- 				<img th:if="${#strings.length(producto.foto) > 0}"
+					class="img-thumbnail rounded float-left" style="max-width: 25%;"
+					th:src="@{'/uploads/' + ${producto.foto}}" th:alt="${producto.foto}" /> -->
+
+				<ul class="list-group">
+					<li class="list-group-item active" th:text="${codigopro}"></li>
+					<li class="list-group-item" th:text="'Proveedor:    '+${proveedor}"></li>
+					<li class="list-group-item" th:text="'Fecha:  '+${fecha}"></li>
+					<li class="list-group-item" th:text="'Comentario:  '+${comentario}"></li>
+				</ul>
+
+				<!-- <div th:if="${#lists.isEmpty(inventario)}"
+					class="alert alert-info my-4"
+					th:text="'No hay inventarios de este producto ' + ${producto.nombrep} + ' ' + ${producto.codigo}"></div> -->
+
+				<table class="table table-bordered table-striped my-4">
+					<thead class="thead-inverse">
+						<tr>
+							<th>ID de compra</th>
+							<th>Producto</th>
+							<th>Marca</th>
+							<th>cantidad</th>
+							<th>Presentacion</th>
+
+							<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">ver</th> -->
+							<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="movimiento: ${inventarios.inventario}">
+							<td><a
+								th:href="@{/producto/ver/} + ${movimiento.producto.id}"
+								class="btn btn-primary btn-xs"
+								th:text="${movimiento.producto.id}"></a></td>
+							<td th:text="${movimiento.producto.nombrep}"></td>
+							<td th:text="${movimiento.producto.marca.nombrem}"></td>
+							<td th:text="${movimiento.stock}"></td>
+							<td th:text="${movimiento.producto.presentacion.unidad + ' ' +movimiento.producto.presentacion.detalle}"></td>
+							
+							<!-- 							<td th:text="${inventario.cantidad}"></td> -->
+
+							<!-- 							<td th:text="${factura.cantidad * factura.servicios.precio}"></td> -->
+							<!-- 							<td sec:authorize="hasRole('ROLE_ADMIN')"><a -->
+							<!-- 								class="btn btn-primary btn-xs" -->
+							<!-- 								th:href="@{'/factura/ver/' + ${factura.id}}" th:text="'detalle'"></a></td> -->
+							<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+								class="btn btn-danger btn-xs"
+								th:href="@{'/inventario/eliminar/' + ${codigopro}}"
+								th:text="'eliminar'"
+								onclick="return confirm('¿Estas seguro que desea eliminar la factura?');"></a></td>
+						</tr>
+					</tbody>
+
+				</table>
+
+			</div>
+		</div>
+
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head"></head>
+
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+
+				<h4 class="card-title">
+					<!-- 				<a th:ref="@{'/listar}" class="btn btn-light btn-xs" th:utext="#{text.global.volver}">&laquo; Volver></a> -->
+					<a class="btn btn-danger btn-xs float-right"
+						th:href="@{'/producto/ver/' + ${producto.id}(format=pdf)}">PDF</a>
+					<a class="btn btn-success btn-xs float-right"
+						th:href="@{'/producto/ver/' + ${producto.id}(format=xlsx)}">XLSX</a>
+
+					<!-- 					<a th:if="${#request.isUserInRole('SELLER')}" -->
+					<!-- 						class="btn btn-primary btn-xs" -->
+					<!-- 						th:href="@{'/factura/form/' + ${producto.id}}" -->
+					<!-- 						th:text="'Crear factura'"></a> -->
+					<!-- 						<a -->
+					<!-- 						sec:authorize="hasRole('ROLE_ADMIN')" -->
+					<!-- 						class="btn btn-primary btn-xs" -->
+					<!-- 						th:href="@{'/taller/form/' + ${producto.id}}" -->
+					<!-- 						th:text="'Nuevo requerimiento'"></a> -->
+					<a class="btn btn-primary btn-xs" th:href="@{/producto/listar}"
+						th:text="'Volver'"></a> <a class="btn btn-warning btn-xs"
+						th:text="'Historial de precio'" data-target="#historialmodal"
+						data-toggle="modal"
+						onclick="modalHistorialdePrecios(document.getElementById('idp').textContent);"></a>
+					<label th:text='${idp}' id="idp" style="visibility: hidden"></label>
+
+
+				</h4>
+
+				<!-- 				<img th:if="${#strings.length(producto.foto) > 0}"
+					class="img-thumbnail rounded float-left" style="max-width: 25%;"
+					th:src="@{'/uploads/' + ${producto.foto}}" th:alt="${producto.foto}" /> -->
+
+				<ul class="list-group">
+					<li class="list-group-item active" th:text="${producto.nombrep}"></li>
+					<li class="list-group-item"
+						th:text="'Codigo:    '+${producto.codigo}"></li>
+					<li class="list-group-item"
+						th:text="'Ubicacion:    '+${producto.bodega}"></li>
+					<li class="list-group-item"
+						th:text="'Categoria:    '+${producto.categoria.nombre}"></li>
+					<li class="list-group-item"
+						th:text="'En stock:  ' +${producto.stock}"></li>
+					<li class="list-group-item"
+						th:text="'Proveedor:    '+${producto.proveedor.nombre}"></li>
+					<li class="list-group-item"
+						th:text="'Marca:    '+${producto.marca.nombrem}"></li>
+					<li class="list-group-item"
+						th:text="'Costo unitario:  $'+${producto.precio}"></li>
+					<li class="list-group-item"
+						th:text="'Margen:    '+${producto.margen}+'%'"></li>
+					<li class="list-group-item"
+						th:text="'Precio de venta:  $'+${precioventa}"></li>
+				</ul>
+
+				<div th:if="${#lists.isEmpty(producto.inventarios)}"
+					class="alert alert-info my-4"
+					th:text="'No hay inventarios de este producto ' + ${producto.nombrep} + ' ' + ${producto.codigo}"></div>
+
+				<table th:if="${not #lists.isEmpty(producto.inventarios)}"
+					class="table table-bordered table-striped my-4">
+					<thead class="thead-inverse">
+						<tr>
+							<th>ID</th>
+							<th>ID de compra</th>
+							<th>Ingreso</th>
+							<th>Fecha</th>
+
+							<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">ver</th> -->
+							<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="inventario: ${producto.inventarios}">
+							<td th:text="${inventario.id}"></td>
+							<td th:text="${inventario.codigoProveedor}"></td>
+							<td th:text="${inventario.stock}"></td>
+							<td th:text="${inventario.fecha}"></td>
+							<!-- 							<td th:text="${inventario.cantidad}"></td> -->
+
+							<!-- 							<td th:text="${factura.cantidad * factura.servicios.precio}"></td> -->
+							<!-- 							<td sec:authorize="hasRole('ROLE_ADMIN')"><a -->
+							<!-- 								class="btn btn-primary btn-xs" -->
+							<!-- 								th:href="@{'/factura/ver/' + ${factura.id}}" th:text="'detalle'"></a></td> -->
+							<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+								class="btn btn-danger btn-xs"
+								th:href="@{'/inventario/eliminar/' + ${producto.id}}"
+								th:text="'eliminar'"
+								onclick="return confirm('¿Estas seguro que desea eliminar la factura?');"></a></td>
+						</tr>
+					</tbody>
+
+				</table>
+
+			</div>
+		</div>
+		<!-- Modal -->
+		<div class="modal fade bd-example-modal-lg" id="historialmodal" tabindex="-1"
+			role="dialog" aria-labelledby="exampleModalCenterTitle"
+			aria-hidden="true">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLongTitle">Este es un
+							listado de los precios hechos en facturas recientemente</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body resposive">
+						<table class="table table-striped table-bordered" id="tbdc">
+							<thead>
+								<tr>
+									<th width="100">ID DE FACTURA</th>
+									<th width="100">ID DE COTIZACION</th>
+									<th width="100">PRECIO</th>									
+									<th width="100">FECHA</th>
+									<th width="100">CANTIDAD</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr id="test">
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Cerrar</button>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	<input type="hidden" id="urlAjaxprecios"
+		th:value="@{/producto/historialDePrecios/}" />
+	<input type="hidden" id="urlAjaxFactura" th:value="@{/factura/ver/}" />
+	<input type="hidden" id="urlAjaxCoti" th:value="@{/cotizacion/ver/}" />
+	<script th:replace="productos/js/historialdeprecios :: javascript"></script>
+</body>
+</html>

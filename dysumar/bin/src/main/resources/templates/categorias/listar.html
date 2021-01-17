@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="layout/layout :: head"></head>
+<link rel='stylesheet prefetch'
+	href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+<link rel='stylesheet prefetch'
+	href='https://fonts.googleapis.com/css?family=Roboto:100,300,400'>
+
+<!-- <link rel="stylesheet" href="css/deleteanimated_js.css"> -->
+<link rel="stylesheet" th:href="@{/css/searchbar.css}" />
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<label class="h2" th:text="${titulo}"></label>
+			<div class="card-header"></div>
+			<div class="card-body">
+
+				<div class="card-title">
+					<a sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"
+						th:href="@{/categoria/nuevo}" class="btn btn-primary btn-xs">Crear
+						Categoria</a>
+					<form id="formsearch" class="searchbox"
+						th:action="@{/categoria/listar/}">
+						<input type="search"
+							placeholder="Introducir un indicio del nombre de la categoria......"
+							class="searchbox-input" onkeyup="buttonUp();" id="btn-search"
+							required> <input type="button" id="vamonos"
+							class="searchbox-submit" value="GO"> <span
+							class="searchbox-icon">Buscar</span>
+					</form>
+				</div>
+				<table id="example" class="table table-striped table-bordered">
+					<thead class="thead-inverse">
+						<tr>
+							<th>id</th>
+							<th>Nombre</th>
+
+							<!-- <th
+								th:if="${#request.isUserInRole('ADMIN')} OR ${#request.isUserInRole('SELLER')}"></th> -->
+							<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')">Editar</th>
+							<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')">Eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="categoria: ${categorias}">
+							<td th:text="${categoria.id}"></td>
+							<td th:text="${categoria.nombre}"></td>
+							<td class="centerMe"
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"><a
+								th:href="@{'/categoria/editar/' + ${categoria.id}}">
+									<div class='icon'>
+										<i class='fa fa-pencil'></i>
+									</div>
+									<div class='text update'>
+										<span>Editar</span>
+									</div>
+							</a></td>
+
+							<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV')"><a
+								class="centerMe"
+								th:href="@{/categoria/eliminar/} + ${categoria.id}"
+								onclick="return confirm('Estas seguro que quieres eliminar?');">
+									<div class='icon'>
+										<i class='fa fa-trash'></i>
+									</div>
+									<div class='text delete'>
+										<span>Eliminar</span>
+									</div>
+							</a></td>
+						</tr>
+					</tbody>
+
+				</table>
+
+				<!-- <nav th:replace="paginator-nav :: paginator"></nav> -->
+			</div>
+		</div>
+
+
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	<input type="hidden" id="urlenviar" th:value="@{/categoria/listar/}" />
+	<script th:src="@{/js/searchbargeneric.js}"></script>
+	<script>
+		$('#example').DataTable({
+			"paging" : false,
+
+			"searching" : false,
+			"info" : false
+		});
+	</script>
+</body>
+</html>

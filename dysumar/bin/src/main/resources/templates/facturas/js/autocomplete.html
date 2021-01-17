@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8" />
+<body>
+
+	<script type="text/javascript" th:fragment="javascript">
+	var evaluated=false;
+		$(document).ready(function() {
+			function cambiomargen() {			
+				$("#tratoh4").text("Esta cotizacion estará siendo evaluada");
+				$("#tratop").css("visibility", "visible");			
+			}
+			function nocambiomargen() {			
+				$("#tratoh4").text("Estado: Con normalidad");
+				$("#tratop").css("visibility", "visible");			
+			}
+
+var urlAjax = $("#urlAjaxpro").val();
+var urlAjaxdes = $("#urlAjaxdes").val();
+			$("#cargar_producto").autocomplete({
+
+				source : function(request, response) {
+// 					var provid = $("#cargar_proveedor").val();
+					$.ajax({
+						url : urlAjax + request.term,
+						dataType : "json",
+						data : {
+							term : request.term
+							
+						},
+						success : function(data) {
+							
+							response($.map(data, function(item) {
+								return {
+									value : item.id,
+									label : item.presentacionnombre+" - "+item.nombrep +" - " +item.marcanombre,
+									precio: item.precio,
+									margen: item.margen,
+									stock : item.stock
+									
+								};
+									
+							}));
+						},
+					});
+				},
+				select : function(event, ui) {
+// 					$("#cargar_producto").val(ui.item.value)
+					if(itemsHelper.hasProducto(ui.item.value)){
+						$("#submit").removeAttr("disabled");
+						itemsHelper.incrementaCantidad(ui.item.value, ui.item.precio,ui.item.margen)
+						return false;
+					}
+					if(($('input[name="item_id[]"]').length)==13){
+						alert("El limite para una solo factura ha sido superado");
+						return false;
+					};
+					
+					var linea = $("#plantillaItemsFactura").html();
+					linea = linea.replace(/{ID}/g,ui.item.value);
+					linea = linea.replace(/{NOMBRE}/g,ui.item.label);
+					linea = linea.replace(/{COSTO}/g,ui.item.precio);
+					linea = linea.replace(/{STOCK}/g,ui.item.stock);
+// 					linea = linea.replace(/{DESCUENTO}/g,1);
+					
+					$("#cargarItemProductos tbody").append(linea);
+					$("#descuento_"+ui.item.value).val(2.0);
+					//esto es mas que todo si usamos descuento pero lo quitamos
+					//itemHelper.calcularimporte....();
+					//sin descuento
+					itemsHelper.cambiarTotalyMargen(ui.item.value, ui.item.precio,1,ui.item.margen,1);
+					var margenOP = (100-ui.item.margen)/100;
+					//aqui ponemos costo! no precio de venta
+					$("#margen_"+ui.item.value).html(ui.item.margen);
+					$("#cargar_producto").val('');
+					
+					return false;
+				}
+			});
+			
+	 		$("form").submit(function(){
+	 			$("#plantillaItemsFactura").remove();
+	 			return;
+	 		});
+	 		
+	 		
+		});
+		
+		var itemsHelper = {
+				//aqui usariamos el descuento pero hoy no
+				calcularImporte: function(id, precio, cantidad,margen,descuento){
+					var url = "/descuento/cargar_descuento/"+id+"/"+cantidad;
+					var descuentoForm;
+					if(margen==1){
+						margen = $("#margen_"+id).val();
+					}
+
+					  $.ajax({
+						    url: url,
+						    dataType: 'json',
+						    success: function( data ) {
+						      $("#descuento_"+id).html(data.descuento);
+						      itemsHelper.cambiarTotalyMargen(id,precio,cantidad,margen,data.descuento);
+						      console.log("success: "+data.descuento);
+						    },
+						    error: function( data ) {
+						    	$("#descuento_"+id).html("1.0");
+						    	itemsHelper.cambiarTotalyMargen(id,precio,cantidad,margen,1);
+						    }
+						  });					
+					
+					
+				},
+// 				cambiarTotalyMargen: function(id,precio,cantidad,margen,descuento){ quitamos descuento de nuevo
+				cambiarTotalyMargen: function(id,precio,cantidad,margen,descuento){
+					if(margen==1){
+						margen = $("#margen_"+id).val();
+					}
+					
+					//operacion apenas pones un producto
+					$("#precio_"+id).val(((parseFloat(precio))/(((100-margen)/100)*descuento)).toFixed(2));
+					if($("#iva").is(":checked")){											
+						var total_temp = ((parseFloat(precio)*parseInt(cantidad))/(((100-margen)/100)*descuento));
+						var total_temp = total_temp*1.13
+						$("#total_importe_"+id).html(total_temp.toFixed(2));						
+					}else{					
+						$("#total_importe_"+id).html(((parseFloat(precio)*parseInt(cantidad))/(((100-margen)/100)*descuento)).toFixed(2));
+					}
+					
+					this.calcularGranTotal();
+				},
+// 				cambiarTotalyMargen: function(id,precio,cantidad,margen,descuento){ quitamos descuento de nuevo
+				multiplicarxCantidad: function(id,cantidad){
+					var precio = $("#precio_"+id).val();
+					if($("#iva").is(":checked")){
+						$("#total_importe_"+id).html((precio*cantidad*1.13).toFixed(2));	
+					}else{
+						$("#total_importe_"+id).html((precio*cantidad).toFixed(2));
+					}
+					
+					this.calcularGranTotal();
+				},
+				
+				calcularImporte2: function(id,precio,descuento,costo){
+					var cantidad = 1;
+					
+						margen = $("#margen_"+id).text();
+						cantidad = $("#cantidad_"+id).val();
+						
+						if(parseInt(margen)<=15){
+							$("#tratoh4").text("Esta cotizacion estará siendo evaluada antes de facturar");
+							$("#tratop").css("color", "orange");
+							$("#trato").css("color", "orange");
+							evaluated = true;
+						}else{						
+							evaluated = false;
+							$("#tratoh4").text("Estado: Con normalidad");
+							$("#tratop").css("visibility", "visible");
+							$("#tratop").css("color", "green");
+							$("#trato").css("color", "green");
+						}
+						
+// 						alert(precio+" "+margen+" "+descuento);
+					var csobrep = (((costo/precio)*-1)*100)+100;
+					var lodeabajo=(100-csobrep)/100;
+
+					$("#margen_"+id).text(csobrep.toFixed(2));
+					if($("#iva").is(":checked")){
+						var temp_total = (((costo/lodeabajo))*cantidad);
+						temp_total = temp_total*1.13;
+						$("#total_importe_"+id).html(temp_total.toFixed(2));
+					}else{
+						$("#total_importe_"+id).html((((costo/lodeabajo))*cantidad).toFixed(2));
+					}
+					this.calcularGranTotal();
+				},
+				hasProducto: function(id){
+					var resultado = false;
+					
+				
+				$('input[name="item_id[]"]').each(function(){
+					if(parseInt(id) == parseInt($(this).val()) ){
+						resultado = true;
+					}
+				});
+				return resultado;
+		},
+		obtenerDescuento: function(id,cantidad){		
+			var url = "/descuento/cargar_descuento/"+id+"/"+cantidad;
+			console.log(url);
+			var descuento;
+			$.getJSON(url,function(data){			
+				console.log("mostrado el descuento adquirido por ajax: "+data.descuento);
+				descuento = data.descuento;				
+				return descuento;
+			
+		});
+			return descuento;
+		},
+		incrementaCantidad: function(id,precio){
+			
+			var cantidad = $("#cantidad_" +id).val() ? parseInt($("#cantidad_"+id).val()) : 0;
+			$("#cantidad_"+id).val(++cantidad);
+			margen = $("#margen_"+id).val();		
+			cantidadajax =++cantidad; 
+			console.log(cantidadajax);
+			var descuento=1;					
+// 					var provid = $("#cargar_proveedor").val();
+			console.log("En incrementarcantida fuction");
+			console.log("cantidad: "+cantidad);
+// 			si un dia se va usar el descuento aqui se activaria
+// 			descuento = this.obtenerDescuento(id,cantidad);
+			
+			this.multiplicarxCantidad(id,cantidad-1);
+		},
+		eliminarLineaFactura: function(id){
+			$("#row_"+id).remove();
+			this.calcularGranTotal();
+		},
+		
+		calcularGranTotal: function(){
+			var total = 0;
+			$('span[id^="total_importe_"]').each(function(){
+// 				alert(parseFloat($(this).html()).toFixed(2));
+				total+=parseFloat($(this).html());
+// 				total+=parseFloat($(this).html()).toFixed(2);
+// 				total+=Math.round(parseFloat($(this).html()*100)/100);
+			});
+			total = total.toFixed(2);
+			$("#gran_total").html(total);
+			$("#submit").removeAttr('disabled');
+		}
+	}
+
+	function quitariva1(id,costo){
+		var preciocon = $("#precio_"+id).val();
+		$("#precio_"+id).val((preciocon/1.13).toFixed(6));
+		var preciosin = (preciocon/1.13).toFixed(6);
+		document.getElementById("precio_"+id).focus();
+		console.log(id,costo,preciosin);
+		itemsHelper.calcularImporte2(id,preciosin,1,costo);
+	
+	}
+		
+		
+	</script>
+</body>
+</html>

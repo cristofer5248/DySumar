@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<script type="text/javascript" th:fragment="javascript">
+		$(document).ready(function() {
+
+
+let delegado = $('#roles_op')
+delegado.empty();
+delegado.append('<option selected="true" disabled>Selecciona</option>');
+delegado.prop('selectedIndex',0);
+const url2 = "/user/carga_tipou";
+//populate dropdown list wujuu
+$.getJSON(url2,function(data){
+	$.each(data,function(key,entry){
+		delegado.append($('<option></option>').attr('value',entry.id).text(entry.authority));
+	})
+});
+
+		}
+			
+					
+					
+			
+					
+				
+			
+
+		});
+	</script>
+</body>
+</html>

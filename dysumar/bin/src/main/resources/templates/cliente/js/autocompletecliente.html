@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<script type="text/javascript" th:fragment="javascript">
+		
+
+
+				function modalDirecciones(idc){
+					var urlAjaxcliente = $("#urlAjaxcliente").val();
+					var urlAjaxvercliente = $("#urlAjaxvercliente").val();
+					var urlAjaxform = $("#urlAjaxEditarCliente").val();
+					var urlAjaxformdelete = $("#urlAjaxEditarClienteD").val();
+					
+					let tb = $('#tbdc tbody')
+					tb.empty();
+					const url = urlAjaxcliente+idc;
+
+					//populate dropdown list wujuu
+					$.getJSON(url,function(data){
+					    $.each(data, function(idx, elem){
+					        tb.append("<tr><td><a class='btn btn-primary btn-xs' href='"+urlAjaxvercliente+elem.id+"'>"+elem.id+"</a></td><td>"+elem.direcciones.nombre+"</td><td><a class='btn btn-primary btn-xs' href='"+urlAjaxform+elem.id+"'>EDITAR</a></td><td><a class='btn btn-danger btn-xs' href='"+urlAjaxformdelete+elem.id+"'>Elimnar</a></td></tr>");
+					    })
+					});
+	
+	}
+					
+					
+				
+			
+
+
+
+			
+		
+		
+	</script>
+</body>
+</html>

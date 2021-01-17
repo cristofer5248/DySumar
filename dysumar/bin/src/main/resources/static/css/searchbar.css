@@ -1,0 +1,99 @@
+
+
+/* .container{ */
+/*     width:600px; */
+/*     margin:50px auto; */
+/* } */
+
+tbody .tdproveedor{
+	
+}
+
+.searchbox{
+    position:relative;
+    min-width:100px;
+    width:100px;
+    height:60px;
+    float:right;
+    overflow:hidden;
+    padding-bottom:10px;
+    -webkit-transition: width 0.3s;
+    -moz-transition: width 0.3s;
+    -ms-transition: width 0.3s;
+    -o-transition: width 0.3s;
+    transition: width 0.3s;
+}
+
+.searchbox-input{
+    top:0;
+    right:0;
+    border:0;
+    outline:0;
+    background:#dcddd8;
+/*     if you want to remove my select in front to search, just remove my select and change width value (below this) to 100% */
+/* si quieres quitar el select que esta enfrente de la barra de busqueda solo remueve ese select y ponle 100% de abajo */
+    width:75%;
+    height:50px;
+    margin:0;
+    padding:0px 55px 0px 20px;
+    font-size:20px;
+    color:red;
+}
+.searchbox-input::-webkit-input-placeholder {
+    color: #d74b4b;
+}
+.searchbox-input:-moz-placeholder {
+    color: #d74b4b;
+}
+.searchbox-input::-moz-placeholder {
+    color: #d74b4b;
+}
+.searchbox-input:-ms-input-placeholder {
+    color: #d74b4b;
+}
+
+.searchbox-icon,
+.searchbox-submit{
+    width:100px;
+    height:50px;
+    display:block;
+    position:absolute;
+    top:0;
+    font-family:verdana;
+    font-size:22px;
+    right:0;
+    padding:0;
+    margin:0;
+    border:0;
+    outline:0;
+    line-height:50px;
+    text-align:center;
+    cursor:pointer;
+    color:#dcddd8;
+    background:#172b3c;
+}
+
+
+
+.searchbox-open{
+    width:100%;
+}
+
+.byline{
+  position:absolute;
+  top:150px;
+  left:30%;
+  text-align:center;
+  font-size:18px;
+}
+.byline a{
+  text-decoration:none;
+  color: #d74b4b;
+}
+#opcsearch {
+
+
+}
+#vamonos{
+
+}

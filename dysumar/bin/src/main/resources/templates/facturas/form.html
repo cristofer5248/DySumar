@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="layout/layout :: head"></head>
+<meta charset="utf-8">
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-dark text-white">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+
+				<div th:object="${facturacion}" th:remove="tag">
+					<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger"
+						role="alert">
+						<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+					</ul>
+				</div>
+
+				<form th:action="@{/factura/savefactura}" th:object="${facturacion}"
+					method="post" enctype="multipart/form-data">
+					<!-- 					<div class="form-group row">
+						<label for="cliente" class="col-sm-2 col-form-label"
+							th:text="'¿Solo cotizacion?'"></label>
+						<div class="col-sm-6">
+							<label class="switch"> <input type="checkbox"
+								onchange="checkopc();" id="opc" /> <span class="slider round"></span>
+							</label><input type="number" name="tipoC" id="tipoC"
+								style="visibility: hidden" />
+						</div>
+
+					</div> -->
+					<div class="form-group row">
+						<label for="cliente" class="col-sm-2 col-form-label"
+							th:text="'Tus clientes'"></label>
+						<div class="col-sm-6">
+							<select class="selectpicker" id="misclientes"
+								data-live-search="true">
+								<option value="0" disabled selected>Seleccione uno</option>
+								<option th:each="cl : ${carteraclientes}" th:value="${cl.id}"
+									th:text="${cl.nombre +' '+ cl.apellido} "></option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="direccion" class="col-sm-2 col-form-label"
+							th:text="Direccion"></label>
+						<div class="col-sm-6">
+							<select id="cargar_direccion" name="cargar_direccion"
+								th:field="*{cliente}" class="custom-select mr-sm-2" disabled>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT')">
+						<label for="codigo" class="col-sm-2 col-form-label">Codigo
+							de factura </label>
+						<div class="col-sm-6">
+							<input th:field="*{codigofactura}" type="text"
+								class="form-control" />
+						</div>
+					</div>
+					<!-- 					<div class="form-group row"> -->
+					<!-- 						<label for="cuentade" class="col-sm-2 col-form-label">A -->
+					<!-- 							cuenta de</label> -->
+					<!-- 						<div class="col-sm-6"> -->
+					<!-- 							<input type="text" th:field="*{aCuentade}" class="form-control" -->
+					<!-- 								th:errorclass="'form-control alert-danger'" /> -->
+					<!-- 						</div> -->
+					<!-- 					</div> -->
+					<div class="form-group row">
+						<label for="carritoItems" class="col-sm-2 col-form-label">Codigo
+							de cotizacion</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{cotizacion}" class="form-control"
+								id="codigocotizacion"
+								th:errorclass="'form-control alert-danger'" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="fecha" class="col-sm-2 col-form-label">Fecha</label>
+						<div class="col-sm-6">
+							<input type="text" id="mydate" th:field="*{fecha}"
+								class="form-control">
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="condiciondepago" class="col-sm-2 col-form-label"
+							th:text="'Forma de pago'"></label>
+						<div class="col-sm-6">
+							<select th:field="*{condicionesDPago}"
+								class="custom-select mr-sm-2">
+								<option value="0" disabled selected>Selecciona una</option>
+								<option th:each="cdp : ${cdePago}" th:value="${cdp.id}"
+									th:text="${cdp.nombre}"></option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="tipodefactura" class="col-sm-2 col-form-label"
+							th:text="'Tipo de documento'"></label>
+						<div class="col-sm-6">
+							<select th:field="*{tipoFactura}" class="custom-select mr-sm-2">
+								<option value="0" disabled selected>Selecciona una</option>
+								<option th:each="tf : ${tfactura}" th:value="${tf.id}"
+									th:text="${tf.nombre}"></option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="detalle" class="col-sm-2 col-form-label">Detalle</label>
+						<div class="col-sm-6">
+							<input type="text" th:field="*{detalles}" class="form-control"
+								th:errorclass="'form-control alert-danger'" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('detalles')}" th:errors="*{detalles}"></small>
+						</div>
+					</div>
+					<div class="form-group row" style="visibility: hidden;">
+						<label for="Formadepago" class="col-sm-2 col-form-label"
+							th:text="'Forma de pago'"></label>
+						<div class="col-sm-6">
+							<select th:field="*{formadepago}" class="custom-select mr-sm-2"
+								data-live-search="true">
+								<option th:each="fdp : ${fdePago}" th:value="${fdp.id}"
+									th:text="${fdp.nombre}"></option>
+							</select>
+
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="col-sm-6">
+							<input type="submit" th:value="${titulo}"
+								class="btn btn-secondary" />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	<input type="hidden" id="urlAjaxcliente" th:value="@{/cargar_cliente/}" />
+	<input type="hidden" id="urlAjaxdirecciones"
+		th:value="@{/cargar_direcciones/}" />
+	<!-- 	<script th:replace="productos/js/setselected :: javascript"></script> -->
+	<script th:replace="facturas/js/autocompletecliente :: javascript"></script>
+
+	<script>
+		var codigoc = $("#codigocotizacion").val();
+		if (codigoc > 0) {
+			$("#codigocotizacion").addClass("alertinput");
+		}
+
+		$('#mydate').datepicker({
+			format : "yyyy-mm-dd"
+		});
+		$(document).ready(function() {
+			// Warning
+			$(window).on('beforeunload', function() {
+				return "Any changes will be lost";
+			});
+
+			// Form Submit
+			$(document).on("submit", "form", function(event) {
+				// disable warning
+				$(window).off('beforeunload');
+			});
+		});
+		/* 		function checkopc() {
+		 if ($('#opc').is(':checked')) {
+		 $('#tipoC').val(1);
+		 }
+
+		 else {
+		 $('#tipoC').val(0);
+		 }
+		 } */
+	</script>
+
+
+</body>
+</html>

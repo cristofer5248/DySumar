@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head"></head>
+
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+
+				<ul class="list-group">
+					<li class="list-group-item active"
+						th:text="${cliente.cliente.nombre}"></li>
+					<li class="list-group-item" th:text="${cliente.cliente.apellido}"></li>
+					<li class="list-group-item" th:text="${cliente.cliente.email}"></li>
+					<li class="list-group-item" th:text="${cliente.cliente.createAt}"></li>
+				</ul>
+
+				<!-- 				<div th:if="${#lists.isEmpty(taller)}" class="alert alert-info my-4" -->
+				<!-- 					th:text="'No hay facturas activas para el cliente ' + ${cliente.nombre} + ' ' + ${cliente.apellido}"></div> -->
+
+				<table th:if="${not #lists.isEmpty(cliente.facturacion)}"
+					class="table table-bordered table-striped my-4">
+					<thead class="thead-inverse">
+						<tr>
+							<th>Id de factura</th>
+							<th>codigo de facturacion</th>
+							<th>Forma de pago</th>
+
+							<th>Fecha</th>
+							<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">ver</th> -->
+							<th sec:authorize="hasRole('ROLE_ADMIN')">eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="factura: ${cliente.facturacion}">
+							<td><a title="Click para ver detalle de la factura"
+								class="btn btn-primary btn-xs"
+								th:href="@{/factura/ver/}+${factura.id}"
+								th:text="${factura.id}"></a></td>
+							<td th:text="${factura.codigofactura}"></td>
+							<td th:text="${factura.tipoFactura.nombre}"></td>
+							<td th:text="${factura.fecha}"></td>
+							<!-- 							<td sec:authorize="hasRole('ROLE_ADMIN')"><a -->
+							<!-- 								class="btn btn-primary btn-xs" -->
+							<!-- 								th:href="@{'/factura/ver/' + ${factura.id}}" th:text="'detalle'"></a></td> -->
+							<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+								class="btn btn-danger btn-xs"
+								th:href="@{'/factura/eliminar/' + ${factura.id}}"
+								th:text="'eliminar'"
+								onclick="return confirm('¿Estas seguro que desea eliminar la factura?');"></a></td>
+						</tr>
+					</tbody>
+
+				</table>
+
+			</div>
+		</div>
+
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	<script>
+	$(this).tooltip();
+	</script>
+</body>
+</html>

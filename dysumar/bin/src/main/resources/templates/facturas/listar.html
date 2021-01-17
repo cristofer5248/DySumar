@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<meta charset="UTF-8">
+<head th:replace="layout/layout :: head"></head>
+<link rel="stylesheet" th:href="@{/css/searchbar.css}" />
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-light">
+			<label class="h2" th:text="${titulo}"></label>
+			<div class="card-header"></div>
+			<div class="card-body">
+
+				<div class="card-title">
+					<!-- <a
+						th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('FACT')}"
+						th:href="@{/factura/nuevof}" class="btn btn-primary btn-xs">Facturar</a> -->
+					<!-- 					<a th:if="${#request.isUserInRole('SELLER')}" -->
+					<!-- 						th:href="@{/factura/nuevof}" class="btn btn-primary btn-xs">REMISION</a> -->
+					<a
+						th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('SELLER')}"
+						th:href="@{/factura/nuevo}" class="btn btn-primary btn-xs">Crear
+						remision o cotizacion</a>
+					<button type="button" class="btn btn-info" data-toggle="modal"
+						data-target="#filterByDate" data-whatever="@mdo">Filtrar</button>
+					<form id="formsearch" class="searchbox"
+						th:action="@{/marca/listar/}">
+						<div>
+							<input type="search"
+								placeholder="Introducir el nombre de un cliente para buscar......"
+								class="searchbox-input" onkeyup="buttonUp();" id="btn-search"
+								required><select class="custom-select mr-sm-2"
+								id="opcSearch" style="margin-left: 10px; height: 3.3em;">
+								<option value="cliente">Por cliente</option>
+								<option th:if="${!#request.isUserInRole('SELLER')}"
+									value="usuario">Por usuario</option>
+							</select> <input type="button" id="vamonos" class="searchbox-submit"
+								value="GO"><span class="searchbox-icon">Buscar</span>
+						</div>
+					</form>
+				</div>
+				<table id="example"
+					class="table table-sm table-striped table-bordered">
+					<thead class="thead-inverse">
+						<tr>
+							<th>Id</th>
+							<th>Cod</th>
+							<th>Por</th>
+							<th>Cliente</th>
+							<!-- <th>Stock</th> -->
+							<th>CC</th>
+							<th>FP</th>
+							<!-- 							<th>FP</th> -->
+							<th>TF</th>
+							<th>Fecha</th>
+							<th>Total</th>
+
+							<th
+								th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('JEFEADM')}">eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="factura: ${facturas}">
+							<td><a class="btn btn-primary btn-xs"
+								th:href="@{/factura/ver/} + ${factura.id}"
+								th:text="${factura.id}"></a></td>
+							<td th:if="${factura.status==1}"
+								th:text="${factura.codigofactura}"></td>
+							<td th:if="${factura.status==2}" style="color: orange"
+								th:text="'EN ESPERA'"></td>
+							<td th:if="${factura.status==3}" style="color: red"
+								th:text="'Stock insuficiente'"></td>
+							<td th:text="${factura.aCuentade.username}"></td>
+							<td th:text="${factura.cliente.cliente.nombre}"></td>
+							<!-- <td th:text="${facturas.}"></td> -->
+							<td th:text="${factura.cotizacion.id}"></td>
+							<td th:text="${factura.condicionesDPago.nombre}"></td>
+							<!-- 							<td th:text="${factura.formadepago.nombre}"></td> -->
+							<td th:text="${factura.tipoFactura.nombre}"></td>
+							<td th:text="${factura.fecha}"></td>
+
+							<td
+								th:text="'$'+${#numbers.formatDecimal(factura.totaRegistrado,0, 'COMMA', 2, 'POINT')}"></td>
+							<!-- 							<td
+								th:if="${#request.isUserInRole('SELLER')}"><a
+								class="btn btn-success btn-xs"
+								th:href="@{'/factura/form/' + ${factura.id}}"
+								th:text="'crear factura'"></a></td> -->
+							<td
+								th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM')}"><a
+								class="btn btn-danger btn-xs"
+								th:href="@{/factura/eliminar/} + ${factura.id}"
+								th:text="'eliminar'"
+								onclick="return confirm('Estas seguro que quieres eliminar?');"></a></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th colspan="8" style="text-align: right">Total:</th>
+							<th></th>
+						</tr>
+					</tfoot>
+				</table>
+				<div class="modal fade" id="filterByDate" tabindex="-1"
+					role="dialog" aria-labelledby="exampleModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog modal-lg" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">Filtrar por
+									fechas</h5>
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form th:action="@{/factura/listarfecha}" method="post">
+									<div class="container">
+										<div class="row">
+											<div class="col-1">
+												<label for="createAt">Inicio</label>
+											</div>
+											<div class="col-5">
+												<input type="text" class="form-control mydate"
+													id="filterstart" name="inicio" />
+											</div>
+
+											<div class="col-1">
+												<label for="createAt">Final</label>
+											</div>
+											<div class="col-5">
+												<input type="text" class="form-control mydate"
+													id="filterend" name="final" />
+											</div>
+											<div class="col-1">
+												<label for="createAt">Ver:</label>
+											</div>
+											<div class="col-5">
+												<select id="opcfilter" class="form-control">
+													<option value="listado" selected>Listado de
+														registros</option>
+													<option value="vendedor"
+														th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('JEFEADM')}">Agrupado
+														por vendedor</option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary"
+									data-dismiss="modal">Cerrar</button>
+								<button type="button" id="datefilter" class="btn btn-primary">Enviar</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<nav th:replace="paginator-nav :: paginator"></nav>
+			</div>
+		</div>
+
+
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	<input type="hidden" id="urlenviar" th:value="@{/factura/listar/}" />
+	<script th:src="@{/js/searchbarfactura.js}"></script>
+	<script th:inline="javascript" th:if="${!activePivot}">
+		$('#example').DataTable({
+			"paging" : false,
+
+			"searching" : false,
+			"order": [ 0, "desc" ],
+			"info" : false
+			
+		});
+	</script>
+	<script th:inline="javascript" th:if="${activePivot}">
+		$('#example').DataTable(
+				{
+					"paging" : false,
+					"order": [ 0, "desc" ],
+					"searching" : false,
+					"info" : false,
+					rowGroup : {
+						startRender : null,
+						endRender : function(rows, group) {
+							var salaryAvg = rows.data().pluck(8).reduce(
+									function(a, b) {
+										// 	                    	alert("a:"+a+" b: "+b);
+										// 	                        return a + b.replace(/[^\d]/g,licar '')*1;
+
+										return parseFloat(a) + parseFloat(b);
+										// 	                    	return a + b.replace(/[^\d]/g, '')*1;
+
+									});
+							// 	                salaryAvg = $.fn.dataTable.render.number(',', '.', 0, '$').display( salaryAvg );
+
+							return $('<tr/>').append(
+									'<td colspan="9" class="totalclass">Total del vendedor: '
+											+ group + '</td>')
+
+							.append(
+									'<td class="totalclass">' + salaryAvg
+											+ '</td>');
+						},
+						dataSrc : 2
+					}
+				});
+	</script>
+	<script>
+		$('.mydate').datepicker({
+			format : "yyyy-mm-dd"
+		});
+
+		var datefilter = $('#datefilter');
+		datefilter.click(function() {
+			location.href = $("#urlenviar").val() + "fechas/"
+					+ $("#filterstart").val() + "/" + $("#filterend").val()
+					+ "/" + $("#opcfilter").val();
+		});
+	</script>
+</body>
+</html>
