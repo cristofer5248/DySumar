@@ -69,8 +69,9 @@ public class InventarioController {
 	@Autowired
 	private INotificacionesService notificacionesService;
 
-	@RequestMapping(value = { "/listar", "/listar/{date1}/{date2}" }, method = RequestMethod.GET)
-	public String listar(@PathVariable(value = "date1", required = false) String date1,
+	@RequestMapping(value = { "/listar", "/listar/{date1}/{date2}", "/listar/{codigo}" }, method = RequestMethod.GET)
+	public String listar(@PathVariable(value = "codigo", required = false) String codigo,
+			@PathVariable(value = "date1", required = false) String date1,
 			@PathVariable(value = "date2", required = false) String date2,
 			@RequestParam(value = "all", required = false, defaultValue = "1") int all,
 			@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
@@ -80,6 +81,7 @@ public class InventarioController {
 		boolean enableallsearch = (date1 != null) ? true : false;
 
 		String pathexcel = (enableallsearch) ? "inventario/listar/" + date1 + "/" + date2 + xlsxPath : xlsxPath;
+		pathexcel = (codigo != null) ? "inventario/listar/" + codigo + xlsxPath : xlsxPath;
 
 		Date date1_ = null;
 		Date date2_ = null;
@@ -96,8 +98,14 @@ public class InventarioController {
 		}
 
 		Pageable pageRequest = (all > 0) ? Pageable.unpaged() : PageRequest.of(page, 20);
-		Page<Inventario> inventario = (date1 != null) ? inventarioService.findAllFechas(pageRequest, date1_, date2_)
-				: inventarioService.findAll(pageRequest);
+		Page<Inventario> inventario = null;
+		if (codigo != null) {
+			inventario = inventarioService.findByCodigoProveedorContaining(codigo, pageRequest);
+		} else {
+			inventario = (date1 != null && codigo == null)
+					? inventarioService.findAllFechas(pageRequest, date1_, date2_)
+					: inventarioService.findAll(pageRequest);
+		}
 
 		List<Inventario> inventariolamba = inventario.stream().filter(distinctByKey(p -> p.getMovimientos()))
 				.collect(Collectors.toList());
@@ -162,9 +170,11 @@ public class InventarioController {
 			@RequestParam(name = "item_id[]", required = false) Long[] itemId,
 			@RequestParam(name = "cantidad[]", required = false) Integer[] cantidad, Model model,
 			RedirectAttributes flash, SessionStatus status, Authentication authentication) throws ParseException {
-		String pattern = "MM-dd-yyyy";
+		System.out.print("\nfecha" + fecha);
+		String pattern = "yyyy-MM-dd";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		Date date1 = simpleDateFormat.parse(fecha);
+		System.out.print("\nfecha" + date1);
 //		if (result.hasErrors()) {
 //			model.addAttribute("titulo", "Inventariado");
 //			return "/producto/listar";

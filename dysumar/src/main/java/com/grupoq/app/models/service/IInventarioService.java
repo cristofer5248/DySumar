@@ -29,6 +29,7 @@ public interface IInventarioService {
 	public Inventario findById(Long id);
 	public List<Inventario> findByIdCodigoProveedor(String id);
 	public Inventario findByIdCodigoProveedorOb(Long id,String codcompra);
+	public Page<Inventario> findByCodigoProveedorContaining(String id, Pageable page);
 	public Inventario findByCodigoProveedor(String id);
 	public Inventario findByIdCustom(Long id);
 }

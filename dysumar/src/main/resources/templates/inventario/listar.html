@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="layout/layout :: head"></head>
+<link rel="stylesheet" th:href="@{/css/searchbar.css}" />
 <body>
 
 	<header th:replace="layout/layout :: header"></header>
@@ -22,14 +23,23 @@
 					<a class="btn btn-success btn-xs" th:if="${enableallsearch}"
 						th:href="@{'/'+${pathall}(format=xlsx)}">TODOS EN <i
 						class="fas fa-file-excel"></i></a>
+
 				</h4>
+				<form class="searchbox" id="formsearch" action="">
+					<input type="search"
+						placeholder="Introduzca el codigo de documento......"
+						class="searchbox-input" onkeyup="buttonUp();" id="btn-search"
+						required> <input type="button" id="vamonos"
+						class="searchbox-submit" value="GO"> <span
+						class="searchbox-icon">Buscar</span>
+				</form>
 				<table id="example"
 					class="table table-striped table-bordered table-sm">
 					<thead class="thead-inverse">
 						<tr>
 							<th
 								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')">Id</th>
-							<th>Id compra</th>
+							<th>COD de factura</th>
 							<!-- 							<th>Nombre</th> -->
 							<th>Proveedor</th>
 							<!-- 							<th>Stock</th> -->
@@ -133,8 +143,9 @@
 			</div>
 		</div>
 	</div>
-	<input type="hidden" id="urlenviar" th:value="@{/inventario/listar}" />
+	<input type="hidden" id="urlenviar" th:value="@{/inventario/listar/}" />
 	<footer th:replace="layout/layout :: footer"></footer>
+	<script th:src="@{/js/searchbargeneric.js}"></script>
 	<script>
 		// 	$('#example').DataTable( {
 		//         "paging":   false,
@@ -151,9 +162,8 @@
 			location.href = $("#urlenviar").val() + "/"
 					+ $("#filterstart").val() + "/" + $("#filterend").val()
 					+ "/";
-			console.log($("#urlenviar").val() + "/"
-					+ $("#filterstart").val() + "/" + $("#filterend").val()
-					+ "/"); 
+			console.log($("#urlenviar").val() + "/" + $("#filterstart").val()
+					+ "/" + $("#filterend").val() + "/");
 		});
 	</script>
 </body>

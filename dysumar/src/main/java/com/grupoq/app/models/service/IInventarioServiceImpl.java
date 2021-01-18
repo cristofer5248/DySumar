@@ -15,7 +15,7 @@ import com.grupoq.app.models.entity.Inventario;
 
 @Service
 public class IInventarioServiceImpl implements IInventarioService {
-	
+
 	@Autowired
 	private IInventarioDao inventarioDao;
 
@@ -28,7 +28,7 @@ public class IInventarioServiceImpl implements IInventarioService {
 	@Override
 	public void save(Inventario inventario) {
 		inventarioDao.save(inventario);
-		
+
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class IInventarioServiceImpl implements IInventarioService {
 	@Override
 	public void delete(Long id) {
 		inventarioDao.deleteById(id);
-		
+
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class IInventarioServiceImpl implements IInventarioService {
 	@Override
 	public Inventario findByIdCodigoProveedorOb(Long id, String idcompra) {
 		// TODO Auto-generated method stub
-		return inventarioDao.findByIdCodigoProveedorOb(id,idcompra);//aqui
+		return inventarioDao.findByIdCodigoProveedorOb(id, idcompra);// aqui
 	}
 
 	@Override
@@ -85,8 +85,10 @@ public class IInventarioServiceImpl implements IInventarioService {
 		return inventarioDao.findAllByDates(pageable, date1, date2);
 	}
 
-
-	
-	
+	@Override
+	public Page<Inventario> findByCodigoProveedorContaining(String id, Pageable page) {
+		// TODO Auto-generated method stub
+		return inventarioDao.findByCodigoProveedorLike(id, page);
+	}
 
 }

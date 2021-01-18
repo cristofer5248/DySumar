@@ -363,7 +363,8 @@ public class FacturaController {
 			// fin
 			// poniendo total en factura entity
 
-			totalParaFactura += (pro.getPrecio() * pro.getCantidad() * pro.getDescuento());
+			totalParaFactura += (pro.getPrecio() * pro.getCantidad() * pro.getDescuento()*1.13);
+			
 			totalsiniva += pro.getPrecio() * pro.getCantidad();
 
 			System.out.print("\n" + totalParaFactura + "\n");
@@ -597,11 +598,11 @@ public class FacturaController {
 
 				for (CarritoItems carrito : factura.getCotizacion().getCarrito()) {
 					if (carrito.getId().equals(codigoItemCarrito)) {
-
+						
 						flash.addFlashAttribute("success", "Operacion exitosa!");
 						nuevaNotificacion("fas fa-file-alt", "El costo de un producto en una factura ha sido cambiado!",
 								"/factura/ver/" + factura.getId(), "gray");
-						pathredirect = "/cotizacion/ver/" + factura.getCotizacion().getId().toString();
+						pathredirect = "/cotizacion/ver/" + factura.getCotizacion().getId().toString()+"/"+factura.getId();
 						cambiarcosto = true;
 						double preciosin = (costoN * carrito.getCantidad());
 						double descuento = carrito.getDescuento() / 100;
@@ -612,14 +613,16 @@ public class FacturaController {
 						carrito.setMargen(margennuevo);
 						carrito.setPrecio(costoN);
 						carritoitemsservice.save(carrito);
+						System.out.print("\ncuantas veces paso" + totalnuevo);
 					} else {
-						totalnuevo += carrito.getTotal();
-						flash.addFlashAttribute("error", "Error cambiando el costo!");
+						totalnuevo += carrito.getPrecio() * 1.13* carrito.getCantidad();
+						System.out.print("\ncuantas veces paso" + totalnuevo);
 					}
 
 				}
 				if (cambiarcosto) {
-					double totalnuevosin = totalnuevo/1.13; 
+					System.out.print("\ncuantas veces paso" + totalnuevo);
+					double totalnuevosin = totalnuevo / 1.13;
 					totalnuevo = (totalnuevosin > 113.00 & factura.getCliente().getCliente().getAgente())
 							? totalnuevo - (totalnuevosin * 0.01)
 							: totalnuevo;
@@ -628,6 +631,7 @@ public class FacturaController {
 				}
 
 			} catch (Exception e) {
+				e.printStackTrace();
 				flash.addFlashAttribute("error", "Error cambiando el costo!");
 				return "redirect:" + pathredirect;
 			}

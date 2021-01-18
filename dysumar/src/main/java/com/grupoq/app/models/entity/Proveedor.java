@@ -37,8 +37,8 @@ public class Proveedor implements Serializable {
 	private Giro giro;
 	
 	@NotEmpty
-	@Column(length= 90)
-	@Size(max = 90)
+	@Column(length= 150)
+	@Size(max = 150)
 	private String direccion;
 	
 	@NotEmpty

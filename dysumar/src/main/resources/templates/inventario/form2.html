@@ -31,7 +31,7 @@
 					</div>
 					<div class="form-group row">
 						<label for="codigo" class="col-sm-2 col-form-label">ID de
-							compra</label>
+							factura</label>
 						<div class="col-sm-6">
 							<input type="text" name="codigo" class="form-control" />
 						</div>
@@ -96,7 +96,7 @@
 		th:value="@{/proveedor/cargar_proveedor}" />
 	<script>
 		$('#mydate').datepicker({
-			format : "dd-mm-yyyy"
+			format : "yyyy-mm-dd"
 		});
 	</script>
 	<script th:replace="inventario/js/autocomplete :: javascript"></script>

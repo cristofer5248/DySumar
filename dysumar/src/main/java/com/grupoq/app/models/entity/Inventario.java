@@ -90,6 +90,7 @@ public class Inventario implements Serializable{
 	}
 
 	public Date getFecha() {
+//		System.out.print("\n"+fecha);
 		return fecha;
 	}
 

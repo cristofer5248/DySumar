@@ -19,7 +19,7 @@ public interface IInventarioDao extends PagingAndSortingRepository<Inventario, L
 	@Query(value = "select i from Inventario i join fetch i.producto p join fetch p.proveedor prov join fetch i.movimientos m group by m  order by i.id desc", countQuery = "select count(i) from Inventario i join i.producto p join p.proveedor prov join i.movimientos m  group by m order by i.id desc ")
 	public Page<Inventario> findAllCustom(Pageable page);
 
-	@Query(value = "select i from Inventario i join fetch i.producto p join fetch p.proveedor prov join fetch i.movimientos m where i.fecha between ?1 and ?2 group by m  order by i.id desc", countQuery = "select count(i) from Inventario i join i.producto p join p.proveedor prov join i.movimientos m where i.fecha between ?1 and ?2 group by m order by i.id desc ") 
+	@Query(value = "select i from Inventario i join fetch i.producto p join fetch p.proveedor prov join fetch i.movimientos m where i.fecha between ?1 and ?2 group by m  order by i.id desc", countQuery = "select count(i) from Inventario i join i.producto p join p.proveedor prov join i.movimientos m where i.fecha between ?1 and ?2 group by m order by i.id desc ")
 	public Page<Inventario> findAllByDates(Pageable page, Date date1, Date date2);
 
 	@Query("select i from Inventario i join fetch i.producto p join fetch p.proveedor pro join fetch p.marca ma join fetch p.categoria c join fetch p.presentacion pre where i.codigoProveedor=?1")
@@ -34,6 +34,8 @@ public interface IInventarioDao extends PagingAndSortingRepository<Inventario, L
 	public Inventario findByIdCustom(Long id);
 
 	public Inventario findFirstByCodigoProveedor(String id);
+
+	public Page<Inventario> findByCodigoProveedorLike(String id, Pageable page);
 
 	public List<Inventario> findByProductoId(Long id);
 }
