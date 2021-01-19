@@ -45,13 +45,15 @@
 								style="visibility: hidden" />
 						</div>
 					</div>
-					<div class="form-group row">
+					<div class="form-group row" style="visibility: hidden">
 						<label for="IVA" th:text="'IVA'" class="col-sm-2 col-form-label"></label>
 						<div class="col-sm-4">
 							<label class="switch"> <input type="checkbox"
 								onclick="checkiva();" id="iva" /> <span class="slider round"></span>
 							</label><input type="number" name="ivaC" id="ivaC" th:value="0"
-								style="visibility: hidden"><label id="mnsiva" style="visibility:hidden" >Esta es tan solo una visualizacion de la aplicacion del iva a los productos</label>
+								style="visibility: hidden"><label id="mnsiva"
+								style="visibility: hidden">Esta es tan solo una
+								visualizacion de la aplicacion del iva a los productos</label>
 						</div>
 					</div>
 					<div class="form-group row">
@@ -63,8 +65,7 @@
 						</div>
 					</div>
 					<table th:replace="facturas/plantilla-items.html ::itemsFactura"></table>
-					<table id="cargarItemProductos"
-						class="table" style="width: 100%">
+					<table id="cargarItemProductos" class="table" style="width: 100%">
 						<thead>
 							<tr>
 								<th>Nombre</th>
@@ -76,7 +77,8 @@
 								<!-- 								<th style="display: none;">Descuento</th> -->
 								<th>Cantidad</th>
 								<th>Total</th>
-								<th>Stock</th>		
+								<th>Total con iva</th>
+								<th>Stock</th>
 								<th>Eliminar</th>
 							</tr>
 						</thead>
@@ -89,8 +91,8 @@
 					</h5>
 					<div class="form-group row">
 						<div class="col-sm-6">
-							<input type="submit" th:value="${titulo}" id="submit" disabled="disabled"
-								class="btn btn-secondary"
+							<input type="submit" th:value="${titulo}" id="submit"
+								disabled="disabled" class="btn btn-secondary"
 								onclick="return confirm('¿Esta seguro? Recuerde que todos los precios deben estar sin IVA, internamente seran operados')" />
 						</div>
 					</div>
@@ -137,8 +139,8 @@
 					total_temp += parseFloat($(this).html());
 				});
 				$("#gran_total").html(total_temp.toFixed(2));
-				$("#mnsiva").css("visibility","visible");
-				$("#mnsiva").css("color","white");
+				$("#mnsiva").css("visibility", "visible");
+				$("#mnsiva").css("color", "white");
 			} else {
 				$('#ivaC').val(0);
 				var total_temp = 0;
@@ -148,8 +150,8 @@
 					total_temp += parseFloat($(this).html());
 				});
 				$("#gran_total").html(total_temp.toFixed(2));
-				$("#mnsiva").css("visibility","hidden");
-				$("#mnsiva").css("color","white");
+				$("#mnsiva").css("visibility", "hidden");
+				$("#mnsiva").css("color", "white");
 			}
 		}
 	</script>

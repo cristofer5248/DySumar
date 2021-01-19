@@ -124,6 +124,10 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 						var total_temp = total_temp*1.13
 						$("#total_importe_"+id).html(total_temp.toFixed(2));						
 					}else{					
+						var total_temp = ((parseFloat(precio)*parseInt(cantidad))/(((100-margen)/100)*descuento));
+						var total_temp = total_temp*1.13
+						$("#total_importeiva_"+id).html(total_temp.toFixed(2));
+						
 						$("#total_importe_"+id).html(((parseFloat(precio)*parseInt(cantidad))/(((100-margen)/100)*descuento)).toFixed(2));
 					}
 					
@@ -136,6 +140,7 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 						$("#total_importe_"+id).html((precio*cantidad*1.13).toFixed(2));	
 					}else{
 						$("#total_importe_"+id).html((precio*cantidad).toFixed(2));
+						$("#total_importeiva_"+id).html((precio*cantidad*1.13).toFixed(2));
 					}
 					
 					this.calcularGranTotal();
@@ -161,9 +166,9 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 						}
 						
 // 						alert(precio+" "+margen+" "+descuento);
-					var csobrep = (((costo/precio)*-1)*100)+100;
+					var csobrep = (((costo/(precio*1.13))*-1)*100)+100;
 					var lodeabajo=(100-csobrep)/100;
-
+					console.log(precio*1.13);
 					$("#margen_"+id).text(csobrep.toFixed(2));
 					if($("#iva").is(":checked")){
 						var temp_total = (((costo/lodeabajo))*cantidad);
@@ -171,6 +176,9 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 						$("#total_importe_"+id).html(temp_total.toFixed(2));
 					}else{
 						$("#total_importe_"+id).html((((costo/lodeabajo))*cantidad).toFixed(2));
+						var temp_total = (((costo/lodeabajo))*cantidad);
+						temp_total = temp_total*1.13;
+						$("#total_importeiva_"+id).html(temp_total.toFixed(2));
 					}
 					this.calcularGranTotal();
 				},

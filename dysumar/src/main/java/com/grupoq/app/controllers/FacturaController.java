@@ -506,7 +506,7 @@ public class FacturaController {
 			// margen default
 			// evaluar si era un cotizacin evaluada
 			// aqui pondremos si es menor a 15 entoncs sera avaluada
-			double cSobrep = (producto.getPrecio() / (precio[i]) * 1.13) * -1;
+			double cSobrep = (producto.getPrecio() / ((precio[i]) * 1.13)) * -1;
 			double margenGenerado = (cSobrep * 100) + 100;
 
 			if (margenGenerado <= 15) {
