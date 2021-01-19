@@ -113,65 +113,54 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		CellStyle celltextRight = workbook.createCellStyle();
 		celltextRight.setAlignment(HorizontalAlignment.RIGHT);
 
-		// primera row
-		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
-		sheet.addMergedRegion(new CellRangeAddress(1, 2, 0, 6));
-		sheet.addMergedRegion(new CellRangeAddress(3, 3, 1, 2));
 		if (creditoFiscal) {
-			sheet.addMergedRegion(new CellRangeAddress(7, 10, 1, 4));
-			sheet.addMergedRegion(new CellRangeAddress(7, 7, 5, 6));
-			sheet.addMergedRegion(new CellRangeAddress(8, 8, 5, 6));
-			sheet.addMergedRegion(new CellRangeAddress(9, 9, 5, 6));
-			sheet.addMergedRegion(new CellRangeAddress(10, 10, 5, 6));
+			sheet.addMergedRegion(new CellRangeAddress(0, 11, 0, 0));
+			sheet.addMergedRegion(new CellRangeAddress(0, 29, 1, 1));
+			sheet.addMergedRegion(new CellRangeAddress(30, 36, 0, 7));
+			sheet.addMergedRegion(new CellRangeAddress(2, 2, 2, 5));
 		} else {
+			// primera row
+			sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
+			sheet.addMergedRegion(new CellRangeAddress(1, 2, 0, 6));
+			sheet.addMergedRegion(new CellRangeAddress(3, 3, 1, 2));
 			sheet.addMergedRegion(new CellRangeAddress(7, 10, 1, 6));
-		}
-		sheet.addMergedRegion(new CellRangeAddress(4, 10, 0, 0));
-		// C7 a G7
-		if (creditoFiscal) {
-			sheet.addMergedRegion(new CellRangeAddress(6, 6, 2, 4));
-			sheet.addMergedRegion(new CellRangeAddress(6, 6, 5, 6));
-		} else {
+			sheet.addMergedRegion(new CellRangeAddress(4, 10, 0, 0));
 			sheet.addMergedRegion(new CellRangeAddress(6, 6, 2, 6));
-		}
-		// B6 a G6
-		if (creditoFiscal) {
-			sheet.addMergedRegion(new CellRangeAddress(5, 5, 1, 4));
-			sheet.addMergedRegion(new CellRangeAddress(5, 5, 5, 6));
-		} else {
 			sheet.addMergedRegion(new CellRangeAddress(5, 5, 1, 6));
-		}
-		// B5 a c5
-		sheet.addMergedRegion(new CellRangeAddress(4, 4, 1, 2));
-		// D5 a E5
-		sheet.addMergedRegion(new CellRangeAddress(4, 4, 3, 4));
-		// F5 a F5
-		sheet.addMergedRegion(new CellRangeAddress(4, 4, 5, 6));
-		// F4 A G4
-		sheet.addMergedRegion(new CellRangeAddress(3, 3, 5, 6));
-		// b12 a c12
-		sheet.addMergedRegion(new CellRangeAddress(11, 11, 1, 2));
-		sheet.addMergedRegion(new CellRangeAddress(12, 12, 1, 2));
-		sheet.addMergedRegion(new CellRangeAddress(13, 13, 1, 2));
-		sheet.addMergedRegion(new CellRangeAddress(14, 14, 1, 2));
-		sheet.addMergedRegion(new CellRangeAddress(15, 15, 1, 2));
-		sheet.addMergedRegion(new CellRangeAddress(16, 16, 1, 2));
-		sheet.addMergedRegion(new CellRangeAddress(17, 17, 1, 2));
-		sheet.addMergedRegion(new CellRangeAddress(18, 18, 1, 2));
-		sheet.addMergedRegion(new CellRangeAddress(19, 19, 1, 2));
-		sheet.addMergedRegion(new CellRangeAddress(20, 20, 1, 2));
-		sheet.addMergedRegion(new CellRangeAddress(21, 21, 1, 2));
-		sheet.addMergedRegion(new CellRangeAddress(22, 22, 1, 2));
-		sheet.addMergedRegion(new CellRangeAddress(23, 23, 1, 2));
 
-		// b25 a c25
-		sheet.addMergedRegion(new CellRangeAddress(24, 24, 1, 2));
-		// d25 a f25
-		sheet.addMergedRegion(new CellRangeAddress(24, 24, 3, 5));
-		// a25 a a30
-		sheet.addMergedRegion(new CellRangeAddress(24, 29, 0, 0));
-		// b26:30 a f26:f30
-		sheet.addMergedRegion(new CellRangeAddress(25, 29, 1, 5));
+			// B5 a c5
+			sheet.addMergedRegion(new CellRangeAddress(4, 4, 1, 2));
+			// D5 a E5
+			sheet.addMergedRegion(new CellRangeAddress(4, 4, 3, 4));
+			// F5 a F5
+			sheet.addMergedRegion(new CellRangeAddress(4, 4, 5, 6));
+			// F4 A G4
+			sheet.addMergedRegion(new CellRangeAddress(3, 3, 5, 6));
+			// b12 a c12
+			sheet.addMergedRegion(new CellRangeAddress(11, 11, 1, 2));
+			sheet.addMergedRegion(new CellRangeAddress(12, 12, 1, 2));
+			sheet.addMergedRegion(new CellRangeAddress(13, 13, 1, 2));
+			sheet.addMergedRegion(new CellRangeAddress(14, 14, 1, 2));
+			sheet.addMergedRegion(new CellRangeAddress(15, 15, 1, 2));
+			sheet.addMergedRegion(new CellRangeAddress(16, 16, 1, 2));
+			sheet.addMergedRegion(new CellRangeAddress(17, 17, 1, 2));
+			sheet.addMergedRegion(new CellRangeAddress(18, 18, 1, 2));
+			sheet.addMergedRegion(new CellRangeAddress(19, 19, 1, 2));
+			sheet.addMergedRegion(new CellRangeAddress(20, 20, 1, 2));
+			sheet.addMergedRegion(new CellRangeAddress(21, 21, 1, 2));
+			sheet.addMergedRegion(new CellRangeAddress(22, 22, 1, 2));
+			sheet.addMergedRegion(new CellRangeAddress(23, 23, 1, 2));
+
+			// b25 a c25
+			sheet.addMergedRegion(new CellRangeAddress(24, 24, 1, 2));
+			// d25 a f25
+			sheet.addMergedRegion(new CellRangeAddress(24, 24, 3, 5));
+			// a25 a a30
+			sheet.addMergedRegion(new CellRangeAddress(24, 29, 0, 0));
+			// b26:30 a f26:f30
+			sheet.addMergedRegion(new CellRangeAddress(25, 29, 1, 5));
+
+		}
 
 		// primero damos altura
 
@@ -341,7 +330,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		}
 		int contadorProducts = 12;
-		double totalsiniva =0;
+		double totalsiniva = 0;
 		for (CarritoItems carrito : factura.getCotizacion().getCarrito()) {
 			Row fila = sheet.createRow(itemRows++);
 			fila.setHeightInPoints(28);
@@ -379,7 +368,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 //			double precioUnitarioXcantidad = precioUnitario_temp * carrito.getCantidad(); DESCOMENTAR PARA SIN FORMULA
 			String precioUnitarioXcantidad = ("(D" + contadorProducts + "*A" + contadorProducts + ")");
 			cellItems.setCellFormula(precioUnitarioXcantidad);
-			totalsiniva +=carrito.getCantidad()*carrito.getPrecio();
+			totalsiniva += carrito.getCantidad() * carrito.getPrecio();
 			contadorProducts++;
 
 		}
@@ -458,7 +447,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		} else {
 			rowvacios_abajo29.getCell(6).setCellValue(df.format(retenido));
 			rowvacios_abajo29.getCell(6).setCellStyle(celltextMoney);
-			System.out.print("\nretenido"+retenido);
+			System.out.print("\nretenido" + retenido);
 		}
 
 		rowvacios_abajo29.getCell(6).setCellStyle(celltextMoney);
