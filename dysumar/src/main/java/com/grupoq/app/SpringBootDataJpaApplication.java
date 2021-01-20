@@ -1,5 +1,7 @@
 package com.grupoq.app;
 
+import java.util.TimeZone;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -23,6 +25,7 @@ public class SpringBootDataJpaApplication extends SpringBootServletInitializer i
 	@Override
 	public void run(String... args)throws Exception{
 		//probador
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 		String password="12345";
 		for(int i=0; i<4; i++) {
 			String bcryptPassword = passwordEncoder.encode(password);
