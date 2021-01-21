@@ -143,8 +143,7 @@ public class Facturacion implements Serializable {
 		this.codigofactura = codigofactura;
 	}
 
-	public Date getFecha() {
-		System.out.print("\n"+fecha);
+	public Date getFecha() {		
 		return fecha;
 	}
 

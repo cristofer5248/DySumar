@@ -112,17 +112,24 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		CellStyle celltextRight = workbook.createCellStyle();
 		celltextRight.setAlignment(HorizontalAlignment.RIGHT);
+		
+		CellStyle calibricenter11 = workbook.createCellStyle();
+		calibricenter11.setAlignment(HorizontalAlignment.CENTER);
+		
+		CellStyle calibricenter10right = workbook.createCellStyle();
+		calibricenter10right.setAlignment(HorizontalAlignment.RIGHT);
 
 		if (creditoFiscal) {
 			sheet.addMergedRegion(new CellRangeAddress(0, 11, 0, 0));
 			sheet.addMergedRegion(new CellRangeAddress(0, 29, 1, 1));
-			sheet.addMergedRegion(new CellRangeAddress(30, 36, 0, 7));
+			sheet.addMergedRegion(new CellRangeAddress(30, 34, 0, 7));
 
 			sheet.addMergedRegion(new CellRangeAddress(2, 2, 2, 5));
 			sheet.addMergedRegion(new CellRangeAddress(3, 3, 2, 5));
 			sheet.addMergedRegion(new CellRangeAddress(4, 4, 2, 5));
 			sheet.addMergedRegion(new CellRangeAddress(5, 5, 2, 5));
 			sheet.addMergedRegion(new CellRangeAddress(6, 6, 2, 5));
+			sheet.addMergedRegion(new CellRangeAddress(5, 6, 7, 8)); // union de giro
 
 			sheet.addMergedRegion(new CellRangeAddress(7, 7, 4, 5));
 
@@ -154,8 +161,8 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			sheet.addMergedRegion(new CellRangeAddress(2, 2, 7, 8));
 			sheet.addMergedRegion(new CellRangeAddress(3, 3, 7, 8));
 			sheet.addMergedRegion(new CellRangeAddress(4, 4, 7, 8));
-			sheet.addMergedRegion(new CellRangeAddress(5, 5, 7, 8));
-			sheet.addMergedRegion(new CellRangeAddress(6, 6, 7, 8));
+//			sheet.addMergedRegion(new CellRangeAddress(5, 5, 7, 8));
+//			sheet.addMergedRegion(new CellRangeAddress(6, 6, 7, 8));
 			sheet.addMergedRegion(new CellRangeAddress(7, 7, 7, 8));
 			sheet.addMergedRegion(new CellRangeAddress(8, 8, 7, 8));
 
@@ -205,43 +212,57 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		// primero damos altura
 
-		Row rowvacios_abajo26 = creditoFiscal ? sheet.createRow(28):sheet.createRow(25);
-		Row rowvacios_abajo27 = creditoFiscal ? sheet.createRow(29):sheet.createRow(26);
-		Row rowvacios_abajo28 = creditoFiscal ? sheet.createRow(29):sheet.createRow(27);
-		Row rowvacios_abajo29 = creditoFiscal ? sheet.createRow(29):sheet.createRow(28);
-		Row rowvacios_abajo30 = creditoFiscal ? sheet.createRow(30):sheet.createRow(29);
+		Row rowvacios_abajo26 = sheet.createRow(25);
+		Row rowvacios_abajo27 = sheet.createRow(26);
+		Row rowvacios_abajo28 = sheet.createRow(27);
+		Row rowvacios_abajo29 = sheet.createRow(28);
+		Row rowvacios_abajo30 = sheet.createRow(29);
+
+		Row rowvacios_abajo31 = sheet.createRow(30);
+		Row rowvacios_abajo32 = sheet.createRow(31);
+		Row rowvacios_abajo33 = sheet.createRow(32);
+		Row rowvacios_abajo34 = sheet.createRow(33);
+		Row rowvacios_abajo35 = sheet.createRow(34);
 
 		// coloreamos
 
 		if (creditoFiscal) {
 			sheet.setColumnWidth(0, 5 * 256);
-			sheet.setColumnWidth(1, 2 * 256);
-			sheet.setColumnWidth(2, 18 * 256);
-			sheet.setColumnWidth(3, 14 * 256);
+			sheet.setColumnWidth(1, 3 * 256);
+			sheet.setColumnWidth(2, 19 * 256);
+			sheet.setColumnWidth(3, 15 * 256);
 			sheet.setColumnWidth(4, 21 * 256);
-			sheet.setColumnWidth(5, 7 * 256);
-			sheet.setColumnWidth(6, 6 * 256);
+			sheet.setColumnWidth(5, 8 * 256);
+			sheet.setColumnWidth(6, 7 * 256);
 			sheet.setColumnWidth(7, 11 * 256);
-			sheet.setColumnWidth(8, 9 * 256);
+			sheet.setColumnWidth(8, 10 * 256);
 			rowvacios_abajo27.createCell(0);
-			rowvacios_abajo27.getCell(0).setCellStyle(celdasStyleMerged);
+
 			rowvacios_abajo28.createCell(0);
-			rowvacios_abajo28.getCell(0).setCellStyle(celdasStyleMerged);
+
 			rowvacios_abajo29.createCell(0);
-			rowvacios_abajo29.getCell(0).setCellStyle(celdasStyleMerged);
+
 			rowvacios_abajo30.createCell(0);
-			rowvacios_abajo30.getCell(0).setCellStyle(celdasStyleMerged);
+
 			rowvacios_abajo26.createCell(1);
 			rowvacios_abajo26.createCell(3);
 			rowvacios_abajo26.createCell(4);
-			rowvacios_abajo26.getCell(1).setCellStyle(celdasStyleMerged);
 
 			rowvacios_abajo26.setHeightInPoints(20);
 			rowvacios_abajo27.setHeightInPoints(22);
 			rowvacios_abajo28.setHeightInPoints(18);
-			rowvacios_abajo29.setHeightInPoints(22);
-			rowvacios_abajo30.setHeightInPoints(20);
-			rowvacios_abajo30.setHeightInPoints(22);
+			rowvacios_abajo29.setHeightInPoints(Float.parseFloat("22.5"));
+			rowvacios_abajo30.setHeightInPoints(Float.parseFloat("11.25"));
+
+			rowvacios_abajo31.setHeightInPoints(14);
+
+			rowvacios_abajo32.setHeightInPoints(14);
+
+			rowvacios_abajo33.setHeightInPoints(14);
+
+			rowvacios_abajo34.setHeightInPoints(14);
+
+			rowvacios_abajo35.setHeightInPoints(15);
 
 		} else {
 
@@ -298,6 +319,17 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		celltextRightF.setBold(true);
 		celltextRight.setFont(ennegrita);
 
+		Font calibrinormal11 = workbook.createFont();
+		calibrinormal11.setFontHeight((short) 11);
+		calibrinormal11.setFontName("Arial");
+		calibricenter11.setFont(calibrinormal11);
+		
+		Font calibrinormal10Right = workbook.createFont();
+		calibrinormal10Right.setFontHeight((short) 10);
+		calibrinormal10Right.setFontName("Arial");
+		calibricenter10right.setFont(calibrinormal10Right);
+		
+
 		CellStyle tbodystyle = workbook.createCellStyle();
 		tbodystyle.setBorderBottom(BorderStyle.MEDIUM);
 		tbodystyle.setBorderRight(BorderStyle.MEDIUM);
@@ -305,6 +337,83 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		tbodystyle.setBorderTop(BorderStyle.MEDIUM); // FIN DE LOS ESTILOS
 
 		if (creditoFiscal) {
+			Row row = sheet.createRow(0);
+			row.setHeightInPoints(57);
+			row.createCell(0);
+			row.createCell(8).setCellValue(factura.getCodigofactura());
+			row.getCell(8).setCellStyle(celltextRight);
+			row.getCell(0).setCellStyle(celdasStyleMerged);
+
+			// para la 2 y 3
+			Row row2 = sheet.createRow(1);
+			row2.setHeightInPoints(22);
+			row2.createCell(0);
+			row2.getCell(0).setCellStyle(celdasStyleMerged);
+
+			Row row3 = sheet.createRow(2);
+			row3.setHeightInPoints(14);
+			row3.createCell(8);
+			row3.createCell(2);
+			row3.getCell(2).setCellValue(factura.getCliente().getCliente().getNombre());
+			row3.getCell(2).setCellStyle(calibricenter11);
+
+			// fecha
+			row3.createCell(7);
+			row3.getCell(7).setCellValue(new SimpleDateFormat("dd/MM/yyyy").format(factura.getFecha()).toString());
+			row3.getCell(7).setCellStyle(calibricenter10right);
+
+			// para la 4 el registro
+			Row row4 = sheet.createRow(3);
+
+			row4.createCell(7);
+			row4.setHeightInPoints(22);
+			row4.getCell(7).setCellValue(factura.getCliente().getCliente().getCodigo());
+			row4.getCell(7).setCellStyle(calibricenter10right);
+
+			// para la 5
+			Row row5 = sheet.createRow(4);
+			row5.setHeightInPoints(31);
+			row5.createCell(2);
+			row5.getCell(2).setCellValue(factura.getCliente().getDirecciones().getNombre());
+			row5.getCell(2).setCellStyle(calibricenter11);
+			// nit
+			row5.createCell(7);
+			row5.getCell(7).setCellValue(factura.getCliente().getCliente().getDui());
+			row5.getCell(7).setCellStyle(calibricenter10right);
+
+			// para la 6 giro y a unir con la 7
+			Row row6 = sheet.createRow(5);
+			row6.setHeightInPoints(14);
+			row6.createCell(7);
+			row6.getCell(7).setCellValue(factura.getCliente().getCliente().getGiro().getDetalles());
+
+			// para la 7
+			Row row7 = sheet.createRow(6);
+			row7.setHeightInPoints(12);
+
+			// para la 8 9, 10 y 11
+			Row row8 = sheet.createRow(7);
+			Row row9 = sheet.createRow(8);
+			Row row10 = sheet.createRow(9);
+			Row row11 = sheet.createRow(10);
+			Row row12 = sheet.createRow(11);
+
+			row8.setHeightInPoints(21);
+			row9.setHeightInPoints(15);
+			row10.setHeightInPoints(6);
+			row11.setHeightInPoints(1);
+			row12.setHeightInPoints(24);
+
+			row8.createCell(2);
+			row8.createCell(4);
+			row8.createCell(8);
+
+			row8.getCell(2).setCellValue("DEPARTAMENTO");
+			row8.getCell(2).setCellStyle(calibricenter11);
+			row8.getCell(4).setCellStyle(calibricenter11);
+			row8.getCell(4).setCellValue("MUNICIPIO");
+			row8.getCell(8).setCellValue(factura.getTipoFactura().getNombre());
+			row8.getCell(8).setCellStyle(celltextRight);
 
 		} else {
 			// para la primera row A1
@@ -324,12 +433,12 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			row3.setHeightInPoints(8);
 
 			// para la 4
-			Row row4 = sheet.createRow(3);
+			Row row4 = sheet.createRow(creditoFiscal ? 2 : 3);
 
 			row4.createCell(0);
 			row4.createCell(3);
 			row4.createCell(4);
-			row4.createCell(1);
+			row4.createCell(creditoFiscal ? 2 : 1);
 			row4.createCell(5);
 			row4.getCell(0).setCellStyle(celdasStyleMerged);
 			row4.getCell(3).setCellStyle(celdasStyleMerged);
@@ -399,8 +508,20 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		int contadorProducts = 12;
 		double totalsiniva = 0;
 		for (CarritoItems carrito : factura.getCotizacion().getCarrito()) {
+			float tamanoaltura = creditoFiscal ? 22 : 28;
+			if (itemRows == 11 && creditoFiscal) {
+				tamanoaltura = Float.parseFloat("24.75");
+			}
+			if (itemRows == 12 && creditoFiscal) {
+				tamanoaltura = 26;
+			}
+			if (itemRows == 23 && creditoFiscal) {
+				tamanoaltura = 18;
+			}
+
 			Row fila = sheet.createRow(itemRows++);
-			fila.setHeightInPoints(28);
+			fila.setHeightInPoints(tamanoaltura);
+
 			cellItems = fila.createCell(0);
 			cellItems.setCellStyle(celltext);
 //			double preciofinalP = (creditoFiscal)?carrito.getPrecio()/1.13:carrito.getPrecio(); 
@@ -441,16 +562,27 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		}
 		// para ir llenando en vacio las demas con formato
-		while (contadorProducts > 24) {
+		int whilefin = creditoFiscal ? 27 : 24;
+		while (contadorProducts > whilefin) {
+			System.out.print("Voy por la celda: " + contadorProducts);
 			if (creditoFiscal) {
 				Row fila = sheet.createRow(contadorProducts);
-				fila.setHeightInPoints(26);
+				float tamanoaltura = Float.parseFloat("22.5");
+				if (itemRows == 12) {
+					tamanoaltura = 26;
+				}
+				if (itemRows == 23) {
+					tamanoaltura = 18;
+				}
+				fila.setHeightInPoints(contadorProducts == 23 && creditoFiscal ? 18 : 28);
+				fila.setHeightInPoints(tamanoaltura);
 				cellItems = fila.createCell(0);
 				cellItems.setCellStyle(celltext);
 				cellItems = fila.createCell(2);
 				cellItems.setCellStyle(celltextLeft);
 				cellItems = fila.createCell(8);
 				cellItems.setCellStyle(celltextMoney);
+
 				contadorProducts++;
 			} else {
 				Row fila = sheet.createRow(contadorProducts);
@@ -467,11 +599,17 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		System.out.print("donde estara el final es: " + itemRows);
 		// rellenamos con vacio lo que resta mas altura
 
-		int dondeterminoPro = creditoFiscal ? 28 : 24;
+		int dondeterminoPro = creditoFiscal ? 27 : 24;
 		for (int i_filler = itemRows; itemRows < dondeterminoPro; itemRows++) {
 			Row fila = sheet.createRow(i_filler++);
-			int altoprecios = (creditoFiscal) ? 25 : 28;
-			fila.setHeightInPoints(altoprecios);
+			float tamanoaltura = Float.parseFloat("22.5");
+			if (itemRows == 12) {
+				tamanoaltura = 26;
+			}
+			if (itemRows == 23) {
+				tamanoaltura = 18;
+			}
+			fila.setHeightInPoints(tamanoaltura);
 			fila.createCell(4);
 			fila.createCell(5);
 			fila.getCell(4).setCellStyle(celdasStyleMerged);
@@ -482,47 +620,37 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		double retenido = 0;
 		Row rowFinal = sheet.createRow(dondeterminoPro);
+		String retenidoformula = "0";
 		// mostrar iva ahi
 		if (creditoFiscal) {
-			rowvacios_abajo26.createCell(6);
-//			rowvacios_abajo26.getCell(6).setCellValue(factura.getTotaRegistrado() * 0.13); sin formula a lo hombre
-			rowvacios_abajo26.getCell(6).setCellFormula("G25*0.13");
-			rowvacios_abajo26.getCell(6).setCellStyle(celltextMoney);
-			rowvacios_abajo27.createCell(6);
-			rowvacios_abajo27.getCell(6).setCellStyle(celltextMoney);
-			// espacio para poner credito fiscal solo datos que solo el vera
-			// fin
-			Row numerosspacio = sheet.createRow(29);
-			numerosspacio.setHeightInPoints(11);
-			
-			rowFinal.setHeightInPoints(22);
-			rowFinal.createCell(1);
-			rowFinal.createCell(3);
-			rowFinal.getCell(1).setCellStyle(celdasStyleMerged);
-			rowFinal.getCell(3).setCellStyle(celdasStyleMerged);
-			rowFinal.createCell(2);
-			double sumasPrecios = (creditoFiscal) ? factura.getTotaRegistrado() : factura.getTotaRegistrado();
-			rowFinal.getCell(2).setCellValue(" " + numeroALetras.Convertir(df.format(sumasPrecios), true));
-			rowFinal.getCell(1).setCellStyle(ennegritacell);
-			rowFinal.createCell(8);
-			rowFinal.getCell(8).setCellStyle(celltextMoney);
-			rowFinal.getCell(8).setCellFormula("SUM(I11:I28)");
-			// retenindo 0 para restar si no es agente			
+			double sumasPrecios = factura.getTotaRegistrado();
+			rowvacios_abajo30.createCell(1);
+			rowvacios_abajo30.getCell(1).setCellValue(" " + numeroALetras.Convertir(df.format(sumasPrecios), true));
+
+			rowvacios_abajo29.createCell(8);
+			rowvacios_abajo29.getCell(8).setCellFormula("SUM(I11:I28)");
+			rowvacios_abajo29.getCell(8).setCellStyle(celltextMoney);
+			// retenindo 0 para restar si no es agente
 			if (totalsiniva > 113 && agente) {
 				retenido = (totalsiniva * 0.01);
+				retenidoformula = "I29*0.01";
 			}
-			rowvacios_abajo27.createCell(8);
-			rowvacios_abajo27.getCell(8).setCellStyle(celltextMoney);
-//			rowvacios_abajo27.getCell(6).setCellValue(df.format(ivado)); a lo hombre sin formula voy
-			rowvacios_abajo27.getCell(8).setCellFormula("I25");
-			
-			
-			Row rowFinal_total = sheet.createRow(29);
-			rowFinal_total.createCell(6);
-//			rowFinal_total.getCell(6).setCellValue(ivado - retenido); a lo hombre sin formula
-			rowFinal_total.getCell(6).setCellFormula("I31-I32");
-			rowFinal_total.getCell(6).setCellStyle(ennegritacelltotal);
-			rowFinal_total.setHeightInPoints(23);
+			rowvacios_abajo30.createCell(8);
+			rowvacios_abajo30.getCell(8).setCellFormula("I29*0.13");
+			rowvacios_abajo30.getCell(8).setCellStyle(celltextMoney);
+
+			rowvacios_abajo31.createCell(8);
+			rowvacios_abajo31.getCell(8).setCellFormula("SUM(I30+I29 )");
+			rowvacios_abajo31.getCell(8).setCellStyle(celltextMoney);
+
+			rowvacios_abajo32.createCell(8);
+			rowvacios_abajo32.getCell(8).setCellFormula(retenidoformula);
+			rowvacios_abajo32.getCell(8).setCellStyle(celltextMoney);
+
+			rowvacios_abajo35.createCell(8);
+			rowvacios_abajo35.getCell(8).setCellFormula("I31-I32");
+			rowvacios_abajo35.getCell(8).setCellStyle(celltextMoney);
+
 		} else {
 
 			rowFinal.setHeightInPoints(40);
@@ -531,8 +659,8 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			rowFinal.getCell(0).setCellStyle(celdasStyleMerged);
 			rowFinal.getCell(3).setCellStyle(celdasStyleMerged);
 			rowFinal.createCell(1);
-			double sumasPrecios = (creditoFiscal) ? factura.getTotaRegistrado() : factura.getTotaRegistrado();
-			rowFinal.getCell(1).setCellValue(" " + numeroALetras.Convertir(df.format(sumasPrecios), true));
+			rowFinal.getCell(1)
+					.setCellValue(" " + numeroALetras.Convertir(df.format(factura.getTotaRegistrado()), true));
 			rowFinal.getCell(1).setCellStyle(ennegritacell);
 			rowFinal.createCell(6);
 			rowFinal.getCell(6).setCellStyle(celltextMoney);
@@ -548,7 +676,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			rowvacios_abajo27.getCell(6).setCellStyle(celltextMoney);
 //			rowvacios_abajo27.getCell(6).setCellValue(df.format(ivado)); a lo hombre sin formula voy
 			rowvacios_abajo27.getCell(6).setCellFormula("G25");
-			
+
 			Row rowFinal_total = sheet.createRow(29);
 			rowFinal_total.createCell(6);
 //			rowFinal_total.getCell(6).setCellValue(ivado - retenido); a lo hombre sin formula
@@ -556,29 +684,22 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			rowFinal_total.getCell(6).setCellStyle(ennegritacelltotal);
 			rowFinal_total.setHeightInPoints(23);
 			rowvacios_abajo27.getCell(6).setCellFormula("SUM(G25:G26)");
-		}
 
-		// retencion datos set
-		rowvacios_abajo29.createCell(6);
-		if (retenido == 0) {
-			rowvacios_abajo29.getCell(6).setCellValue("0");
-		} else {
-			rowvacios_abajo29.getCell(6).setCellValue(df.format(retenido));
+			// retencion datos set
+			rowvacios_abajo29.createCell(6);
+			if (retenido == 0) {
+				rowvacios_abajo29.getCell(6).setCellValue("0");
+			} else {
+				rowvacios_abajo29.getCell(6).setCellValue(df.format(retenido));
+				rowvacios_abajo29.getCell(6).setCellStyle(celltextMoney);
+				System.out.print("\nretenido" + retenido);
+			}
+
 			rowvacios_abajo29.getCell(6).setCellStyle(celltextMoney);
-			System.out.print("\nretenido" + retenido);
+			rowFinal.getCell(1)
+					.setCellValue(" " + numeroALetras.Convertir(df.format(factura.getTotaRegistrado()), true));
 		}
 
-		rowvacios_abajo29.getCell(6).setCellStyle(celltextMoney);
-//		
-//		rowvacios_abajo27.getCell(6).setCellValue(ivado); // sin formula a lo hombre
-		
-		// termina la retencion
-
-		// ponemos el credito fiscal o vacio
-
-
-
-		rowFinal.getCell(1).setCellValue(" " + numeroALetras.Convertir(df.format(factura.getTotaRegistrado()), true));
 		// hacer el cambio en esto porque lo tomamos del final
 
 //		Row row12aleft = sheet.createRow(11);

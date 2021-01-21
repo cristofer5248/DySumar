@@ -15,7 +15,9 @@
 				<td><input type="number" min="0.000001" step="0.000001"
 					name="precio_id[]" id="precio_{ID}" class="form-control col-sm-10"
 					onkeyup="itemsHelper.calcularImporte2({ID},this.value,1,{COSTO});"
-					onchange="itemsHelper.calcularImporte2({ID},this.value,1,{COSTO});" /><a type="button" class="btn ivabtn" onclick="quitariva1({ID},{COSTO})" >- IVA</a></td>
+					onchange="itemsHelper.calcularImporte2({ID},this.value,1,{COSTO});" /><a
+					type="button" class="btn ivabtn" onclick="quitariva1({ID},{COSTO})">-
+						IVA</a></td>
 				<td class="columnmargen" style="display: none"><span
 					id="margen_{ID}"></span></td>
 				<!--Esto es con descuento igual no funciona aun no agarro el id bien el valor onchange="itemsHelper.calcularImporte2({ID},{PRECIO}, this.value,document.getElementById('descuento_{ID}').value);" -->
