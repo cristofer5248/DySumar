@@ -190,6 +190,31 @@ public class FacturaController {
 		return "redirect:/factura/ver/" + term;
 	}
 
+	// PARA CARRITO
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_FACT" })
+	@RequestMapping(value = "/notaderemision/{term}", method = RequestMethod.GET)
+	public String rm(Map<String, Object> model, RedirectAttributes flash, @PathVariable Long term) {
+		String productosmalos = "";
+		try {
+			Facturacion facturacion = facturaservice.findBy(term);
+
+			System.out.print("\nRecorriendo: \n");
+			boolean cambiarStatus = true;
+			facturacion.setStatus(4);
+			if (cambiarStatus) {				
+				facturaservice.save(facturacion);
+				flash.addFlashAttribute("success", "Se ha actualizado el estado de la remision");
+			} else {
+
+				flash.addFlashAttribute("error", productosmalos + " No se pudo cambiar el estado");
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		return "redirect:/factura/ver/" + term;
+	}
+
 //PARA CARRITO
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
@@ -363,8 +388,8 @@ public class FacturaController {
 			// fin
 			// poniendo total en factura entity
 
-			totalParaFactura += (pro.getPrecio() * pro.getCantidad() * pro.getDescuento()*1.13);
-			
+			totalParaFactura += (pro.getPrecio() * pro.getCantidad() * pro.getDescuento() * 1.13);
+
 			totalsiniva += pro.getPrecio() * pro.getCantidad();
 
 			System.out.print("\n" + totalParaFactura + "\n");
@@ -598,14 +623,15 @@ public class FacturaController {
 
 				for (CarritoItems carrito : factura.getCotizacion().getCarrito()) {
 					if (carrito.getId().equals(codigoItemCarrito)) {
-						
+
 						flash.addFlashAttribute("success", "Operacion exitosa!");
 						nuevaNotificacion("fas fa-file-alt", "El costo de un producto en una factura ha sido cambiado!",
 								"/factura/ver/" + factura.getId(), "gray");
-						pathredirect = "/cotizacion/ver/" + factura.getCotizacion().getId().toString()+"/"+factura.getId();
+						pathredirect = "/cotizacion/ver/" + factura.getCotizacion().getId().toString() + "/"
+								+ factura.getId();
 						cambiarcosto = true;
 						double preciosin = (costoN * carrito.getCantidad());
-						double descuento = carrito.getDescuento() / 100;
+//						double descuento = carrito.getDescuento() / 100;
 						// el descuento es sin iva?
 //						descuento = carrito.getPrecio()*descuento;
 						totalnuevo += (preciosin * 1.13);
@@ -613,10 +639,10 @@ public class FacturaController {
 						carrito.setMargen(margennuevo);
 						carrito.setPrecio(costoN);
 						carritoitemsservice.save(carrito);
-						System.out.print("\ncuantas veces paso" + totalnuevo);
+
 					} else {
-						totalnuevo += carrito.getPrecio() * 1.13* carrito.getCantidad();
-						System.out.print("\ncuantas veces paso" + totalnuevo);
+						totalnuevo += carrito.getPrecio() * 1.13 * carrito.getCantidad();
+
 					}
 
 				}
@@ -675,6 +701,7 @@ public class FacturaController {
 	public String finalizandoFactura(@RequestParam(name = "id") Long id, @RequestParam(name = "codigo") String codigo,
 			RedirectAttributes flash) {
 		System.out.print("\n VEAMOS EL ID :" + codigo);
+		String redirecpage  = "redirect:/factura/listar/";
 		if (id > 0 && codigo != null) {
 			try {
 				Facturacion factura = facturaservice.findBy(id);
@@ -684,13 +711,14 @@ public class FacturaController {
 				flash.addFlashAttribute("success", "Operacion exitosa!");
 				nuevaNotificacion("fas fa-file-alt", "Nueva remision finalizada!", "/factura/ver/" + factura.getId(),
 						"green");
+				redirecpage = "redirect:/factura/ver/"+factura.getId();
 			} catch (Exception e) {
 				flash.addFlashAttribute("error", "No se pudo cambiar el estado ni guardar la operacion!");
-				return "redirect:/factura/listar";
+				return redirecpage;
 			}
 
 		}
-		return "redirect:/factura/listar";
+		return redirecpage;
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })

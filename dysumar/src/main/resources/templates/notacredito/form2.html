@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<meta charset="UTF-8" />
+<body>
+
+	<header th:replace="layout/layout :: header"></header>
+
+	<div class="container py-4">
+
+		<div class="card bg-dark text-white">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+
+				<div th:object="${notadecredito}" th:remove="tag">
+					<ul th:if="${#fields.hasErrors('*')}" class="alert alert-danger"
+						role="alert">
+						<li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+					</ul>
+				</div>
+
+				<form th:action="@{/notacredito/save}" method="post"
+					id="carritoform" enctype="multipart/form-data">
+					<div class="form-group row">
+						<label for="proveedor" class="col-sm-2 col-form-label"
+							th:text="'Cliente/Proveedor'"></label>
+						<div class="col-sm-6">
+							<select id="cargar_proveedor" name="cargar_proveedor"
+								class="custom-select mr-sm-2">
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="codigo" class="col-sm-2 col-form-label">N° de
+							documento</label>
+						<div class="col-sm-6">
+							<input type="text" name="codigodoc" class="form-control"
+								placeholder="Este codigo corresponde con la factura o credito fiscal" />
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="fecha" class="col-sm-2 col-form-label">Fecha</label>
+						<div class="col-sm-6">
+							<input type="text" id="mydate" name="fecha" class="form-control"
+								required="required">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="cargar_producto" class="col-sm-2 col-form-label"
+							th:text="'Ingrese los articulos'"></label>
+						<div class="col-sm-6">
+							<input type="text" name="cargar_producto" id="cargar_producto"
+								class="form-control" disabled />
+						</div>
+					</div>
+					<div class="form-group row" style="visibility: hidden"
+						id="concepto">
+						<label for="fecha" class="col-sm-2 col-form-label">Concepto</label>
+						<div class="col-sm-6">
+							<input type="text" name="comentario" id="conceptotxt"
+								class="form-control">
+						</div>
+					</div>
+					<table th:replace="inventario/plantilla-items.html ::itemsFactura"></table>
+					<table id="cargarItemProductos"
+						class="table table-sm-striped table-hover">
+						<thead>
+							<tr>
+								<th>Nombre</th>
+								<th>Precio</th>
+								<th>Cantidad</th>
+								<th>Total</th>
+								<th>Eliminar</th>
+							</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+					<h5>
+						$<span class="badge badge-secondary" id="gran_total"></span>
+					</h5>
+					<div class="form-group row">
+						<div class="col-sm-6">
+							<input type="submit" th:value="${titulo}" id="submit"
+								class="btn btn-secondary" disabled />
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<footer th:replace="layout/layout :: footer"></footer>
+	<input type="hidden" id="urlAjaxproveedor"
+		th:value="@{/descuento/cargar_producto/}" />
+	<input type="hidden" id="urlAjaxproveedorselect"
+		th:value="@{/proveedor/cargar_proveedor}" />
+	<script>
+		$('#mydate').datepicker({
+			format : "yyyy-mm-dd"
+		});
+	</script>
+	<script th:replace="inventario/js/autocomplete :: javascript"></script>
+	<script>
+		$(document).ready(function() {
+			// Warning
+			$(window).on('beforeunload', function() {
+				return "Any changes will be lost";
+			});
+
+			// Form Submit
+			$(document).on("submit", "#carritoform", function(event) {
+				// disable warning
+				$(window).off('beforeunload');
+			});
+		});
+	</script>
+
+</body>
+</html>

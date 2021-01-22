@@ -45,11 +45,15 @@
 						th:href="@{/factura/checkstock/}+${codigofa}"
 						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT','ROLE_JEFEADM')"
 						th:text="'Evaluar existencias'"></a> <a
-						th:if="${facturaciones.status==2 || facturaciones.status==1}"
+						th:if="${facturaciones.status==2 || facturaciones.status==1 || facturaciones.status==4 }"
 						class="btn btn-success btn-xs" data-toggle="modal"
 						data-target="#exampleModal2" style="color: white;"
 						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT')"
-						onclick="meterid();" th:text="'Procesar'"></a>
+						onclick="meterid();" th:text="'Procesar'"></a> <a
+						th:if="${facturaciones.status==2 || facturaciones.status==1}"
+						class="btn btn-primary btn-xs" style="color: white;"
+						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT')" th:href="@{/factura/notaderemision/}+${codigofa}"
+						onclick="notaderemision();" th:text="'CAMBIAR A NR'"></a>
 
 
 				</h4>
@@ -93,6 +97,9 @@
 					<li th:if="${facturaciones.status==2}" class="list-group-item"
 						style="color: #F05E23"
 						th:text="'Estado :    EN ESPERA a facturacion'"></li>
+					<li th:if="${facturaciones.status==4}" class="list-group-item"
+						style="color: blue"
+						th:text="'Estado :    Como nota de remision'"></li>
 					<li class="list-group-item"
 						th:text="'Factura con id:    '+${codigofa}"></li>
 					<li class="list-group-item"
@@ -276,6 +283,9 @@
 	<script>
 		function cambiarcodigo() {
 			$('#statuschangeform').submit();
+		}
+		function notaderemision(){
+			
 		}
 	</script>
 
