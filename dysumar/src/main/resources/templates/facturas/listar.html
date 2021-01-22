@@ -87,7 +87,8 @@
 							<td th:text="${factura.fecha}"></td>
 
 							<td
-								th:text="'$'+${#numbers.formatDecimal(factura.totaRegistrado,0, 'COMMA', 2, 'POINT')}"></td>
+								th:text="${#numbers.formatDecimal(factura.totaRegistrado,0, 'COMMA', 2, 'POINT')}"></td>
+							<!-- 								th:text="${factura.totaRegistrado}"></td> -->
 							<!-- 							<td
 								th:if="${#request.isUserInRole('SELLER')}"><a
 								class="btn btn-success btn-xs"
@@ -206,7 +207,7 @@
 							// 	                salaryAvg = $.fn.dataTable.render.number(',', '.', 0, '$').display( salaryAvg );
 
 							return $('<tr/>').append(
-									'<td colspan="9" class="totalclass">Total del vendedor: '
+									'<td colspan="8" class="totalclass">Total del vendedor: '
 											+ group + '</td>')
 
 							.append(
