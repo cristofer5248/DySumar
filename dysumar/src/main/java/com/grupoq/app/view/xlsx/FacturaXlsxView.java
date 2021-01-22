@@ -110,14 +110,31 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		CellStyle celltextLeft = workbook.createCellStyle();
 		celltextLeft.setAlignment(HorizontalAlignment.LEFT);
 
+		CellStyle calibriproducs = workbook.createCellStyle();
+		calibriproducs.setAlignment(HorizontalAlignment.LEFT);
+		
 		CellStyle celltextRight = workbook.createCellStyle();
 		celltextRight.setAlignment(HorizontalAlignment.RIGHT);
-		
+
 		CellStyle calibricenteronce = workbook.createCellStyle();
 		calibricenteronce.setAlignment(HorizontalAlignment.CENTER);
+		calibricenteronce.setVerticalAlignment(VerticalAlignment.CENTER);
 //		
 		CellStyle calibridiezright = workbook.createCellStyle();
 		calibridiezright.setAlignment(HorizontalAlignment.RIGHT);
+
+		CellStyle calibridiezcenterright = workbook.createCellStyle();
+		calibridiezcenterright.setAlignment(HorizontalAlignment.RIGHT);
+		calibridiezcenterright.setVerticalAlignment(VerticalAlignment.CENTER);
+
+		CellStyle calibritopleftonce = workbook.createCellStyle();
+		calibritopleftonce.setAlignment(HorizontalAlignment.LEFT);
+		calibritopleftonce.setVerticalAlignment(VerticalAlignment.TOP);
+
+		CellStyle calibri10warptext = workbook.createCellStyle();
+		calibri10warptext.setAlignment(HorizontalAlignment.RIGHT);
+		calibri10warptext.setVerticalAlignment(VerticalAlignment.TOP);
+		calibri10warptext.setWrapText(true);
 
 		if (creditoFiscal) {
 			sheet.addMergedRegion(new CellRangeAddress(0, 11, 0, 0));
@@ -323,11 +340,31 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		calibrinormal11.setFontHeightInPoints((short) 11);
 		calibrinormal11.setFontName("Calibri");
 		calibricenteronce.setFont(calibrinormal11);
-		
+
 		Font calibrinormal10Right = workbook.createFont();
 		calibrinormal10Right.setFontHeightInPoints((short) 10);
 		calibrinormal10Right.setFontName("Calibri");
 		calibridiezright.setFont(calibrinormal10Right);
+
+		Font calibridiezcenterrightF = workbook.createFont();
+		calibridiezcenterrightF.setFontHeightInPoints((short) 10);
+		calibridiezcenterrightF.setFontName("Calibri");
+		calibridiezcenterright.setFont(calibridiezcenterrightF);
+
+		Font calibritopleftonceF = workbook.createFont();
+		calibritopleftonceF.setFontHeightInPoints((short) 10);
+		calibritopleftonceF.setFontName("Calibri");
+		calibritopleftonce.setFont(calibritopleftonceF);
+
+		Font calibri10warptextF = workbook.createFont();
+		calibri10warptextF.setFontHeightInPoints((short) 10);
+		calibri10warptextF.setFontName("Calibri");
+		calibri10warptext.setFont(calibritopleftonceF);
+		
+		Font calibriproducsf = workbook.createFont();
+		calibriproducsf.setFontHeightInPoints((short) 9);
+		calibriproducsf.setFontName("Calibri");
+		calibriproducs.setFont(calibriproducsf);
 		
 
 		CellStyle tbodystyle = workbook.createCellStyle();
@@ -379,14 +416,14 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			// nit
 			row5.createCell(7);
 			row5.getCell(7).setCellValue(factura.getCliente().getCliente().getDui());
-			row5.getCell(7).setCellStyle(calibridiezright);
+			row5.getCell(7).setCellStyle(calibridiezcenterright);
 
 			// para la 6 giro y a unir con la 7
 			Row row6 = sheet.createRow(5);
 			row6.setHeightInPoints(14);
 			row6.createCell(7);
 			row6.getCell(7).setCellValue(factura.getCliente().getCliente().getGiro().getDetalles());
-			row6.getCell(7).setCellStyle(calibridiezright);
+			row6.getCell(7).setCellStyle(calibri10warptext);
 
 			// para la 7
 			Row row7 = sheet.createRow(6);
@@ -401,20 +438,20 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 			row8.setHeightInPoints(21);
 			row9.setHeightInPoints(15);
-			row10.setHeightInPoints(6);
+			row10.setHeightInPoints(7);
 			row11.setHeightInPoints(1);
-			row12.setHeightInPoints(24);
+			row12.setHeightInPoints(Float.parseFloat("24.75"));
 
 			row8.createCell(2);
 			row8.createCell(4);
-			row8.createCell(8);
+			row8.createCell(7);
 
 			row8.getCell(2).setCellValue("DEPARTAMENTO");
-			row8.getCell(2).setCellStyle(calibricenteronce);
+			row8.getCell(2).setCellStyle(calibritopleftonce);
 			row8.getCell(4).setCellStyle(calibricenteronce);
 			row8.getCell(4).setCellValue("MUNICIPIO");
-			row8.getCell(8).setCellValue(factura.getTipoFactura().getNombre());
-			row8.getCell(8).setCellStyle(calibridiezright);
+			row8.getCell(7).setCellValue(factura.getTipoFactura().getNombre());
+			row8.getCell(7).setCellStyle(calibridiezcenterright);
 
 		} else {
 			// para la primera row A1
@@ -502,19 +539,23 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		}
 		// para el 12 en adelante:
-		int itemRows = 11;
+		int itemRows = creditoFiscal ? 12 : 11;
 		Row rowItems = sheet.createRow(11);
+		if (creditoFiscal) {
+			rowItems.setHeightInPoints(Float.parseFloat("24.75"));
+		}
 
 		Cell cellItems = rowItems.createCell(0);
-		int contadorProducts = 12;
+
+		int contadorProducts = creditoFiscal ? 13 : 12;
 		double totalsiniva = 0;
 		for (CarritoItems carrito : factura.getCotizacion().getCarrito()) {
-			float tamanoaltura = creditoFiscal ? 22 : 28;
+			float tamanoaltura = creditoFiscal ? Float.parseFloat("22.5") : 28;
 			if (itemRows == 11 && creditoFiscal) {
 				tamanoaltura = Float.parseFloat("24.75");
 			}
 			if (itemRows == 12 && creditoFiscal) {
-				tamanoaltura = 26;
+				tamanoaltura = Float.parseFloat("26.25");
 			}
 			if (itemRows == 23 && creditoFiscal) {
 				tamanoaltura = 18;
@@ -530,7 +571,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 			// codigo del producto y nombre unidos por alguna razon
 			cellItems = creditoFiscal ? fila.createCell(2) : fila.createCell(1);
-			cellItems.setCellStyle(celltextLeft);
+			cellItems.setCellStyle(calibriproducs);
 			cellItems.setCellValue(
 					carrito.getProductos().getMarca().getNombrem() + " " + carrito.getProductos().getNombrep() + " "
 							+ carrito.getProductos().getPresentacion().getDetalle());
