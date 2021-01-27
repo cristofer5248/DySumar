@@ -201,7 +201,7 @@ public class FacturaController {
 			System.out.print("\nRecorriendo: \n");
 			boolean cambiarStatus = true;
 			facturacion.setStatus(4);
-			if (cambiarStatus) {				
+			if (cambiarStatus) {
 				facturaservice.save(facturacion);
 				flash.addFlashAttribute("success", "Se ha actualizado el estado de la remision");
 			} else {
@@ -600,6 +600,7 @@ public class FacturaController {
 		model.put("codigofa", id);
 		model.put("titulo", "Detalle de factura # : " + id);
 		model.put("carritoid", carritoid);
+		model.put("correlativo", facturacion.getCodigofactura());
 
 		return "/facturas/ver";
 	}
@@ -699,19 +700,20 @@ public class FacturaController {
 	@Secured({ "ROLE_ADMIN", "ROLE_FACT" })
 	@RequestMapping(value = "/statusChange", method = RequestMethod.POST)
 	public String finalizandoFactura(@RequestParam(name = "id") Long id, @RequestParam(name = "codigo") String codigo,
-			RedirectAttributes flash) {
+			@RequestParam(name = "ndr") int ndr, RedirectAttributes flash) {
 		System.out.print("\n VEAMOS EL ID :" + codigo);
-		String redirecpage  = "redirect:/factura/listar/";
+		String redirecpage = "redirect:/factura/listar/";
 		if (id > 0 && codigo != null) {
 			try {
 				Facturacion factura = facturaservice.findBy(id);
-				factura.setStatus(1);
+
+				factura.setStatus(ndr == 2 ? 4 : 1);
 				factura.setCodigofactura(codigo);
 				facturaservice.save(factura);
 				flash.addFlashAttribute("success", "Operacion exitosa!");
 				nuevaNotificacion("fas fa-file-alt", "Nueva remision finalizada!", "/factura/ver/" + factura.getId(),
 						"green");
-				redirecpage = "redirect:/factura/ver/"+factura.getId();
+				redirecpage = "redirect:/factura/ver/" + factura.getId();
 			} catch (Exception e) {
 				flash.addFlashAttribute("error", "No se pudo cambiar el estado ni guardar la operacion!");
 				return redirecpage;

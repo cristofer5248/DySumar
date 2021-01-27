@@ -51,12 +51,7 @@
 						class="btn btn-success btn-xs" data-toggle="modal"
 						data-target="#exampleModal2" style="color: white;"
 						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT')"
-						onclick="meterid();" th:text="'Procesar'"></a> <a
-						th:if="${facturaciones.status==2 || facturaciones.status==1}"
-						class="btn btn-primary btn-xs" style="color: white;"
-						sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_FACT')"
-						th:href="@{/factura/notaderemision/}+${codigofa}"
-						onclick="notaderemision();" th:text="'PROCESAR COMO NR'"></a>
+						onclick="meterid();" th:text="'Procesar'"></a>
 
 
 				</h4>
@@ -78,6 +73,15 @@
 										<input id="idinput" type="hidden" name="id" /> <label>Codigo
 											unico de remisión:</label> <input id="codigoinput" type="text"
 											maxlength="11" name="codigo" class="form-control" />
+									</div>
+									<div class="form-group">
+										<label>Procesar como:</label>
+									</div>
+									<div class="form-group">
+										<select class="form-control" name="ndr">
+											<option value="1">FACTURA/CREDITO FISCAL</option>
+											<option value="2">NOTA DE REMISION</option>
+										</select>
 									</div>
 								</form>
 							</div>
@@ -104,7 +108,7 @@
 					<li th:if="${facturaciones.status==4}" class="list-group-item"
 						style="color: blue" th:text="'Estado :    Como nota de remision'"></li>
 					<li class="list-group-item"
-						th:text="'Factura con id:    '+${codigofa}"></li>
+						th:text="'Factura con correlativo:    '+${correlativo}"></li>
 					<li class="list-group-item"
 						th:text="'Cliente: '+  ${facturaciones.cliente.cliente.nombre}"></li>
 					<li class="list-group-item"
