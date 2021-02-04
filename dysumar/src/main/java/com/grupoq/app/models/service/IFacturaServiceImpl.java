@@ -1,6 +1,5 @@
 package com.grupoq.app.models.service;
 
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -27,16 +26,16 @@ public class IFacturaServiceImpl implements IFacturaService {
 
 	@Autowired
 	IFacturaDao facturadao;
-	
+
 	@Autowired
 	IClienteDirecciones clientedireccionesdao;
-	
+
 	@Autowired
 	IFormaDePagoDao formadepagodao;
-	
+
 	@Autowired
 	ICDePagoDao cdepagodao;
-	
+
 	@Autowired
 	ITipoDeFacturaDao tipodefacturadao;
 
@@ -62,13 +61,13 @@ public class IFacturaServiceImpl implements IFacturaService {
 	@Override
 	public void save(Facturacion facturacion) {
 		facturadao.save(facturacion);
-		
+
 	}
 
 	@Override
 	public void delete(Long id) {
 		facturadao.deleteById(id);
-		
+
 	}
 
 	@Override
@@ -144,7 +143,7 @@ public class IFacturaServiceImpl implements IFacturaService {
 	}
 
 	@Override
-	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatusWithoutProducto(Long id) {	
+	public List<Facturacion> findByCotizacionByCarritoItemsByIdByStatusWithoutProducto(Long id) {
 		return facturadao.findByCotizacionByCarritoItemsByIdByStatusWithoutProducto(id);
 	}
 
@@ -163,6 +162,12 @@ public class IFacturaServiceImpl implements IFacturaService {
 	@Override
 	public List<Facturacion> findHistorialPreciosVendedor(Long id, Long vendedor) {
 		// TODO Auto-generated method stub
-		return facturadao.findHistorialPreciosVendedor(id,vendedor);
+		return facturadao.findHistorialPreciosVendedor(id, vendedor);
+	}
+
+	@Override
+	public Facturacion findByCodigofactura(String id) {
+		// TODO Auto-generated method stub
+		return facturadao.findByCodigofactura(id);
 	}
 }

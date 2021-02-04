@@ -249,7 +249,41 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 		itemsHelper.calcularImporte2(id,preciosin,1,costo);
 	
 	}
+	
+
+	
+	function investigar() {				
 		
+			var data = $("#codigodoc").val();
+			$.ajax({
+		         type: "get",
+		         dataType : "json",
+		         url: $("#urlAjaxndc").val()+$("#codigodoc").val(),
+		         timeout: 600000,
+		         
+		         success: function (response) {
+		        	 console.log(data);
+// 		             $("#btnPresentacion").prop("disabled", true);
+// 		             $('#modalpresentacion').modal('toggle');
+		             
+// 		             $('#cargar_presentacion').val(response);
+// 		             $("#cargar_presentacion").prop("readonly", true);
+	if(response==true){
+		
+	}else{
+		alertify.alert('Error!', 'Ese codigo de documento no fue encontrado, ingrese uno valido.', function(){ alertify.success('Ok'); });
+	}
+
+		             // ...
+		         },
+		         error: function () {
+		        	 alertify.alert('Error!', 'Ese codigo de documento no fue encontrado, ingrese uno valido.', function(){ alertify.success('Ok'); });
+// 		             $("#btnPresentacion").prop("disabled", false);
+		             // ...
+		         }
+		});
+
+}
 		
 	</script>
 </body>

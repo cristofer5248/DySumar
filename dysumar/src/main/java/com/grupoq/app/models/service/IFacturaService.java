@@ -20,6 +20,7 @@ public interface IFacturaService {
 	public List<Facturacion> findHistorialPrecios(Long id);
 	public List<Facturacion> findHistorialPreciosVendedor(Long id, Long vendedor);
 	public Facturacion findBy(Long id);
+	public Facturacion findByCodigofactura(String id);
 	public void save(Facturacion facturacion);
 	public void delete(Long id);
 	public List<ClienteDirecciones> findByCliente(Long id);

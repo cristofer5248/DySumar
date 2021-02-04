@@ -64,4 +64,6 @@ public interface IFacturaDao extends PagingAndSortingRepository<Facturacion, Lon
 	// el nombre lo dice, busco precios ya dados en factura de un producto PERO PARA EL VENDEDOR
 	@Query("SELECT f FROM Facturacion f join fetch f.aCuentade usu join fetch f.cotizacion c join fetch c.carrito ca join fetch ca.productos p where p.id=?1 and usu.id=?2")
 	public List<Facturacion> findHistorialPreciosVendedor(Long id, Long vendedor);
+	
+	public Facturacion findByCodigofactura(String id);
 }

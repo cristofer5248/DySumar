@@ -30,6 +30,7 @@ import com.grupoq.app.models.entity.CarritoItems;
 import com.grupoq.app.models.entity.Cotizacion;
 import com.grupoq.app.models.entity.Descuento;
 import com.grupoq.app.models.entity.Facturacion;
+import com.grupoq.app.models.entity.NotadeCredito;
 import com.grupoq.app.models.entity.Notificaciones;
 import com.grupoq.app.models.entity.Producto;
 import com.grupoq.app.models.entity.Usuario;
@@ -47,6 +48,7 @@ import com.grupoq.app.webservice.ProductosWB;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
@@ -223,6 +225,15 @@ public class FacturaController {
 		model.put("carritoitems", carrito);
 		model.put("titulo", "Ingreso de articulos");
 		return "/facturas/form2";
+	}
+
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_INV", "ROLE_FACT" })
+	@RequestMapping(value = "/notadecredito", method = RequestMethod.GET)
+	public String notaderemision(Map<String, Object> model, RedirectAttributes flash) {
+		NotadeCredito notadecredito = new NotadeCredito();
+		model.put("notadecredito", notadecredito);
+		model.put("titulo", "Nota de Credito");
+		return "/facturas/notadecredito";
 	}
 
 //ESTOS SI SON PARA FACTURA
@@ -472,6 +483,52 @@ public class FacturaController {
 
 		}
 		return list2;
+	}
+
+	@Secured({ "ROLE_ADMIN", "ROLE_FACT", "ROLE_JEFEADM" })
+	@RequestMapping(value = "/busquedacodigo/{codigodoc}", method = { RequestMethod.GET }, produces = {
+			"application/json" })
+	public @ResponseBody Boolean busquedacodigo(@PathVariable(value = "codigodoc", required = true) String codigodoc,
+			Model model, RedirectAttributes flash, SessionStatus status) throws ParseException {
+
+		Boolean resultado = false;
+		Facturacion facturacion = facturaservice.findByCodigofactura(codigodoc);
+		if (facturacion == null) {
+			resultado = false;
+			System.out.print("holi");
+		} else {
+			model.addAttribute("success", "Todo blue");
+			flash.addFlashAttribute("success", "Todo blue");
+			System.out.print("holi 2");
+			resultado = true;
+		}
+
+		return resultado;
+
+	}
+
+	@Secured({ "ROLE_ADMIN", "ROLE_FACT", "ROLE_JEFEADM" })
+	@RequestMapping(value = "/savendc", method = RequestMethod.POST)
+	public String guardarnotadecredito(@RequestParam(name = "item_id[]", required = false) Long[] itemId,
+			@RequestParam(name = "cantidad[]", required = false) Integer[] cantidad,
+			@RequestParam(name = "precio_id[]", required = false) double[] precio,
+			@RequestParam(name = "tipoC", required = true) int tipoC,
+			@RequestParam(name = "codigodoc", required = true) String codigodoc, Model model, RedirectAttributes flash,
+			SessionStatus status) throws ParseException {
+
+		Facturacion facturacion = facturaservice.findByCodigofactura(codigodoc);
+		if (facturacion == null) {
+			model.addAttribute("error", "Error brodeeeeeer");
+			flash.addFlashAttribute("error", "Error brodeeeeeer");
+			System.out.print("holi");
+		} else {
+			model.addAttribute("success", "Todo blue");
+			flash.addFlashAttribute("success", "Todo blue");
+			System.out.print("holi 2");
+		}
+
+		return "redirect:/";
+
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER", "ROLE_JEFEADM" })

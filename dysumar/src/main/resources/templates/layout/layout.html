@@ -108,12 +108,12 @@
 							<a class="dropdown-item" href="#about"
 								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_FACT','ROLE_SELLER')"
 								th:href="@{/factura/listar}"><i
-								class="fas fa-file-invoice-dollar"></i> Remision</a>
-							<!-- 								<a -->
-							<!-- 								class="dropdown-item" th:href="@{/ventas/listar}">Historial -->
-							<!-- 								de Salidas</a> -->
-							<!-- 							<div class="dropdown-divider"></div> -->
-							<!-- 							<a class="dropdown-item" href="#">Movimientos</a> -->
+								class="fas fa-file-invoice-dollar"></i> Remision</a> <a
+								class="dropdown-item" href="#about"
+								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_FACT','ROLE_INV')"
+								th:href="@{/factura/notadecredito}"><i class="far fa-clipboard"></i>
+								Nota de credito</a>
+
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" data-toggle="modal"
 								sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_JEFEADM','ROLE_FACT','ROLE_SELLER')"
