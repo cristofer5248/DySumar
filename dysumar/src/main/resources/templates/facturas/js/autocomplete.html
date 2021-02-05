@@ -269,9 +269,14 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 // 		             $('#cargar_presentacion').val(response);
 // 		             $("#cargar_presentacion").prop("readonly", true);
 	if(response==true){
-		
+		$("#elcheck").css("color","green");
+		$("#codigodoc").css("background-color","white");
+		$("#codigodoc").css("color","black");
 	}else{
 		alertify.alert('Error!', 'Ese codigo de documento no fue encontrado, ingrese uno valido.', function(){ alertify.success('Ok'); });
+		$("#elcheck").css("color","red");
+		$("#codigodoc").css("background-color","red");
+		$("#codigodoc").css("color","white");
 	}
 
 		             // ...

@@ -30,6 +30,7 @@ import com.grupoq.app.models.entity.CarritoItems;
 import com.grupoq.app.models.entity.Cotizacion;
 import com.grupoq.app.models.entity.Descuento;
 import com.grupoq.app.models.entity.Facturacion;
+import com.grupoq.app.models.entity.Inventario;
 import com.grupoq.app.models.entity.NotadeCredito;
 import com.grupoq.app.models.entity.Notificaciones;
 import com.grupoq.app.models.entity.Producto;
@@ -39,6 +40,8 @@ import com.grupoq.app.models.service.IClienteService;
 import com.grupoq.app.models.service.ICotizacionService;
 import com.grupoq.app.models.service.IDescuentoService;
 import com.grupoq.app.models.service.IFacturaService;
+import com.grupoq.app.models.service.IInventarioService;
+import com.grupoq.app.models.service.INotadeCreditoService;
 import com.grupoq.app.models.service.INotificacionesService;
 import com.grupoq.app.models.service.IProductoService;
 import com.grupoq.app.models.service.IUsuarioService;
@@ -48,7 +51,6 @@ import com.grupoq.app.webservice.ProductosWB;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
@@ -81,6 +83,12 @@ public class FacturaController {
 
 	@Autowired
 	INotificacionesService notificacionesService;
+
+	@Autowired
+	IInventarioService inventarioservice;
+
+	@Autowired
+	INotadeCreditoService notadecreditoservice;
 
 	protected final Log logger = LogFactory.getLog(this.getClass());
 
@@ -493,13 +501,12 @@ public class FacturaController {
 
 		Boolean resultado = false;
 		Facturacion facturacion = facturaservice.findByCodigofactura(codigodoc);
+		Inventario inventario = new Inventario();
 		if (facturacion == null) {
 			resultado = false;
-			System.out.print("holi");
+			inventario = inventarioservice.findByCodigoProveedorAndStatus(codigodoc);
+			resultado = (inventario == null) ? false : true;
 		} else {
-			model.addAttribute("success", "Todo blue");
-			flash.addFlashAttribute("success", "Todo blue");
-			System.out.print("holi 2");
 			resultado = true;
 		}
 
@@ -513,22 +520,110 @@ public class FacturaController {
 			@RequestParam(name = "cantidad[]", required = false) Integer[] cantidad,
 			@RequestParam(name = "precio_id[]", required = false) double[] precio,
 			@RequestParam(name = "tipoC", required = true) int tipoC,
+			@RequestParam(name = "municipio", required = true) String municipio,
+			@RequestParam(name = "departamento", required = true) String departamento,
 			@RequestParam(name = "codigodoc", required = true) String codigodoc, Model model, RedirectAttributes flash,
 			SessionStatus status) throws ParseException {
 
+		String dondevoy = "/";
 		Facturacion facturacion = facturaservice.findByCodigofactura(codigodoc);
-		if (facturacion == null) {
-			model.addAttribute("error", "Error brodeeeeeer");
-			flash.addFlashAttribute("error", "Error brodeeeeeer");
-			System.out.print("holi");
-		} else {
-			model.addAttribute("success", "Todo blue");
-			flash.addFlashAttribute("success", "Todo blue");
-			System.out.print("holi 2");
+		NotadeCredito notita = new NotadeCredito();
+		Cotizacion coti = new Cotizacion();
+		try {
+			if (facturacion == null) {
+				Inventario inventario = inventarioservice.findByCodigoProveedor(codigodoc);
+				if (inventario == null) {
+					flash.addFlashAttribute("error",
+							"Revisa la integridad de los datos si de verdad corresponden, si eso no funciona contacta a soporte tecnico");
+				} else {
+					dondevoy = "/inventario/listar";
+					notita.setCliente(inventario.getProducto().getProveedor().getNombre());
+					notita.setCodigodoc(codigodoc);
+					notita.setMunicipio(municipio);
+					notita.setDepartamento(departamento);
+					notita.setFecha(new Date());
+					notita.setDuinit(inventario.getProducto().getProveedor().getNit());
+					notita.setGiro(inventario.getProducto().getProveedor().getGiro());
+					notita.setCdpago("contado");
+					notita.setNtr(codigodoc);
+					notita.setCarrito(coti);
+					notadecreditoservice.save(notita);
+					flash.addFlashAttribute("success", anularinventario(inventario, tipoC, itemId, cantidad, precio,
+							departamento, municipio, coti));
+
+				}
+			} else {
+				dondevoy = "/factura/listar";
+				flash.addFlashAttribute("success",
+						anularfactura(facturacion, tipoC, itemId, cantidad, precio, departamento, municipio, coti));
+				notita.setCliente(facturacion.getCliente().getCliente().getNombre());
+				notita.setCodigodoc(codigodoc);
+				notita.setMunicipio(municipio);
+				notita.setDepartamento(departamento);
+				notita.setFecha(new Date());
+				notita.setDuinit(facturacion.getCliente().getCliente().getDui());
+				notita.setGiro(facturacion.getCliente().getCliente().getGiro());
+				notita.setCdpago(facturacion.getCondicionesDPago().getNombre());
+				notita.setNtr(codigodoc);
+				notita.setCarrito(coti);
+				notadecreditoservice.save(notita);
+			}
+
+		} catch (Exception e) {
+			flash.addFlashAttribute("error", "Error interno, reportar a soporte tecnico");
+			return "redirect:" + dondevoy;
 		}
 
-		return "redirect:/";
+		return "redirect:" + dondevoy;
 
+	}
+
+	public String anularfactura(Facturacion facturacion, int anular, Long[] itemId, Integer[] cantidad, double[] precio,
+			String departamento, String municipio, Cotizacion coti) {
+		String mensaje = "";
+		coti.setAprobado(true);
+		coti.setFecha(new Date());
+		cotizacionService.save(coti);
+		for (int i = 0; i < itemId.length; i++) {
+			Random random = new Random();
+			int x = random.nextInt(900) + 100;
+			CarritoItems carrito = new CarritoItems();
+			carrito.setCantidad(cantidad[i]);
+			carrito.setPrecio(precio[i]);
+			String codigoGenerated = x + "xxx";
+			carrito.setCodigo(codigoGenerated);
+			carrito.setProductos(productoservice.findOne(itemId[i]));
+			carrito.setCotizacionid(coti);
+			carritoitemsservice.save(carrito);
+
+		}
+		if (anular > 0) {
+			facturacion.setStatus(5);
+			facturacion.setDetalles(
+					"NDC: ESTA FACTURA/CREDITO FISCAL tiene una nota de credito. " + facturacion.getDetalles());
+			mensaje += "Factura con ID " + facturacion.getCodigofactura() + " anulada";
+
+		} else {
+			facturacion.setDetalles(
+					"NDC: ESTA FACTURA/CREDITO FISCAL tiene una nota de credito. " + facturacion.getDetalles());
+			mensaje += "Factura con ID " + facturacion.getCodigofactura() + " no anulada";
+		}
+		facturaservice.save(facturacion);
+		return mensaje;
+	}
+
+	public String anularinventario(Inventario inventario, int anular, Long[] itemId, Integer[] cantidad,
+			double[] precio, String departamento, String municipio, Cotizacion coti) {
+		String mensaje = "";
+		if (anular > 0) {
+			inventario.setEstado(false);
+			inventario.setComentario("Este registro tiene una nota de credito " + inventario.getComentario());
+			mensaje += "Inventario con ID " + inventario.getCodigoProveedor() + " anulada";
+		} else {
+			mensaje += "Inventario con ID " + inventario.getCodigoProveedor() + " no anulada";
+		}
+		inventarioservice.save(inventario);
+		return mensaje;
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER", "ROLE_JEFEADM" })

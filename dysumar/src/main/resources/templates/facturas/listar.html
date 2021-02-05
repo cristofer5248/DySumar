@@ -77,6 +77,8 @@
 								th:text="'Stock insuficiente'"></td>
 							<td th:if="${factura.status==4}" style="color: blue"
 								th:text="${factura.codigofactura}"></td>
+							<td th:if="${factura.status==5}" style="color: white; background-color: red; font-size: 13px; -webkit-border-radius: 1em;"
+								th:text="'ANULADA: '+${factura.codigofactura}"></td>
 							<td th:text="${factura.aCuentade.username}"></td>
 							<td th:text="${factura.cliente.cliente.nombre}"></td>
 							<!-- <td th:text="${facturas.}"></td> -->

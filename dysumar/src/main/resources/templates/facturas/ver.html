@@ -107,6 +107,8 @@
 						th:text="'Estado :    EN ESPERA a facturacion'"></li>
 					<li th:if="${facturaciones.status==4}" class="list-group-item"
 						style="color: blue" th:text="'Estado :    Como nota de remision'"></li>
+					<li th:if="${facturaciones.status==5}" class="list-group-item"
+						style="color: red" th:text="'Estado :    Anulada con codigo: '+${correlativo}"></li>
 					<li class="list-group-item"
 						th:text="'Factura con correlativo:    '+${correlativo}"></li>
 					<li class="list-group-item"
