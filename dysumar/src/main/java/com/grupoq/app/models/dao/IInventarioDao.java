@@ -36,7 +36,7 @@ public interface IInventarioDao extends PagingAndSortingRepository<Inventario, L
 //	@Query(value = "select i from Inventario i where i.codigoProveedor=?1 and i.estado=true LIMIT 1")
 	public Inventario findFirstByCodigoProveedor(String id);
 	
-	public Inventario findFirstByCodigoProveedorAndEstadoTrue(String id);
+	public Inventario findFirstByCodigoProveedorAndEstadoFalse(String id);
 
 	
 	public Page<Inventario> findByCodigoProveedorLike(String id, Pageable page);

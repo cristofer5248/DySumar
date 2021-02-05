@@ -70,7 +70,7 @@ public class IInventarioServiceImpl implements IInventarioService {
 	@Override
 	public Inventario findByCodigoProveedorAndStatus(String id) {
 		// TODO Auto-generated method stub
-		return inventarioDao.findFirstByCodigoProveedorAndEstadoTrue(id);
+		return inventarioDao.findFirstByCodigoProveedorAndEstadoFalse(id);
 	}
 
 	@Override

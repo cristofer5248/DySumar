@@ -10,8 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 public class NotadeCredito implements Serializable {
@@ -41,19 +45,23 @@ public class NotadeCredito implements Serializable {
 	@Column(length = 30)
 	private String departamento;
 
-	@NotEmpty
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date fecha;
 
 	@NotEmpty
+	@Column(length = 40)
 	private String duinit;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Giro giro;
 
 	@NotEmpty
+	@Column(length = 60)
 	private String cdpago;
 
 	@NotEmpty
+	@Column(length = 60)
 	private String ntr;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

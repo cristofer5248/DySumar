@@ -28,6 +28,7 @@
 						<div class="col-sm-6">
 							<input type="text" name="codigodoc" id="codigodoc"
 								class="form-control" onfocusout="investigar()"
+								required="required"
 								placeholder="Este codigo hace referencia al documento de compra o venta" />
 							<i id="elcheck" style="color: gray; font-size: 2em"
 								class="far fa-check-circle"></i>
@@ -36,13 +37,15 @@
 					<div class="form-group row">
 						<label for="municipio" class="col-sm-2 col-form-label">Municipio</label>
 						<div class="col-sm-6">
-							<input type="text" name="municipio" class="form-control" />
+							<input type="text" name="municipio" class="form-control"
+								required="required" />
 						</div>
 					</div>
 					<div class="form-group row">
 						<label for="departamento" class="col-sm-2 col-form-label">Departamento</label>
 						<div class="col-sm-6">
-							<input type="text" name="departamento" class="form-control" />
+							<input type="text" name="departamento" class="form-control"
+								required="required" />
 						</div>
 					</div>
 					<div class="form-group row">
@@ -94,7 +97,8 @@
 						<div class="col-sm-6">
 							<input type="submit" th:value="'Enviar'" id="submit"
 								class="btn btn-secondary"
-								onclick="return confirm('¿Esta seguro? Recuerde que todos los precios deben estar sin IVA, internamente seran operados')" />
+								onclick="return confirm('¿Esta seguro? Recuerde que todos los precios deben estar sin IVA, internamente seran operados')"
+								disabled />
 						</div>
 					</div>
 				</form>

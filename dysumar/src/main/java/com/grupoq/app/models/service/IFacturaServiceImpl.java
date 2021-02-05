@@ -170,4 +170,10 @@ public class IFacturaServiceImpl implements IFacturaService {
 		// TODO Auto-generated method stub
 		return facturadao.findByCodigofactura(id);
 	}
+
+	@Override
+	public Facturacion findByCodigofacturaStatus(String id) {
+		// TODO Auto-generated method stub
+		return facturadao.findFirstByCodigofacturaAndStatus(id);
+	}
 }

@@ -272,11 +272,13 @@ var urlAjaxdes = $("#urlAjaxdes").val();
 		$("#elcheck").css("color","green");
 		$("#codigodoc").css("background-color","white");
 		$("#codigodoc").css("color","black");
+		$("#submit").prop("disabled",false);
 	}else{
 		alertify.alert('Error!', 'Ese codigo de documento no fue encontrado, ingrese uno valido.', function(){ alertify.success('Ok'); });
 		$("#elcheck").css("color","red");
 		$("#codigodoc").css("background-color","red");
 		$("#codigodoc").css("color","white");
+		$("#submit").prop("disabled",true);
 	}
 
 		             // ...

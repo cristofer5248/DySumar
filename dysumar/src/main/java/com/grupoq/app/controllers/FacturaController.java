@@ -500,16 +500,23 @@ public class FacturaController {
 			Model model, RedirectAttributes flash, SessionStatus status) throws ParseException {
 
 		Boolean resultado = false;
-		Facturacion facturacion = facturaservice.findByCodigofactura(codigodoc);
-		Inventario inventario = new Inventario();
-		if (facturacion == null) {
-			resultado = false;
-			inventario = inventarioservice.findByCodigoProveedorAndStatus(codigodoc);
-			resultado = (inventario == null) ? false : true;
-		} else {
-			resultado = true;
-		}
+		try {
 
+			Facturacion facturacion = facturaservice.findByCodigofacturaStatus(codigodoc);
+			Inventario inventario = new Inventario();
+			if (facturacion == null) {
+				resultado = false;
+				inventario = inventarioservice.findByCodigoProveedorAndStatus(codigodoc);
+//				inventario = (inventario == null) ? false : true;
+				resultado = (inventario == null) ? false : true;
+				System.out.print("el resultado es: " + resultado);
+			} else {
+				resultado = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
 		return resultado;
 
 	}
@@ -522,7 +529,7 @@ public class FacturaController {
 			@RequestParam(name = "tipoC", required = true) int tipoC,
 			@RequestParam(name = "municipio", required = true) String municipio,
 			@RequestParam(name = "departamento", required = true) String departamento,
-			@RequestParam(name = "codigodoc", required = true) String codigodoc, Model model, RedirectAttributes flash,
+			@RequestParam(name = "codigodoc", required = true) String codigodoc, Authentication authentication, Model model, RedirectAttributes flash,
 			SessionStatus status) throws ParseException {
 
 		String dondevoy = "/";
@@ -545,7 +552,7 @@ public class FacturaController {
 					notita.setDuinit(inventario.getProducto().getProveedor().getNit());
 					notita.setGiro(inventario.getProducto().getProveedor().getGiro());
 					notita.setCdpago("contado");
-					notita.setNtr(codigodoc);
+					notita.setNtr("A cuenta de "+authentication.getName());
 					notita.setCarrito(coti);
 					notadecreditoservice.save(notita);
 					flash.addFlashAttribute("success", anularinventario(inventario, tipoC, itemId, cantidad, precio,
@@ -564,12 +571,13 @@ public class FacturaController {
 				notita.setDuinit(facturacion.getCliente().getCliente().getDui());
 				notita.setGiro(facturacion.getCliente().getCliente().getGiro());
 				notita.setCdpago(facturacion.getCondicionesDPago().getNombre());
-				notita.setNtr(codigodoc);
+				notita.setNtr("A cuenta de "+authentication.getName());
 				notita.setCarrito(coti);
 				notadecreditoservice.save(notita);
 			}
 
 		} catch (Exception e) {
+
 			flash.addFlashAttribute("error", "Error interno, reportar a soporte tecnico");
 			return "redirect:" + dondevoy;
 		}
