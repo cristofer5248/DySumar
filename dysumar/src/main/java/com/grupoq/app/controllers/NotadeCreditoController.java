@@ -31,12 +31,13 @@ public class NotadeCreditoController {
 	@Autowired
 	INotadeCreditoService notadecreditoservice;
 
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_INV", "ROLE_FACT" })
 	@RequestMapping(value = "/nuevo", method = RequestMethod.GET)
-	public String nuevo2(Map<String, Object> model, RedirectAttributes flash) {
+	public String notaderemision(Map<String, Object> model, RedirectAttributes flash) {
 		NotadeCredito notadecredito = new NotadeCredito();
 		model.put("notadecredito", notadecredito);
-		model.put("titulo", "Nota de credito");
-		return "/notacredito/form2";
+		model.put("titulo", "Nota de Credito");
+		return "/facturas/notadecredito";
 	}
 
 	@RequestMapping(value = { "/listar", "/listar/{date1}/{date2}", "/listar/{codigo}" }, method = RequestMethod.GET)
@@ -77,12 +78,12 @@ public class NotadeCreditoController {
 					: notadecreditoservice.findAll(pageRequest);
 		}
 
-		model.addAttribute("titulo", "Listado de inventario");
+		model.addAttribute("titulo", "Listado de notas de credito");
 		PageRender<NotadeCredito> pageRender = new PageRender<>("listar", notadecredito);
 		model.addAttribute("notasdecredito", notadecredito);
 		model.addAttribute("page", pageRender);
 		model.addAttribute("enableallsearch", enableallsearch);
-		model.addAttribute("activePivot",false);
+		model.addAttribute("activePivot", false);
 		model.addAttribute("pathall", pathexcel);
 
 		return "/facturas/listarndc";

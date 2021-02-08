@@ -235,14 +235,6 @@ public class FacturaController {
 		return "/facturas/form2";
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_INV", "ROLE_FACT" })
-	@RequestMapping(value = "/notadecredito", method = RequestMethod.GET)
-	public String notaderemision(Map<String, Object> model, RedirectAttributes flash) {
-		NotadeCredito notadecredito = new NotadeCredito();
-		model.put("notadecredito", notadecredito);
-		model.put("titulo", "Nota de Credito");
-		return "/facturas/notadecredito";
-	}
 
 //ESTOS SI SON PARA FACTURA
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })

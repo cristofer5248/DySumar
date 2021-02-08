@@ -22,9 +22,7 @@
 						th:href="@{/ndc/nuevof}" class="btn btn-primary btn-xs">ndcr</a> -->
 					<!-- 					<a th:if="${#request.isUserInRole('SELLER')}" -->
 					<!-- 						th:href="@{/ndc/nuevof}" class="btn btn-primary btn-xs">REMISION</a> -->
-					<a
-						th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('SELLER')}"
-						th:href="@{/notadecredito/nuevo}" class="btn btn-primary btn-xs">Crear
+					<a th:href="@{/notadecredito/nuevo}" class="btn btn-primary btn-xs">Crear
 						nota de credito</a>
 					<button type="button" class="btn btn-info" data-toggle="modal"
 						data-target="#filterByDate" data-whatever="@mdo">Filtrar</button>
@@ -62,7 +60,7 @@
 					</thead>
 					<tbody>
 						<tr th:each="ndc: ${notasdecredito}">
-							<td th:text="${ndc.codigodoc}"></td>
+							<td><a th:href="@{/notadecredito/ver/}+${ndc.codigodoc}" class="btn btn-primary" th:text="${ndc.codigodoc}"></a></td>
 							<td th:text="${ndc.cliente}"></td>
 							<td th:text="${ndc.municipio}"></td>
 							<td th:text="${ndc.departamento}"></td>
