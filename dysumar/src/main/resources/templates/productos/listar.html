@@ -87,7 +87,7 @@
 						<tbody id="trtable">
 							<div>
 								<tr th:each="producto: ${productos}"
-									th:style="${producto.asegurar}==true? 'color: green' : 'color: black'">
+									th:style="${producto.asegurar}==true? 'color: red' : 'color: black'">
 									<td
 										sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_INV','ROLE_JEFEADM')"><a
 										class="btn btn-primary btn-xs"

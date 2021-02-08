@@ -235,7 +235,6 @@ public class FacturaController {
 		return "/facturas/form2";
 	}
 
-
 //ESTOS SI SON PARA FACTURA
 	@Secured({ "ROLE_ADMIN", "ROLE_SELLER" })
 	@RequestMapping(value = "/nuevof/{term}", method = RequestMethod.GET)
@@ -500,7 +499,7 @@ public class FacturaController {
 				resultado = false;
 				inventario = inventarioservice.findByCodigoProveedorAndStatus(codigodoc);
 //				inventario = (inventario == null) ? false : true;
-				resultado = (inventario == null) ? false : true;
+				resultado = (inventario == null) ? true : false;
 				System.out.print("el resultado es: " + resultado);
 			} else {
 				resultado = true;
@@ -521,8 +520,8 @@ public class FacturaController {
 			@RequestParam(name = "tipoC", required = true) int tipoC,
 			@RequestParam(name = "municipio", required = true) String municipio,
 			@RequestParam(name = "departamento", required = true) String departamento,
-			@RequestParam(name = "codigodoc", required = true) String codigodoc, Authentication authentication, Model model, RedirectAttributes flash,
-			SessionStatus status) throws ParseException {
+			@RequestParam(name = "codigodoc", required = true) String codigodoc, Authentication authentication,
+			Model model, RedirectAttributes flash, SessionStatus status) throws ParseException {
 
 		String dondevoy = "/";
 		Facturacion facturacion = facturaservice.findByCodigofactura(codigodoc);
@@ -535,6 +534,8 @@ public class FacturaController {
 					flash.addFlashAttribute("error",
 							"Revisa la integridad de los datos si de verdad corresponden, si eso no funciona contacta a soporte tecnico");
 				} else {
+					flash.addFlashAttribute("success", anularinventario(inventario, tipoC, itemId, cantidad, precio,
+							departamento, municipio, coti));
 					dondevoy = "/inventario/listar";
 					notita.setCliente(inventario.getProducto().getProveedor().getNombre());
 					notita.setCodigodoc(codigodoc);
@@ -544,11 +545,9 @@ public class FacturaController {
 					notita.setDuinit(inventario.getProducto().getProveedor().getNit());
 					notita.setGiro(inventario.getProducto().getProveedor().getGiro());
 					notita.setCdpago("contado");
-					notita.setNtr("A cuenta de "+authentication.getName());
+					notita.setNtr("A cuenta de " + authentication.getName());
 					notita.setCarrito(coti);
 					notadecreditoservice.save(notita);
-					flash.addFlashAttribute("success", anularinventario(inventario, tipoC, itemId, cantidad, precio,
-							departamento, municipio, coti));
 
 				}
 			} else {
@@ -563,13 +562,13 @@ public class FacturaController {
 				notita.setDuinit(facturacion.getCliente().getCliente().getDui());
 				notita.setGiro(facturacion.getCliente().getCliente().getGiro());
 				notita.setCdpago(facturacion.getCondicionesDPago().getNombre());
-				notita.setNtr("A cuenta de "+authentication.getName());
+				notita.setNtr("A cuenta de " + authentication.getName());
 				notita.setCarrito(coti);
 				notadecreditoservice.save(notita);
 			}
 
 		} catch (Exception e) {
-
+			e.printStackTrace();
 			flash.addFlashAttribute("error", "Error interno, reportar a soporte tecnico");
 			return "redirect:" + dondevoy;
 		}
@@ -615,6 +614,9 @@ public class FacturaController {
 	public String anularinventario(Inventario inventario, int anular, Long[] itemId, Integer[] cantidad,
 			double[] precio, String departamento, String municipio, Cotizacion coti) {
 		String mensaje = "";
+		coti.setAprobado(true);
+		coti.setFecha(new Date());
+		cotizacionService.save(coti);
 		if (anular > 0) {
 			inventario.setEstado(false);
 			inventario.setComentario("Este registro tiene una nota de credito " + inventario.getComentario());
@@ -822,15 +824,16 @@ public class FacturaController {
 		return "redirect:" + pathredirect;
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM" })
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_FACT" })
 	@RequestMapping(value = "/eliminar/{id}")
-	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
+	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash, Authentication auth) {
 
 		if (id > 0) {
 			try {
 				flash.addFlashAttribute("success", "Facturacion eliminada con éxito!");
 				// aqui le ponemos reversa de factura hasta productos/inventarios
 				Facturacion fac = facturaservice.findBy(id);
+				String coddoc = fac.getCodigofactura();
 				for (CarritoItems carrito : fac.getCotizacion().getCarrito()) {
 					Producto pro = productoservice.findOne(carrito.getProductos().getId());
 					System.out.print("Elemento: " + pro.getNombrep() + "\n" + "Cantidad: " + carrito.getCantidad());
@@ -838,6 +841,8 @@ public class FacturaController {
 					productoservice.save(pro);
 				}
 				facturaservice.delete(id);
+				nuevaNotificacion("fas fa-trash-alt", "La factura con el id " + id + " y correlativo " + coddoc
+						+ " ha sido eliminado por " + auth.getName(), "#", "red");
 
 			} catch (Exception e) {
 				flash.addFlashAttribute("error",

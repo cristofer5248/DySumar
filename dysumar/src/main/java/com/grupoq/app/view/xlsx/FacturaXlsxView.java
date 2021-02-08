@@ -48,7 +48,10 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		System.out.print("\n Credito fiscal" + creditoFiscal + "\n");
 		System.out.print("\n Agente" + agente + "\n");
 		Numeros_Letras numeroALetras = new Numeros_Letras();
+
 		Sheet sheet = workbook.createSheet();
+		workbook.setSheetName(0, "FACTURA");
+
 		// zoom and view
 
 		sheet.setAutobreaks(false);
@@ -112,7 +115,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		CellStyle calibriproducs = workbook.createCellStyle();
 		calibriproducs.setAlignment(HorizontalAlignment.LEFT);
-		
+
 		CellStyle celltextRight = workbook.createCellStyle();
 		celltextRight.setAlignment(HorizontalAlignment.RIGHT);
 
@@ -360,12 +363,11 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		calibri10warptextF.setFontHeightInPoints((short) 10);
 		calibri10warptextF.setFontName("Calibri");
 		calibri10warptext.setFont(calibritopleftonceF);
-		
+
 		Font calibriproducsf = workbook.createFont();
 		calibriproducsf.setFontHeightInPoints((short) 9);
 		calibriproducsf.setFontName("Calibri");
 		calibriproducs.setFont(calibriproducsf);
-		
 
 		CellStyle tbodystyle = workbook.createCellStyle();
 		tbodystyle.setBorderBottom(BorderStyle.MEDIUM);
@@ -456,7 +458,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		} else {
 			// para la primera row A1
 			Row row = sheet.createRow(0);
-			row.setHeightInPoints(82);
+			row.setHeightInPoints(66);
 			row.createCell(0);
 			row.createCell(6).setCellValue(factura.getCodigofactura());
 			row.getCell(6).setCellStyle(celltextRight);
@@ -464,11 +466,11 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 			// para la 2 y 3
 			Row row2 = sheet.createRow(1);
-			row2.setHeightInPoints(8);
+			row2.setHeightInPoints(15);
 			row2.createCell(0);
 			row2.getCell(0).setCellStyle(celdasStyleMerged);
 			Row row3 = sheet.createRow(2);
-			row3.setHeightInPoints(8);
+			row3.setHeightInPoints(Float.parseFloat("8.5"));
 
 			// para la 4
 			Row row4 = sheet.createRow(creditoFiscal ? 2 : 3);
@@ -481,7 +483,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			row4.getCell(0).setCellStyle(celdasStyleMerged);
 			row4.getCell(3).setCellStyle(celdasStyleMerged);
 			row4.getCell(4).setCellStyle(celdasStyleMerged);
-			row4.setHeightInPoints(37);
+			row4.setHeightInPoints(Float.parseFloat("37.5"));
 
 			row4.getCell(1).setCellValue(factura.getCliente().getCliente().getNombre());
 			row4.getCell(1).setCellStyle(normalCenter);
@@ -514,7 +516,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			// para la 7
 			Row row7 = sheet.createRow(6);
 //		row7.setHeightInPoints(19);
-			row7.setHeightInPoints(28);
+			row7.setHeightInPoints(Float.parseFloat("20.75"));
 			row7.createCell(1);
 			row7.createCell(2);
 
@@ -528,7 +530,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			Row row10 = sheet.createRow(9);
 			Row row11 = sheet.createRow(10);
 
-			row8.setHeightInPoints(12);
+			row8.setHeightInPoints(Float.parseFloat("11.75"));
 			row9.setHeightInPoints(6);
 			row10.setHeightInPoints(19);
 			row11.setHeightInPoints(3);
