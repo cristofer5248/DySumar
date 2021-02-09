@@ -74,7 +74,7 @@
 					<thead class="thead-inverse">
 						<tr>
 							<th>ID</th>
-							<th>ID de compra</th>
+							<th>Codigo de documento</th>
 							<th>Ingreso</th>
 							<th>Fecha</th>
 
@@ -83,11 +83,11 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="inventario: ${producto.inventarios}">
-							<td th:text="${inventario.id}"></td>
-							<td th:text="${inventario.codigoProveedor}"></td>
-							<td th:text="${inventario.stock}"></td>
-							<td th:text="${inventario.fecha}"></td>
+						<tr th:each="inventario: ${movimientos}">
+							<td th:text="${inventario.id}" th:style="'color:' +${inventario.color}" ></td>
+							<td th:text="${inventario.codigo}" th:style="'color:' +${inventario.color}"></td>
+							<td th:text="${inventario.movimiento}" th:style="'color:' +${inventario.color}"></td>
+							<td th:text="${inventario.fecha}" th:style="'color:' +${inventario.color}"></td>
 							<!-- 							<td th:text="${inventario.cantidad}"></td> -->
 
 							<!-- 							<td th:text="${factura.cantidad * factura.servicios.precio}"></td> -->

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +27,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.grupoq.app.webservice.EntradasYsalidas;
 import com.grupoq.app.webservice.HistorialDePrecios;
 import com.grupoq.app.models.entity.CarritoItems;
 import com.grupoq.app.models.entity.Facturacion;
@@ -86,7 +89,6 @@ public class ProductoController {
 //		String xlsxPath = (page > 0) ? "?page=" + page : "";
 		String xlsxPath = "?page=" + page;
 		xlsxPath = (op2 != 0) ? xlsxPath + "&op2=" + op2 : xlsxPath;
-		
 
 		String pathall = (op != null) ? xlsxPath + "&op2=1" : "all";
 
@@ -97,7 +99,7 @@ public class ProductoController {
 			xlsxPath = "/" + op + "/" + nombrep;
 			urlpage = nombrep;
 			if (op.equals("nombre")) {
-				pathall = "producto/listar/nombre/"+nombrep+"/"+pathall;
+				pathall = "producto/listar/nombre/" + nombrep + "/" + pathall;
 				productos = productoService.findAllLike(nombrep, pageRequest);
 				if (productos.isEmpty()) {
 					int lastSpaceIndex = nombrep.lastIndexOf(" ");
@@ -113,23 +115,23 @@ public class ProductoController {
 
 			}
 			if (op.equals("codigo")) {
-				pathall = "producto/listar/codigo/"+nombrep+pathall;
+				pathall = "producto/listar/codigo/" + nombrep + pathall;
 				productos = productoService.findByCodigo(nombrep, pageRequest);
 			}
 			if (op.equals("proveedor")) {
-				pathall = "producto/listar/proveedor/"+nombrep+pathall;
+				pathall = "producto/listar/proveedor/" + nombrep + pathall;
 				productos = productoService.findByProveedor(nombrep, pageRequest);
 			}
 			if (op.equals("marca")) {
-				pathall = "producto/listar/marca/"+nombrep+pathall;
+				pathall = "producto/listar/marca/" + nombrep + pathall;
 				productos = productoService.findByMarca(nombrep, pageRequest);
 			}
 			if (op.equals("categoria")) {
-				pathall = "producto/listar/categoria/"+nombrep+pathall;
+				pathall = "producto/listar/categoria/" + nombrep + pathall;
 				productos = productoService.findByCategoria(nombrep, pageRequest);
 			}
 			if (op.equals("bodega")) {
-				pathall = "producto/listar/bodega/"+nombrep+pathall;
+				pathall = "producto/listar/bodega/" + nombrep + pathall;
 				productos = productoService.findByBodega(nombrep, pageRequest);
 			}
 			if (productos == null) {
@@ -154,7 +156,7 @@ public class ProductoController {
 		model.addAttribute("pathall", pathall);
 		model.addAttribute("enableallsearch", enableallsearch);
 		model.addAttribute("enablebtnall", enablebtnall);
-		
+
 		return "/productos/listar";
 	}
 
@@ -337,6 +339,42 @@ public class ProductoController {
 			return "redirect:/producto/listar";
 		}
 		model.put("producto", producto);
+		List<EntradasYsalidas> entra_list = new ArrayList<EntradasYsalidas>();
+		for (int i = 0; i < producto.getInventarios().size(); i++) {
+			EntradasYsalidas entr_salidas = new EntradasYsalidas();
+			entr_salidas.setCodigo(producto.getInventarios().get(i).getCodigoProveedor());
+			entr_salidas.setFecha(producto.getInventarios().get(i).getFecha());
+			entr_salidas.setId(producto.getInventarios().get(i).getId());
+			entr_salidas.setMovimiento(producto.getInventarios().get(i).getStock());
+			entr_salidas.setColor("blue");
+			entra_list.add(entr_salidas);
+		}
+		List<Facturacion> lista = facturaService.findHistorialPrecios(id);
+		for (int i = 0; i < lista.size(); i++) {
+			EntradasYsalidas entr_salidas = new EntradasYsalidas();
+			entr_salidas.setCodigo(lista.get(i).getCodigofactura());
+			entr_salidas.setFecha(lista.get(i).getFecha());
+			entr_salidas.setId(lista.get(i).getId());
+			entr_salidas.setColor("green");
+			for (CarritoItems carrito : lista.get(i).getCotizacion().getCarrito()) {
+				if (carrito.getProductos().getId() == Long.parseLong(id.toString())) {
+					entr_salidas.setMovimiento(carrito.getCantidad() * -1);
+				}
+			}
+			entra_list.add(entr_salidas);
+		}
+
+		List<EntradasYsalidas> entra_listByDat = entra_list.stream().sorted((a, b) -> {
+			try {
+				return (a.getFecha().compareTo(b.getFecha()));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return 0;
+		}).collect(Collectors.toList());
+
+		model.put("movimientos", entra_listByDat);
 		model.put("idp", producto.getId());
 		model.put("titulo", "Detalle producto: " + producto.getNombrep());
 		double precioventa = (producto.getPrecio() / ((100 - producto.getMargen()) / 100));

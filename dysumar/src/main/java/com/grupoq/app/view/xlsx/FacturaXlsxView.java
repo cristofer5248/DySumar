@@ -191,8 +191,8 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
 			sheet.addMergedRegion(new CellRangeAddress(1, 2, 0, 6));
 			sheet.addMergedRegion(new CellRangeAddress(3, 3, 1, 2));
-			sheet.addMergedRegion(new CellRangeAddress(7, 10, 1, 6));
-			sheet.addMergedRegion(new CellRangeAddress(4, 10, 0, 0));
+			sheet.addMergedRegion(new CellRangeAddress(7, 9, 1, 6));
+			sheet.addMergedRegion(new CellRangeAddress(4, 9, 0, 0));
 			sheet.addMergedRegion(new CellRangeAddress(6, 6, 2, 6));
 			sheet.addMergedRegion(new CellRangeAddress(5, 5, 1, 6));
 
@@ -306,12 +306,13 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			rowvacios_abajo26.createCell(4);
 			rowvacios_abajo26.getCell(1).setCellStyle(celdasStyleMerged);
 
-			rowvacios_abajo26.setHeightInPoints(20);
-			rowvacios_abajo27.setHeightInPoints(22);
-			rowvacios_abajo28.setHeightInPoints(18);
-			rowvacios_abajo29.setHeightInPoints(22);
-			rowvacios_abajo30.setHeightInPoints(20);
-			rowvacios_abajo30.setHeightInPoints(22);
+			rowvacios_abajo26.setHeightInPoints(24);
+			
+			rowvacios_abajo27.setHeightInPoints(18);
+			rowvacios_abajo28.setHeightInPoints(Float.parseFloat("20.25"));
+			rowvacios_abajo29.setHeightInPoints(Float.parseFloat("22.25"));
+			rowvacios_abajo30.setHeightInPoints(0);
+//			rowvacios_abajo30.setHeightInPoints(22);
 		}
 
 		Font font1 = workbook.createFont();
@@ -531,8 +532,8 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			Row row11 = sheet.createRow(10);
 
 			row8.setHeightInPoints(Float.parseFloat("11.75"));
-			row9.setHeightInPoints(6);
-			row10.setHeightInPoints(19);
+			row9.setHeightInPoints(15);
+			row10.setHeightInPoints(15);
 			row11.setHeightInPoints(3);
 			row8.createCell(0);
 			row8.createCell(1);
@@ -541,7 +542,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		}
 		// para el 12 en adelante:
-		int itemRows = creditoFiscal ? 12 : 11;
+		int itemRows = creditoFiscal ? 12 : 10;
 		Row rowItems = sheet.createRow(11);
 		if (creditoFiscal) {
 			rowItems.setHeightInPoints(Float.parseFloat("24.75"));
@@ -552,7 +553,16 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		int contadorProducts = creditoFiscal ? 13 : 12;
 		double totalsiniva = 0;
 		for (CarritoItems carrito : factura.getCotizacion().getCarrito()) {
-			float tamanoaltura = creditoFiscal ? Float.parseFloat("22.5") : 28;
+			float tamanoaltura = creditoFiscal ? Float.parseFloat("22.5") : 27;
+			if (itemRows == 10 && !creditoFiscal) {
+				tamanoaltura = Float.parseFloat("27.5");
+			}
+			if (itemRows == 11 && !creditoFiscal) {
+				tamanoaltura = Float.parseFloat("27.5");
+			}
+			if (itemRows == 12 && !creditoFiscal) {
+				tamanoaltura = Float.parseFloat("27.5");
+			}
 			if (itemRows == 11 && creditoFiscal) {
 				tamanoaltura = Float.parseFloat("24.75");
 			}
@@ -561,6 +571,15 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			}
 			if (itemRows == 23 && creditoFiscal) {
 				tamanoaltura = 18;
+			}
+			if (itemRows == 16 && !creditoFiscal) {
+				tamanoaltura = Float.parseFloat("28");
+			}
+			if (itemRows == 18 && !creditoFiscal) {
+				tamanoaltura = Float.parseFloat("28.5");
+			}
+			if (itemRows == 21 && !creditoFiscal) {
+				tamanoaltura = Float.parseFloat("28.5");
 			}
 
 			Row fila = sheet.createRow(itemRows++);
@@ -629,8 +648,37 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 				contadorProducts++;
 			} else {
+				float tamanoaltura = creditoFiscal ? Float.parseFloat("22.5") : 27;
+				if (itemRows == 10) {
+					tamanoaltura = Float.parseFloat("27.5");
+				}
+				if (itemRows == 11) {
+					tamanoaltura = Float.parseFloat("27.5");
+				}
+				if (itemRows == 12) {
+					tamanoaltura = Float.parseFloat("27.5");
+				}
+				if (itemRows == 16) {
+					tamanoaltura = Float.parseFloat("28");
+				}
+				if (itemRows == 18) {
+					tamanoaltura = Float.parseFloat("28.5");
+				}
+				if (itemRows == 21) {
+					tamanoaltura = Float.parseFloat("28.5");
+				}
+				if (itemRows == 16 && !creditoFiscal) {
+					tamanoaltura = Float.parseFloat("28");
+				}
+				if (itemRows == 18 && !creditoFiscal) {
+					tamanoaltura = Float.parseFloat("28.5");
+				}
+				if (itemRows == 21 && !creditoFiscal) {
+					tamanoaltura = Float.parseFloat("28.5");
+				}
+
 				Row fila = sheet.createRow(contadorProducts);
-				fila.setHeightInPoints(28);
+				fila.setHeightInPoints(tamanoaltura);
 				cellItems = fila.createCell(0);
 				cellItems.setCellStyle(celltext);
 				cellItems = fila.createCell(1);
@@ -638,20 +686,40 @@ public class FacturaXlsxView extends AbstractXlsxView {
 				cellItems = fila.createCell(6);
 				cellItems.setCellStyle(celltextMoney);
 				contadorProducts++;
+
 			}
 		}
 		System.out.print("donde estara el final es: " + itemRows);
 		// rellenamos con vacio lo que resta mas altura
 
-		int dondeterminoPro = creditoFiscal ? 27 : 24;
+		int dondeterminoPro = creditoFiscal ? 27 : 23;
 		for (int i_filler = itemRows; itemRows < dondeterminoPro; itemRows++) {
 			Row fila = sheet.createRow(i_filler++);
-			float tamanoaltura = Float.parseFloat("22.5");
+//			float tamanoaltura = Float.parseFloat("22.5"); borrar si da error de tamano
+			float tamanoaltura = creditoFiscal ? Float.parseFloat("22.5") : 27;
 			if (itemRows == 12) {
 				tamanoaltura = 26;
 			}
 			if (itemRows == 23) {
 				tamanoaltura = 18;
+			}
+			if (itemRows == 10 && !creditoFiscal) {
+				tamanoaltura = Float.parseFloat("27.5");
+			}
+			if (itemRows == 11 && !creditoFiscal) {
+				tamanoaltura = Float.parseFloat("27.5");
+			}
+			if (itemRows == 12 && !creditoFiscal) {
+				tamanoaltura = Float.parseFloat("27.5");
+			}
+			if (itemRows == 16 && !creditoFiscal) {
+				tamanoaltura = Float.parseFloat("28");
+			}
+			if (itemRows == 18 && !creditoFiscal) {
+				tamanoaltura = Float.parseFloat("28.5");
+			}
+			if (itemRows == 21 && !creditoFiscal) {
+				tamanoaltura = Float.parseFloat("28.5");
 			}
 			fila.setHeightInPoints(tamanoaltura);
 			fila.createCell(4);
@@ -697,8 +765,10 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			rowvacios_abajo35.getCell(8).setCellStyle(celltextMoney);
 
 		} else {
-
-			rowFinal.setHeightInPoints(40);
+			Row rowFinalabajo = sheet.createRow(24);
+			rowFinalabajo.createCell(1);
+			rowFinalabajo.setHeightInPoints(Float.parseFloat("19.75"));
+			rowFinal.setHeightInPoints(33);
 			rowFinal.createCell(0);
 			rowFinal.createCell(3);
 			rowFinal.getCell(0).setCellStyle(celdasStyleMerged);
@@ -710,39 +780,40 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			rowFinal.createCell(6);
 			rowFinal.getCell(6).setCellStyle(celltextMoney);
 //			rowFinal.getCell(6).setCellValue(sumasPrecios); //sin formula a lo hombre
-			rowFinal.getCell(6).setCellFormula("SUM(G12:G24)");
+			rowFinal.getCell(6).setCellFormula("SUM(G11:G23)");
 			// retenindo 0 para restar si no es agente
 
 //			double ivado = factura.getTotaRegistrado() + (factura.getTotaRegistrado() * 0.13);
 			if (totalsiniva > 113 && agente) {
 				retenido = (totalsiniva * 0.01);
 			}
-			rowvacios_abajo27.createCell(6);
-			rowvacios_abajo27.getCell(6).setCellStyle(celltextMoney);
+			rowvacios_abajo26.createCell(6);
+			rowvacios_abajo26.getCell(6).setCellStyle(celltextMoney);
 //			rowvacios_abajo27.getCell(6).setCellValue(df.format(ivado)); a lo hombre sin formula voy
-			rowvacios_abajo27.getCell(6).setCellFormula("G25");
+			rowvacios_abajo26.getCell(6).setCellFormula("G24");
 
-			Row rowFinal_total = sheet.createRow(29);
-			rowFinal_total.createCell(6);
+//			no deberia de usar la 30 si hasta la 29 llega :o
+//			Row rowFinal_total = sheet.createRow(29);	
+			rowvacios_abajo29.createCell(6);
 //			rowFinal_total.getCell(6).setCellValue(ivado - retenido); a lo hombre sin formula
-			rowFinal_total.getCell(6).setCellFormula("G27-G29");
-			rowFinal_total.getCell(6).setCellStyle(ennegritacelltotal);
-			rowFinal_total.setHeightInPoints(23);
-			rowvacios_abajo27.getCell(6).setCellFormula("SUM(G25:G26)");
+			rowvacios_abajo29.getCell(6).setCellFormula("G26-G28");
+			rowvacios_abajo29.getCell(6).setCellStyle(ennegritacelltotal);
+			rowvacios_abajo29.setHeightInPoints(Float.parseFloat("22.25"));
+//			rowvacios_abajo26.getCell(6).setCellFormula("SUM(G25:G26)");
 
 			// retencion datos set
-			rowvacios_abajo29.createCell(6);
+			rowvacios_abajo28.createCell(6);
 			if (retenido == 0) {
-				rowvacios_abajo29.getCell(6).setCellValue("0");
+				rowvacios_abajo28.getCell(6).setCellValue("0");
 			} else {
-				rowvacios_abajo29.getCell(6).setCellValue(df.format(retenido));
-				rowvacios_abajo29.getCell(6).setCellStyle(celltextMoney);
+				rowvacios_abajo28.getCell(6).setCellValue(df.format(retenido));
+				rowvacios_abajo28.getCell(6).setCellStyle(celltextMoney);
 				System.out.print("\nretenido" + retenido);
 			}
 
-			rowvacios_abajo29.getCell(6).setCellStyle(celltextMoney);
-			rowFinal.getCell(1)
-					.setCellValue(" " + numeroALetras.Convertir(df.format(factura.getTotaRegistrado()), true));
+			rowvacios_abajo28.getCell(6).setCellStyle(celltextMoney);
+//			rowFinalabajo.getCell(1)
+//					.setCellValue(" " + numeroALetras.Convertir(df.format(factura.getTotaRegistrado()), true));
 		}
 
 		// hacer el cambio en esto porque lo tomamos del final
