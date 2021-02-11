@@ -35,10 +35,12 @@ import com.grupoq.app.models.entity.Facturacion;
 import com.grupoq.app.models.entity.Notificaciones;
 import com.grupoq.app.models.entity.Presentacion;
 import com.grupoq.app.models.entity.Producto;
+import com.grupoq.app.models.entity.ProductosModify;
 import com.grupoq.app.models.entity.Usuario;
 import com.grupoq.app.models.service.IFacturaService;
 import com.grupoq.app.models.service.INotificacionesService;
 import com.grupoq.app.models.service.IPresentacionService;
+import com.grupoq.app.models.service.IProductoModifyService;
 import com.grupoq.app.models.service.IProductoService;
 import com.grupoq.app.models.service.IUsuarioService;
 import com.grupoq.app.util.paginator.PageRender;
@@ -63,6 +65,9 @@ public class ProductoController {
 
 	@Autowired
 	IFacturaService facturaService;
+
+	@Autowired
+	IProductoModifyService productomodifyService;
 
 	@Secured({ "ROLE_ADMIN", "ROLE_INV", "ROLE_JEFEADM", "ROLE_SELLER" })
 	@RequestMapping(value = { "/listar", "/listar/{op}/{nombrep}", "/listar/{op}" }, method = RequestMethod.GET)
@@ -252,6 +257,9 @@ public class ProductoController {
 	@RequestMapping(value = "/productosave", method = RequestMethod.POST)
 	public String guardar(@Valid Producto producto, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
+		Producto pro = productoService.findOne(producto.getId());
+		Double precioold = pro.getPrecio();
+		System.out.print("\nModificacion " + pro.getPrecio() + " nuevo " + producto.getPrecio());
 		if (result.hasErrors()) {
 			model.addAttribute("titulo", "Formulario de Productos");
 			return "/productos/productoform";
@@ -263,7 +271,21 @@ public class ProductoController {
 			producto.setStock(0);
 		}
 		producto.setAsegurar(false);
+
 		productoService.save(producto);
+		if (producto.getId() != null) {
+
+			if (producto.getPrecio() != precioold) {
+				System.out.print("\nEntro a modificacion");
+				ProductosModify pro_modify = new ProductosModify();
+				pro_modify.setFecha(new Date());
+				pro_modify.setPrecio(producto.getPrecio());
+				pro_modify.setProductomodi(productoService.findOne(pro.getId()));
+				productomodifyService.save(pro_modify);
+			}
+
+		}
+
 		status.setComplete();
 		nuevaNotificacion("fas fa-box-open", "Producto '" + producto.getNombrep() + "' agregado o modificado",
 				"/producto/ver/" + producto.getId(), "blue");

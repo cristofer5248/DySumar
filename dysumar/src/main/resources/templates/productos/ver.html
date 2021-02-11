@@ -67,7 +67,25 @@
 
 				<div th:if="${#lists.isEmpty(producto.inventarios)}"
 					class="alert alert-info my-4"
-					th:text="'No hay inventarios de este producto ' + ${producto.nombrep} + ' ' + ${producto.codigo}"></div>
+					th:text="'No hay movimientos de este producto ' + ${producto.nombrep} + ' ' + ${producto.codigo}"></div>
+
+				<table th:if="${not #lists.isEmpty(producto.productosmodify)}"
+					class="table table-bordered table-striped my-4">
+					<thead class="thead-inverse">
+						<tr>
+							<th>Fecha de modificacion</th>
+							<th>Precio</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="productosmodify_ ${productosmodify}">
+							<td th:text="${productosmodify.fecha}"></td>
+							<td th:text="${inventario.precio}"></td>
+						</tr>
+					</tbody>
+
+				</table>
 
 				<table th:if="${not #lists.isEmpty(producto.inventarios)}"
 					class="table table-bordered table-striped my-4">
@@ -75,7 +93,7 @@
 						<tr>
 							<th>ID</th>
 							<th>Codigo de documento</th>
-							<th>Ingreso</th>
+							<th>Entrada o Salida</th>
 							<th>Fecha</th>
 
 							<!-- 							<th sec:authorize="hasRole('ROLE_ADMIN')">ver</th> -->
@@ -84,10 +102,14 @@
 					</thead>
 					<tbody>
 						<tr th:each="inventario: ${movimientos}">
-							<td th:text="${inventario.id}" th:style="'color:' +${inventario.color}" ></td>
-							<td th:text="${inventario.codigo}" th:style="'color:' +${inventario.color}"></td>
-							<td th:text="${inventario.movimiento}" th:style="'color:' +${inventario.color}"></td>
-							<td th:text="${inventario.fecha}" th:style="'color:' +${inventario.color}"></td>
+							<td th:text="${inventario.id}"
+								th:style="'color:' +${inventario.color}"></td>
+							<td th:text="${inventario.codigo}"
+								th:style="'color:' +${inventario.color}"></td>
+							<td th:text="${inventario.movimiento}"
+								th:style="'color:' +${inventario.color}"></td>
+							<td th:text="${inventario.fecha}"
+								th:style="'color:' +${inventario.color}"></td>
 							<!-- 							<td th:text="${inventario.cantidad}"></td> -->
 
 							<!-- 							<td th:text="${factura.cantidad * factura.servicios.precio}"></td> -->
@@ -107,8 +129,8 @@
 			</div>
 		</div>
 		<!-- Modal -->
-		<div class="modal fade bd-example-modal-lg" id="historialmodal" tabindex="-1"
-			role="dialog" aria-labelledby="exampleModalCenterTitle"
+		<div class="modal fade bd-example-modal-lg" id="historialmodal"
+			tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
 			aria-hidden="true">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
@@ -126,7 +148,7 @@
 								<tr>
 									<th width="100">ID DE FACTURA</th>
 									<th width="100">ID DE COTIZACION</th>
-									<th width="100">PRECIO</th>									
+									<th width="100">PRECIO</th>
 									<th width="100">FECHA</th>
 									<th width="100">CANTIDAD</th>
 								</tr>
