@@ -566,4 +566,16 @@ $$
 DELIMITER ;
 
 
--- insert into facturacion values(null,0,123,'2020-02-02',1,5,2,1,1,1,1);
+DROP TABLE IF EXISTS `productos_modify`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `productos_modify` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `fecha` datetime DEFAULT NULL,
+  `precio` double DEFAULT NULL,
+  `productomodi_idp` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK550jfjihgjfvegqatl6b1f2hd` (`productomodi_idp`),
+  CONSTRAINT `FK550jfjihgjfvegqatl6b1f2hd` FOREIGN KEY (`productomodi_idp`) REFERENCES `productos` (`idp`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
