@@ -67,6 +67,14 @@ public class ProductosModify implements Serializable{
 
 
 	public Date getFecha() {
+//		Date date1 = new Date();
+//	    try {
+//	    	String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(fecha);
+//			date1 = new SimpleDateFormat("dd/MM/yyyy").parse(timeStamp);
+//		} catch (ParseException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		return fecha;
 	}
 

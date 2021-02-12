@@ -79,9 +79,9 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="productosmodify_ ${productosmodify}">
-							<td th:text="${productosmodify.fecha}"></td>
-							<td th:text="${inventario.precio}"></td>
+						<tr th:each="productosmodify_: ${producto.productosmodify}" th:with="df=#{date.format}">
+							<td th:text="${#calendars.format(productosmodify_.fecha,df)}"></td>
+							<td th:text="${productosmodify_.precio}"></td>
 						</tr>
 					</tbody>
 

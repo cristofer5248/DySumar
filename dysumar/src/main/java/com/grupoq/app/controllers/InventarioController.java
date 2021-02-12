@@ -179,14 +179,13 @@ public class InventarioController {
 //			model.addAttribute("titulo", "Inventariado");
 //			return "/producto/listar";
 //		}
+		// vemos si hay un codigo repetido no!!
+		if (inventarioService.findByCodigoProveedor(codigo) != null) {
+			flash.addFlashAttribute("error", "No se pudo guardar en el inventario, el codigo ingresado esta repetido");
+			return "redirect:/inventario/nuevo";
+		}
+
 		String mensajeFlash = (itemId != null) ? "inventario editado con éxito!" : "Inventario creado con éxito!";
-//		Inventario justCodeRepetead = null;
-//		justCodeRepetead = inventarioService.findByCodigoProveedor(codigo);
-//		if(justCodeRepetead!=null) {
-//			model.addAttribute("error","Error: Ese id de compra ya existe!");
-//			model.addAttribute("titulo","Nuevo");
-//			return "/inventario/form2";
-//		}
 		if (comentario == null) {
 			comentario = "Este comentario fue generado automaticamente, se ingresaron productos negativos para devolucion o retiro al inventario";
 		}

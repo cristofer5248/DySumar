@@ -272,7 +272,7 @@ public class ProductoController {
 		}
 		producto.setAsegurar(false);
 
-		productoService.save(producto);
+		
 		if (producto.getId() != null) {
 
 			if (producto.getPrecio() != precioold) {
@@ -285,6 +285,7 @@ public class ProductoController {
 			}
 
 		}
+		productoService.save(producto);
 
 		status.setComplete();
 		nuevaNotificacion("fas fa-box-open", "Producto '" + producto.getNombrep() + "' agregado o modificado",
