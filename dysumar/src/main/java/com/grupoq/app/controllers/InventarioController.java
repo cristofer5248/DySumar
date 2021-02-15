@@ -97,7 +97,7 @@ public class InventarioController {
 
 		}
 
-		Pageable pageRequest = (all > 0) ? Pageable.unpaged() : PageRequest.of(page, 20);
+		Pageable pageRequest = !(all > 0) ? Pageable.unpaged() : PageRequest.of(page, 20);
 		Page<Inventario> inventario = null;
 		if (codigo != null) {
 			inventario = inventarioService.findByCodigoProveedorContaining(codigo, pageRequest);
@@ -168,6 +168,7 @@ public class InventarioController {
 			@RequestParam(name = "comentario") String comentario,
 			@RequestParam(name = "codigo", required = true) String codigo,
 			@RequestParam(name = "item_id[]", required = false) Long[] itemId,
+			@RequestParam(name = "integrar", required = true) int integrar,
 			@RequestParam(name = "cantidad[]", required = false) Integer[] cantidad, Model model,
 			RedirectAttributes flash, SessionStatus status, Authentication authentication) throws ParseException {
 		System.out.print("\nfecha" + fecha);
@@ -180,9 +181,35 @@ public class InventarioController {
 //			return "/producto/listar";
 //		}
 		// vemos si hay un codigo repetido no!!
-		if (inventarioService.findByCodigoProveedor(codigo) != null) {
+		Inventario inventariorepeted = inventarioService.findByCodigoProveedor(codigo);
+		if (inventariorepeted != null && integrar != 1) {
 			flash.addFlashAttribute("error", "No se pudo guardar en el inventario, el codigo ingresado esta repetido");
 			return "redirect:/inventario/nuevo";
+		}
+		if (inventariorepeted != null && integrar == 1) {
+			Inventario integrarinventario = new Inventario();
+			for (int i = 0; i < itemId.length; i++) {
+				integrarinventario.setCodigoProveedor(codigo);
+				integrarinventario.setComentario(inventariorepeted.getComentario());
+				integrarinventario.setEstado(inventariorepeted.getEstado());
+				integrarinventario.setFecha(new Date());
+				integrarinventario.setMovimientos(inventariorepeted.getMovimientos());
+				integrarinventario.setProducto(productoService.findOne(itemId[i]));
+				integrarinventario.setStock(cantidad[i]);
+				integrarinventario.setZaNombrede(authentication.getName());
+				if (integrarinventario.getProducto().getProveedor().getId() != inventariorepeted.getProducto()
+						.getProveedor().getId()) {
+					flash.addFlashAttribute("error",
+							"Un producto de los que intenta ingresar no corresponde al mismo proveedor");
+					return "redirect:/inventario/nuevo";
+				}
+				inventarioService.save(integrarinventario);
+			}
+			status.setComplete();
+			flash.addFlashAttribute("success", "Nuevo integracion de datos a inventario previo completado");
+			nuevaNotificacion("fas fa-parachute-box", "Integracion de productos a registro antiguo",
+					"/inventario/ver/" + inventariorepeted.getMovimientos().getId(), "purple");
+			return "redirect:/inventario/listar";
 		}
 
 		String mensajeFlash = (itemId != null) ? "inventario editado con éxito!" : "Inventario creado con éxito!";

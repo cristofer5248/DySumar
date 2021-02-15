@@ -140,6 +140,7 @@ public class FacturaController {
 					}
 //				sPath = facturacion!=null ? "listar/fechas/"+param+"/"+param2 : "listar";  
 				} catch (Exception e) {
+					e.printStackTrace();
 					model.addAttribute("error", "Error en las fechas");
 					return "/facturas/listar";
 				}
@@ -159,7 +160,7 @@ public class FacturaController {
 		if (facturacion == null) {
 			return "redirect:/factura/listar";
 		}
-		PageRender<Facturacion> pageRender = new PageRender<>("", facturacion);
+		PageRender<Facturacion> pageRender = new PageRender<>("listar", facturacion);
 		model.addAttribute("titulo", "Listado de facturas y remisiones");
 		model.addAttribute("facturas", facturacion);
 		model.addAttribute("page", pageRender);
@@ -524,7 +525,14 @@ public class FacturaController {
 			Model model, RedirectAttributes flash, SessionStatus status) throws ParseException {
 
 		String dondevoy = "/";
-		Facturacion facturacion = facturaservice.findByCodigofactura(codigodoc);
+		Facturacion facturacion = new Facturacion();
+		try {
+			facturacion = facturaservice.findByCodigofactura(codigodoc);
+		} catch (Exception e) {
+			flash.addFlashAttribute("error",
+					"Es posible que el codigo de documento ingresado se encuentre repetido, vuelve a revisar los datos ingresados y vuelve a intentarlo.");
+		}
+
 		NotadeCredito notita = new NotadeCredito();
 		Cotizacion coti = new Cotizacion();
 		try {
@@ -537,7 +545,9 @@ public class FacturaController {
 					flash.addFlashAttribute("success", anularinventario(inventario, tipoC, itemId, cantidad, precio,
 							departamento, municipio, coti));
 					dondevoy = "/inventario/listar";
-					notita.setCliente(inventario.getProducto().getProveedor().getNombre());
+					String clientestring = inventario.getProducto().getProveedor().getNombre();
+					clientestring = (clientestring.length() <= 7) ? clientestring + "     " : clientestring;
+					notita.setCliente(clientestring);
 					notita.setCodigodoc(codigodoc);
 					notita.setMunicipio(municipio);
 					notita.setDepartamento(departamento);

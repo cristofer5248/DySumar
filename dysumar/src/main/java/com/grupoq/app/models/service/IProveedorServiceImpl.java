@@ -19,22 +19,21 @@ public class IProveedorServiceImpl implements IProveedorService {
 	@Override
 	public List<Proveedor> findAllList() {
 		// TODO Auto-generated method stub
-		return (List<Proveedor>) proveedorDao.findAll();
+//		return (List<Proveedor>) proveedorDao.findAll(); el generico
+		return proveedorDao.findAllByOrderByNombreAsc();
 	}
 
 	@Override
 	public void save(Proveedor proveedor) {
 		proveedorDao.save(proveedor);
-		
+
 	}
 
 	@Override
 	public void deleteById(Long id) {
 		proveedorDao.deleteById(id);
-		
+
 	}
-
-
 
 	@Override
 	public Page<Proveedor> findAll(Pageable page) {
@@ -59,6 +58,5 @@ public class IProveedorServiceImpl implements IProveedorService {
 		// TODO Auto-generated method stub
 		return proveedorDao.findByNombre(nombre);
 	}
-	
-	
+
 }

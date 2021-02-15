@@ -37,6 +37,18 @@
 						</div>
 					</div>
 					<div class="form-group row">
+						<label for="integrar" th:text="'Integrar a un documento'"
+							class="col-sm-2 col-form-label"></label>
+						<div class="col-sm-4">
+							<label class="switch"> <input type="checkbox"
+								onchange="integrarinput();" id="integrarcheck" /> <span
+								class="slider round"></span>
+							</label><input type="number" name="integrar" id="integrar"
+								style="visibility: hidden" />
+						</div>
+
+					</div>
+					<div class="form-group row">
 						<label for="fecha" class="col-sm-2 col-form-label">Fecha</label>
 						<div class="col-sm-6">
 							<input type="text" id="mydate" name="fecha" class="form-control"
@@ -101,18 +113,26 @@
 	</script>
 	<script th:replace="inventario/js/autocomplete :: javascript"></script>
 	<script>
-	$(document).ready(function () {
-	    // Warning
-	    $(window).on('beforeunload', function(){
-	        return "Any changes will be lost";
-	    });
+		$('#integrar').val(0);
+		$(document).ready(function() {
+			// Warning
+			$(window).on('beforeunload', function() {
+				return "Any changes will be lost";
+			});
 
-	    // Form Submit
-	    $(document).on("submit", "#carritoform", function(event){
-	        // disable warning
-	        $(window).off('beforeunload');
-	    });
-	});
+			// Form Submit
+			$(document).on("submit", "#carritoform", function(event) {
+				// disable warning
+				$(window).off('beforeunload');
+			});
+		});
+		function integrarinput() {
+			if ($('#integrarcheck').is(':checked')) {
+				$('#integrar').val(1);
+			} else {
+				$('#integrar').val(0);
+			}
+		}
 	</script>
 
 </body>

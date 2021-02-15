@@ -127,13 +127,13 @@ public class IFacturaServiceImpl implements IFacturaService {
 	@Override
 	public Page<Facturacion> findAllByFecha(Pageable page, Date date1, Date date2) {
 		// TODO Auto-generated method stub
-		return facturadao.findAllByFecha(page, date1, date2);
+		return facturadao.findAllByFecha(date1, date2, page);
 	}
 
 	@Override
 	public Page<Facturacion> findAllByFechaGroupBy(Pageable page, Date date1, Date date2) {
 		// TODO Auto-generated method stub
-		return facturadao.findAllByFechaGroupBy(page, date1, date2);
+		return facturadao.findAllByFechaGroupBy(date1, date2, page);
 	}
 
 	@Override
