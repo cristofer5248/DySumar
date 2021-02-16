@@ -307,7 +307,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			rowvacios_abajo26.getCell(1).setCellStyle(celdasStyleMerged);
 
 			rowvacios_abajo26.setHeightInPoints(24);
-			
+
 			rowvacios_abajo27.setHeightInPoints(18);
 			rowvacios_abajo28.setHeightInPoints(Float.parseFloat("20.25"));
 			rowvacios_abajo29.setHeightInPoints(Float.parseFloat("22.25"));
@@ -593,9 +593,8 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			// codigo del producto y nombre unidos por alguna razon
 			cellItems = creditoFiscal ? fila.createCell(2) : fila.createCell(1);
 			cellItems.setCellStyle(calibriproducs);
-			cellItems.setCellValue(
-					carrito.getProductos().getMarca().getNombrem() + " " + carrito.getProductos().getNombrep() + " "
-							+ carrito.getProductos().getPresentacion().getDetalle());
+			cellItems.setCellValue(carrito.getProductos().getPresentacion().getDetalle() + " "
+					+ carrito.getProductos().getNombrep() + " " + carrito.getProductos().getMarca().getNombrem());
 
 			// precio
 			cellItems = creditoFiscal ? fila.createCell(5) : fila.createCell(3);
@@ -618,7 +617,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			cellItems.setCellStyle(celltextMoney);
 //			double precioUnitarioXcantidad = precioUnitario_temp * carrito.getCantidad(); DESCOMENTAR PARA SIN FORMULA
 			String precioUnitarioXcantidad = creditoFiscal ? ("(F" + contadorProducts + "*A" + contadorProducts + ")")
-					: ("(D" + contadorProducts + "*A" + contadorProducts + ")");
+					: ("(D" + (contadorProducts - 1) + "*A" + (contadorProducts - 1) + ")");
 			cellItems.setCellFormula(precioUnitarioXcantidad);
 			totalsiniva += carrito.getCantidad() * carrito.getPrecio();
 			contadorProducts++;

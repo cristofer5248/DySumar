@@ -101,7 +101,8 @@ public class FacturaController {
 			@PathVariable(value = "param2", required = false) String param2,
 			@PathVariable(value = "opc", required = false) String opc, HttpServletRequest request,
 			Authentication authentication) {
-		Pageable pageRequest = PageRequest.of(page, 30);
+		Pageable pageRequest = (por != null || param != null || opc != null) ? Pageable.unpaged()
+				: PageRequest.of(page, 30);
 		Page<Facturacion> facturacion = null;
 //		String sPath= "listar";
 		if (por != null) {
@@ -485,7 +486,7 @@ public class FacturaController {
 		return list2;
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_FACT", "ROLE_JEFEADM" })
+	@Secured({ "ROLE_ADMIN", "ROLE_FACT", "ROLE_JEFEADM", "ROLE_INV" })
 	@RequestMapping(value = "/busquedacodigo/{codigodoc}", method = { RequestMethod.GET }, produces = {
 			"application/json" })
 	public @ResponseBody Boolean busquedacodigo(@PathVariable(value = "codigodoc", required = true) String codigodoc,

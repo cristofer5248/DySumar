@@ -165,6 +165,12 @@ public class Facturacion implements Serializable {
 	public void setTotaRegistrado(double totaRegistrado) {
 		this.totaRegistrado = totaRegistrado;
 	}
+	
+	public double getVentastotales() {
+//		Double totales = getTotaRegistrado()/1.13;
+		Double totales = getTotaRegistrado();
+		return totales;
+	}
 
 
 

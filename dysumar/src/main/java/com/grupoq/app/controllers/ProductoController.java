@@ -257,9 +257,9 @@ public class ProductoController {
 	@RequestMapping(value = "/productosave", method = RequestMethod.POST)
 	public String guardar(@Valid Producto producto, BindingResult result, Model model, RedirectAttributes flash,
 			SessionStatus status) {
-		Producto pro = productoService.findOne(producto.getId());
-		Double precioold = pro.getPrecio();
-		System.out.print("\nModificacion " + pro.getPrecio() + " nuevo " + producto.getPrecio());
+		Producto pro = (producto.getId() != null) ? productoService.findOne(producto.getId()) : null;
+		Double precioold = (producto.getId() != null) ? pro.getPrecio() : null;
+
 		if (result.hasErrors()) {
 			model.addAttribute("titulo", "Formulario de Productos");
 			return "/productos/productoform";
@@ -272,7 +272,6 @@ public class ProductoController {
 		}
 		producto.setAsegurar(false);
 
-		
 		if (producto.getId() != null) {
 
 			if (producto.getPrecio() != precioold) {
@@ -282,6 +281,12 @@ public class ProductoController {
 				pro_modify.setPrecio(producto.getPrecio());
 				pro_modify.setProductomodi(productoService.findOne(pro.getId()));
 				productomodifyService.save(pro_modify);
+				status.setComplete();
+				nuevaNotificacion("fas fa-box-open", "Producto '" + producto.getNombrep() + "' agregado o modificado",
+						"/producto/ver/" + producto.getId(), "blue");
+				flash.addFlashAttribute("success", mensajeFlash);
+				return "redirect:/producto/listar";
+
 			}
 
 		}

@@ -57,13 +57,35 @@
 							<th>FP</th>
 							<!-- 							<th>FP</th> -->
 							<th>TF</th>
+							<th>AGENTE</th>
 							<th>Fecha</th>
+<!-- 							<th>Ventas totales</th> -->
 							<th>Total</th>
 
 							<th
 								th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('JEFEADM') or #request.isUserInRole('FACT') }">eliminar</th>
 						</tr>
 					</thead>
+					<tfoot class="thead-inverse">
+						<tr>
+							<th>Id</th>
+							<th>N° DOC</th>
+							<th>Por</th>
+							<th>Cliente</th>
+							<!-- <th>Stock</th> -->
+							<th>CC</th>
+							<th>FP</th>
+							<!-- 							<th>FP</th> -->
+							<th>TF</th>
+							<th>AGENTE</th>
+							<th>Fecha</th>
+<!-- 							<th>Ventas totales</th> -->
+							<th>Total</th>
+
+							<th
+								th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('JEFEADM') or #request.isUserInRole('FACT') }">eliminar</th>
+						</tr>
+					</tfoot>
 					<tbody>
 						<tr th:each="factura: ${facturas}">
 							<td><a class="btn btn-primary btn-xs"
@@ -77,7 +99,8 @@
 								th:text="'Stock insuficiente'"></td>
 							<td th:if="${factura.status==4}" style="color: blue"
 								th:text="${factura.codigofactura}"></td>
-							<td th:if="${factura.status==5}" style="color: white; background-color: red; font-size: 13px; -webkit-border-radius: 1em;"
+							<td th:if="${factura.status==5}"
+								style="color: white; background-color: red; font-size: 13px; -webkit-border-radius: 1em;"
 								th:text="'ANULADA: '+${factura.codigofactura}"></td>
 							<td th:text="${factura.aCuentade.username}"></td>
 							<td th:text="${factura.cliente.cliente.nombre}"></td>
@@ -86,10 +109,19 @@
 							<td th:text="${factura.condicionesDPago.nombre}"></td>
 							<!-- 							<td th:text="${factura.formadepago.nombre}"></td> -->
 							<td th:text="${factura.tipoFactura.nombre}"></td>
+							<td th:if="${factura.cliente.cliente.agente}" th:text="'SI'"></td>
+							<td th:if="!${factura.cliente.cliente.agente}" th:text="'NO'"></td>
 							<td th:text="${factura.fecha}"></td>
 
+
+<!-- 							<td th:if="${factura.cliente.cliente.agente}" -->
+<!-- 								th:text="'$'+${#numbers.formatDecimal(factura.totaRegistrado,0, 'COMMA', 2, 'POINT')}"></td> -->
+<!-- 							<td th:if="!${factura.cliente.cliente.agente}" -->
+<!-- 								th:text="'$'+${#numbers.formatDecimal(factura.totaRegistrado,0, 'COMMA', 2, 'POINT')}"></td> -->
+								
+								
 							<td
-								th:text="${#numbers.formatDecimal(factura.totaRegistrado,0, 'COMMA', 2, 'POINT')}"></td>
+								th:text="'$'+${#numbers.formatDecimal(factura.ventastotales,0, 'COMMA', 2, 'POINT')}"></td>
 							<!-- 								th:text="${factura.totaRegistrado}"></td> -->
 							<!-- 							<td
 								th:if="${#request.isUserInRole('SELLER')}"><a
@@ -104,12 +136,6 @@
 								onclick="return confirm('Estas seguro que quieres eliminar?');"></a></td>
 						</tr>
 					</tbody>
-					<tfoot>
-						<tr>
-							<th colspan="8" style="text-align: right">Total:</th>
-							<th></th>
-						</tr>
-					</tfoot>
 				</table>
 				<div class="modal fade" id="filterByDate" tabindex="-1"
 					role="dialog" aria-labelledby="exampleModalLabel"
@@ -187,39 +213,93 @@
 
 		});
 	</script>
+
 	<script th:inline="javascript" th:if="${activePivot}">
-		$('#example').DataTable(
-				{
-					"paging" : false,
-					"order" : [ 0, "desc" ],
-					"searching" : false,
-					"info" : false,
-					rowGroup : {
-						startRender : null,
-						endRender : function(rows, group) {
-							var salaryAvg = rows.data().pluck(8).reduce(
-									function(a, b) {
-										// 	                    	alert("a:"+a+" b: "+b);
-										// 	                        return a + b.replace(/[^\d]/g,licar '')*1;
+		$(document)
+				.ready(
+						function() {
+							var table = $("#example")
+									.DataTable(
+											{
+												columnDefs : [ {
+													visible : false,
+													targets : 2
+												} ],
+												order : [ [ 2, "asc" ] ],
+												"searching" : false,
+												"paging" : false,
+												drawCallback : function(
+														settings) {
+													var api = this.api();
+													var rows = api.rows({
+														page : "all"
+													}).nodes();
+													var last = null;
 
-										return parseFloat(a) + parseFloat(b);
-										// 	                    	return a + b.replace(/[^\d]/g, '')*1;
+													// Remove the formatting to get integer data for summation
+													var intVal = function(i) {
+														return typeof i === "string" ? i
+																.replace(
+																		/[\$,]/g,
+																		"") * 1
+																: typeof i === "number" ? i
+																		: 0;
+													};
 
-									});
-							// 	                salaryAvg = $.fn.dataTable.render.number(',', '.', 0, '$').display( salaryAvg );
+													total = [];
+													api
+															.column(2, {
+																page : "all"
+															})
+															.data()
+															.each(
+																	function(
+																			group,
+																			i) {
+																		group_assoc = group
+																				.replace(
+																						" ",
+																						"_");
+																		console
+																				.log(group_assoc);
+																		if (typeof total[group_assoc] != "undefined") {
+																			total[group_assoc] = total[group_assoc]
+																					+ intVal(api
+																							.column(
+																									9)
+																							.data()[i]);
+																		} else {
+																			total[group_assoc] = intVal(api
+																					.column(
+																							9)
+																					.data()[i]);
+																		}
+																		if (last !== group) {
+																			$(
+																					rows)
+																					.eq(
+																							i)
+																					.before(
+																							'<tr class="group totalito"><td colspan="8">'
+																									+ group
+																									+ '</td><td class="' +
+                                                group_assoc +
+                                                '"></td></tr>');
 
-							return $('<tr/>').append(
-									'<td colspan="8" class="totalclass">Total del vendedor: '
-											+ group + '</td>')
-
-							.append(
-									'<td class="totalclass">' + salaryAvg
-											+ '</td>');
-						},
-						dataSrc : 2
-					}
-				});
+																			last = group;
+																		}
+																	});
+													for ( var key in total) {
+														$("." + key)
+																.html(
+																		"$"
+																				+ total[key]);
+													}
+												}
+											});
+						});
 	</script>
+
 	<script>
 		$('.mydate').datepicker({
 			format : "yyyy-mm-dd"
@@ -232,5 +312,11 @@
 					+ "/" + $("#opcfilter").val();
 		});
 	</script>
+	<style>
+.totalito {
+	background-color: white;
+	color: green;
+}
+</style>
 </body>
 </html>

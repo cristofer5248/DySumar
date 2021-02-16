@@ -50,7 +50,7 @@ public interface IFacturaDao extends PagingAndSortingRepository<Facturacion, Lon
 	public Page<Facturacion> findAllByFechaRestricted(Pageable page, Date date1, Date date2, Long id);
 
 	// rindiendo cuentas por vendedor agrupado
-	@Query(value = "select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join fetch f.tipoFactura tp join fetch f.condicionesDPago cp join fetch f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by c.nombre asc", countQuery = "select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join f.tipoFactura tp join f.condicionesDPago cp join f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by c.nombre asc")
+	@Query(value = "select f from Facturacion f join fetch f.cliente cd join fetch cd.cliente c join fetch f.tipoFactura tp join fetch f.condicionesDPago cp join fetch f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by usu.username asc", countQuery = "select count(f) from Facturacion f join f.cliente cd join cd.cliente c join f.tipoFactura tp join f.condicionesDPago cp join f.aCuentade usu where f.status=1 and f.fecha BETWEEN ?1 and ?2 order by usu.username asc")
 	public Page<Facturacion> findAllByFechaGroupBy(Date date1, Date date2, Pageable page);
 
 	// buscar si esta la cotizacion repetida en factura
