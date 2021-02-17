@@ -17,10 +17,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -36,6 +38,7 @@ public class Producto implements Serializable {
 	private Long id;
 
 	@NotEmpty
+	
 	@Column(unique = true)
 	@Length(min = 2, max = 10)
 	private String codigo;

@@ -265,12 +265,34 @@ public class ProductoController {
 			return "/productos/productoform";
 		}
 
+//		if (pro == null) {
+//			pro = productoService.findByCodigo(producto.getCodigo());
+//			if (pro.getCodigo() == producto.getCodigo()) {
+//				flash.addFlashAttribute("error", "Ese codigo de producto ya esta registrado prueba otro.");
+//				return "/productos/productoform";
+//			}
+//
+//		} else {
+//			if (pro.getCodigo() == producto.getCodigo()) {
+//				flash.addFlashAttribute("error", "Ese codigo de producto ya esta registrado prueba otro.");
+//				return "/productos/productoform";
+//			}
+//		}
+
 		String mensajeFlash = (producto.getId() != null) ? "Producto editado con éxito!"
 				: "Producto creado o solicitud enviada con éxito!";
 		if (producto.getId() == null) {
 			producto.setStock(0);
 		}
-		producto.setAsegurar(false);
+
+		try {
+			if (producto.getId() == null) {
+				producto.setAsegurar(false);
+			}
+			productoService.save(producto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		if (producto.getId() != null) {
 
@@ -281,16 +303,16 @@ public class ProductoController {
 				pro_modify.setPrecio(producto.getPrecio());
 				pro_modify.setProductomodi(productoService.findOne(pro.getId()));
 				productomodifyService.save(pro_modify);
-				status.setComplete();
+
 				nuevaNotificacion("fas fa-box-open", "Producto '" + producto.getNombrep() + "' agregado o modificado",
 						"/producto/ver/" + producto.getId(), "blue");
 				flash.addFlashAttribute("success", mensajeFlash);
+
 				return "redirect:/producto/listar";
 
 			}
 
 		}
-		productoService.save(producto);
 
 		status.setComplete();
 		nuevaNotificacion("fas fa-box-open", "Producto '" + producto.getNombrep() + "' agregado o modificado",

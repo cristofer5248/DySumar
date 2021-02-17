@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -38,6 +39,7 @@ public class Facturacion implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private TFactura tipoFactura;
 	
+	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	private ClienteDirecciones cliente;
 	//manytoOne pero desde cliente sera OnetoMany!

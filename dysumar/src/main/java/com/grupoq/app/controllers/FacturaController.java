@@ -327,9 +327,13 @@ public class FacturaController {
 				return "/facturas/form";
 			}
 //			return "redirect:/factura/nuevof/"+facturacion.getCotizacion().getId();
-
+			model.addAttribute("fdePago", facturaservice.listFdp());
+			model.addAttribute("cdePago", facturaservice.listCdp());
+			model.addAttribute("tfactura", facturaservice.listTf());
+			model.addAttribute("carteraclientes", clienteService.findAllByUsuario(authentication.getName()));
 			return "/facturas/form";
 		}
+		
 
 		// solo para editar solo guardamos
 		if (facturacion.getId() != null) {
