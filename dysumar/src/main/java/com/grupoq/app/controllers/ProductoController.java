@@ -265,33 +265,27 @@ public class ProductoController {
 			return "/productos/productoform";
 		}
 
-//		if (pro == null) {
-//			pro = productoService.findByCodigo(producto.getCodigo());
-//			if (pro.getCodigo() == producto.getCodigo()) {
-//				flash.addFlashAttribute("error", "Ese codigo de producto ya esta registrado prueba otro.");
-//				return "/productos/productoform";
-//			}
-//
-//		} else {
-//			if (pro.getCodigo() == producto.getCodigo()) {
-//				flash.addFlashAttribute("error", "Ese codigo de producto ya esta registrado prueba otro.");
-//				return "/productos/productoform";
-//			}
-//		}
+		if (pro == null) {
+			pro = productoService.findByCodigo(producto.getCodigo());
+
+			if (pro != null) {
+				model.addAttribute("error", "Ese codigo de producto ya esta registrado prueba otro.");
+				model.addAttribute("titulo", "Enviar de nuevo");
+				return "/productos/productoform";
+			}
+
+		} else {
+			if (pro.getCodigo().equals(producto.getCodigo())) {
+				model.addAttribute("error", "Ese codigo de producto ya esta registrado prueba otro.");
+				model.addAttribute("titulo", "Enviar de nuevo");
+				return "/productos/productoform";
+			}
+		}
 
 		String mensajeFlash = (producto.getId() != null) ? "Producto editado con éxito!"
 				: "Producto creado o solicitud enviada con éxito!";
 		if (producto.getId() == null) {
 			producto.setStock(0);
-		}
-
-		try {
-			if (producto.getId() == null) {
-				producto.setAsegurar(false);
-			}
-			productoService.save(producto);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 		if (producto.getId() != null) {
@@ -312,6 +306,14 @@ public class ProductoController {
 
 			}
 
+		}
+		try {
+			if (producto.getId() == null) {
+				producto.setAsegurar(false);
+			}
+			productoService.save(producto);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 		status.setComplete();

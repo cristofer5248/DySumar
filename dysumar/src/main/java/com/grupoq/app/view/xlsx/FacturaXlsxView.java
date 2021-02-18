@@ -1,6 +1,7 @@
 package com.grupoq.app.view.xlsx;
 
 import java.text.DecimalFormat;
+import org.apache.poi.ss.usermodel.PrintSetup;
 //import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.Map;
@@ -53,10 +54,17 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		workbook.setSheetName(0, "FACTURA");
 
 		// zoom and view
+		PrintSetup printsetup = sheet.getPrintSetup();
+		printsetup.setVResolution((short) 3);
+		printsetup.setHResolution((short) 3);
+		
+		printsetup.setValidSettings(true);
+		printsetup.setPaperSize(PrintSetup.LETTER_PAPERSIZE);
 
 		sheet.setAutobreaks(false);
 		sheet.setZoom(110);
-		sheet.setFitToPage(true);
+
+//		sheet.setFitToPage(true);
 
 		if (creditoFiscal) {
 			sheet.setMargin(Sheet.TopMargin, 0.866142);
@@ -71,7 +79,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			sheet.setMargin(Sheet.HeaderMargin, 0.00);
 			sheet.setMargin(Sheet.FooterMargin, 0.00);
 //		sheet.setMargin(Sheet.RightMargin, 0.0787402);
-			sheet.setMargin(Sheet.RightMargin, 0.0000);
+			sheet.setMargin(Sheet.RightMargin, 0.078740157480315);
 			sheet.setMargin(Sheet.LeftMargin, 0.629921);
 		}
 		CellStyle theaderstyle = workbook.createCellStyle();
@@ -292,7 +300,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			sheet.setColumnWidth(3, 9 * 256);
 			sheet.setColumnWidth(4, 8 * 256);
 			sheet.setColumnWidth(5, 6 * 256);
-			sheet.setColumnWidth(6, 11 * 256);
+			sheet.setColumnWidth(6, 10 * 256);
 			rowvacios_abajo27.createCell(0);
 			rowvacios_abajo27.getCell(0).setCellStyle(celdasStyleMerged);
 			rowvacios_abajo28.createCell(0);
