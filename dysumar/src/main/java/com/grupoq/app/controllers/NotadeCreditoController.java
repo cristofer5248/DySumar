@@ -5,13 +5,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -87,6 +91,37 @@ public class NotadeCreditoController {
 		model.addAttribute("pathall", pathexcel);
 
 		return "/facturas/listarndc";
+	}
+
+	// para ver el detalle de la FACTURA
+	@Secured({ "ROLE_ADMIN", "ROLE_INV", "ROLE_JEFEADM", "ROLE_FACT" })
+	@GetMapping(value = "/ver/{id}")
+	public String ver(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash,
+			Authentication auth, HttpServletRequest request) {
+
+		NotadeCredito notadecredito = notadecreditoservice.findOne(id);
+		if (notadecredito == null) {
+			flash.addFlashAttribute("error", "Ese codigo no existe en la base de datos");
+			return "redirect:/notadecredito/listar";
+		}
+
+		if (!notadecredito.getNtr().equals(notadecredito.getNtr()) || !(request.isUserInRole("ROLE_ADMIN")
+				|| request.isUserInRole("ROLE_JEFEADM"))) {
+			flash.addFlashAttribute("error", "La factura que intentas ver no te corresponde porque no es tuya.");
+			return "redirect:/notadecredito/listar";
+		}
+
+		
+		model.put("activePivot", true);
+		model.put("notasdecredito", notadecredito);
+//			model.put("proveedor", facturacion.get(0).getProducto().getProveedor().getNombre());
+//			model.put("fecha", facturacion.get(0).getFecha().toString());
+		model.put("codigofa", id);
+		model.put("titulo", "Detalle de factura # : " + id);
+		
+		model.put("correlativo", notadecredito.getCodigodoc());
+
+		return "/facturas/verndc";
 	}
 
 }

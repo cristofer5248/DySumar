@@ -32,12 +32,14 @@ import com.grupoq.app.webservice.EntradasYsalidas;
 import com.grupoq.app.webservice.HistorialDePrecios;
 import com.grupoq.app.models.entity.CarritoItems;
 import com.grupoq.app.models.entity.Facturacion;
+import com.grupoq.app.models.entity.NotadeCredito;
 import com.grupoq.app.models.entity.Notificaciones;
 import com.grupoq.app.models.entity.Presentacion;
 import com.grupoq.app.models.entity.Producto;
 import com.grupoq.app.models.entity.ProductosModify;
 import com.grupoq.app.models.entity.Usuario;
 import com.grupoq.app.models.service.IFacturaService;
+import com.grupoq.app.models.service.INotadeCreditoService;
 import com.grupoq.app.models.service.INotificacionesService;
 import com.grupoq.app.models.service.IPresentacionService;
 import com.grupoq.app.models.service.IProductoModifyService;
@@ -68,6 +70,9 @@ public class ProductoController {
 
 	@Autowired
 	IProductoModifyService productomodifyService;
+
+	@Autowired
+	INotadeCreditoService notadecreditoService;
 
 	@Secured({ "ROLE_ADMIN", "ROLE_INV", "ROLE_JEFEADM", "ROLE_SELLER" })
 	@RequestMapping(value = { "/listar", "/listar/{op}/{nombrep}", "/listar/{op}" }, method = RequestMethod.GET)
@@ -400,6 +405,23 @@ public class ProductoController {
 			entr_salidas.setMovimiento(producto.getInventarios().get(i).getStock());
 			entr_salidas.setColor("blue");
 			entra_list.add(entr_salidas);
+		}
+		List<NotadeCredito> notitas = notadecreditoService.findByCodigodoc(id);
+		if (!notitas.isEmpty()) {
+			for (int i = 0; i < notitas.size(); i++) {
+				EntradasYsalidas entr_salidas = new EntradasYsalidas();
+				entr_salidas.setCodigo("NDC - "+notitas.get(i).getCodigodoc());
+				entr_salidas.setFecha(notitas.get(i).getFecha());
+				entr_salidas.setId(notitas.get(i).getId());
+				for (CarritoItems carritostocker : notitas.get(i).getCarrito().getCarrito()) {
+					entr_salidas.setMovimiento(
+							(carritostocker.getProductos().equals(producto)) ? carritostocker.getCantidad() : 0);
+
+				}
+				
+				entr_salidas.setColor("blue");
+				entra_list.add(entr_salidas);
+			}
 		}
 		List<Facturacion> lista = facturaService.findHistorialPrecios(id);
 		for (int i = 0; i < lista.size(); i++) {

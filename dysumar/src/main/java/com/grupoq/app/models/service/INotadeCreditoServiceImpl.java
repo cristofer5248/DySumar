@@ -1,6 +1,7 @@
 package com.grupoq.app.models.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,6 +39,18 @@ public class INotadeCreditoServiceImpl implements INotadeCreditoService {
 	public Page<NotadeCredito> findByDates(Date fecha1, Date fecha2, Pageable page) {
 		// TODO Auto-generated method stub
 		return notadecreditodao.findByDates(fecha1, fecha2, page);
+	}
+
+	@Override
+	public NotadeCredito findOne(Long id) {
+		// TODO Auto-generated method stub
+		return notadecreditodao.findById(id).orElse(null);
+	}
+
+	@Override
+	public List<NotadeCredito> findByCodigodoc(Long codigodoc) {
+		// TODO Auto-generated method stub
+		return notadecreditodao.findByCodigodoc(codigodoc);
 	}
 
 }

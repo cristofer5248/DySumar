@@ -37,8 +37,8 @@ public class Cliente implements Serializable {
 	private String codigo;
 	
 	@NotEmpty
-	@Column(length = 60)
-	@Size(max = 60)
+	@Column(length = 140)
+	@Size(max = 140)
 	private String nombre;
 	
 	@NotEmpty	

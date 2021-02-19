@@ -120,7 +120,6 @@ public class FacturaController {
 					Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(param);
 					Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(param2);
 					if (opc.equals("vendedor")) {
-						System.out.print("Entro a 'vendedor'\n");
 						facturacion = (request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_JEFEADM"))
 								? facturaservice.findAllByFechaGroupBy(pageRequest, date1, date2)
 								: null;
@@ -135,9 +134,7 @@ public class FacturaController {
 								? facturaservice.findAllByFecha(pageRequest, date1, date2)
 								: facturaservice.findAllByFechaRestricted(pageRequest, date1, date2, user_temp.getId());
 
-						System.out.print("Entro a 'admin' tamaño:" + facturacion.getSize() + "\n");
-//						System.out.print("ID:" + facturacion.getNumberOfElements() + "\n");	
-						model.addAttribute("activePivot", false);
+						model.addAttribute("activePivot", true);
 					}
 //				sPath = facturacion!=null ? "listar/fechas/"+param+"/"+param2 : "listar";  
 				} catch (Exception e) {
@@ -333,7 +330,6 @@ public class FacturaController {
 			model.addAttribute("carteraclientes", clienteService.findAllByUsuario(authentication.getName()));
 			return "/facturas/form";
 		}
-		
 
 		// solo para editar solo guardamos
 		if (facturacion.getId() != null) {
@@ -518,7 +514,7 @@ public class FacturaController {
 
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_FACT", "ROLE_JEFEADM","ROLE_INV" })
+	@Secured({ "ROLE_ADMIN", "ROLE_FACT", "ROLE_JEFEADM", "ROLE_INV" })
 	@RequestMapping(value = "/savendc", method = RequestMethod.POST)
 	public String guardarnotadecredito(@RequestParam(name = "item_id[]", required = false) Long[] itemId,
 			@RequestParam(name = "cantidad[]", required = false) Integer[] cantidad,
@@ -580,6 +576,7 @@ public class FacturaController {
 				notita.setNtr("A cuenta de " + authentication.getName());
 				notita.setCarrito(coti);
 				notadecreditoservice.save(notita);
+
 			}
 
 		} catch (Exception e) {
@@ -599,6 +596,7 @@ public class FacturaController {
 		coti.setFecha(new Date());
 		cotizacionService.save(coti);
 		for (int i = 0; i < itemId.length; i++) {
+			Producto producto_ = productoservice.findOne(itemId[i]);
 			Random random = new Random();
 			int x = random.nextInt(900) + 100;
 			CarritoItems carrito = new CarritoItems();
@@ -609,6 +607,12 @@ public class FacturaController {
 			carrito.setProductos(productoservice.findOne(itemId[i]));
 			carrito.setCotizacionid(coti);
 			carritoitemsservice.save(carrito);
+			producto_.setStock(producto_.getStock() + (cantidad[i]));
+			productoservice.save(producto_);
+			nuevaNotificacion(((cantidad[i] <= 0) ? "fas fa-step-backward" : "fas fa-fast-forward"),
+					((cantidad[i] <= 0) ? "Devolucion de " : "Se añadio ") + producto_.getNombrep()
+							+ " a una nota de credito",
+					"/notadecredito/listar", "orange");
 
 		}
 		if (anular > 0) {
@@ -632,6 +636,25 @@ public class FacturaController {
 		coti.setAprobado(true);
 		coti.setFecha(new Date());
 		cotizacionService.save(coti);
+		for (int i = 0; i < itemId.length; i++) {
+			Producto producto_ = productoservice.findOne(itemId[i]);
+			Random random = new Random();
+			int x = random.nextInt(900) + 100;
+			CarritoItems carrito = new CarritoItems();
+			carrito.setCantidad(cantidad[i]);
+			carrito.setPrecio(precio[i]);
+			String codigoGenerated = x + "xxx";
+			carrito.setCodigo(codigoGenerated);
+			carrito.setProductos(productoservice.findOne(itemId[i]));
+			carrito.setCotizacionid(coti);
+			carritoitemsservice.save(carrito);
+			producto_.setStock(producto_.getStock() + (cantidad[i]));
+			productoservice.save(producto_);
+			nuevaNotificacion(((cantidad[i] <= 0) ? "fas fa-step-backward" : "fas fa-fast-forward"),
+					((cantidad[i] <= 0) ? "Devolucion de " : "Se añadio ") + producto_.getNombrep()
+							+ " a una nota de credito",
+					"/notadecredito/listar", "orange");
+		}
 		if (anular > 0) {
 			inventario.setEstado(false);
 			inventario.setComentario("Este registro tiene una nota de credito " + inventario.getComentario());

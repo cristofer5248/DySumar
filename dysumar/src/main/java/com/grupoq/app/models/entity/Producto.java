@@ -38,7 +38,7 @@ public class Producto implements Serializable {
 	@NotEmpty
 	
 	@Column(unique = true)
-	@Length(min = 2, max = 10)
+	@Length(min = 2, max = 20)
 	private String codigo;
 
 	@NotEmpty
