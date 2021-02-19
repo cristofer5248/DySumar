@@ -60,7 +60,9 @@
 					</thead>
 					<tbody>
 						<tr th:each="ndc: ${notasdecredito}">
-							<td><a th:href="@{/notadecredito/ver/}+${ndc.codigodoc}" class="btn btn-primary" th:text="${ndc.codigodoc}"></a></td>
+							<td><a th:href="@{/notadecredito/ver/}+${ndc.codigodoc}"
+								class="btn btn-primary" th:text="${ndc.codigodoc}"
+								onclick="alert('trabajando en ello')"></a></td>
 							<td th:text="${ndc.cliente}"></td>
 							<td th:text="${ndc.municipio}"></td>
 							<td th:text="${ndc.departamento}"></td>

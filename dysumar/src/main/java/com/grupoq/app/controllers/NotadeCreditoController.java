@@ -25,7 +25,7 @@ import com.grupoq.app.util.paginator.PageRender;
 @Controller
 @SessionAttributes("notadecredito")
 @RequestMapping("/notadecredito")
-@Secured({ "ROLE_ADMIN", "ROLE_INV", "ROLE_JEFEADM" })
+@Secured({ "ROLE_ADMIN", "ROLE_INV", "ROLE_JEFEADM", "ROLE_FACT" })
 public class NotadeCreditoController {
 
 	@Autowired

@@ -518,7 +518,7 @@ public class FacturaController {
 
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_FACT", "ROLE_JEFEADM" })
+	@Secured({ "ROLE_ADMIN", "ROLE_FACT", "ROLE_JEFEADM","ROLE_INV" })
 	@RequestMapping(value = "/savendc", method = RequestMethod.POST)
 	public String guardarnotadecredito(@RequestParam(name = "item_id[]", required = false) Long[] itemId,
 			@RequestParam(name = "cantidad[]", required = false) Integer[] cantidad,
