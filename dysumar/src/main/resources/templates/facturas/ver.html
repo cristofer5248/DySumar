@@ -108,7 +108,12 @@
 					<li th:if="${facturaciones.status==4}" class="list-group-item"
 						style="color: blue" th:text="'Estado :    Como nota de remision'"></li>
 					<li th:if="${facturaciones.status==5}" class="list-group-item"
-						style="color: red" th:text="'Estado :    Anulada con codigo: '+${correlativo}"></li>
+						style="color: red"
+						th:text="'Estado :    Anulada con codigo: '+${correlativo}"></li>
+					<li th:if="${facturaciones.status==5}" class="list-group-item"><a
+						class="btn btn-danger"
+						th:href="@{'/notadecredito/verb/'}+ ${facturaciones.codigofactura}"
+						th:text="'VER NOTA DE CREDITO'">></a></li>
 					<li class="list-group-item"
 						th:text="'Factura con correlativo:    '+${correlativo}"></li>
 					<li class="list-group-item"

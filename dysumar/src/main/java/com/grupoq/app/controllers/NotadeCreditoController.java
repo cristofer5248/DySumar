@@ -3,6 +3,7 @@ package com.grupoq.app.controllers;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,6 +43,19 @@ public class NotadeCreditoController {
 		model.put("notadecredito", notadecredito);
 		model.put("titulo", "Nota de Credito");
 		return "/facturas/notadecredito";
+	}
+
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_INV", "ROLE_FACT" })
+	@RequestMapping(value = "/verb/{id}", method = RequestMethod.GET)
+	public String verb(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+		System.out.print("salgoooo");
+		List<NotadeCredito> notadecredito = notadecreditoservice.findByCodigodoc(id);
+		if (notadecredito.size() > 1) {
+			flash.addAttribute("error", "Hay mas de un registro, buscalo en la seccion de notas de credito");
+			return "redirect:/notadecredito/listar";
+		}
+		Long idndc = notadecredito.get(0).getId();
+		return "redirect:/notadecredito/ver" + idndc;
 	}
 
 	@RequestMapping(value = { "/listar", "/listar/{date1}/{date2}", "/listar/{codigo}" }, method = RequestMethod.GET)
@@ -104,21 +118,20 @@ public class NotadeCreditoController {
 			flash.addFlashAttribute("error", "Ese codigo no existe en la base de datos");
 			return "redirect:/notadecredito/listar";
 		}
-
-		if (!notadecredito.getNtr().equals(notadecredito.getNtr()) || !(request.isUserInRole("ROLE_ADMIN")
-				|| request.isUserInRole("ROLE_JEFEADM"))) {
+		String substr = notadecredito.getNtr().substring(12, notadecredito.getNtr().length());
+		if (!((request.isUserInRole("ROLE_ADMIN") || request.isUserInRole("ROLE_JEFEADM")))
+				&& (!substr.equals(auth.getName()))) {
 			flash.addFlashAttribute("error", "La factura que intentas ver no te corresponde porque no es tuya.");
 			return "redirect:/notadecredito/listar";
 		}
 
-		
 		model.put("activePivot", true);
 		model.put("notasdecredito", notadecredito);
 //			model.put("proveedor", facturacion.get(0).getProducto().getProveedor().getNombre());
 //			model.put("fecha", facturacion.get(0).getFecha().toString());
 		model.put("codigofa", id);
 		model.put("titulo", "Detalle de factura # : " + id);
-		
+
 		model.put("correlativo", notadecredito.getCodigodoc());
 
 		return "/facturas/verndc";
