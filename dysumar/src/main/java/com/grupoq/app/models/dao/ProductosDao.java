@@ -59,4 +59,7 @@ public interface ProductosDao extends PagingAndSortingRepository<Producto, Long>
 	public Page<Producto> findByCategoria(String codigo, Pageable page);
 	
 	public Producto findByCodigo(String codigo);
+	
+	@Query(value = "select p from Producto p where p.id=?1 and p.codigo!=?2")
+	public Producto findOneByCodigoNot(Long id,Long id2);
 }

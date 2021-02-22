@@ -16,7 +16,7 @@ public class IProductoServiceImpl implements IProductoService {
 
 	@Autowired
 	private ProductosDao productosDao;
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public Page<Producto> findAll(Pageable page) {
@@ -35,7 +35,7 @@ public class IProductoServiceImpl implements IProductoService {
 	@Transactional
 	public void delete(Long id) {
 		productosDao.deleteById(id);
-		
+
 	}
 
 	@Override
@@ -138,6 +138,12 @@ public class IProductoServiceImpl implements IProductoService {
 	public Page<Producto> findByBodega(String term, Pageable page) {
 		// TODO Auto-generated method stub
 		return productosDao.findByBodega(term, page);
+	}
+
+	@Override
+	public Producto findOneByCodigoNot(Long id, Long id2) {
+		// TODO Auto-generated method stub
+		return productosDao.findOneByCodigoNot(id, id2);
 	}
 
 }

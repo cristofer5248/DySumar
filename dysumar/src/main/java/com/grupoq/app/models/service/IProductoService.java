@@ -22,6 +22,7 @@ public interface IProductoService {
 	public Page<Producto> findAllLike(String termn,Pageable page);
 	
 	public Producto findOne(Long id);
+	public Producto findOneByCodigoNot(Long id,Long id2);
 	
 	public List<Producto> findAllList();
 	public List<Producto> findByNombrep(String term);	
