@@ -27,7 +27,7 @@ public class Giro implements Serializable {
 	private Long id;
 	
 	@Column(length = 200)
-	@Size(max = 200, min = 10)
+	@Size(max = 250, min = 10)
 	private String detalles;
 
 	@JsonIgnore

@@ -231,13 +231,13 @@ public class InventarioController {
 				stockenpositivo = producto.getStock() * -1;
 				System.out
 						.print("Stock para comparar: " + stockenpositivo + "la cantidad a meter " + cantidad[i] + "\n");
-				if (stockenpositivo > cantidad[i]) {
-					System.out.print("Entre a a la condicion Cantidad de ingreso insuficiente para el stock");
-					flash.addFlashAttribute("error", "El producto " + producto.getNombrep()
-							+ " exige un ingreso superior a " + (producto.getStock() * -1) + " para suplir la demanda");
-
-					return "redirect:/inventario/listar";
-				}
+//				if (stockenpositivo > cantidad[i]) {
+//					System.out.print("Entre a a la condicion Cantidad de ingreso insuficiente para el stock");
+//					flash.addFlashAttribute("error", "El producto " + producto.getNombrep()
+//							+ " exige un ingreso superior a " + (producto.getStock() * -1) + " para suplir la demanda");
+//
+//					return "redirect:/inventario/listar";
+//				}
 			}
 		}
 

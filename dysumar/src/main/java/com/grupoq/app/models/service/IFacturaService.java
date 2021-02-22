@@ -17,6 +17,7 @@ public interface IFacturaService {
 	public Facturacion fetchByIdWithClienteWithCarritoItemsWithProducto(Long id);
 	
 	public Page<Facturacion> findAll(Pageable page);
+	public List<Facturacion> findAll();
 	public List<Facturacion> findHistorialPrecios(Long id);
 	public List<Facturacion> findHistorialPreciosVendedor(Long id, Long vendedor);
 	public Facturacion findBy(Long id);

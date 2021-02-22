@@ -141,7 +141,7 @@ public class IProductoServiceImpl implements IProductoService {
 	}
 
 	@Override
-	public Producto findOneByCodigoNot(Long id, Long id2) {
+	public Producto findOneByCodigoNot(Long id, String id2) {
 		// TODO Auto-generated method stub
 		return productosDao.findOneByCodigoNot(id, id2);
 	}

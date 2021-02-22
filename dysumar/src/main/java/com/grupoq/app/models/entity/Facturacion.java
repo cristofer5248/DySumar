@@ -63,6 +63,8 @@ public class Facturacion implements Serializable {
 	@Column(length = 1)
 	private int status;
 	
+	private double subtotal;
+	
 	private double totaRegistrado;
 	public Facturacion() {
 		
@@ -172,6 +174,14 @@ public class Facturacion implements Serializable {
 //		Double totales = getTotaRegistrado()/1.13;
 		Double totales = getTotaRegistrado();
 		return totales;
+	}
+
+	public double getSubtotal() {
+		return subtotal;
+	}
+
+	public void setSubtotal(double subtotal) {
+		this.subtotal = subtotal;
 	}
 
 

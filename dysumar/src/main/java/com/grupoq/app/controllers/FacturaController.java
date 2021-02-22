@@ -410,6 +410,7 @@ public class FacturaController {
 		facturacion.setTotaRegistrado(totalParaFactura > 113 && facturacion.getCliente().getCliente().getAgente()
 				? (totalParaFactura - (totalsiniva * 0.01))
 				: totalParaFactura);
+		facturacion.setSubtotal(totalsiniva);
 		// duplicaremos la cotizacin para despues no haber errores
 		boolean cotiRepeated = facturaservice.cotizacionRepetida(facturacion.getCotizacion().getId()) > 0 ? true
 				: false;
@@ -797,6 +798,20 @@ public class FacturaController {
 		return "/facturas/ver";
 	}
 
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM","ROLE_FACT" })
+	@GetMapping(value = "/subtotal/{id}")
+	public String sacarsubtotal(@PathVariable(value = "id") Long id, Map<String, Object> model,
+			RedirectAttributes flash, Authentication auth, HttpServletRequest request) {
+		Facturacion facturacion = facturaservice.findBy(id);
+		double subtotal = 0.0;
+		for (CarritoItems carro : facturacion.getCotizacion().getCarrito()) {
+			subtotal += carro.getPrecio() * carro.getCantidad();
+		}
+		facturacion.setSubtotal(subtotal);
+		facturaservice.save(facturacion);
+		return "redirect:/factura/listar";
+	}
+
 	// para ver el detalle de la FACTURA
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_FACT" })
 	@RequestMapping(value = "/cambiarcosto/", method = RequestMethod.POST)
@@ -840,12 +855,13 @@ public class FacturaController {
 
 				}
 				if (cambiarcosto) {
-					System.out.print("\ncuantas veces paso" + totalnuevo);
+
 					double totalnuevosin = totalnuevo / 1.13;
 					totalnuevo = (totalnuevosin > 113.00 & factura.getCliente().getCliente().getAgente())
 							? totalnuevo - (totalnuevosin * 0.01)
 							: totalnuevo;
 					factura.setTotaRegistrado(totalnuevo);
+					factura.setSubtotal(totalnuevosin);
 					facturaservice.save(factura);
 				}
 

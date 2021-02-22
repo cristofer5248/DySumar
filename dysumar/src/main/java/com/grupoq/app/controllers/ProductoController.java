@@ -280,7 +280,7 @@ public class ProductoController {
 			}
 
 		} else {
-			if (pro.getCodigo().equals(producto.getCodigo())) {
+			if (!pro.getId().equals(producto.getId())) {
 				model.addAttribute("error", "Ese codigo de producto ya esta registrado prueba otro.");
 				model.addAttribute("titulo", "Enviar de nuevo");
 				return "/productos/productoform";
@@ -302,11 +302,11 @@ public class ProductoController {
 				pro_modify.setPrecio(producto.getPrecio());
 				pro_modify.setProductomodi(productoService.findOne(pro.getId()));
 				productomodifyService.save(pro_modify);
-
+				productoService.save(producto);
 				nuevaNotificacion("fas fa-box-open", "Producto '" + producto.getNombrep() + "' agregado o modificado",
 						"/producto/ver/" + producto.getId(), "blue");
 				flash.addFlashAttribute("success", mensajeFlash);
-
+				status.setComplete();
 				return "redirect:/producto/listar";
 
 			}
@@ -316,6 +316,7 @@ public class ProductoController {
 			if (producto.getId() == null) {
 				producto.setAsegurar(false);
 			}
+			System.out.print("\nNuevo precio " + producto.getPrecio());
 			productoService.save(producto);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -410,7 +411,7 @@ public class ProductoController {
 		if (!notitas.isEmpty()) {
 			for (int i = 0; i < notitas.size(); i++) {
 				EntradasYsalidas entr_salidas = new EntradasYsalidas();
-				entr_salidas.setCodigo("NDC - "+notitas.get(i).getCodigodoc());
+				entr_salidas.setCodigo("NDC - " + notitas.get(i).getCodigodoc());
 				entr_salidas.setFecha(notitas.get(i).getFecha());
 				entr_salidas.setId(notitas.get(i).getId());
 				for (CarritoItems carritostocker : notitas.get(i).getCarrito().getCarrito()) {
@@ -418,7 +419,7 @@ public class ProductoController {
 							(carritostocker.getProductos().equals(producto)) ? carritostocker.getCantidad() : 0);
 
 				}
-				
+
 				entr_salidas.setColor("blue");
 				entra_list.add(entr_salidas);
 			}
