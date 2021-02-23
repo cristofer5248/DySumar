@@ -19,5 +19,6 @@ public interface INotadeCreditoService {
 
 	public NotadeCredito findOne(Long id);
 	
+	public List<NotadeCredito> findByCodigodocNDC(String codigodoc);
 	public List<NotadeCredito> findByCodigodoc(Long codigodoc);
 }

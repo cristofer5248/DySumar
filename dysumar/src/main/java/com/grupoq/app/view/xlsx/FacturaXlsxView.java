@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -57,7 +58,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		PrintSetup printsetup = sheet.getPrintSetup();
 		printsetup.setVResolution((short) 3);
 		printsetup.setHResolution((short) 3);
-		
+
 		printsetup.setValidSettings(true);
 		printsetup.setPaperSize(PrintSetup.LETTER_PAPERSIZE);
 
@@ -104,6 +105,14 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		CellStyle celltextMoney = workbook.createCellStyle();
 		celltextMoney.setAlignment(HorizontalAlignment.CENTER);
 
+		CellStyle celltextMoneyRetencion = workbook.createCellStyle();
+		celltextMoneyRetencion.setAlignment(HorizontalAlignment.CENTER);
+		celltextMoneyRetencion.setVerticalAlignment(VerticalAlignment.TOP);
+		
+		celltextMoneyRetencion.setDataFormat(dataFormat.getFormat(accountingformat));
+
+		
+
 		celltextMoney.setDataFormat(dataFormat.getFormat(accountingformat));
 
 		CellStyle ennegritacell = workbook.createCellStyle();
@@ -111,7 +120,7 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 		CellStyle ennegritacelltotal = workbook.createCellStyle();
 		ennegritacelltotal.setAlignment(HorizontalAlignment.LEFT);
-		ennegritacelltotal.setVerticalAlignment(VerticalAlignment.CENTER);
+		ennegritacelltotal.setVerticalAlignment(VerticalAlignment.TOP);
 		ennegritacelltotal.setDataFormat(dataFormat.getFormat(accountingformat));
 
 		CellStyle normalCenter = workbook.createCellStyle();
@@ -316,9 +325,9 @@ public class FacturaXlsxView extends AbstractXlsxView {
 
 			rowvacios_abajo26.setHeightInPoints(24);
 
-			rowvacios_abajo27.setHeightInPoints(18);
-			rowvacios_abajo28.setHeightInPoints(Float.parseFloat("20.25"));
-			rowvacios_abajo29.setHeightInPoints(Float.parseFloat("22.25"));
+			rowvacios_abajo27.setHeightInPoints(Float.parseFloat("12"));
+			rowvacios_abajo28.setHeightInPoints(Float.parseFloat("17"));
+			rowvacios_abajo29.setHeightInPoints(Float.parseFloat("23"));
 			rowvacios_abajo30.setHeightInPoints(0);
 //			rowvacios_abajo30.setHeightInPoints(22);
 		}
@@ -382,7 +391,9 @@ public class FacturaXlsxView extends AbstractXlsxView {
 		tbodystyle.setBorderBottom(BorderStyle.MEDIUM);
 		tbodystyle.setBorderRight(BorderStyle.MEDIUM);
 		tbodystyle.setBorderLeft(BorderStyle.MEDIUM);
-		tbodystyle.setBorderTop(BorderStyle.MEDIUM); // FIN DE LOS ESTILOS
+		tbodystyle.setBorderTop(BorderStyle.MEDIUM);
+		celltextMoneyRetencion.setFont(font1);
+		// FIN DE LOS ESTILOS
 
 		if (creditoFiscal) {
 			Row row = sheet.createRow(0);
@@ -813,12 +824,14 @@ public class FacturaXlsxView extends AbstractXlsxView {
 			if (retenido == 0) {
 				rowvacios_abajo28.getCell(6).setCellValue("0");
 			} else {
-				rowvacios_abajo28.getCell(6).setCellValue(df.format(retenido));
-				rowvacios_abajo28.getCell(6).setCellStyle(celltextMoney);
+//				rowvacios_abajo28.getCell(6).setCellValue(df.format(retenido));
+				rowvacios_abajo28.getCell(6).setCellFormula("G24/1.13*1%");
+				rowvacios_abajo28.getCell(6).setCellStyle(celltextMoneyRetencion);
+				// retenido lugar value
 				System.out.print("\nretenido" + retenido);
 			}
 
-			rowvacios_abajo28.getCell(6).setCellStyle(celltextMoney);
+			rowvacios_abajo28.getCell(6).setCellStyle(celltextMoneyRetencion);
 //			rowFinalabajo.getCell(1)
 //					.setCellValue(" " + numeroALetras.Convertir(df.format(factura.getTotaRegistrado()), true));
 		}

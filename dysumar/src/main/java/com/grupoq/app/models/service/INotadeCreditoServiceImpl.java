@@ -53,4 +53,10 @@ public class INotadeCreditoServiceImpl implements INotadeCreditoService {
 		return notadecreditodao.findByCodigodoc(codigodoc);
 	}
 
+	@Override
+	public List<NotadeCredito> findByCodigodocNDC(String codigodoc) {
+		// TODO Auto-generated method stub
+		return notadecreditodao.findByCodigodocNDC(codigodoc);
+	}
+
 }

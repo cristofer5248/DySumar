@@ -137,7 +137,7 @@
 					<li class="list-group-item" style="color: green; font-weight: bold"
 						th:text="'Subtotal $' +${#numbers.formatDecimal(facturaciones.subtotal,0, 'COMMA', 2, 'POINT')}"></li>
 					<li class="list-group-item" style="color: green; font-weight: bold"
-						th:text="'Subtotal $' +${#numbers.formatDecimal(facturaciones.totaRegistrado,0, 'COMMA', 2, 'POINT')}"></li>
+						th:text="'Total $' +${#numbers.formatDecimal(facturaciones.totaRegistrado,0, 'COMMA', 2, 'POINT')}"></li>
 
 					<li class="list-group-item" style="font-weight: bold"
 						th:text="'COMENTARIO: ' +${facturaciones.detalles}"></li>
@@ -169,9 +169,10 @@
 								<th>Costo</th>
 								<th>Margen</th>
 								<th>Precio sin iva</th>
-								<th>Descuento</th>
+								<!-- 								<th>Descuento</th> -->
 								<th>Cantidad</th>
-								<th>Total con iva</th>
+								<th>13% de IVA</th>
+								<th>Subtotal</th>
 								<!-- 								<th sec:authorize="hasAnyRole('ROLE_ADMIN')">Status</th> -->
 								<th>Stock actual</th>
 
@@ -201,10 +202,12 @@
 								<!-- 								<td	th:text="'$'+${#numbers.formatDecimal(((carritos.productos.precio)/((100-carritos.margen)/100)),0,'COMMA',3,'POINT')}"></td> -->
 								<td
 									th:text="'$'+${#numbers.formatDecimal((carritos.precio),0,'COMMA',3,'POINT')}"></td>
-								<td th:if="${carritos.descuento<1}"
-									th:text="${carritos.descuento*100}+'%'"></td>
-								<td th:if="${carritos.descuento==1}" th:text="'NO'"></td>
+								<!-- 								<td th:if="${carritos.descuento<1}" -->
+								<!-- 									th:text="${carritos.descuento*100}+'%'"></td> -->
+								<!-- 								<td th:if="${carritos.descuento==1}" th:text="'NO'"></td> -->
 								<td th:text="${carritos.cantidad}"></td>
+								<td
+									th:text="${#numbers.formatDecimal((carritos.precio*carritos.cantidad),0, 'COMMA', 3, 'POINT')}"></td>
 								<td
 									th:text="${#numbers.formatDecimal((carritos.precio*1.13*carritos.cantidad),0, 'COMMA', 3, 'POINT')}"></td>
 								<!-- 								<td sec:authorize="hasAnyRole('ROLE_ADMIN')" -->
@@ -223,8 +226,19 @@
 								<!-- 								onclick="return confirm('Â¿Estas seguro que desea eliminar la factura?');"></a></td> -->
 							</tr>
 						</tbody>
-
+						<tfoot>
+							<tr>
+								<td class="totalclass" colspan="10">Totales</td>
+								<td class="totalclass" th:text="' $'+${#numbers.formatDecimal((facturaciones.subtotal),0, 'COMMA', 3, 'POINT')}+'-'"></td>
+								<td class="totalclass" th:text="' $'+${#numbers.formatDecimal((facturaciones.subtotal*1.13),0, 'COMMA', 3, 'POINT')}"></td>
+								
+							</tr>
+							<tr>
+							<td class="totalclass" colspan="2">Venta total</td>
+							<td class="totalclass" th:text="' $'+${#numbers.formatDecimal((facturaciones.totaRegistrado),0, 'COMMA', 3, 'POINT')}"></td>
+							</tr>
 					</table>
+
 				</div>
 
 			</div>
@@ -272,31 +286,31 @@
 		});
 	</script>
 	<script th:inline="javascript" th:if="${activePivot}">
-		$('#carrito').DataTable(
-				{
-					"paging" : false,
+		// 		$('#carrito').DataTable(
+		// 				{
+		// 					"paging" : false,
 
-					"searching" : false,
-					"info" : false,
-					rowGroup : {
-						startRender : null,
-						endRender : function(rows, group) {
-							var salaryAvg = rows.data().pluck(11).reduce(
-									function(a, b) {
-										return parseFloat(a) + parseFloat(b);
-									});
+		// 					"searching" : false,
+		// 					"info" : false,
+		// 					rowGroup : {
+		// 						startRender : null,
+		// 						endRender : function(rows, group) {
+		// 							var salaryAvg = rows.data().pluck(12).reduce(
+		// 									function(a, b) {
+		// 										return parseFloat(a) + parseFloat(b);
+		// 									});
 
-							return $('<tr/>').append(
-									'<td colspan="11" class="totalclass">Cotizacion: '
-											+ group + '</td>')
+		// 							return $('<tr/>').append(
+		// 									'<td colspan="10" class="totalclass">Cotizacion: '
+		// 											+ group + '</td>')
 
-							.append(
-									'<td class="totalclass">' + salaryAvg
-											+ '</td>');
-						},
-						dataSrc : 1
-					}
-				});
+		// 							.append(
+		// 									'<td class="totalclass">$' + salaryAvg
+		// 											+ '</td>');
+		// 						},
+		// 						dataSrc : 1
+		// 					}
+		// 				});
 	</script>
 	<script>
 		function cambiarcodigo() {

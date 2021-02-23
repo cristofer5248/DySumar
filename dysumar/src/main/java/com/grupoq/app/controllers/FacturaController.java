@@ -798,7 +798,7 @@ public class FacturaController {
 		return "/facturas/ver";
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM","ROLE_FACT" })
+	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_FACT", "ROLE_SELLER" })
 	@GetMapping(value = "/subtotal/{id}")
 	public String sacarsubtotal(@PathVariable(value = "id") Long id, Map<String, Object> model,
 			RedirectAttributes flash, Authentication auth, HttpServletRequest request) {
@@ -808,6 +808,12 @@ public class FacturaController {
 			subtotal += carro.getPrecio() * carro.getCantidad();
 		}
 		facturacion.setSubtotal(subtotal);
+		double retenido = subtotal * 0.01;
+		if (facturacion.getCliente().getCliente().getAgente()) {
+			facturacion.setTotaRegistrado((subtotal * 1.13) - retenido);
+		} else {
+			facturacion.setTotaRegistrado(subtotal * 1.13);
+		}
 		facturaservice.save(facturacion);
 		return "redirect:/factura/listar";
 	}

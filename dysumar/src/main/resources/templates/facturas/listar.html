@@ -65,8 +65,7 @@
 
 							<th
 								th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('JEFEADM') or #request.isUserInRole('FACT') }">eliminar</th>
-							<th
-								th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('JEFEADM') or #request.isUserInRole('FACT') }">recalcular</th>
+							<th>recalcular</th>
 						</tr>
 					</thead>
 					<tfoot class="thead-inverse">
@@ -88,8 +87,7 @@
 
 							<th
 								th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('JEFEADM') or #request.isUserInRole('FACT') }">eliminar</th>
-							<th
-								th:if="${#request.isUserInRole('ADMIN') or #request.isUserInRole('JEFEADM') or #request.isUserInRole('FACT') }">recalcular</th>
+							<th>recalcular</th>
 						</tr>
 					</tfoot>
 					<tbody>
@@ -130,16 +128,14 @@
 								th:text="'$'+${#numbers.formatDecimal(factura.ventastotales,0, 'COMMA', 2, 'POINT')}"></td>
 							<td
 								th:text="'$'+${#numbers.formatDecimal(factura.subtotal,0, 'COMMA', 2, 'POINT')}"></td>
-							<!-- 								th:text="${factura.totaRegistrado}"></td> -->							
+							<!-- 								th:text="${factura.totaRegistrado}"></td> -->
 							<td
 								th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM') OR #request.isUserInRole('FACT')}"><a
 								class="btn btn-danger btn-xs"
 								th:href="@{/factura/eliminar/} + ${factura.id}"
 								th:text="'eliminar'"
 								onclick="return confirm('Estas seguro que quieres eliminar?');"></a></td>
-							<td
-								th:if="${#request.isUserInRole('ADMIN') OR #request.isUserInRole('JEFEADM') OR #request.isUserInRole('FACT')}"><a
-								class="btn btn-info btn-xs"
+							<td><a class="btn btn-info btn-xs"
 								th:href="@{/factura/subtotal/} + ${factura.id}"><i
 									class="fas fa-calculator"></i></a></td>
 						</tr>

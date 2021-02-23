@@ -197,12 +197,16 @@ public class InventarioController {
 				integrarinventario.setProducto(productoService.findOne(itemId[i]));
 				integrarinventario.setStock(cantidad[i]);
 				integrarinventario.setZaNombrede(authentication.getName());
+				Producto productoupdate = productoService.findOne(itemId[i]);
+				productoupdate.setStock(cantidad[i]);
+				productoService.save(productoupdate);
 				if (integrarinventario.getProducto().getProveedor().getId() != inventariorepeted.getProducto()
 						.getProveedor().getId()) {
 					flash.addFlashAttribute("error",
 							"Un producto de los que intenta ingresar no corresponde al mismo proveedor");
 					return "redirect:/inventario/nuevo";
 				}
+
 				inventarioService.save(integrarinventario);
 			}
 			status.setComplete();
@@ -233,10 +237,11 @@ public class InventarioController {
 						.print("Stock para comparar: " + stockenpositivo + "la cantidad a meter " + cantidad[i] + "\n");
 				if (stockenpositivo > cantidad[i]) {
 					System.out.print("Entre a a la condicion Cantidad de ingreso insuficiente para el stock");
-					flash.addFlashAttribute("error", "El producto " + producto.getNombrep()
-							+ " exige un ingreso superior a " + (producto.getStock() * -1) + " para suplir la demanda");
+					flash.addFlashAttribute("error",
+							"El producto " + producto.getNombrep() + " necesita un ingreso superior a "
+									+ (producto.getStock() * -1) + " para suplir demanda, tenerlo en cuenta");
 
-					return "redirect:/inventario/listar";
+//					return "redirect:/inventario/listar";
 				}
 			}
 		}

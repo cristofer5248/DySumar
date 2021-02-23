@@ -47,15 +47,15 @@ public class NotadeCreditoController {
 
 	@Secured({ "ROLE_ADMIN", "ROLE_JEFEADM", "ROLE_INV", "ROLE_FACT" })
 	@RequestMapping(value = "/verb/{id}", method = RequestMethod.GET)
-	public String verb(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+	public String verb(@PathVariable(value = "id") String id, Map<String, Object> model, RedirectAttributes flash) {
 		System.out.print("salgoooo");
-		List<NotadeCredito> notadecredito = notadecreditoservice.findByCodigodoc(id);
+		List<NotadeCredito> notadecredito = notadecreditoservice.findByCodigodocNDC(id);
 		if (notadecredito.size() > 1) {
 			flash.addAttribute("error", "Hay mas de un registro, buscalo en la seccion de notas de credito");
 			return "redirect:/notadecredito/listar";
 		}
 		Long idndc = notadecredito.get(0).getId();
-		return "redirect:/notadecredito/ver" + idndc;
+		return "redirect:/notadecredito/ver/" + idndc;
 	}
 
 	@RequestMapping(value = { "/listar", "/listar/{date1}/{date2}", "/listar/{codigo}" }, method = RequestMethod.GET)

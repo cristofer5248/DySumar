@@ -18,5 +18,8 @@ public interface INotadeCreditoDao extends PagingAndSortingRepository<NotadeCred
 
 	@Query("select n from NotadeCredito n inner join n.carrito co inner join co.carrito ca inner join ca.productos pro where pro.id=?1")
 	public List<NotadeCredito> findByCodigodoc(Long codigodoc);
+	
+	@Query("select n from NotadeCredito n where codigodoc=?1")
+	public List<NotadeCredito> findByCodigodocNDC(String codigodoc);
 
 }
