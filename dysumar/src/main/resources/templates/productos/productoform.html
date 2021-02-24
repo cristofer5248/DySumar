@@ -45,10 +45,10 @@
 					<div class="form-group row">
 						<label for="precio" class="col-sm-2 col-form-label">Costo</label>
 						<div class="col-sm-6">
-							<input type="number" th:field="*{precio}" class="form-control" placeholder="ESE PRECIO ES SIN IVA"
-								min="0.000001" step="0.000001"
-								th:errorclass="'form-control alert-danger'" /> <small
-								class="form-text text-danger"
+							<input type="number" th:field="*{precio}" class="form-control"
+								placeholder="ESE PRECIO ES SIN IVA" min="0.000001"
+								step="0.000001" th:errorclass="'form-control alert-danger'" />
+							<small class="form-text text-danger"
 								th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}"></small>
 						</div>
 					</div>
@@ -78,8 +78,9 @@
 						<div class="col-sm-6">
 							<select th:field="*{categoria}" id="cargar_categoria"
 								name="cargar_categoria" class="custom-select mr-sm-2">
-
-							</select>
+							</select><small class="form-text text-danger"
+								th:if="${#fields.hasErrors('categoria')}"
+								th:errors="*{categoria}"></small>
 						</div>
 					</div>
 					<div class="form-group row">
@@ -87,7 +88,8 @@
 						<div class="col-sm-6">
 							<select th:field="*{marca}" id="cargar_marca" name="cargar_marca"
 								class="custom-select mr-sm-2">
-							</select>
+							</select> <small class="form-text text-danger"
+								th:if="${#fields.hasErrors('marca')}" th:errors="*{marca}"></small>
 						</div>
 					</div>
 					<div class="form-group row">
@@ -105,15 +107,19 @@
 					<div class="form-group row">
 						<label for="presentacion" class="col-sm-2 col-form-label"
 							th:text="Presentacion"></label>
-						
+
 						<div class="col-sm-4">
-							<input type="text" th:field="*{presentacion}" name="cargar_presentacion"
-								required="required" placeholder="Buscar una presentacion ya existente..."
-								id="cargar_presentacion" class="form-control" />
+							<input type="text" th:field="*{presentacion}"
+								name="cargar_presentacion" required="required"
+								placeholder="Buscar una presentacion ya existente..."
+								id="cargar_presentacion" class="form-control" /> <small
+								class="form-text text-danger"
+								th:if="${#fields.hasErrors('presentacion')}"
+								th:errors="*{presentacion}"></small>
 						</div>
-							<button type="button" class="btn btn-primary" data-toggle="modal"
+						<button type="button" class="btn btn-primary" data-toggle="modal"
 							data-target="#modalpresentacion">Registrar uno nuevo</button>
-						
+
 					</div>
 					<div class="form-group row">
 						<label for="proveedor" class="col-sm-2 col-form-label"
@@ -121,13 +127,16 @@
 						<div class="col-sm-6">
 							<select th:field="*{proveedor}" id="cargar_proveedor"
 								name="cargar_proveedor" class="custom-select mr-sm-2">
-							</select>
+							</select> <small class="form-text text-danger"
+								th:if="${#fields.hasErrors('proveedor')}"
+								th:errors="*{proveedor}"></small>
 						</div>
 					</div>
 
 					<div class="form-group row">
 						<div class="col-sm-6">
-							<input type="submit" th:value="${titulo}" onclick="return confirm('¿Esta seguro? El precio debe ser un precio SIN IVA.')"
+							<input type="submit" th:value="${titulo}"
+								onclick="return confirm('¿Esta seguro? El precio debe ser un precio SIN IVA.')"
 								class="btn btn-secondary" />
 						</div>
 					</div>
@@ -187,8 +196,8 @@
 		</div>
 	</div>
 	<!-- Modal para presentacion-->
-	<div class="modal fade" id="modalpresentacion" tabindex="-1" role="dialog"
-		aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal fade" id="modalpresentacion" tabindex="-1"
+		role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -206,8 +215,8 @@
 						<div class="form-group row">
 							<label for="nombre" class="col-sm-2 col-form-label">Nombre</label>
 							<div class="col-sm-8">
-								<textarea name="nombrePresentacion" id="nombrePresentacion" minlength="5"
-									class="form-control"></textarea>
+								<textarea name="nombrePresentacion" id="nombrePresentacion"
+									minlength="5" class="form-control"></textarea>
 							</div>
 
 						</div>
@@ -232,7 +241,8 @@
 		th:value="@{/proveedor/cargar_proveedor}" />
 	<input type="hidden" id="urlPresentacion"
 		th:value="@{/producto/saveExpress/}" />
-	<input type="hidden" id="urlAjaxpresentaciones" th:value="@{/presentacion/cargar_presentaciones/}" />
+	<input type="hidden" id="urlAjaxpresentaciones"
+		th:value="@{/presentacion/cargar_presentaciones/}" />
 	<script th:replace="productos/js/setselected :: javascript"></script>
 	<script th:replace="productos/js/autocomplete :: javascript"></script>
 	<script>
@@ -254,17 +264,17 @@
 
 			}
 		}
-		$(document).ready(function () {
-		    // Warning
-		    $(window).on('beforeunload', function(){
-		        return "Any changes will be lost";
-		    });
+		$(document).ready(function() {
+			// Warning
+			$(window).on('beforeunload', function() {
+				return "Any changes will be lost";
+			});
 
-		    // Form Submit
-		    $(document).on("submit", "form", function(event){
-		        // disable warning
-		        $(window).off('beforeunload');
-		    });
+			// Form Submit
+			$(document).on("submit", "form", function(event) {
+				// disable warning
+				$(window).off('beforeunload');
+			});
 		});
 	</script>
 

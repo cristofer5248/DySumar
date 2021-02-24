@@ -52,19 +52,23 @@ public class Producto implements Serializable {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date fecha;
 
+	@NotNull
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Marca marca;
 
+	@NotNull
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Proveedor proveedor;
 
+	@NotNull
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Presentacion presentacion;
 	private double precio;
 
+	@NotNull
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Categoria categoria;
